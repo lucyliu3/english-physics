@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BORDER 图解 — 边界 / 国界 / 边缘</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; color:#e63946; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:#e63946; border-radius:2px; flex-shrink:0; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#e63946; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#e63946; }
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#e63946; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+  .red-bg { background:linear-gradient(135deg,#fef2f2,#fde8e8); }
+  .orange-bg { background:linear-gradient(135deg,#fef9f2,#fdf2e6); }
+  .green-bg { background:linear-gradient(135deg,#f0faf5,#e8f5ec); }
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>BORDER</h1>
+<p class="subtitle">边界 / 国界 — 从"country border"到"border on ridiculous"</p>
+
+<!-- 核心意象对比 -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+
+  <!-- Card 1: BORDER 核心 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="borderBg" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#fef2f2"/>
+          <stop offset="100%" stop-color="#fde8e8"/>
+        </linearGradient>
+        <filter id="shadow">
+          <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.10"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#borderBg)" rx="8"/>
+
+      <!-- 国界 -->
+      <text x="180" y="50" text-anchor="middle" fill="#e63946" font-size="15" font-weight="700" font-family="sans-serif">country border</text>
+      <!-- 左侧国家 -->
+      <rect x="40" y="80" width="140" height="150" fill="#f5e6d0" rx="6"/>
+      <text x="110" y="145" text-anchor="middle" fill="#333" font-size="14" font-weight="600" font-family="sans-serif">Country A</text>
+      <!-- 右侧国家 -->
+      <rect x="180" y="80" width="140" height="150" fill="#d0e8f5" rx="6"/>
+      <text x="250" y="145" text-anchor="middle" fill="#333" font-size="14" font-weight="600" font-family="sans-serif">Country B</text>
+      <!-- 边界线 -->
+      <line x1="180" y1="80" x2="180" y2="230" stroke="#e63946" stroke-width="4" stroke-dasharray="8,4"/>
+      <!-- 边界标识 -->
+      <rect x="165" y="80" width="30" height="20" fill="#e63946" rx="3"/>
+      <text x="180" y="94" text-anchor="middle" fill="#fff" font-size="9" font-weight="700" font-family="sans-serif">BORDER</text>
+      <!-- 边界检查站 -->
+      <rect x="160" y="200" width="40" height="30" fill="#e63946" rx="4"/>
+      <text x="180" y="218" text-anchor="middle" fill="#fff" font-size="8" font-weight="700" font-family="sans-serif">CROSS</text>
+      <!-- 人物过境箭头 -->
+      <circle cx="120" cy="190" r="10" fill="#f5e6d0"/>
+      <line x1="130" y1="190" x2="165" y2="190" stroke="#e63946" stroke-width="2" marker-end="url(#arrow)">
+        <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+      </line>
+      <defs>
+        <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <polygon points="0,0 6,3 0,6" fill="#e63946"/>
+        </marker>
+      </defs>
+      <text x="110" y="320" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">国界 / 两国的分界线</text>
+      <text x="110" y="338" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">"cross the border" 穿越国界</text>
+
+      <!-- 右侧：border on (抽象) -->
+      <text x="560" y="50" text-anchor="middle" fill="#e63946" font-size="15" font-weight="700" font-family="sans-serif">border on (抽象边界)</text>
+      <!-- 一条逐渐变红的色带 -->
+      <rect x="450" y="100" width="200" height="40" fill="#f5e6d0" rx="6"/>
+      <rect x="450" y="100" width="200" height="40" fill="url(#gradBorder)" rx="6"/>
+      <defs>
+        <linearGradient id="gradBorder" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#f5e6d0"/>
+          <stop offset="70%" stop-color="#f5e6d0"/>
+          <stop offset="85%" stop-color="#f0c0c0"/>
+          <stop offset="100%" stop-color="#e63946"/>
+        </linearGradient>
+      </defs>
+      <!-- "荒谬"标签 -->
+      <text x="640" y="125" text-anchor="middle" fill="#e63946" font-size="14" font-weight="700" font-family="sans-serif">荒谬/离谱</text>
+      <!-- 合理↔荒谬箭头 -->
+      <line x1="460" y1="160" x2="640" y2="160" stroke="#e63946" stroke-width="2"/>
+      <text x="460" y="178" text-anchor="start" fill="#666" font-size="11" font-family="sans-serif">合理</text>
+      <text x="640" y="178" text-anchor="end" fill="#e63946" font-size="11" font-family="sans-serif">荒谬</text>
+      <!-- 闪烁的X标记 -->
+      <text x="640" y="210" text-anchor="middle" fill="#e63946" font-size="28" font-weight="700" font-family="sans-serif">
+        X
+        <animate attributeName="opacity" values="1;0.3;1" dur="1.2s" repeatCount="indefinite"/>
+      </text>
+      <text x="560" y="270" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">抽象边界——"接近某种状态"</text>
+      <text x="560" y="290" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">"His behavior borders on ridiculous." 他的行为近乎荒谬。</text>
+    </svg>
+    <div class="card-body">
+      <h3>BORDER <span class="hl">/ˈbɔːrdər/</span></h3>
+      <div class="pos">noun · verb · 边界/国界/边缘</div>
+      <div class="def">
+        <strong>本义</strong> 两个区域之间的分界线<br>
+        <strong>核心意象</strong> "分隔线"——物理上分隔两个国家/区域。动词用法"border on" = 在分界线附近 → 抽象为"近乎/接近于（某种状态）"。<br>
+        <span class="eg">"They crossed the border into Mexico." 他们越过边境进入墨西哥。<br>"What he said borders on harassment." 他说的话近乎骚扰。</span>
+      </div>
+      <div class="white-box"><strong>理解关键</strong>：BORDER 的核心是"<strong>分隔线</strong>"。从物理的国界/省界 → 动词"border on"= 与...接壤 → 抽象为"接近于（某种极端状态）"像站在边界线上一样。border control/border dispute 都是围绕"边界"这个核心。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: BORDER vs BOUNDARY vs FRONTIER vs EDGE -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="borderBg2" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#fef2f2"/>
+          <stop offset="100%" stop-color="#fafaf8"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="400" fill="url(#borderBg2)" rx="8"/>
+      <text x="380" y="45" text-anchor="middle" fill="#333" font-size="18" font-weight="700" font-family="sans-serif">BORDER vs BOUNDARY vs FRONTIER vs EDGE</text>
+      <line x1="152" y1="58" x2="152" y2="340" stroke="#e0d8c8" stroke-width="1" stroke-dasharray="6,4"/>
+      <line x1="304" y1="58" x2="304" y2="340" stroke="#e0d8c8" stroke-width="1" stroke-dasharray="6,4"/>
+      <line x1="456" y1="58" x2="456" y2="340" stroke="#e0d8c8" stroke-width="1" stroke-dasharray="6,4"/>
+      <line x1="608" y1="58" x2="608" y2="340" stroke="#e0d8c8" stroke-width="1" stroke-dasharray="6,4"/>
+
+      <!-- BORDER -->
+      <text x="76" y="80" text-anchor="middle" fill="#e63946" font-size="14" font-weight="700" font-family="sans-serif">BORDER</text>
+      <rect x="30" y="100" width="92" height="120" fill="#f5e6d0" rx="6"/>
+      <rect x="122" y="100" width="92" height="120" fill="#d0e8f5" rx="6"/>
+      <line x1="122" y1="100" x2="122" y2="220" stroke="#e63946" stroke-width="4" stroke-dasharray="6,3"/>
+      <text x="76" y="305" text-anchor="middle" fill="#444" font-size="11.5" font-family="sans-serif">政治/地理分界线</text>
+      <text x="76" y="323" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">国界 / 省界</text>
+
+      <!-- BOUNDARY -->
+      <text x="228" y="80" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="700" font-family="sans-serif">BOUNDARY</text>
+      <circle cx="228" cy="160" r="50" fill="none" stroke="#e67e22" stroke-width="3" stroke-dasharray="6,4"/>
+      <circle cx="228" cy="160" r="8" fill="#f5e6d0"/>
+      <text x="228" y="305" text-anchor="middle" fill="#444" font-size="11.5" font-family="sans-serif">抽象的界限/范围</text>
+      <text x="228" y="323" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">个人/心理/科学边界</text>
+
+      <!-- FRONTIER -->
+      <text x="380" y="80" text-anchor="middle" fill="#8e44ad" font-size="14" font-weight="700" font-family="sans-serif">FRONTIER</text>
+      <!-- 荒野 -->
+      <rect x="330" y="100" width="100" height="120" fill="#f0f0d0" rx="6"/>
+      <!-- 帐篷 -->
+      <polygon points="350,180 370,150 390,180" fill="#8e44ad"/>
+      <text x="380" y="250" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">开拓中的边疆</text>
+      <text x="380" y="305" text-anchor="middle" fill="#444" font-size="11.5" font-family="sans-serif">开拓性的前沿领域</text>
+      <text x="380" y="323" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">西部边疆 / 科技前沿</text>
+
+      <!-- EDGE -->
+      <text x="532" y="80" text-anchor="middle" fill="#2c3e50" font-size="14" font-weight="700" font-family="sans-serif">EDGE</text>
+      <rect x="490" y="100" width="84" height="80" fill="#888"/>
+      <rect x="490" y="170" width="120" height="20" fill="#666"/>
+      <line x1="574" y1="100" x2="574" y2="170" stroke="#2c3e50" stroke-width="4"/>
+      <text x="532" y="305" text-anchor="middle" fill="#444" font-size="11.5" font-family="sans-serif">物体最外侧的线</text>
+      <text x="532" y="323" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">刀刃/悬崖/桌边</text>
+    </svg>
+    <div class="card-body">
+      <h3>BOUNDARY vs FRONTIER vs EDGE <span class="hl">对比</span></h3>
+      <div class="pos">四种"边界/边缘"的精确区别</div>
+      <div class="def">
+        <strong>BORDER</strong> 政治/地理分界线（最具体）；<strong>BOUNDARY</strong> 抽象界限（个人空间、科学边界）；<strong>FRONTIER</strong> 开拓中的前沿（边疆/未知领域）；<strong>EDGE</strong> 物体最外侧的线/刃（最物理）。<br>
+        <span class="eg">"The Rio Grande forms the border." 格兰德河构成了边界。<br>"Push the boundaries of science." 推动科学的边界。<br>"The frontier of space exploration." 太空探索的前沿。</span>
+      </div>
+      <div class="white-box"><strong>BOUNDARY vs BORDER</strong>：BORDER 更具体——通常指政治上划定的国界、省界。BOUNDARY 更抽象——个人界限（personal boundaries）、学科界限。FRONTIER 强调"未开发、待探索的领域"。EDGE 是最物理的"物体的边"。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 逻辑演化树 -->
+<div class="section-title"><span class="bar"></span><span>逻辑演化树</span></div>
+<div style="background:#fffdf7; border:1px solid #e8e0d0; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div style="font-size:16px; font-weight:700; margin-bottom:16px; color:#e63946;">BORDER 核心意象 → 抽象用法演化链</div>
+  <div style="display:flex; flex-wrap:wrap; align-items:flex-start; gap:10px;">
+    <div style="background:#fef2f2; border:1px solid #f0d0d0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; max-width:140px;">
+      ① 国界/分界线<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">两个国家/区域的分隔线</span>
+    </div>
+    <div style="font-size:18px; color:#e63946; font-weight:700; line-height:40px;">→</div>
+    <div style="background:#fef2f2; border:1px solid #f0d0d0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; max-width:140px;">
+      ② border on<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">"与...接壤"→"近乎/接近于"</span>
+    </div>
+    <div style="font-size:18px; color:#e63946; font-weight:700; line-height:40px;">→</div>
+    <div style="background:#fef2f2; border:1px solid #f0d0d0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; max-width:140px;">
+      ③ cross the border<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">跨越界限→超出常规范围</span>
+    </div>
+    <div style="font-size:18px; color:#e63946; font-weight:700; line-height:40px;">→</div>
+    <div style="background:#fef2f2; border:1px solid #f0d0d0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; max-width:140px;">
+      ④ border control<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">边界管制→对边界的管控</span>
+    </div>
+    <div style="font-size:18px; color:#e63946; font-weight:700; line-height:40px;">→</div>
+    <div style="background:#fef2f2; border:1px solid #f0d0d0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; max-width:140px;">
+      ⑤ border dispute<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">边界争议→关于界限的争论</span>
+    </div>
+  </div>
+  <div class="white-box" style="margin-top:16px;"><strong>核心逻辑</strong>：BORDER = "分隔线"。物理上分隔两个国家/区域。动词"border" = "与...接壤"→ 抽象为"接近于某种极端状态"（border on ridiculous = 站在"荒谬"的边界线上）。所有用法都源于"<strong>分隔两个区域的线</strong>"这个核心画面。</div>
+</div>
+
+<!-- 易混对比区 -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="190" y="40" text-anchor="middle" fill="#e63946" font-size="16" font-weight="700" font-family="sans-serif">cross the border</text>
+      <text x="570" y="40" text-anchor="middle" fill="#e63946" font-size="16" font-weight="700" font-family="sans-serif">over the border</text>
+      <!-- 左侧：cross the border -->
+      <rect x="100" y="80" width="80" height="100" fill="#f5e6d0" rx="6"/>
+      <rect x="180" y="80" width="80" height="100" fill="#d0e8f5" rx="6"/>
+      <line x1="180" y1="80" x2="180" y2="180" stroke="#e63946" stroke-width="3" stroke-dasharray="6,3"/>
+      <!-- 人跨过 -->
+      <circle cx="140" cy="120" r="12" fill="#f5e6d0">
+        <animate attributeName="cx" values="140;190;140" dur="4s" repeatCount="indefinite"/>
+      </circle>
+      <text x="140" y="230" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">"cross the border"</text>
+      <text x="140" y="250" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">穿越国界（物理）</text>
+      <text x="140" y="270" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">也可抽象：超出常规</text>
+
+      <!-- 右侧：over the border -->
+      <rect x="480" y="80" width="80" height="100" fill="#f5e6d0" rx="6"/>
+      <rect x="560" y="80" width="80" height="100" fill="#d0e8f5" rx="6"/>
+      <line x1="560" y1="80" x2="560" y2="180" stroke="#e63946" stroke-width="3" stroke-dasharray="6,3"/>
+      <!-- 鸟飞过 -->
+      <path d="M540,70 Q545,65 550,70" fill="none" stroke="#333" stroke-width="2">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 100,0; 0,0"
+          dur="4s" repeatCount="indefinite"/>
+      </path>
+      <text x="570" y="230" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">"over the border"</text>
+      <text x="570" y="250" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">跨越边界过去（强调位置）</text>
+      <text x="570" y="270" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">穿过去到另一边</text>
+    </svg>
+    <div class="label">
+      <div class="p">cross vs over the border</div>
+      <div class="desc">穿越边界 vs 跨越到边界另一边</div>
+    </div>
+    <div style="padding:0 16px 18px;">
+      <div class="white-box" style="margin-top:0;"><strong>cross the border</strong> = 强调"穿越"这个动作本身。"over the border" = 强调"到边界的另一侧"的位置状态。cross = 动词动作，over = 介词位置。</div>
+    </div>
+  </div>
+
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="190" y="40" text-anchor="middle" fill="#e63946" font-size="16" font-weight="700" font-family="sans-serif">border on</text>
+      <text x="570" y="40" text-anchor="middle" fill="#e63946" font-size="16" font-weight="700" font-family="sans-serif">border dispute</text>
+      <!-- 左侧：border on -->
+      <!-- 渐变条 -->
+      <rect x="80" y="100" width="220" height="30" fill="url(#gradBo)" rx="6"/>
+      <defs>
+        <linearGradient id="gradBo" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#f5e6d0"/>
+          <stop offset="60%" stop-color="#f5e6d0"/>
+          <stop offset="80%" stop-color="#f0c0c0"/>
+          <stop offset="100%" stop-color="#e63946"/>
+        </linearGradient>
+      </defs>
+      <text x="100" y="120" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">正常</text>
+      <text x="280" y="120" text-anchor="middle" fill="#e63946" font-size="11" font-family="sans-serif">极端</text>
+      <!-- 箭头 -->
+      <path d="M190,150 L190,170" stroke="#e63946" stroke-width="2" marker-end="url(#arrowR)">
+        <animate attributeName="d" values="M190,150 L190,170;M190,150 L260,170;M190,150 L190,170" dur="3s" repeatCount="indefinite"/>
+      </path>
+      <text x="190" y="230" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">"border on the ridiculous"</text>
+      <text x="190" y="250" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">近乎荒谬——站在"荒谬"的边缘</text>
+
+      <!-- 右侧：border dispute -->
+      <!-- 两个人争论 -->
+      <rect x="480" y="90" width="80" height="80" fill="#f5e6d0" rx="6"/>
+      <rect x="580" y="90" width="80" height="80" fill="#d0e8f5" rx="6"/>
+      <line x1="560" y1="90" x2="560" y2="170" stroke="#e63946" stroke-width="4" stroke-dasharray="6,3"/>
+      <!-- 人物1 -->
+      <circle cx="500" cy="130" r="14" fill="#f5e6d0"/>
+      <path d="M493,127 L506,127" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- 人物2 -->
+      <circle cx="640" cy="130" r="14" fill="#d0e8f5"/>
+      <path d="M633,127 L646,127" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- 撞火符号 -->
+      <text x="560" y="125" text-anchor="middle" fill="#e63946" font-size="20" font-weight="700" font-family="sans-serif">⚡</text>
+      <text x="570" y="230" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">"border dispute"</text>
+      <text x="570" y="250" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">边界争议——两国关于边界的争论</text>
+    </svg>
+    <div class="label">
+      <div class="p">border on vs border dispute</div>
+      <div class="desc">动词"近乎" vs 名词"边界争议"</div>
+    </div>
+    <div style="padding:0 16px 18px;">
+      <div class="white-box" style="margin-top:0;"><strong>border on</strong> = 从"与...接壤"→ "近乎（某种极端状态）"。"border dispute" = 关于边界的争议——两个国家对分界线位置有分歧。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 常见搭配区 -->
+<div class="section-title"><span class="bar"></span><span>常见搭配 / 用法</span></div>
+
+<div class="usage-section">
+  <h4>地理/政治边界类</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>border</strong> between two countries</span>
+      <span class="usage-cn">两国之间的边界 &nbsp;|&nbsp; 最常见地理用法</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">cross the <strong>border</strong></span>
+      <span class="usage-cn">穿越国界 &nbsp;|&nbsp; 越过边界线到另一边</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>border</strong> control</span>
+      <span class="usage-cn">边境管制/边防检查 &nbsp;|&nbsp; 对出入境的管理</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>border</strong> dispute</span>
+      <span class="usage-cn">边界争议 &nbsp;|&nbsp; 两国关于边界的争端</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>抽象/动词用法</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>border</strong> on sth</span>
+      <span class="usage-cn">近乎/接近于 &nbsp;|&nbsp; 站在某种极端状态的边界上</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">over the <strong>border</strong></span>
+      <span class="usage-cn">跨越边界/到另一边 &nbsp;|&nbsp; 强调位置变化</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">within <strong>border</strong>s</span>
+      <span class="usage-cn">在边界之内 &nbsp;|&nbsp; 在某个范围内</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">across the <strong>border</strong></span>
+      <span class="usage-cn">在边界另一边 &nbsp;|&nbsp; 强调对面的位置</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>习语/比喻用法</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en">push the <strong>border</strong>s</span>
+      <span class="usage-cn">突破边界 &nbsp;|&nbsp; 挑战常规/极限</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>border</strong>line case</span>
+      <span class="usage-cn">临界案例 &nbsp;|&nbsp; 处于两种分类边界的情况</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>border</strong>line personality</span>
+      <span class="usage-cn">边缘型人格 &nbsp;|&nbsp; 处于"正常"边界的人格障碍</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">know no <strong>border</strong>s</span>
+      <span class="usage-cn">没有边界 &nbsp;|&nbsp; 不受限制/跨越国界</span>
+    </div>
+  </div>
+</div>
+
+<div class="white-box"><strong>BORDER 的深层逻辑</strong>：国界是最典型的"分界线"。物理上分隔国家→抽象上分隔"正常"和"极端"（border on ridiculous）。border control 是对边界的管控，border dispute 是对边界位置的争议。borderline 作为形容词表示"临界状态的"——正好在分类的边界线上。</div>
+
+<!-- 反义/相似 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card red-bg">
+      <h5 style="color:#e63946;">近义辨析（边界类）</h5>
+      <p><strong>BORDER</strong> — 政治/地理分界线 <small>最具体</small></p>
+      <p><strong>BOUNDARY</strong> — 抽象界限 <small>个人/科学边界</small></p>
+      <p><strong>FRONTIER</strong> — 开拓前沿 <small>边疆/未知领域</small></p>
+      <p><strong>EDGE</strong> — 物体最外侧 <small>最物理</small></p>
+    </div>
+    <div class="info-card orange-bg">
+      <h5 style="color:#e67e22;">反义/对比</h5>
+      <p><strong>INTERIOR</strong> — 内部 <small>border 包围的内部</small></p>
+      <p><strong>CENTER</strong> — 中心 <small>远离边界的地方</small></p>
+      <p><strong>HEARTLAND</strong> — 腹地 <small>远离国界的核心区域</small></p>
+      <p><strong>OPEN / UNBOUNDED</strong> — 无边界 <small>没有界限</small></p>
+    </div>
+    <div class="info-card green-bg">
+      <h5 style="color:#38a169;">特殊用法</h5>
+      <p><strong>borderline</strong> — 临界状态 <small>正处在分类边缘</small></p>
+      <p><strong>cross-border</strong> — 跨境的 <small>cross-border trade</small></p>
+      <p><strong>borderlands</strong> — 边境地带 <small>边界周围的区域</small></p>
+      <p><strong>open borders</strong> — 开放边境 <small>不设边防</small></p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

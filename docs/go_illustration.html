@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GO 空间意象图解</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f0;
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+    color: #1a1a1a;
+  }
+  .container {
+    max-width: 960px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px 56px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .section-title .bar {
+    display: inline-block;
+    width: 4px; height: 18px;
+    background: #e63946;
+    margin-right: 12px;
+    vertical-align: middle;
+    border-radius: 2px;
+  }
+  .section-title span { vertical-align: middle; }
+
+  /* 核心图 */
+  .core-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 44px;
+  }
+  .core-card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 18px 16px 22px;
+    text-align: center;
+  }
+  .core-card canvas {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    aspect-ratio: 380 / 220;
+    display: block;
+    margin: 0 auto 12px;
+    border-radius: 6px;
+    background: #fafaf8;
+  }
+  .core-card .card-label { font-size: 18px; font-weight: 700; color: #e63946; }
+  .core-card .card-desc { font-size: 14px; color: #555; line-height: 1.5; margin-top: 4px; }
+
+  /* 四大类卡片（2+2布局） */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .card canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 380 / 190;
+    display: block;
+    background: #fafaf8;
+  }
+  .card-body { padding: 16px 18px 20px; }
+  .card-body h3 { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+  .card-body h3 .hl { color: #e63946; }
+  .card-body .ref { font-size: 13px; color: #888; margin-bottom: 6px; }
+  .card-body .def { font-size: 13.5px; color: #444; line-height: 1.6; }
+  .card-body .def .eg { color: #777; font-style: italic; display: block; margin-top: 2px; }
+  .card-body .def .key { color: #e63946; font-weight: 600; }
+
+  /* 用法列表 */
+  .usage-category {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .cat-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #e63946;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e8e8e4;
+  }
+  .usage-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 32px;
+  }
+  .usage-item { padding: 6px 0; border-bottom: 1px dashed #eee; }
+  .usage-item:last-child,
+  .usage-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .usage-en { font-size: 14px; font-weight: 600; color: #333; }
+  .usage-en strong { color: #e63946; }
+  .usage-cn { font-size: 13px; color: #777; margin-top: 1px; }
+
+  .spatial-note {
+    margin-top: 36px;
+    padding: 16px 20px;
+    background: #fde8e8;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .spatial-note strong { color: #e63946; }
+
+  @media (max-width: 720px) {
+    .container { padding: 28px 16px 36px; }
+    .core-row { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+    .usage-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>GO 的空间意象</h1>
+  <p class="subtitle">核心逻辑：从某处向目标移动 → 最基础的"位移"动词</p>
+
+  <!-- 核心图 -->
+  <div class="section-title"><span class="bar"></span><span>核心空间逻辑</span></div>
+  <div class="core-row">
+    <div class="core-card">
+      <canvas id="coreGo" width="380" height="220"></canvas>
+      <div class="card-label">GO</div>
+      <div class="card-desc">
+        从起点向目的地移动。<br>
+        核心 = <strong>位移</strong>（强调"离开现在位置，前往别处"）
+      </div>
+    </div>
+    <div class="core-card">
+      <canvas id="coreGoParts" width="380" height="220"></canvas>
+      <div class="card-label">GO + 小品词</div>
+      <div class="card-desc">
+        不同的方向小品词 = 不同的移动轨迹。<br>
+        核心 = <strong>方向</strong>（小品词决定了位移的具体路径）
+      </div>
+    </div>
+  </div>
+
+  <!-- 四大类 -->
+  <div class="section-title"><span class="bar"></span><span>四大自然类别</span></div>
+  <div class="cards">
+
+    <div class="card">
+      <canvas id="cardDirection" width="380" height="190"></canvas>
+      <div class="card-body">
+        <h3>基本方向 <span class="hl">go + 方向小品词</span></h3>
+        <div class="ref">go in / go out / go up / go down / go through / go across</div>
+        <div class="def">
+          用 GO 来表达"往某个方向移动"，方向由小品词决定。<span class="key">空间位移</span>。
+          <span class="eg">"Go in." / "Go out." / "Go up the stairs."</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardToFrom" width="380" height="190"></canvas>
+      <div class="card-body">
+        <h3>前往 / 离开 <span class="hl">go to / go from</span></h3>
+        <div class="ref">go to work / go home / go to bed / go away / go off</div>
+        <div class="def">
+          GO 的核心机制：<span class="key">从A到B</span>。to 标记目的地，from/away 标记离开。
+          <span class="eg">"I'm going to the store." / "Go away!"</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardActivity" width="380" height="190"></canvas>
+      <div class="card-body">
+        <h3>去做某事 <span class="hl">go + V-ing / go on</span></h3>
+        <div class="ref">go shopping / go swimming / go on a trip / go on vacation</div>
+        <div class="def">
+          GO + 动名词 = "去做某活动"。从"不动"到"在做"的状态切换。<span class="key">活动位移</span>。
+          <span class="eg">"Let's go swimming." / "go on a date"</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardAbstract" width="380" height="190"></canvas>
+      <div class="card-body">
+        <h3>抽象推进 <span class="hl">go on / go ahead / go by</span></h3>
+        <div class="ref">go on / go ahead / go by / go wrong / go well</div>
+        <div class="def">
+          从空间位移延伸到<span class="key">时间 / 状态 / 事件的推进</span>。事情"向前走"就叫 go。
+          <span class="eg">"Go ahead." / "How's it going?" / "What's going on?"</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 高频用法 -->
+  <div class="section-title"><span class="bar"></span><span>GO 高频用法</span></div>
+
+  <div class="usage-category">
+    <div class="cat-label">① 基本位移 — go + 小品词</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">Please <strong>go in</strong>.</span>
+        <span class="usage-cn">请进去。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Don't <strong>go out</strong> in the rain.</span>
+        <span class="usage-cn">别冒雨出去。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Go up</strong> the stairs.</span>
+        <span class="usage-cn">上楼。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Go down</strong> the street.</span>
+        <span class="usage-cn">沿着街走下去。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Go through</strong> the tunnel.</span>
+        <span class="usage-cn">穿过隧道。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Go across</strong> the bridge.</span>
+        <span class="usage-cn">走过那座桥。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The road <strong>goes</strong> around the mountain.</span>
+        <span class="usage-cn">这条路绕着山走。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He <strong>went</strong> past me without saying hi.</span>
+        <span class="usage-cn">他从我旁边走过去没打招呼。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">② go to / go away / go off — 目的地 vs 离开（超高頻日常）</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">I <strong>go to</strong> work at 8.</span>
+        <span class="usage-cn">我8点上班（去公司）。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Go to</strong> bed!</span>
+        <span class="usage-cn">去睡觉！（对孩子说）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>went</strong> to the doctor.</span>
+        <span class="usage-cn">她去看医生了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Go away</strong>!</span>
+        <span class="usage-cn">走开！</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The alarm <strong>went off</strong>.</span>
+        <span class="usage-cn">闹钟响了 / 警报响了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He <strong>went off</strong> to find a taxi.</span>
+        <span class="usage-cn">他走开去找出租车了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Go home</strong>.</span>
+        <span class="usage-cn">回家。（注意！home前没有to）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let's <strong>go</strong> that way.</span>
+        <span class="usage-cn">咱们走那边。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">③ go + V-ing / go on —— 去做某活动（超高頻口语）</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">Let's <strong>go swimming</strong>.</span>
+        <span class="usage-cn">咱们去游泳吧。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I want to <strong>go shopping</strong>.</span>
+        <span class="usage-cn">我想去逛街。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">They <strong>go camping</strong> every summer.</span>
+        <span class="usage-cn">他们每年夏天去露营。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>went</strong> on a trip to Japan.</span>
+        <span class="usage-cn">她去日本旅行了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">We're <strong>going on</strong> vacation.</span>
+        <span class="usage-cn">我们要去度假了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Go on</strong> a date.</span>
+        <span class="usage-cn">去约会。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He <strong>went</strong> on a diet.</span>
+        <span class="usage-cn">他开始节食了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">They <strong>went on</strong> a tour.</span>
+        <span class="usage-cn">他们去旅游了。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">④ 抽象推进 —— go on / go ahead / go by / how it's going（超高頻！）</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">How's it <strong>going</strong>?</span>
+        <span class="usage-cn">怎么样？（日常打招呼超级高频！）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Go ahead</strong>.</span>
+        <span class="usage-cn">请便 / 去吧 / 继续说。（超级高频！让对方继续说/做）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">What's <strong>going on</strong>?</span>
+        <span class="usage-cn">发生什么事了？（超级高频疑问句）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Time <strong>goes by</strong> so fast.</span>
+        <span class="usage-cn">时间过得真快。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Everything <strong>went</strong> well.</span>
+        <span class="usage-cn">一切顺利。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Something <strong>went</strong> wrong.</span>
+        <span class="usage-cn">出问题了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The meeting didn't <strong>go</strong> as planned.</span>
+        <span class="usage-cn">会议没有按计划进行。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I'll <strong>go</strong> first.</span>
+        <span class="usage-cn">我先来。（物理/顺序上"先走"）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">⑤ 固定短语 —— 必须要会的 GO 短语</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Go for it</strong>!</span>
+        <span class="usage-cn">去吧！/ 加油上！（超高頻鼓励话）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Go with</strong> the flow.</span>
+        <span class="usage-cn">随大流 / 顺其自然。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">It <strong>goes without saying</strong>.</span>
+        <span class="usage-cn">这不用说也知道。（不言而喻）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">There you <strong>go</strong>.</span>
+        <span class="usage-cn">这就对了 / 给你。（超级高频口语短句）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Here we <strong>go</strong> again.</span>
+        <span class="usage-cn">又来了 / 老样子。（又要重复了，无奈但高频）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Go over</strong> the report.</span>
+        <span class="usage-cn">仔细检查/复习报告。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Go through</strong> the list.</span>
+        <span class="usage-cn">逐一过一遍清单。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">It doesn't <strong>go with</strong> your outfit.</span>
+        <span class="usage-cn">它和你的衣服不搭。（go with = 搭配）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="spatial-note">
+    <strong>GO 的统一逻辑</strong>：GO 是英语里最基础的位移动词 —— <strong>"从A到B"</strong>。无论是物理上的去学校（go to school）、做活动（go swimming）、事情推进（how's it going），还是时间流逝（time goes by），本质都是<strong>从当前状态到另一个状态</strong>的移动。小品词决定了：往哪个方向去、到了没有、怎么去的。<br>
+    GO 的过去式 = <strong>went</strong>（不规则）；过去分词 = <strong>gone</strong>（不在了）/ <strong>been</strong>（去过回来了）。
+  </div>
+
+</div>
+
+<script>
+(function() {
+function drawFrame(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ===== 核心图1：GO 基本位移 =====
+const c1 = document.getElementById('coreGo');
+const ctx1 = c1.getContext('2d');
+drawFrame(ctx1,380,220);
+
+// ground
+ctx1.fillStyle = '#ddd'; ctx1.fillRect(0,170,380,3);
+
+// start point
+ctx1.fillStyle = '#e63946';
+ctx1.beginPath(); ctx1.arc(80,155,14,0,Math.PI*2); ctx1.fill();
+ctx1.fillRect(77,169,6,18);
+ctx1.fillStyle = '#fff'; ctx1.font = '11px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('你',80,159);
+
+// destination
+ctx1.fillStyle = '#666';
+ctx1.fillRect(280,115,40,50);
+ctx1.fillStyle = '#4a90d9';
+ctx1.fillRect(286,121,8,8);
+ctx1.fillRect(298,121,8,8);
+ctx1.fillRect(286,131,8,8);
+ctx1.fillRect(298,131,8,8);
+ctx1.fillStyle = '#888'; ctx1.font = '11px sans-serif';
+ctx1.fillText('目的地',300,108);
+
+// path arrow
+ctx1.strokeStyle = '#e63946'; ctx1.lineWidth = 2.5;
+ctx1.beginPath(); ctx1.moveTo(98,155); ctx1.lineTo(265,155); ctx1.stroke();
+ctx1.fillStyle = '#e63946';
+ctx1.beginPath(); ctx1.moveTo(261,151); ctx1.lineTo(271,155); ctx1.lineTo(261,159); ctx1.closePath(); ctx1.fill();
+
+// labels
+ctx1.fillStyle = '#e63946'; ctx1.font = 'bold 14px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('GO → 从A到B',190,35);
+ctx1.fillStyle = '#999'; ctx1.font = '11px sans-serif';
+ctx1.fillText('"I am going to the store."',190,55);
+ctx1.fillStyle = '#888'; ctx1.font = '11px sans-serif';
+ctx1.fillText('起点',80,200);
+ctx1.fillText('→ 位移的方向',190,200);
+
+// ===== 核心图2：GO + 小品词 =====
+const c2 = document.getElementById('coreGoParts');
+const ctx2 = c2.getContext('2d');
+drawFrame(ctx2,380,220);
+
+// center dot = "你在这"
+ctx2.fillStyle = '#e63946';
+ctx2.beginPath(); ctx2.arc(190,110,10,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#fff'; ctx2.font = '9px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('你',190,113);
+
+// go in → into a box
+ctx2.strokeStyle = '#e63946'; ctx2.lineWidth = 1.5;
+ctx2.strokeRect(230,55,30,30);
+ctx2.fillStyle = '#e63946'; ctx2.font = '10px sans-serif';
+ctx2.fillText('go in →',212,75);
+
+// go out → out of box
+ctx2.strokeStyle = '#e63946'; ctx2.lineWidth = 1.5;
+ctx2.strokeRect(60,140,30,30);
+ctx2.fillStyle = '#e63946'; ctx2.font = '10px sans-serif';
+ctx2.fillText('← go out',100,175);
+ctx2.beginPath(); ctx2.moveTo(155,155); ctx2.lineTo(96,155); ctx2.stroke();
+
+// go up
+ctx2.strokeStyle = '#e63946'; ctx2.lineWidth = 1.5;
+ctx2.beginPath(); ctx2.moveTo(190,100); ctx2.lineTo(190,35); ctx2.stroke();
+ctx2.fillStyle = '#e63946';
+ctx2.beginPath(); ctx2.moveTo(186,39); ctx2.lineTo(190,29); ctx2.lineTo(194,39); ctx2.closePath(); ctx2.fill();
+ctx2.fillStyle = '#e63946'; ctx2.font = '10px sans-serif';
+ctx2.fillText('go up ↑',205,55);
+
+// go down
+ctx2.strokeStyle = '#e63946'; ctx2.lineWidth = 1.5;
+ctx2.beginPath(); ctx2.moveTo(190,120); ctx2.lineTo(190,195); ctx2.stroke();
+ctx2.fillStyle = '#e63946';
+ctx2.beginPath(); ctx2.moveTo(186,191); ctx2.lineTo(190,201); ctx2.lineTo(194,191); ctx2.closePath(); ctx2.fill();
+ctx2.fillStyle = '#e63946'; ctx2.font = '10px sans-serif';
+ctx2.fillText('go down ↓',175,210);
+
+// go around
+ctx2.strokeStyle = '#e63946'; ctx2.lineWidth = 1.5; ctx2.setLineDash([3,3]);
+ctx2.beginPath(); ctx2.arc(190,110,40,0,Math.PI*2); ctx2.stroke(); ctx2.setLineDash([]);
+ctx2.fillStyle = '#e63946'; ctx2.font = '10px sans-serif';
+ctx2.fillText('↺ go around',115,80);
+
+// go through
+ctx2.strokeStyle = '#2b6cb0'; ctx2.lineWidth = 2; ctx2.setLineDash([4,3]);
+ctx2.beginPath(); ctx2.moveTo(250,130); ctx2.lineTo(340,130); ctx2.stroke(); ctx2.setLineDash([]);
+ctx2.fillStyle = '#2b6cb0'; ctx2.font = '10px sans-serif';
+ctx2.fillText('go through → （穿过）',295,125);
+
+// go across
+ctx2.strokeStyle = '#38a169'; ctx2.lineWidth = 2;
+ctx2.beginPath(); ctx2.moveTo(20,90); ctx2.lineTo(100,90); ctx2.stroke();
+ctx2.fillStyle = '#38a169'; ctx2.font = '10px sans-serif';
+ctx2.fillText('← go across （横穿）',60,85);
+
+// ===== 四大类 =====
+
+// 1. 基本方向
+const e1 = document.getElementById('cardDirection');
+const ctx3 = e1.getContext('2d');
+drawFrame(ctx3,380,190);
+
+// person
+ctx3.fillStyle = '#e63946';
+ctx3.beginPath(); ctx3.arc(70,95,12,0,Math.PI*2); ctx3.fill();
+ctx3.fillStyle = '#fff'; ctx3.font = '10px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('人',70,99);
+
+// multiple direction arrows radiating out
+const dirs = [
+  {angle: -1.2, label: 'go up', x: 100, y: 55},
+  {angle: -0.3, label: 'go out', x: 170, y: 70},
+  {angle: 0.8, label: 'go down', x: 100, y: 150},
+  {angle: 2.2, label: 'go back', x: 15, y: 60},
+  {angle: 1.6, label: 'go in', x:155, y: 120},
+];
+ctx3.strokeStyle = '#e63946'; ctx3.lineWidth = 1.5;
+dirs.forEach(function(d) {
+  var ex = 70 + Math.cos(d.angle) * 50;
+  var ey = 95 + Math.sin(d.angle) * 50;
+  ctx3.beginPath(); ctx3.moveTo(82,95); ctx3.lineTo(ex,ey); ctx3.stroke();
+  ctx3.fillStyle = '#e63946'; ctx3.font = '10px sans-serif';
+  ctx3.fillText(d.label, ex-5, ey-5);
+});
+
+ctx3.fillStyle = '#888'; ctx3.font = '10px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('同一个"人"，不同的小品词 = 不同的方向',190,180);
+
+// 2. go to / go away
+const e2 = document.getElementById('cardToFrom');
+const ctx4 = e2.getContext('2d');
+drawFrame(ctx4,380,190);
+
+// person
+ctx4.fillStyle = '#e63946';
+ctx4.beginPath(); ctx4.arc(190,85,12,0,Math.PI*2); ctx4.fill();
+ctx4.fillStyle = '#fff'; ctx4.font = '10px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('人',190,89);
+
+// to → right building
+ctx4.fillStyle = '#666';
+ctx4.fillRect(300,50,30,40);
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif';
+ctx4.fillText('学校',315,75);
+ctx4.strokeStyle = '#e63946'; ctx4.lineWidth = 2;
+ctx4.beginPath(); ctx4.moveTo(205,85); ctx4.lineTo(290,85); ctx4.stroke();
+ctx4.fillStyle = '#e63946';
+ctx4.beginPath(); ctx4.moveTo(286,81); ctx4.lineTo(296,85); ctx4.lineTo(286,89); ctx4.closePath(); ctx4.fill();
+ctx4.fillStyle = '#e63946'; ctx4.font = '11px sans-serif';
+ctx4.fillText('go to → 去目的地',250,75);
+
+// away ← from home
+ctx4.fillStyle = '#4a90d9';
+ctx4.fillRect(20,50,30,40);
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif';
+ctx4.fillText('家',35,75);
+ctx4.strokeStyle = '#e63946'; ctx4.lineWidth = 2;
+ctx4.beginPath(); ctx4.moveTo(175,85); ctx4.lineTo(55,85); ctx4.stroke();
+ctx4.fillStyle = '#e63946';
+ctx4.beginPath(); ctx4.moveTo(59,81); ctx4.lineTo(49,85); ctx4.lineTo(59,89); ctx4.closePath(); ctx4.fill();
+ctx4.fillStyle = '#e63946'; ctx4.font = '11px sans-serif';
+ctx4.fillText('← go away / go from',120,75);
+
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('GO 的核心机制：从A点到B点',190,170);
+
+// 3. go + V-ing 和 go on
+const e3 = document.getElementById('cardActivity');
+const ctx5 = e3.getContext('2d');
+drawFrame(ctx5,380,190);
+
+// person before (at rest)
+ctx5.fillStyle = '#e63946';
+ctx5.beginPath(); ctx5.arc(60,95,12,0,Math.PI*2); ctx5.fill();
+ctx5.fillStyle = '#fff'; ctx5.font = '9px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('人',60,99);
+ctx5.fillStyle = '#888'; ctx5.font = '10px sans-serif';
+ctx5.fillText('在家 (静止)',60,130);
+
+// arrow
+ctx5.strokeStyle = '#e63946'; ctx5.lineWidth = 2.5;
+ctx5.beginPath(); ctx5.moveTo(77,95); ctx5.lineTo(150,95); ctx5.stroke();
+ctx5.fillStyle = '#e63946';
+ctx5.beginPath(); ctx5.moveTo(146,91); ctx5.lineTo(156,95); ctx5.lineTo(146,99); ctx5.closePath(); ctx5.fill();
+ctx5.fillStyle = '#e63946'; ctx5.font = '13px sans-serif';
+ctx5.fillText('go →',113,85);
+
+// activity icons
+ctx5.fillStyle = '#38a169';
+ctx5.font = '24px sans-serif';
+ctx5.fillText('🏊',175,90);
+ctx5.fillText('🛒',215,90);
+ctx5.fillText('🏕',255,90);
+ctx5.fillText('✈',295,90);
+
+ctx5.fillStyle = '#888'; ctx5.font = '10px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('go swimming    go shopping    go camping    go on a trip',235,130);
+
+ctx5.fillStyle = '#888'; ctx5.font = '10px sans-serif';
+ctx5.fillText('从"在家"→ "去做某事" = 活动的位移',190,170);
+
+// 4. 抽象
+const e4 = document.getElementById('cardAbstract');
+const ctx6 = e4.getContext('2d');
+drawFrame(ctx6,380,190);
+
+// timeline from left to right
+ctx6.strokeStyle = '#ddd'; ctx6.lineWidth = 3;
+ctx6.beginPath(); ctx6.moveTo(20,95); ctx6.lineTo(360,95); ctx6.stroke();
+
+// events on timeline
+ctx6.fillStyle = '#e63946';
+ctx6.beginPath(); ctx6.arc(80,95,6,0,Math.PI*2); ctx6.fill();
+ctx6.fillStyle = '#333'; ctx6.font = '10px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('start',80,115);
+
+ctx6.fillStyle = '#e63946';
+ctx6.beginPath(); ctx6.arc(190,95,6,0,Math.PI*2); ctx6.fill();
+ctx6.fillStyle = '#333'; ctx6.font = '10px sans-serif';
+ctx6.fillText('now',190,115);
+
+ctx6.fillStyle = '#e63946';
+ctx6.beginPath(); ctx6.arc(300,95,6,0,Math.PI*2); ctx6.fill();
+ctx6.fillStyle = '#333'; ctx6.font = '10px sans-serif';
+ctx6.fillText('future',300,115);
+
+// arrow ahead
+ctx6.strokeStyle = '#e63946'; ctx6.lineWidth = 1.5;
+ctx6.beginPath(); ctx6.moveTo(306,95); ctx6.lineTo(330,95); ctx6.stroke();
+ctx6.fillStyle = '#e63946';
+ctx6.beginPath(); ctx6.moveTo(326,91); ctx6.lineTo(336,95); ctx6.lineTo(326,99); ctx6.closePath(); ctx6.fill();
+
+ctx6.fillStyle = '#e63946'; ctx6.font = '13px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('"Time goes by."',190,35);
+ctx6.fillStyle = '#e63946'; ctx6.font = '13px sans-serif';
+ctx6.fillText('"Go ahead." = 继续向前',190,55);
+ctx6.fillStyle = '#888'; ctx6.font = '10px sans-serif';
+ctx6.fillText('时间/事件的推进 = 抽象的"走"',190,165);
+
+})();
+</script>
+
+</body>
+</html>

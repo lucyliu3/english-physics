@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SERENE 图解</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#eaf5f0 0%,#dceee4 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#38a169,#2d7a55); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#38a169,#4ade80); border-radius:2px; flex-shrink:0; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#38a169; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+
+  .white-box { background:#fff; border:1px solid #c8ddd0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #c8ddd0; border-top:1px solid #c8ddd0; transform:rotate(45deg); }
+  .white-box strong { color:#38a169; }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#38a169; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+
+  .spectrum-wrap { background:linear-gradient(135deg,#f0faf5,#e0f0e8); border:1px solid #c8ddd0; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+
+  .green-bg { background:linear-gradient(135deg,#f0faf5,#e0f0e8); }
+  .blue-bg { background:linear-gradient(135deg,#f0f8ff,#e0edf5); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>SERENE</h1>
+<p class="subtitle">宁静的 / 安详的 — 从"serene lake"到"serene mind"</p>
+
+<!-- 核心意象对比 -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+  <!-- Card 1: SERENE 核心意象 - 宁静的湖 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="400">
+          <stop offset="0%" stop-color="#c8e6f0"/>
+          <stop offset="60%" stop-color="#e8f4f8"/>
+          <stop offset="100%" stop-color="#f0faf5"/>
+        </linearGradient>
+        <linearGradient id="lakeGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#7fb8d0"/>
+          <stop offset="100%" stop-color="#5a9ab5"/>
+        </linearGradient>
+        <filter id="glowSerene">
+          <feGaussianBlur stdDeviation="2" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#skyGrad)" rx="8"/>
+
+      <!-- 远山 -->
+      <path d="M0,200 Q100,140 200,180 Q300,120 420,170 Q520,110 620,160 Q700,130 760,160 L760,220 L0,220 Z" fill="#8fb8a8" opacity="0.4"/>
+      <path d="M0,210 Q150,160 280,190 Q400,140 520,180 Q620,150 760,180 L760,240 L0,240 Z" fill="#6a9a8a" opacity="0.3"/>
+
+      <!-- 湖面 -->
+      <rect x="0" y="220" width="760" height="180" fill="url(#lakeGrad)" rx="0"/>
+
+      <!-- 湖中倒影（远山倒影） -->
+      <path d="M0,260 Q100,280 200,270 Q300,290 420,275 Q520,295 620,280 Q700,290 760,280 L760,400 L0,400 Z" fill="#8fb8a8" opacity="0.15"/>
+
+      <!-- 水面波纹（微动画） -->
+      <g opacity="0.15">
+        <path d="M0,280 Q100,278 200,282 Q300,276 400,280 Q500,284 600,278 Q700,282 760,280" fill="none" stroke="#fff" stroke-width="1">
+          <animate attributeName="d" values="M0,280 Q100,278 200,282 Q300,276 400,280 Q500,284 600,278 Q700,282 760,280; M0,282 Q100,280 200,278 Q300,282 400,280 Q500,276 600,282 Q700,280 760,282; M0,280 Q100,278 200,282 Q300,276 400,280 Q500,284 600,278 Q700,282 760,280" dur="6s" repeatCount="indefinite"/>
+        </path>
+        <path d="M0,310 Q100,308 200,312 Q300,306 400,310 Q500,314 600,308 Q700,312 760,310" fill="none" stroke="#fff" stroke-width="1">
+          <animate attributeName="d" values="M0,310 Q100,308 200,312 Q300,306 400,310 Q500,314 600,308 Q700,312 760,310; M0,312 Q100,310 200,308 Q300,312 400,310 Q500,306 600,312 Q700,310 760,312; M0,310 Q100,308 200,312 Q300,306 400,310 Q500,314 600,308 Q700,312 760,310" dur="7s" repeatCount="indefinite"/>
+        </path>
+      </g>
+
+      <!-- 左侧松树 -->
+      <g transform="translate(80,170)">
+        <rect x="-3" y="0" width="6" height="50" fill="#5d4037"/>
+        <polygon points="0,-30 -25,10 25,10" fill="#388e3c" opacity="0.8"/>
+        <polygon points="0,-10 -20,20 20,20" fill="#43a047" opacity="0.8"/>
+      </g>
+      <g transform="translate(120,180)">
+        <rect x="-3" y="0" width="6" height="40" fill="#5d4037"/>
+        <polygon points="0,-20 -18,10 18,10" fill="#388e3c" opacity="0.7"/>
+        <polygon points="0,-5 -14,15 14,15" fill="#43a047" opacity="0.7"/>
+      </g>
+
+      <!-- 右侧松树 -->
+      <g transform="translate(620,170)">
+        <rect x="-3" y="0" width="6" height="50" fill="#5d4037"/>
+        <polygon points="0,-30 -25,10 25,10" fill="#388e3c" opacity="0.8"/>
+        <polygon points="0,-10 -20,20 20,20" fill="#43a047" opacity="0.8"/>
+      </g>
+      <g transform="translate(660,180)">
+        <rect x="-3" y="0" width="6" height="40" fill="#5d4037"/>
+        <polygon points="0,-20 -18,10 18,10" fill="#388e3c" opacity="0.7"/>
+        <polygon points="0,-5 -14,15 14,15" fill="#43a047" opacity="0.7"/>
+      </g>
+
+      <!-- 水中倒影 -->
+      <g opacity="0.2" filter="url(#glowSerene)">
+        <text x="380" y="350" text-anchor="middle" fill="#fff" font-size="24" font-weight="300" font-family="sans-serif">✦ ✦ ✦</text>
+      </g>
+
+      <!-- 标签 -->
+      <text x="380" y="60" text-anchor="middle" fill="#38a169" font-size="18" font-weight="700" font-family="sans-serif">a serene lake</text>
+      <text x="380" y="84" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">宁静的湖面 — 无风、无波、无扰</text>
+
+      <!-- 核心文字 -->
+      <text x="380" y="400" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif" transform="translate(0,-10)">核心意象：没有一丝波澜 — 绝对的平静</text>
+    </svg>
+    <div class="card-body">
+      <h3>SERENE <span class="hl">/səˈriːn/</span></h3>
+      <div class="pos">adjective · 宁静的 / 安详的</div>
+      <div class="def">
+        <strong>本义</strong> 湖面无风、毫无波澜的状态<br>
+        <strong>引申</strong> 人的神态（serene expression = 安详的表情）→ 心境（serene mind = 宁静的心境）
+        <span class="eg">"She had a serene smile on her face." 她脸上带着安详的微笑。</span>
+      </div>
+      <div class="white-box"><strong>💡 理解关键</strong>：serene 比 calm 更深一层。calm 是"不激动/不紧张"，serene 是"内心深处的绝对安宁"——像一面映照天空的湖水，没有任何涟漪。这也是为什么 serene 常用来描述面容、微笑、表情。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: serene mind / serene expression -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="faceBg" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fefdf8"/>
+          <stop offset="100%" stop-color="#f5f0e8"/>
+        </radialGradient>
+      </defs>
+      <rect width="760" height="400" fill="#fafaf8" rx="8"/>
+
+      <!-- 人物面部 - 安详的表情 -->
+      <circle cx="380" cy="180" r="100" fill="#f5e6d0"/>
+
+      <!-- 头发 -->
+      <path d="M285,160 Q285,60 380,55 Q475,60 475,160 Q470,130 450,110 Q430,90 380,88 Q330,90 310,110 Q290,130 285,160" fill="#5d4037"/>
+      <path d="M285,160 Q280,140 300,120 Q320,100 380,95 Q440,100 460,120 Q480,140 475,160" fill="#6d4c41" opacity="0.5"/>
+
+      <!-- 眼睛：安详地微闭 -->
+      <path d="M335,160 Q350,150 365,160" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+      <path d="M395,160 Q410,150 425,160" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+
+      <!-- 眉毛：温和舒展 -->
+      <path d="M330,140 Q347,132 365,138" fill="none" stroke="#666" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M395,138 Q413,132 430,140" fill="none" stroke="#666" stroke-width="1.8" stroke-linecap="round"/>
+
+      <!-- 嘴角：微微上扬的宁静微笑 -->
+      <path d="M355,215 Q380,228 405,215" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+
+      <!-- 脸部柔和的光晕 -->
+      <ellipse cx="380" cy="180" rx="110" ry="115" fill="none" stroke="#38a169" stroke-width="1" opacity="0.15">
+        <animate attributeName="opacity" values="0.15;0.25;0.15" dur="5s" repeatCount="indefinite"/>
+      </ellipse>
+
+      <!-- 散发出的宁静波动 -->
+      <g opacity="0.12">
+        <circle cx="380" cy="180" r="130" fill="none" stroke="#38a169" stroke-width="1.5">
+          <animate attributeName="r" values="130;150;130" dur="5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.12;0;0.12" dur="5s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="380" cy="180" r="150" fill="none" stroke="#38a169" stroke-width="1">
+          <animate attributeName="r" values="150;170;150" dur="5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.08;0;0.08" dur="5s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <!-- 标签 -->
+      <text x="380" y="320" text-anchor="middle" fill="#38a169" font-size="17" font-weight="700" font-family="sans-serif">serene expression / serene mind</text>
+      <text x="380" y="345" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">安详的表情 → 宁静的心境</text>
+      <text x="380" y="370" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">内心没有任何焦虑、烦躁、不安 — 像湖面一样平静</text>
+    </svg>
+    <div class="card-body">
+      <h3>SERENE <span class="hl">表情 / 心境</span></h3>
+      <div class="pos">adjective · 安详 / 宁静</div>
+      <div class="def">
+        <strong>本义</strong> 湖面无风 → 引申为人的神态<br>
+        <strong>引申</strong> Serene mountain → serene music → serene mind
+        <span class="eg">"Despite the chaos around her, she remained serene." 尽管周围一片混乱，她仍然保持宁静。</span>
+      </div>
+      <div class="white-box"><strong>💡 延展对比</strong>：serene 不仅可以形容人，也可以形容风景、音乐、氛围、甚至政治局势（a serene transition of power = 平稳的权力交接）。但核心都是"没有扰动/冲突"——跟湖面没有波澜是同一个图景。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 程度光谱：AGITATED → RESTLESS → CALM → SERENE → PEACEFUL -->
+<div class="section-title"><span class="bar"></span><span>程度光谱：从躁动到安宁</span></div>
+<div class="spectrum-wrap">
+  <svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sereneSpec" x1="0" y1="0" x2="760" y2="0">
+        <stop offset="0%" stop-color="#e63946"/>
+        <stop offset="25%" stop-color="#e67e22"/>
+        <stop offset="50%" stop-color="#7fb8d0"/>
+        <stop offset="75%" stop-color="#38a169"/>
+        <stop offset="100%" stop-color="#2d7a55"/>
+      </linearGradient>
+    </defs>
+    <rect width="760" height="380" fill="#fafaf8" rx="8"/>
+
+    <!-- 光谱条 -->
+    <rect x="40" y="200" width="680" height="12" rx="6" fill="url(#sereneSpec)"/>
+
+    <!-- 端点标签 -->
+    <text x="40" y="188" text-anchor="middle" fill="#e63946" font-size="13" font-weight="600" font-family="sans-serif">AGITATED</text>
+    <text x="700" y="188" text-anchor="middle" fill="#2d7a55" font-size="13" font-weight="600" font-family="sans-serif">PEACEFUL</text>
+
+    <!-- 阶段标签 -->
+    <text x="120" y="240" text-anchor="middle" fill="#e63946" font-size="13" font-weight="600" font-family="sans-serif">AGITATED</text>
+    <text x="260" y="240" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="600" font-family="sans-serif">RESTLESS</text>
+    <text x="380" y="240" text-anchor="middle" fill="#7fb8d0" font-size="13" font-weight="600" font-family="sans-serif">CALM</text>
+    <text x="520" y="240" text-anchor="middle" fill="#38a169" font-size="13" font-weight="600" font-family="sans-serif">SERENE</text>
+    <text x="660" y="240" text-anchor="middle" fill="#2d7a55" font-size="13" font-weight="600" font-family="sans-serif">PEACEFUL</text>
+
+    <!-- 游标 -->
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="40,0; 40,0; 120,0; 260,0; 380,0; 520,0; 660,0; 700,0; 700,0; 660,0; 520,0; 380,0; 260,0; 120,0; 40,0; 40,0" dur="24s" repeatCount="indefinite"/>
+      <circle cx="0" cy="206" r="12" fill="#fff" stroke="#38a169" stroke-width="3"/>
+      <text x="0" y="210" text-anchor="middle" fill="#38a169" font-size="12" font-weight="700" font-family="sans-serif">▼</text>
+    </g>
+
+    <!-- 载体画面：水面波纹 -->
+    <!-- AGITATED 画面 -->
+    <g>
+      <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0;0;0;0;0;1;1" dur="24s" repeatCount="indefinite"/>
+      <text x="120" y="120" text-anchor="middle" fill="#e63946" font-size="14" font-weight="700" font-family="sans-serif">AGITATED</text>
+      <path d="M60,140 Q80,110 100,140 Q120,170 140,140 Q160,110 180,140" fill="none" stroke="#e63946" stroke-width="3">
+        <animate attributeName="d" values="M60,140 Q80,110 100,140 Q120,170 140,140 Q160,110 180,140; M60,140 Q80,170 100,140 Q120,110 140,140 Q160,170 180,140; M60,140 Q80,110 100,140 Q120,170 140,140 Q160,110 180,140" dur="1s" repeatCount="indefinite"/>
+      </path>
+      <text x="120" y="160" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">狂风巨浪</text>
+    </g>
+
+    <!-- RESTLESS 画面 -->
+    <g>
+      <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0;0;0;0;0;0;0" dur="24s" repeatCount="indefinite"/>
+      <text x="260" y="120" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="700" font-family="sans-serif">RESTLESS</text>
+      <path d="M200,135 Q220,120 240,135 Q260,150 280,135 Q300,120 320,135" fill="none" stroke="#e67e22" stroke-width="2.5">
+        <animate attributeName="d" values="M200,135 Q220,120 240,135 Q260,150 280,135 Q300,120 320,135; M200,138 Q220,125 240,138 Q260,148 280,138 Q300,125 320,138; M200,135 Q220,120 240,135 Q260,150 280,135 Q300,120 320,135" dur="2s" repeatCount="indefinite"/>
+      </path>
+      <text x="260" y="158" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">波浪起伏</text>
+    </g>
+
+    <!-- CALM 画面 -->
+    <g>
+      <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0;0;0;0;0;0;0" dur="24s" repeatCount="indefinite"/>
+      <text x="380" y="120" text-anchor="middle" fill="#7fb8d0" font-size="14" font-weight="700" font-family="sans-serif">CALM</text>
+      <path d="M330,140 Q345,135 360,140 Q375,145 390,140 Q405,135 420,140" fill="none" stroke="#7fb8d0" stroke-width="2">
+        <animate attributeName="d" values="M330,140 Q345,135 360,140 Q375,145 390,140 Q405,135 420,140; M330,142 Q345,138 360,142 Q375,144 390,142 Q405,138 420,142; M330,140 Q345,135 360,140 Q375,145 390,140 Q405,135 420,140" dur="4s" repeatCount="indefinite"/>
+      </path>
+      <text x="380" y="158" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">微波起伏</text>
+    </g>
+
+    <!-- SERENE 画面 -->
+    <g>
+      <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0;0;0;0;0;0;0" dur="24s" repeatCount="indefinite"/>
+      <text x="520" y="120" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">SERENE</text>
+      <path d="M470,140 Q485,138 500,140 Q515,142 530,140 Q545,138 560,140" fill="none" stroke="#38a169" stroke-width="1.5">
+        <animate attributeName="d" values="M470,140 Q485,138 500,140 Q515,142 530,140 Q545,138 560,140; M470,141 Q485,139 500,141 Q515,141 530,141 Q545,139 560,141; M470,140 Q485,138 500,140 Q515,142 530,140 Q545,138 560,140" dur="6s" repeatCount="indefinite"/>
+      </path>
+      <text x="520" y="158" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">几乎无波</text>
+    </g>
+
+    <!-- PEACEFUL 画面 -->
+    <g>
+      <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;0;0;0;0;0;0" dur="24s" repeatCount="indefinite"/>
+      <text x="660" y="120" text-anchor="middle" fill="#2d7a55" font-size="14" font-weight="700" font-family="sans-serif">PEACEFUL</text>
+      <path d="M620,140 L660,140 L700,140" fill="none" stroke="#2d7a55" stroke-width="1">
+        <animate attributeName="d" values="M620,140 L660,140 L700,140; M620,141 L660,141 L700,141; M620,140 L660,140 L700,140" dur="8s" repeatCount="indefinite"/>
+      </path>
+      <text x="660" y="158" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">完全平静</text>
+    </g>
+
+    <!-- 底部状态文字 -->
+    <g>
+      <text x="120" y="310" text-anchor="middle" fill="#e63946" font-size="13" font-family="sans-serif">
+        <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0;0;0;0;0;1;1" dur="24s" repeatCount="indefinite"/>
+        AGITATED: 情绪激烈波动，无法平静
+      </text>
+      <text x="260" y="310" text-anchor="middle" fill="#e67e22" font-size="13" font-family="sans-serif">
+        <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0;0;0;0;0;0;0" dur="24s" repeatCount="indefinite"/>
+        RESTLESS: 焦躁不安，静不下来
+      </text>
+      <text x="380" y="310" text-anchor="middle" fill="#7fb8d0" font-size="13" font-family="sans-serif">
+        <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0;0;0;0;0;0;0" dur="24s" repeatCount="indefinite"/>
+        CALM: 情绪平稳，没有激动
+      </text>
+      <text x="520" y="310" text-anchor="middle" fill="#38a169" font-size="13" font-family="sans-serif">
+        <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0;0;0;0;0;0;0" dur="24s" repeatCount="indefinite"/>
+        SERENE: 内心深处的绝对安宁
+      </text>
+      <text x="660" y="310" text-anchor="middle" fill="#2d7a55" font-size="13" font-family="sans-serif">
+        <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;0;0;0;0;0;0" dur="24s" repeatCount="indefinite"/>
+        PEACEFUL: 持续稳定的和平宁静
+      </text>
+    </g>
+
+    <text x="380" y="355" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">💡 游标从左向右扫描：水面从"狂风巨浪"逐渐变为"完全平静"</text>
+  </svg>
+  <div class="white-box"><strong>💡 光谱解读</strong>：从左到右是"内心扰动程度"的递减。AGITATED = 情绪被外部刺激搅动（愤怒/恐慌）。RESTLESS = 烦躁不安（想做什么但静不下来）。CALM = 基本的情绪平稳。SERENE = 深层宁静（内心像镜面湖一样）。PEACEFUL = 持久和谐的安宁状态。SERENE 比 CALM 更深一层——CALM 可以是暂时的"不激动"，SERENE 是发自内在的安宁。</div>
+</div>
+
+<!-- 逻辑演化树 -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div class="usage-section" style="margin-bottom:36px;">
+  <h4>🧠 逻辑演化树：SERENE 从物理到抽象</h4>
+  <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:16px;">
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #c8ddd0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ① 物理义<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">无风湖面/镜面水</span>
+    </div>
+    <span style="font-size:18px; color:#38a169; font-weight:700;">→</span>
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #c8ddd0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ② 自然场景<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">serene lake/mountain</span>
+    </div>
+    <span style="font-size:18px; color:#38a169; font-weight:700;">→</span>
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #c8ddd0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ③ 人的神态<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">serene expression/face</span>
+    </div>
+    <span style="font-size:18px; color:#38a169; font-weight:700;">→</span>
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #c8ddd0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ④ 心境/精神<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">serene mind/soul</span>
+    </div>
+    <span style="font-size:18px; color:#38a169; font-weight:700;">→</span>
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #c8ddd0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ⑤ 抽象事物<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">serene transition/music</span>
+    </div>
+  </div>
+  <div class="white-box" style="margin-top:18px;"><strong>🧠 逻辑链详解</strong>：① 物理画面：无风的湖面，水面如镜，没有丝毫涟漪 → ② 用来形容自然景观：a serene lake（宁静的湖）、serene mountain scenery（安详的山景）→ ③ 从湖面引申到人的面部表情：serene expression = 脸上没有任何焦虑/愤怒的表情，像湖面一样平静 → ④ 进一步抽象到内心的状态：serene mind = 宁静的心境，没有任何杂音和焦虑 → ⑤ 最终可以形容任何"平稳无扰"的抽象事物：a serene transition of power（平稳的权力交接）、serene music（宁静的音乐）。</div>
+</div>
+
+<!-- 易混对比区 -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+  <!-- SERENE vs CALM vs PEACEFUL -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="calmBg" x1="0" y1="0" x2="760" y2="340">
+          <stop offset="0%" stop-color="#f0faf5"/>
+          <stop offset="100%" stop-color="#e8f5ec"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="340" fill="url(#calmBg)" rx="8"/>
+      <text x="380" y="40" text-anchor="middle" fill="#333" font-size="16" font-weight="700" font-family="sans-serif">SERENE vs CALM vs PEACEFUL</text>
+
+      <!-- CALM -->
+      <rect x="30" y="60" width="220" height="110" rx="10" fill="#fff" stroke="#7fb8d0" stroke-width="2"/>
+      <text x="140" y="88" text-anchor="middle" fill="#7fb8d0" font-size="15" font-weight="700" font-family="sans-serif">CALM</text>
+      <text x="140" y="108" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">不激动/不紧张</text>
+      <text x="140" y="128" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">表层平静（可能是暂时的）</text>
+      <text x="140" y="148" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">例：Stay calm. 冷静点。</text>
+      <text x="140" y="163" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">风浪过后变得 calm</text>
+
+      <!-- SERENE -->
+      <rect x="270" y="60" width="220" height="110" rx="10" fill="#fff" stroke="#38a169" stroke-width="2"/>
+      <text x="380" y="88" text-anchor="middle" fill="#38a169" font-size="15" font-weight="700" font-family="sans-serif">SERENE</text>
+      <text x="380" y="108" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">深层安宁</text>
+      <text x="380" y="128" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">发自内心的平静</text>
+      <text x="380" y="148" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">例：a serene smile。安详的微笑</text>
+      <text x="380" y="163" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">像镜面湖一样平静</text>
+
+      <!-- PEACEFUL -->
+      <rect x="510" y="60" width="220" height="110" rx="10" fill="#fff" stroke="#2d7a55" stroke-width="2"/>
+      <text x="620" y="88" text-anchor="middle" fill="#2d7a55" font-size="15" font-weight="700" font-family="sans-serif">PEACEFUL</text>
+      <text x="620" y="108" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">和平/安宁</text>
+      <text x="620" y="128" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">强调"无冲突"的状态</text>
+      <text x="620" y="148" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">例：peaceful village。宁静村庄</text>
+      <text x="620" y="163" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">环境/局势的宁静</text>
+
+      <rect x="60" y="195" width="640" height="120" rx="10" fill="#fff" stroke="#ddd" stroke-width="1"/>
+      <text x="380" y="220" text-anchor="middle" fill="#444" font-size="13" font-weight="600" font-family="sans-serif">💡 关键区别</text>
+      <text x="380" y="242" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">CALM = 状态（不激动），可以是对外部刺激的反应（"别紧张"）</text>
+      <text x="380" y="260" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">SERENE = 气质/内在品质（天生安详），更深层、更持久</text>
+      <text x="380" y="278" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">PEACEFUL = 环境/关系（无冲突），更偏外部状态</text>
+      <text x="380" y="296" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">例：她 calmly 处理危机 / 她 has a serene soul / 他们过着 peaceful 的生活</text>
+    </svg>
+    <div class="label">
+      <div class="p">SERENE vs CALM vs PEACEFUL</div>
+      <div class="desc">深度 vs 暂时 vs 外部</div>
+    </div>
+  </div>
+
+  <!-- TRANQUIL vs PLACID -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="tranquilBg" x1="0" y1="0" x2="760" y2="340">
+          <stop offset="0%" stop-color="#f5f8ff"/>
+          <stop offset="100%" stop-color="#e8edf5"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="340" fill="url(#tranquilBg)" rx="8"/>
+      <text x="380" y="40" text-anchor="middle" fill="#333" font-size="16" font-weight="700" font-family="sans-serif">TRANQUIL vs PLACID vs SERENE</text>
+
+      <!-- TRANQUIL -->
+      <rect x="30" y="60" width="220" height="110" rx="10" fill="#fff" stroke="#5a9ab5" stroke-width="2"/>
+      <text x="140" y="88" text-anchor="middle" fill="#5a9ab5" font-size="15" font-weight="700" font-family="sans-serif">TRANQUIL</text>
+      <text x="140" y="108" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">静谧的/恬静的</text>
+      <text x="140" y="128" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">常用于环境描写</text>
+      <text x="140" y="148" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">例：tranquil garden</text>
+      <text x="140" y="163" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">= 静谧的花园</text>
+
+      <!-- PLACID -->
+      <rect x="270" y="60" width="220" height="110" rx="10" fill="#fff" stroke="#7b9a7b" stroke-width="2"/>
+      <text x="380" y="88" text-anchor="middle" fill="#7b9a7b" font-size="15" font-weight="700" font-family="sans-serif">PLACID</text>
+      <text x="380" y="108" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">温和的/平静的</text>
+      <text x="380" y="128" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">强调"不易被激怒"</text>
+      <text x="380" y="148" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">例：a placid baby</text>
+      <text x="380" y="163" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">= 安静的宝宝（不哭闹）</text>
+
+      <!-- SERENE -->
+      <rect x="510" y="60" width="220" height="110" rx="10" fill="#fff" stroke="#38a169" stroke-width="2"/>
+      <text x="620" y="88" text-anchor="middle" fill="#38a169" font-size="15" font-weight="700" font-family="sans-serif">SERENE</text>
+      <text x="620" y="108" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">安详的/宁静的</text>
+      <text x="620" y="128" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">最深层的内心安宁</text>
+      <text x="620" y="148" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">例：serene expression</text>
+      <text x="620" y="163" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">= 安详的表情</text>
+
+      <rect x="60" y="195" width="640" height="120" rx="10" fill="#fff" stroke="#ddd" stroke-width="1"/>
+      <text x="380" y="220" text-anchor="middle" fill="#444" font-size="13" font-weight="600" font-family="sans-serif">💡 四词对比总结</text>
+      <text x="380" y="242" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">CALM = 最常用，泛指"不激动"（可暂时）</text>
+      <text x="380" y="260" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">SERENE = 最深层的内心安宁（气质层面）</text>
+      <text x="380" y="278" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">TRANQUIL = 环境静谧（偏书面） / PLACID = 天性温和（不易怒）</text>
+      <text x="380" y="296" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">PEACEFUL = 无冲突（环境/关系/世界）</text>
+    </svg>
+    <div class="label">
+      <div class="p">TRANQUIL vs PLACID vs SERENE</div>
+      <div class="desc">宁静的近义词辨析</div>
+    </div>
+  </div>
+</div>
+
+<!-- 常见搭配区 -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+<div class="usage-section">
+  <h4>📖 SERENE 常见用法</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>serene</strong> lake</span>
+      <span class="usage-cn">宁静的湖 &nbsp;|&nbsp; 📖 最核心的物理画面</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>serene</strong> expression</span>
+      <span class="usage-cn">安详的表情 &nbsp;|&nbsp; 📖 脸上没有任何焦虑</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>serene</strong> mind</span>
+      <span class="usage-cn">宁静的心境 &nbsp;|&nbsp; 📖 内心深处的安宁</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>serene</strong> smile</span>
+      <span class="usage-cn">安详的微笑 &nbsp;|&nbsp; 📖 恬淡的、知足的微笑</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>serene</strong> beauty</span>
+      <span class="usage-cn">宁静之美 &nbsp;|&nbsp; 📖 不张扬的、内敛的美</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>serene</strong> landscape</span>
+      <span class="usage-cn">宁静的风景 &nbsp;|&nbsp; 📖 没有人为干扰的自然</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>serene</strong> music</span>
+      <span class="usage-cn">宁静的音乐 &nbsp;|&nbsp; 📖 舒缓、抚慰的音乐</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>serene</strong> retirement</span>
+      <span class="usage-cn">安详的退休生活 &nbsp;|&nbsp; 📖 没有烦恼的晚年</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>🧠 搭配逻辑解释</h4>
+  <div class="white-box"><strong>💡 serene lake / serene landscape</strong> = 物理画面直接使用。湖面/风景没有任何"扰动"——无风、无人、无噪音。这是 serene 最原始的画面。</div>
+  <div class="white-box" style="margin-top:10px;"><strong>💡 serene expression / serene smile</strong> = 从湖面引申到人脸。一个人的脸上"没有焦虑/愤怒/紧张的波纹"——就像平静的湖面。所以 serene expression 翻译为"安详的表情"——面容平静、舒展、柔和。</div>
+  <div class="white-box" style="margin-top:10px;"><strong>💡 serene mind</strong> = 从面部表情深入到内心。心像湖面一样平静——没有杂念、焦虑、烦躁。serene mind 常用于冥想、瑜伽、心理健康的语境。</div>
+  <div class="white-box" style="margin-top:10px;"><strong>💡 serene beauty</strong> = 不是张扬的、艳丽的美。是"安静的、不为取悦他人而存在的"美——像一座宁静的山或一片湖。serene beauty 是"静谧之美"。</div>
+</div>
+
+<!-- 反义/相似 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card blue-bg">
+      <h5 style="color:#38a169;">近义</h5>
+      <p><strong>CALM</strong> — 冷静的 <small>最常用</small></p>
+      <p><strong>PEACEFUL</strong> — 和平的 <small>强调无冲突</small></p>
+      <p><strong>TRANQUIL</strong> — 静谧的 <small>书面/环境</small></p>
+      <p><strong>PLACID</strong> — 温和的 <small>不易发怒</small></p>
+      <p><strong>UNTROUBLED</strong> — 无忧的 <small>无烦恼</small></p>
+    </div>
+    <div class="info-card purple-bg">
+      <h5 style="color:#7b5ea7;">中义过渡</h5>
+      <p><strong>RESTLESS</strong> — 焦躁的 <small>静不下来</small></p>
+      <p><strong>AGITATED</strong> — 激动的 <small>被搅动</small></p>
+      <p><strong>DISTURBED</strong> — 不安的 <small>被打扰</small></p>
+      <p><strong>UNEASY</strong> — 不自在的 <small>隐隐不安</small></p>
+    </div>
+    <div class="info-card green-bg">
+      <h5 style="color:#e63946;">反义</h5>
+      <p><strong>ANXIOUS</strong> — 焦虑的 <small>内心不安</small></p>
+      <p><strong>TROUBLED</strong> — 烦恼的 <small>被问题困扰</small></p>
+      <p><strong>TURBULENT</strong> — 动荡的 <small>激烈波动</small></p>
+      <p><strong>CHAOTIC</strong> — 混乱的 <small>毫无秩序</small></p>
+      <p><strong>STRESSED</strong> — 有压力的 <small>紧张焦虑</small></p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROLL 空间意象图解</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f0;
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+    color: #1a1a1a;
+  }
+  .container {
+    max-width: 960px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px 56px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .section-title .bar {
+    display: inline-block;
+    width: 4px; height: 18px;
+    background: #4a90d9;
+    margin-right: 12px;
+    vertical-align: middle;
+    border-radius: 2px;
+  }
+  .section-title span { vertical-align: middle; }
+
+  /* 核心图 */
+  .core-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 44px;
+  }
+  .core-card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 18px 16px 22px;
+    text-align: center;
+  }
+  .core-card canvas {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    aspect-ratio: 380 / 220;
+    display: block;
+    margin: 0 auto 12px;
+    border-radius: 6px;
+    background: #fafaf8;
+  }
+  .core-card .card-label { font-size: 18px; font-weight: 700; color: #2b6cb0; }
+  .core-card .card-desc { font-size: 14px; color: #555; line-height: 1.5; margin-top: 4px; }
+
+  /* 三大类卡片 */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .card canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 270 / 200;
+    display: block;
+    background: #fafaf8;
+  }
+  .card-body { padding: 16px 18px 20px; }
+  .card-body h3 { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+  .card-body h3 .hl { color: #2b6cb0; }
+  .card-body .ref { font-size: 13px; color: #888; margin-bottom: 6px; }
+  .card-body .def { font-size: 13.5px; color: #444; line-height: 1.6; }
+  .card-body .def .eg { color: #777; font-style: italic; display: block; margin-top: 2px; }
+  .card-body .def .key { color: #2b6cb0; font-weight: 600; }
+
+  /* 用法列表 */
+  .usage-category {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .cat-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #2b6cb0;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e8e8e4;
+  }
+  .usage-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 32px;
+  }
+  .usage-item { padding: 6px 0; border-bottom: 1px dashed #eee; }
+  .usage-item:last-child,
+  .usage-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .usage-en { font-size: 14px; font-weight: 600; color: #333; }
+  .usage-en strong { color: #2b6cb0; }
+  .usage-cn { font-size: 13px; color: #777; margin-top: 1px; }
+
+  .spatial-note {
+    margin-top: 36px;
+    padding: 16px 20px;
+    background: #eef4f8;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .spatial-note strong { color: #2b6cb0; }
+
+  @media (max-width: 720px) {
+    .container { padding: 28px 16px 36px; }
+    .core-row { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+    .usage-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>ROLL 的空间意象</h1>
+  <p class="subtitle">核心逻辑：物体围绕自身轴线旋转 → 在表面上平移</p>
+
+  <!-- 核心图 -->
+  <div class="section-title"><span class="bar"></span><span>核心空间逻辑</span></div>
+  <div class="core-row">
+    <div class="core-card">
+      <canvas id="coreRoll" width="380" height="220"></canvas>
+      <div class="card-label">ROLL</div>
+      <div class="card-desc">
+        球体/圆柱体绕自身轴线旋转，同时沿表面平移。<br>
+        核心 = <strong>滚</strong>（旋转 + 平移）
+      </div>
+    </div>
+    <div class="core-card">
+      <canvas id="coreRollUp" width="380" height="220"></canvas>
+      <div class="card-label">ROLL UP</div>
+      <div class="card-desc">
+        把平面物体绕自身卷起来，<br>
+        核心 = <strong>卷</strong>（把平面变成柱状）
+      </div>
+    </div>
+  </div>
+
+  <!-- 三大类 -->
+  <div class="section-title"><span class="bar"></span><span>三大自然类别</span></div>
+  <div class="cards">
+
+    <div class="card">
+      <canvas id="cardBall" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>球形/柱状物 <span class="hl">roll</span></h3>
+        <div class="ref">球/轮子/桶在表面滚动</div>
+        <div class="def">
+          物体旋转着移动位置，<span class="key">"滚"</span>。
+          <span class="eg">"The ball rolled down the hill."<br>"Roll the barrel over here."</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardFlat" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>平面物 <span class="hl">roll up / roll out</span></h3>
+        <div class="ref">软平面材料被卷起或展开</div>
+        <div class="def">
+          把平面的东西卷成筒状（roll up）或展开（roll out），<span class="key">"卷"</span>。
+          <span class="eg">"Roll up the yoga mat."<br>"Roll out the dough."</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardFluid" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>流动/抽象 <span class="hl">roll</span></h3>
+        <div class="ref">云/雾/声音/人/时间连续推进</div>
+        <div class="def">
+          像滚动的物体一样连续地推进或变化，<span class="key">"涌 / 推进 / 上路"</span>。
+          <span class="eg">"I'm rolling in."<br>"The fog rolled in."</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 高频用法 -->
+  <div class="section-title"><span class="bar"></span><span>ROLL 高频用法</span></div>
+
+  <div class="usage-category">
+    <div class="cat-label">① 球形/柱状物 — 滚动</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">The ball <strong>rolled</strong> under the couch.</span>
+        <span class="usage-cn">球滚到沙发下面去了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Roll</strong> the dice.</span>
+        <span class="usage-cn">掷骰子。（让骰子在桌面滚动）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The car window <strong>rolled</strong> down.</span>
+        <span class="usage-cn">车窗摇下来了。（把手的旋转运动）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>rolled</strong> the barrel across the floor.</span>
+        <span class="usage-cn">她把桶滚过地板。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Roll</strong> the log into the fire.</span>
+        <span class="usage-cn">把圆木滚进火里。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Tears <strong>rolled</strong> down her cheeks.</span>
+        <span class="usage-cn">泪水顺着她的脸颊滚落。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">② 平面物 — 卷起/展开</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Roll up</strong> the yoga mat.</span>
+        <span class="usage-cn">把瑜伽垫卷起来。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Roll out</strong> the dough.</span>
+        <span class="usage-cn">把面团擀开。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Roll</strong> your sleeves <strong>up</strong>.</span>
+        <span class="usage-cn">把袖子卷起来。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Roll</strong> the map <strong>up</strong>.</span>
+        <span class="usage-cn">把地图卷起来。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Roll</strong> the carpet <strong>out</strong>.</span>
+        <span class="usage-cn">把地毯铺开。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>rolled</strong> her jeans <strong>up</strong> to her knees.</span>
+        <span class="usage-cn">她把牛仔裤卷到膝盖。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Just <strong>roll with it</strong>.</span>
+        <span class="usage-cn">将就着来 / 顺着来吧。（超高頻！计划被打乱时说）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Roll with</strong> the punches.</span>
+        <span class="usage-cn">见招拆招 / 随机应变。（拳击比喻，被打时要顺着躲）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">③ 身体动作 — 翻身/转动</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Roll over</strong> onto your stomach.</span>
+        <span class="usage-cn">翻身趴着。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The dog <strong>rolled over</strong> for a belly rub.</span>
+        <span class="usage-cn">狗翻过身来求摸肚子。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Roll</strong> your shoulders <strong>back</strong>.</span>
+        <span class="usage-cn">把肩膀向后转。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Roll</strong> your eyes.</span>
+        <span class="usage-cn">翻白眼。（表示无语/不耐烦）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He <strong>rolled</strong> his ankle playing basketball.</span>
+        <span class="usage-cn">他打篮球崴了脚。（脚踝翻转）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>rolled</strong> out of bed.</span>
+        <span class="usage-cn">她翻身起床。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">④ 在路上 — 人正在移动/快到了（超高頻口语）</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">I'm <strong>rolling</strong>. Be there in 10.</span>
+        <span class="usage-cn">我已经在路上/出发了，10分钟到。（超高頻！开车出发时说）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I'm <strong>rolling in</strong> right now.</span>
+        <span class="usage-cn">我正在开进来/马上到办公室。（快到目的地时）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I'm about to <strong>roll out</strong>.</span>
+        <span class="usage-cn">我准备出发了。（离开家/办公室）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Roll out</strong>! We're gonna be late.</span>
+        <span class="usage-cn">出发！要晚了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let's <strong>roll</strong>!</span>
+        <span class="usage-cn">走吧！/ 出发！（超高頻！所有场景通用）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">We're <strong>rolling</strong> in 5.</span>
+        <span class="usage-cn">我们5分钟后出发。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">⑤ 抽象 — 连续推进</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">The fog <strong>rolled in</strong> from the ocean.</span>
+        <span class="usage-cn">雾气从海上涌来。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Keep the cameras <strong>rolling</strong>.</span>
+        <span class="usage-cn">摄像机继续拍。（不要停）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The credits <strong>rolled</strong>.</span>
+        <span class="usage-cn">片尾字幕滚动起来了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The project is <strong>rolling</strong> now.</span>
+        <span class="usage-cn">项目正在推进中。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let's get this show on the <strong>road</strong>... I mean <strong>rolling</strong>!</span>
+        <span class="usage-cn">咱们开始吧！（习语 get this rolling）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Thunder <strong>rolled</strong> across the sky.</span>
+        <span class="usage-cn">雷声滚滚划过天空。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The laughter just <strong>rolled</strong> out of him.</span>
+        <span class="usage-cn">他忍不住笑出声来。（笑声"滚"出来）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The jokes keep <strong>rolling</strong> in.</span>
+        <span class="usage-cn">笑话一个接一个地来。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="spatial-note">
+    <strong>ROLL 的统一逻辑</strong>：无论具体动作如何，ROLL 始终围绕 <strong>"旋转 + 平移"</strong> 两个核心要素展开。<br>
+    球形物是"滚"，平面物是"卷"，抽象的是"连续推进"——本质都是<strong>围绕轴线的持续运动</strong>。
+  </div>
+
+</div>
+
+<script>
+(function() {
+function drawFrame(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ===== 核心图1：ROLL 滚动的空间逻辑 =====
+const c1 = document.getElementById('coreRoll');
+const ctx1 = c1.getContext('2d');
+drawFrame(ctx1,380,220);
+
+// ground
+ctx1.fillStyle = '#ddd'; ctx1.fillRect(0,160,380,3);
+
+// ball path arrows
+ctx1.strokeStyle = '#bbb'; ctx1.lineWidth = 2; ctx1.setLineDash([4,4]);
+ctx1.beginPath(); ctx1.moveTo(50,145); ctx1.lineTo(330,145); ctx1.stroke(); ctx1.setLineDash([]);
+ctx1.fillStyle = '#bbb'; ctx1.font = '12px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('移动方向 →',190,175);
+
+// ball left (position 1) with rotation arrow
+ctx1.fillStyle = '#2b6cb0';
+ctx1.beginPath(); ctx1.arc(100,145,20,0,Math.PI*2); ctx1.fill();
+// rotation mark on ball
+ctx1.strokeStyle = '#fff'; ctx1.lineWidth = 2;
+ctx1.beginPath(); ctx1.arc(100,145,10,0,Math.PI*1.5); ctx1.stroke();
+ctx1.fillStyle = '#fff'; ctx1.font = '10px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('•',100,140);
+
+// rotation arrow on ball
+ctx1.strokeStyle = '#f5a623'; ctx1.lineWidth = 2;
+ctx1.beginPath(); ctx1.arc(100,145,28,0.8,2.3); ctx1.stroke();
+ctx1.fillStyle = '#f5a623';
+ctx1.beginPath(); ctx1.moveTo(127,152); ctx1.lineTo(128,142); ctx1.lineTo(120,147); ctx1.closePath(); ctx1.fill();
+ctx1.fillStyle = '#f5a623'; ctx1.font = '11px sans-serif';
+ctx1.fillText('↻ 自转',130,135);
+
+// ball right (position 2)
+ctx1.fillStyle = '#2b6cb0';
+ctx1.beginPath(); ctx1.arc(280,145,20,0,Math.PI*2); ctx1.fill();
+ctx1.strokeStyle = '#fff'; ctx1.lineWidth = 2;
+ctx1.beginPath(); ctx1.arc(280,145,10,0,Math.PI*0.5); ctx1.stroke();
+ctx1.fillStyle = '#fff'; ctx1.font = '10px sans-serif';
+ctx1.fillText('•',282,141);
+
+ctx1.fillStyle = '#333'; ctx1.font = '12px sans-serif';
+ctx1.fillText('位置1 →',100,110);
+ctx1.fillText('→ 位置2',280,110);
+
+// ===== 核心图2：ROLL UP 卷 =====
+const c2 = document.getElementById('coreRollUp');
+const ctx2 = c2.getContext('2d');
+drawFrame(ctx2,380,220);
+
+// flat sheet (unrolled state)
+ctx2.fillStyle = '#e8dcc8';
+ctx2.fillRect(30,140,140,5);
+ctx2.strokeStyle = '#b8a88a'; ctx2.lineWidth = 1;
+ctx2.strokeRect(30,140,140,5);
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('铺开 (flat)',100,170);
+
+// partially rolled
+ctx2.strokeStyle = '#2b6cb0'; ctx2.lineWidth = 2;
+ctx2.beginPath(); ctx2.arc(210,140,12,0,Math.PI*2); ctx2.stroke();
+ctx2.beginPath(); ctx2.arc(210,130,5,0,Math.PI*2); ctx2.stroke();
+// spiral lines
+ctx2.strokeStyle = '#b8a88a'; ctx2.lineWidth = 1.5;
+ctx2.beginPath(); ctx2.arc(210,140,8,0,Math.PI*2); ctx2.stroke();
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif';
+ctx2.fillText('半卷',210,175);
+
+// fully rolled up (cylinder)
+ctx2.fillStyle = '#2b6cb0';
+ctx2.beginPath(); ctx2.arc(320,140,16,0,Math.PI*2); ctx2.fill();
+// spiral mark
+ctx2.strokeStyle = '#fff'; ctx2.lineWidth = 1.5;
+ctx2.beginPath(); ctx2.arc(320,140,8,0,Math.PI*2); ctx2.stroke();
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif';
+ctx2.fillText('卷好了 (rolled up)',320,175);
+
+// arrow showing the action
+ctx2.strokeStyle = '#2b6cb0'; ctx2.lineWidth = 2.5;
+ctx2.beginPath(); ctx2.moveTo(170,142); ctx2.lineTo(195,140); ctx2.stroke();
+ctx2.fillStyle = '#2b6cb0';
+ctx2.beginPath(); ctx2.moveTo(192,136); ctx2.lineTo(200,140); ctx2.lineTo(192,144); ctx2.closePath(); ctx2.fill();
+
+ctx2.fillStyle = '#2b6cb0'; ctx2.font = 'bold 12px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('→ 卷起来 (roll up)',190,120);
+
+// ===== 三大类 =====
+
+// 1. 球形物 — ball rolling
+const e1 = document.getElementById('cardBall');
+const ctx3 = e1.getContext('2d');
+drawFrame(ctx3,270,200);
+
+// hill
+ctx3.fillStyle = '#d4d4c8';
+ctx3.beginPath(); ctx3.moveTo(0,150); ctx3.lineTo(135,80); ctx3.lineTo(270,150); ctx3.closePath(); ctx3.fill();
+
+// ball rolling down
+ctx3.fillStyle = '#2b6cb0';
+ctx3.beginPath(); ctx3.arc(160,105,16,0,Math.PI*2); ctx3.fill();
+ctx3.strokeStyle = '#fff'; ctx3.lineWidth = 2;
+ctx3.beginPath(); ctx3.arc(160,105,8,0,Math.PI*1); ctx3.stroke();
+
+// motion lines
+ctx3.strokeStyle = '#aaa'; ctx3.lineWidth = 1.5;
+ctx3.beginPath(); ctx3.moveTo(180,100); ctx3.lineTo(200,90);
+ctx3.moveTo(176,108); ctx3.lineTo(196,100);
+ctx3.moveTo(172,115); ctx3.lineTo(192,108); ctx3.stroke();
+
+ctx3.fillStyle = '#333'; ctx3.font = 'bold 14px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('The ball rolled',135,40);
+ctx3.fillStyle = '#333'; ctx3.font = 'bold 14px sans-serif';
+ctx3.fillText('down the hill.',135,58);
+
+// 2. 平面物
+const e2 = document.getElementById('cardFlat');
+const ctx4 = e2.getContext('2d');
+drawFrame(ctx4,270,200);
+
+// yoga mat on ground
+ctx4.fillStyle = '#4a90d9';
+ctx4.fillRect(20,145,120,5);
+ctx4.fillStyle = '#2b6cb0'; ctx4.font = '11px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('瑜伽垫 (铺开)',80,175);
+
+// arrows for rolling up
+ctx4.strokeStyle = '#2b6cb0'; ctx4.lineWidth = 2; ctx4.setLineDash([4,4]);
+ctx4.beginPath(); ctx4.moveTo(50,140); ctx4.lineTo(50,110);
+ctx4.moveTo(110,140); ctx4.lineTo(110,110); ctx4.stroke(); ctx4.setLineDash([]);
+ctx4.fillStyle = '#2b6cb0'; ctx4.font = '11px sans-serif';
+ctx4.fillText('↑卷↑',80,130);
+
+// rolled mat (side view - circle)
+ctx4.fillStyle = '#4a90d9';
+ctx4.beginPath(); ctx4.arc(220,110,18,0,Math.PI*2); ctx4.fill();
+ctx4.strokeStyle = '#fff'; ctx4.lineWidth = 1.5;
+ctx4.beginPath(); ctx4.arc(220,110,9,0,Math.PI*2); ctx4.stroke();
+ctx4.fillStyle = '#2b6cb0'; ctx4.font = '11px sans-serif';
+ctx4.fillText('卷好了',220,150);
+
+// arrow
+ctx4.strokeStyle = '#2b6cb0'; ctx4.lineWidth = 2;
+ctx4.beginPath(); ctx4.moveTo(145,120); ctx4.lineTo(195,110); ctx4.stroke();
+ctx4.fillStyle = '#2b6cb0';
+ctx4.beginPath(); ctx4.moveTo(192,106); ctx4.lineTo(200,110); ctx4.lineTo(192,114); ctx4.closePath(); ctx4.fill();
+
+ctx4.fillStyle = '#333'; ctx4.font = 'bold 13px sans-serif';
+ctx4.fillText('Roll up the yoga mat.',20,30);
+
+// 3. 抽象
+const e3 = document.getElementById('cardFluid');
+const ctx5 = e3.getContext('2d');
+drawFrame(ctx5,270,200);
+ctx5.fillStyle = '#f5f2ed'; ctx5.fillRect(0,0,270,200);
+
+// road
+ctx5.strokeStyle = '#bbb'; ctx5.lineWidth = 2;
+ctx5.beginPath(); ctx5.moveTo(10,140); ctx5.lineTo(260,140); ctx5.stroke();
+ctx5.setLineDash([6,6]);
+ctx5.beginPath(); ctx5.moveTo(10,148); ctx5.lineTo(260,148); ctx5.stroke();
+ctx5.setLineDash([]);
+
+// car icon
+ctx5.fillStyle = '#2b6cb0';
+ctx5.fillRect(125,118,50,20);
+ctx5.beginPath(); ctx5.arc(137,138,7,0,Math.PI*2); ctx5.fill();
+ctx5.beginPath(); ctx5.arc(163,138,7,0,Math.PI*2); ctx5.fill();
+ctx5.fillStyle = '#fff'; ctx5.font = '9px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('🚗',150,133);
+
+// destination building
+ctx5.fillStyle = '#666';
+ctx5.fillRect(220,80,35,55);
+ctx5.fillStyle = '#4a90d9';
+ctx5.fillRect(227,88,8,8);
+ctx5.fillRect(240,88,8,8);
+ctx5.fillRect(227,100,8,8);
+ctx5.fillRect(240,100,8,8);
+ctx5.fillStyle = '#888'; ctx5.font = '9px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('办公室',237,70);
+
+// speech bubble
+ctx5.fillStyle = '#2b6cb0'; ctx5.font = 'bold 12px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('"I\'m rolling in."',135,40);
+
+// motion lines behind car
+ctx5.strokeStyle = '#aaa'; ctx5.lineWidth = 1.5;
+ctx5.beginPath();
+ctx5.moveTo(80,130); ctx5.lineTo(115,130);
+ctx5.moveTo(85,136); ctx5.lineTo(115,136);
+ctx5.moveTo(90,142); ctx5.lineTo(115,142);
+ctx5.stroke();
+
+})();
+</script>
+
+</body>
+</html>

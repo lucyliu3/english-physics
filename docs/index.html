@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>空间锚点 · 英语词感地图</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); color:#1a1a1a; }
+  .header { background:linear-gradient(135deg,#2c1810,#4a2c1a); color:#f5f0e8; padding:56px 24px 48px; text-align:center; }
+  .header h1 { font-size:36px; font-weight:800; letter-spacing:-0.5px; margin-bottom:8px; }
+  .header h1 span { color:#e67e22; }
+  .header .sub { font-size:16px; color:#b8a898; margin-bottom:4px; letter-spacing:2px; }
+  .header .desc { max-width:640px; margin:20px auto 0; font-size:14.5px; color:#c8b8a8; line-height:1.7; }
+  .header .tagline { display:inline-block; margin-top:20px; background:rgba(230,126,34,0.2); color:#e67e22; padding:6px 18px; border-radius:20px; font-size:13px; border:1px solid rgba(230,126,34,0.3); }
+
+  .container { max-width:1100px; margin:0 auto; padding:40px 24px 80px; }
+
+  .section { margin-bottom:44px; }
+  .section-title { font-size:20px; font-weight:700; color:#333; margin-bottom:18px; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:20px; background:linear-gradient(180deg,#e67e22,#f39c12); border-radius:2px; }
+  .section-title .count { font-size:13px; color:#999; font-weight:400; }
+
+  .word-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; }
+  .word-card { display:block; background:#fafaf8; border:1px solid #e8e8e4; border-radius:10px; padding:12px 10px; text-align:center; text-decoration:none; transition:all 0.2s; }
+  .word-card:hover { background:#fff; transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.10); border-color:#e67e22; }
+  .word-card .word { font-size:15px; font-weight:600; color:#333; }
+  .word-card .word .hl { color:#e67e22; }
+  .word-card .cn { font-size:12px; color:#999; margin-top:3px; }
+
+  .compare-section { margin-bottom:44px; }
+  .compare-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; }
+  .compare-card { display:block; background:linear-gradient(135deg,#fdf6ee,#faf0e0); border:1px solid #e8d8c0; border-radius:10px; padding:14px 14px; text-decoration:none; transition:all 0.2s; }
+  .compare-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.10); border-color:#e67e22; }
+  .compare-card .title { font-size:13px; font-weight:700; color:#333; }
+  .compare-card .title .hl { color:#e67e22; }
+  .compare-card .desc { font-size:12px; color:#888; margin-top:4px; line-height:1.4; }
+
+  .footer { text-align:center; padding:32px 24px; color:#888; font-size:13px; border-top:1px solid #e8e8e4; }
+  .footer a { color:#e67e22; text-decoration:none; }
+
+  @media (max-width:600px) {
+    .header h1 { font-size:26px; }
+    .word-grid { grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; }
+    .word-card { padding:10px 8px; }
+    .word-card .word { font-size:13px; }
+    .compare-grid { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <p class="sub">FROM-PHYSICS</p>
+  <h1>空间锚点 · <span>英语词感地图</span></h1>
+  <div class="tagline">🧭 每一个词都是一幅物理画面</div>
+  <p class="desc">
+    英语是一门空间语言。每个介词、动词、形容词的"本义"都是一幅物理画面——所有抽象用法、口语搭配、习语，都从这幅画面演化而来。<br>
+    点击任意词，查看它的核心物理画面 + 完整的逻辑推演链。
+  </p>
+</div>
+
+<div class="container">
+
+  <!-- 小品词 / 介词 -->
+  <div class="section">
+    <div class="section-title"><span class="bar"></span>小品词 · 介词 <span class="count">(6)</span></div>
+    <div class="word-grid">
+      <a href="up_illustration.html" class="word-card"><div class="word">up</div><div class="cn">朝上 / 完成 / 出现</div></a>
+      <a href="down_illustration.html" class="word-card"><div class="word">down</div><div class="cn">朝下 / 减少 / 倒下</div></a>
+      <a href="off_illustration.html" class="word-card"><div class="word">off</div><div class="cn">脱离 / 关闭 / 离开</div></a>
+      <a href="out_illustration.html" class="word-card"><div class="word">out</div><div class="cn">向外 / 出去 / 耗尽</div></a>
+      <a href="away_illustration.html" class="word-card"><div class="word">away</div><div class="cn">远离 / 离开 / 持续</div></a>
+      <a href="back_illustration.html" class="word-card"><div class="word">back</div><div class="cn">向后 / 返回 / 支持</div></a>
+    </div>
+  </div>
+
+  <!-- 动词 -->
+  <div class="section">
+    <div class="section-title"><span class="bar"></span>动词 <span class="count">(38)</span></div>
+    <div class="word-grid">
+      <a href="act_illustration.html" class="word-card"><div class="word">act</div><div class="cn">行动 / 表演 / 充当</div></a>
+      <a href="break_illustration.html" class="word-card"><div class="word">break</div><div class="cn">打破 / 断开 / 休息</div></a>
+      <a href="broke_illustration.html" class="word-card"><div class="word">broke</div><div class="cn">打破（过去式）</div></a>
+      <a href="broken_illustration.html" class="word-card"><div class="word">broken</div><div class="cn">破碎的 / 损坏的</div></a>
+      <a href="call_illustration.html" class="word-card"><div class="word">call</div><div class="cn">喊叫 / 打电话 / 拜访</div></a>
+      <a href="check_illustration.html" class="word-card"><div class="word">check</div><div class="cn">检查 / 核对 / 阻止</div></a>
+      <a href="do_illustration.html" class="word-card"><div class="word">do</div><div class="cn">做 / 执行 / 足够</div></a>
+      <a href="done_illustration.html" class="word-card"><div class="word">done</div><div class="cn">完成了 / 结束</div></a>
+      <a href="fit_illustration.html" class="word-card"><div class="word">fit</div><div class="cn">适合 / 安装 / 匹配</div></a>
+      <a href="flap_illustration.html" class="word-card"><div class="word">flap</div><div class="cn">拍打 / 扇动 / 慌张</div></a>
+      <a href="flip_illustration.html" class="word-card"><div class="word">flip</div><div class="cn">翻转 / 轻抛 / 切换</div></a>
+      <a href="flop_illustration.html" class="word-card"><div class="word">flop</div><div class="cn">扑通掉落 / 失败</div></a>
+      <a href="fluster_illustration.html" class="word-card"><div class="word">fluster</div><div class="cn">使慌乱 / 使紧张</div></a>
+      <a href="gone_illustration.html" class="word-card"><div class="word">gone</div><div class="cn">走了 / 消失了 / 用完了</div></a>
+      <a href="got_illustration.html" class="word-card"><div class="word">got</div><div class="cn">得到 / 理解 / 到达</div></a>
+      <a href="hack_illustration.html" class="word-card"><div class="word">hack</div><div class="cn">劈砍 / 破解 / 将就</div></a>
+      <a href="haul_illustration.html" class="word-card"><div class="word">haul</div><div class="cn">用力拖 / 运输</div></a>
+      <a href="hold_illustration.html" class="word-card"><div class="word">hold</div><div class="cn">握住 / 持有 / 举行</div></a>
+      <a href="hop_illustration.html" class="word-card"><div class="word">hop</div><div class="cn">单脚跳 / 跳上</div></a>
+      <a href="hunt_illustration.html" class="word-card"><div class="word">hunt</div><div class="cn">打猎 / 搜索 / 追捕</div></a>
+      <a href="hurl_illustration.html" class="word-card"><div class="word">hurl</div><div class="cn">猛扔 / 投掷 / 怒骂</div></a>
+      <a href="let_illustration.html" class="word-card"><div class="word">let</div><div class="cn">让 / 允许 / 出租</div></a>
+      <a href="let_up_illustration.html" class="word-card"><div class="word">let up</div><div class="cn">减弱 / 停止 / 放松</div></a>
+      <a href="make_illustration.html" class="word-card"><div class="word">make</div><div class="cn">制作 / 使成为 / 构成</div></a>
+      <a href="mount_illustration.html" class="word-card"><div class="word">mount</div><div class="cn">攀登 / 安装 / 增加</div></a>
+      <a href="move_illustration.html" class="word-card"><div class="word">move</div><div class="cn">移动 / 感动 / 搬家</div></a>
+      <a href="pat_illustration.html" class="word-card"><div class="word">pat</div><div class="cn">轻拍 / 抚摸</div></a>
+      <a href="pick_illustration.html" class="word-card"><div class="word">pick</div><div class="cn">挑选 / 捡起 / 采摘</div></a>
+      <a href="pull_illustration.html" class="word-card"><div class="word">pull</div><div class="cn">拉 / 拖 / 吸引</div></a>
+      <a href="push_illustration.html" class="word-card"><div class="word">push</div><div class="cn">推 / 推动 / 敦促</div></a>
+      <a href="put_illustration.html" class="word-card"><div class="word">put</div><div class="cn">放 / 放置 / 表达</div></a>
+      <a href="rip_illustration.html" class="word-card"><div class="word">rip</div><div class="cn">撕裂 / 扯开 / 猛冲</div></a>
+      <a href="scroll_illustration.html" class="word-card"><div class="word">scroll</div><div class="cn">卷动 / 滚动 / 书写</div></a>
+      <a href="skip_illustration.html" class="word-card"><div class="word">skip</div><div class="cn">跳过 / 略过 / 跳绳</div></a>
+      <a href="snap_illustration.html" class="word-card"><div class="word">snap</div><div class="cn">啪地断裂 / 崩溃 / 拍照</div></a>
+      <a href="spoil_illustration.html" class="word-card"><div class="word">spoil</div><div class="cn">破坏 / 宠坏 / 变质</div></a>
+      <a href="stroll_illustration.html" class="word-card"><div class="word">stroll</div><div class="cn">散步 / 闲逛</div></a>
+      <a href="sway_illustration.html" class="word-card"><div class="word">sway</div><div class="cn">摇摆 / 影响 / 动摇</div></a>
+      <a href="swing_illustration.html" class="word-card"><div class="word">swing</div><div class="cn">摆动 / 旋转 / 改变</div></a>
+      <a href="swirl_illustration.html" class="word-card"><div class="word">swirl</div><div class="cn">旋转 / 打旋 / 环绕</div></a>
+      <a href="tap_illustration.html" class="word-card"><div class="word">tap</div><div class="cn">轻敲 / 轻拍 / 利用</div></a>
+      <a href="tilt_illustration.html" class="word-card"><div class="word">tilt</div><div class="cn">倾斜 / 偏向 / 倾向</div></a>
+      <a href="tip_illustration.html" class="word-card"><div class="word">tip</div><div class="cn">倾斜 / 给小费 / 提示</div></a>
+      <a href="walk_illustration.html" class="word-card"><div class="word">walk</div><div class="cn">走路 / 散步 / 遛</div></a>
+      <a href="wear_illustration.html" class="word-card"><div class="word">wear</div><div class="cn">穿 / 戴 / 磨损</div></a>
+    </div>
+  </div>
+
+  <!-- 形容词 / 名词 -->
+  <div class="section">
+    <div class="section-title"><span class="bar"></span>形容词 · 名词 <span class="count">(28)</span></div>
+    <div class="word-grid">
+      <a href="backdrop_illustration.html" class="word-card"><div class="word">backdrop</div><div class="cn">背景 / 幕布</div></a>
+      <a href="border_illustration.html" class="word-card"><div class="word">border</div><div class="cn">边界 / 边境 / 边缘</div></a>
+      <a href="channel_illustration.html" class="word-card"><div class="word">channel</div><div class="cn">频道 / 渠道 / 通道</div></a>
+      <a href="class_illustration.html" class="word-card"><div class="word">class</div><div class="cn">班级 / 等级 / 优雅</div></a>
+      <a href="corner_illustration.html" class="word-card"><div class="word">corner</div><div class="cn">角落 / 拐角 / 困境</div></a>
+      <a href="edge_illustration.html" class="word-card"><div class="word">edge</div><div class="cn">边缘 / 优势 / 锋利</div></a>
+      <a href="flaky_illustration.html" class="word-card"><div class="word">flaky</div><div class="cn">易脱落的 / 靠不住的</div></a>
+      <a href="flustered_illustration.html" class="word-card"><div class="word">flustered</div><div class="cn">慌乱的 / 紧张的</div></a>
+      <a href="lowkey_illustration.html" class="word-card"><div class="word">lowkey</div><div class="cn">低调地 / 暗暗地</div></a>
+      <a href="maintain_illustration.html" class="word-card"><div class="word">maintain</div><div class="cn">维持 / 保养 / 坚持</div></a>
+      <a href="maintenance_illustration.html" class="word-card"><div class="word">maintenance</div><div class="cn">维护 / 保养 / 保持</div></a>
+      <a href="nuts_and_bolts_illustration.html" class="word-card"><div class="word">nuts &amp; bolts</div><div class="cn">具体细节 / 基本组成部分</div></a>
+      <a href="refine_illustration.html" class="word-card"><div class="word">refine</div><div class="cn">精炼 / 提纯 / 优化</div></a>
+      <a href="refined_illustration.html" class="word-card"><div class="word">refined</div><div class="cn">精炼的 / 优雅的</div></a>
+      <a href="ribbon_illustration.html" class="word-card"><div class="word">ribbon</div><div class="cn">丝带 / 带状物 / 绶带</div></a>
+      <a href="rim_illustration.html" class="word-card"><div class="word">rim</div><div class="cn">边缘 / 边框 / 轮圈</div></a>
+      <a href="ripple_illustration.html" class="word-card"><div class="word">ripple</div><div class="cn">涟漪 / 波纹 / 连锁反应</div></a>
+      <a href="serene_illustration.html" class="word-card"><div class="word">serene</div><div class="cn">宁静的 / 安详的</div></a>
+      <a href="sidewalk_illustration.html" class="word-card"><div class="word">sidewalk</div><div class="cn">人行道</div></a>
+      <a href="slack_illustration.html" class="word-card"><div class="word">slack</div><div class="cn">松弛的 / 懈怠的 / slack</div></a>
+      <a href="stuck_illustration.html" class="word-card"><div class="word">stuck</div><div class="cn">卡住的 / 困住的 / 停滞</div></a>
+      <a href="tab_illustration.html" class="word-card"><div class="word">tab</div><div class="cn">标签 / 选项卡 / 账单</div></a>
+      <a href="wispy_illustration.html" class="word-card"><div class="word">wispy</div><div class="cn">纤细的 / 轻柔的 / 稀疏的</div></a>
+      <a href="worn_illustration.html" class="word-card"><div class="word">worn</div><div class="cn">磨损的 / 疲惫的</div></a>
+      <a href="zone_illustration.html" class="word-card"><div class="word">zone</div><div class="cn">区域 / 地带 / 分区</div></a>
+    </div>
+  </div>
+
+  <!-- 词族对比 -->
+  <div class="section">
+    <div class="section-title"><span class="bar"></span>词族对比 <span class="count">(10)</span></div>
+    <div class="compare-grid">
+      <a href="break_broke_broken_compare.html" class="compare-card">
+        <div class="title"><span class="hl">break</span> / broke / broken</div>
+        <div class="desc">同根词对比——核心画面一致但语法角色不同</div>
+      </a>
+      <a href="edge_words_compare.html" class="compare-card">
+        <div class="title"><span class="hl">edge</span> / border / rim / brim / verge</div>
+        <div class="desc">五种"边缘"的空间差异</div>
+      </a>
+      <a href="flaky_slack.html" class="compare-card">
+        <div class="title"><span class="hl">flaky</span> vs <span class="hl">slack</span></div>
+        <div class="desc">"靠不住"vs"松懈"——两个松紧类形容词的对比</div>
+      </a>
+      <a href="flip_flap_flop_tip_tilt_compare.html" class="compare-card">
+        <div class="title"><span class="hl">flip</span> / flap / flop / tip / tilt</div>
+        <div class="desc">五个"翻转/倾斜"类动词的微妙区别</div>
+      </a>
+      <a href="go_come_leave_arrive.html" class="compare-card">
+        <div class="title"><span class="hl">go</span> / come / leave / arrive</div>
+        <div class="desc">四个"来去"动词的空间视角差异</div>
+      </a>
+      <a href="haul_hurl_toss_fling_chuck_compare.html" class="compare-card">
+        <div class="title"><span class="hl">haul</span> / hurl / toss / fling / chuck</div>
+        <div class="desc">五种"扔"的不同力度和方式</div>
+      </a>
+      <a href="hop_jump_skip_leap_compare.html" class="compare-card">
+        <div class="title"><span class="hl">hop</span> / jump / skip / leap</div>
+        <div class="desc">四种"跳"的不同脚法和目的</div>
+      </a>
+      <a href="tap_pat_rap_knock_compare.html" class="compare-card">
+        <div class="title"><span class="hl">tap</span> / pat / rap / knock</div>
+        <div class="desc">四种"敲"的力度和意图区别</div>
+      </a>
+      <a href="walk_stroll_march_strut_stomp_compare.html" class="compare-card">
+        <div class="title"><span class="hl">walk</span> / stroll / march / strut / stomp</div>
+        <div class="desc">五种"走"的姿势和情绪</div>
+      </a>
+      <a href="wear_worn_compare.html" class="compare-card">
+        <div class="title"><span class="hl">wear</span> vs <span class="hl">worn</span></div>
+        <div class="desc">"穿着"vs"磨损了"——同一个动作的两个阶段</div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>空间锚点 · 英语词感地图 &mdash; from-physics</p>
+  <p style="margin-top:4px;font-size:12px;">每一个词都是一幅物理画面 · 用空间逻辑构建英语思维地基</p>
+</div>
+
+</body>
+</html>

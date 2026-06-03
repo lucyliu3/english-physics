@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPACE / SPACED / SPATIAL 易混词图解</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:#f5f5f0; display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:#fff; border-radius:16px; padding:48px 40px 56px; box-shadow:0 2px 20px rgba(0,0,0,0.06); }
+  h1 { font-size:28px; font-weight:700; text-align:center; margin-bottom:4px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:40px; }
+
+  .section-title { font-size:18px; font-weight:600; margin-bottom:20px; color:#333; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:#7b4ad9; margin-right:12px; vertical-align:middle; border-radius:2px; }
+  .section-title span { vertical-align:middle; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; margin-bottom:36px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; }
+  .card canvas { width:100%; height:auto; aspect-ratio:270/200; display:block; background:#fafaf8; }
+  .card-body { padding:16px 18px 20px; }
+  .card-body h3 { font-size:17px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#7b4ad9; }
+  .card-body .pos { font-size:12px; color:#999; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.6; }
+  .card-body .def .eg { color:#777; font-style:italic; display:block; margin-top:2px; }
+
+  .white-box { background:#fff; border:1px solid #e0dce8; border-radius:8px; padding:12px 16px; margin-top:12px; font-size:13px; color:#555; line-height:1.6; box-shadow:0 1px 4px rgba(0,0,0,0.03); }
+  .white-box strong { color:#7b4ad9; }
+
+  /* 对比区 */
+  .compare-section { margin-bottom:36px; }
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:16px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:12px; overflow:hidden; text-align:center; }
+  .compare-card canvas { width:100%; height:auto; aspect-ratio:380/180; display:block; background:#fafaf8; }
+  .compare-card .label { padding:10px 14px 14px; }
+  .compare-card .label .p { font-size:16px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#666; margin-top:4px; line-height:1.5; }
+
+  @media (max-width:720px) {
+    .container { padding:28px 16px 36px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🟣 SPACE / SPACED / SPATIAL</h1>
+<p class="subtitle">同源词根，不同的词性——用空间画面一次分清</p>
+
+<div class="section-title"><span class="bar"></span><span>三词独立图解</span></div>
+<div class="cards">
+
+  <!-- SPACE -->
+  <div class="card">
+    <canvas id="cardSpace" width="270" height="200"></canvas>
+    <div class="card-body">
+      <h3>SPACE <span class="hl">/speɪs/</span></h3>
+      <div class="pos">名词 · 动词</div>
+      <div class="def">
+        <strong>名</strong> 空间 / 空隙 / 太空<br>
+        <strong>动</strong> 把……间隔开
+        <span class="eg">"I need more space."<br>"Leave some space between the chairs."</span>
+      </div>
+      <div class="white-box">
+        <strong>💡 核心画面</strong>：两个物体之间的"空当"。可以是物理的（房间空间）、抽象的（个人空间）、或巨大的（outer space 太空）。
+      </div>
+    </div>
+  </div>
+
+  <!-- SPACED -->
+  <div class="card">
+    <canvas id="cardSpaced" width="270" height="200"></canvas>
+    <div class="card-body">
+      <h3>SPACED <span class="hl">/speɪst/</span></h3>
+      <div class="pos">形容词</div>
+      <div class="def">
+        被均匀间隔开的 / 走神的
+        <span class="eg">"Evenly spaced."<br>"He looked spaced out."</span>
+      </div>
+      <div class="white-box">
+        <strong>💡 核心画面</strong>：space（空隙）→ spaced（有规律的空隙）。物体 A → 空隙 → 物体 B → 空隙 → 物体 C。"spaced out" 是从此延伸——你的思维和现实之间有了"空隙" = 走神了。
+      </div>
+    </div>
+  </div>
+
+  <!-- SPATIAL -->
+  <div class="card">
+    <canvas id="cardSpatial" width="270" height="200"></canvas>
+    <div class="card-body">
+      <h3>SPATIAL <span class="hl">/ˈspeɪʃl/</span></h3>
+      <div class="pos">形容词（学术）</div>
+      <div class="def">
+        空间的 / 与空间相关的
+        <span class="eg">"Spatial awareness."<br>"Spatial relationships."</span>
+      </div>
+      <div class="white-box">
+        <strong>💡 核心画面</strong>：描述"空间关系"这个抽象概念本身。不是具体的空间，而是<strong>关于空间的性质/逻辑/关系</strong>。我们说的"spatial logic of particles"就是这个意思。
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 易混对比区 -->
+<div class="section-title"><span class="bar"></span><span>易混对比：三个词放在一起看</span></div>
+<div class="compare-section">
+
+  <div class="compare-row">
+    <div class="compare-card">
+      <canvas id="vsNounVerb" width="380" height="180"></canvas>
+      <div class="label">
+        <div class="p" style="color:#7b4ad9;">SPACE (n.) vs SPACE (v.)</div>
+        <div class="desc">同一个词，名词和动词的画面完全不同</div>
+      </div>
+    </div>
+    <div class="compare-card">
+      <canvas id="vsSpaceSpatial" width="380" height="180"></canvas>
+      <div class="label">
+        <div class="p" style="color:#7b4ad9;">SPACE vs SPATIAL</div>
+        <div class="desc">"具体的空" vs "关于空间的抽象概念"</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 反义词 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词扩展</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:12px; padding:20px 24px; margin-bottom:20px;">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; font-size:14px;">
+    <div style="background:#fde8e8; border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:#e63946; margin-bottom:6px;">🚫 SPACE 的反义词</div>
+      <div><strong>CRAMPED</strong> — 拥挤的（没有空间）<br>
+         <span style="color:#999;">"This room is too cramped."</span></div>
+      <div style="margin-top:6px;"><strong>FILLED</strong> — 被填满的<br>
+         <span style="color:#999;">"Every space is filled."</span></div>
+      <div style="margin-top:6px;"><strong>TIGHT</strong> — 紧密的 / 没有空隙的</div>
+    </div>
+    <div style="background:#e8f0f8; border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:#2b6cb0; margin-bottom:6px;">🔗 SPATIAL 的同义/相关词</div>
+      <div><strong>GEOMETRIC</strong> — 几何的（强调形状和度量）<br>
+         <span style="color:#999;">更偏数学，spatial 更偏感知</span></div>
+      <div style="margin-top:6px;"><strong>PHYSICAL</strong> — 物理的（强调实物）<br>
+         <span style="color:#999;">spatial 可以是抽象的，physical 一定是实体的</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CRAMPED vs CROWDED -->
+<div class="section-title"><span class="bar"></span><span>顺便讲清楚：CRAMPED vs CROWDED</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:12px; padding:18px 20px; margin-bottom:36px; display:flex; gap:20px; flex-wrap:wrap;">
+  <div style="flex:1; min-width:200px;">
+    <div style="font-weight:700; color:#e63946; margin-bottom:8px;">CRAMPED — 空间被压缩</div>
+    <canvas id="crampedRoom" width="260" height="160" style="width:100%; max-width:260px; height:auto; aspect-ratio:260/160; border-radius:6px; background:#fafaf8;"></canvas>
+    <div class="white-box" style="margin-top:10px;">
+      <strong>💡 核心：空间太小</strong><br>
+      四面墙往中间挤 → 人被夹着。即使一个人也会 cramped。<br>
+      <span style="color:#999;">"a cramped apartment"</span>
+    </div>
+  </div>
+  <div style="flex:1; min-width:200px;">
+    <div style="font-weight:700; color:#2b6cb0; margin-bottom:8px;">CROWDED — 人太多</div>
+    <canvas id="crowdedRoom" width="260" height="160" style="width:100%; max-width:260px; height:auto; aspect-ratio:260/160; border-radius:6px; background:#fafaf8;"></canvas>
+    <div class="white-box" style="margin-top:10px;">
+      <strong>💡 核心：人太多</strong><br>
+      空间本身可能很大，但塞满了人。和 cramped 的根本区别在于"原因"——是空间小还是人多。<br>
+      <span style="color:#999;">"a crowded subway"</span>
+    </div>
+  </div>
+</div>
+
+<!-- CRAMPED 抽筋 -->
+<div class="section-title"><span class="bar"></span><span>CRAMPED 的另一个含义：抽筋</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:12px; padding:18px 20px; margin-bottom:36px; display:flex; gap:20px; flex-wrap:wrap;">
+  <div style="flex:1; min-width:200px;">
+    <canvas id="crampedMuscle" width="260" height="160" style="width:100%; max-width:260px; height:auto; aspect-ratio:260/160; border-radius:6px; background:#fafaf8;"></canvas>
+    <div class="white-box" style="margin-top:10px;">
+      <strong>💡 "My leg cramped up."</strong><br>
+      肌肉突然收缩成一团 → 像空间被"挤紧"了一样。<br>
+      两个含义其实是同一个画面：<strong>被挤紧了 → 没有活动余地</strong>。房间被墙挤紧 = cramped room，肌肉被自己挤紧 = cramped muscle。
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+function df(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ===== SPACE 名词 =====
+const e1 = document.getElementById('cardSpace');
+const ctx1 = e1.getContext('2d');
+df(ctx1,270,200);
+
+// room walls
+ctx1.strokeStyle = '#888'; ctx1.lineWidth = 2;
+ctx1.strokeRect(30,30,210,140);
+
+// two chairs far apart
+ctx1.fillStyle = '#7b4ad9';
+ctx1.fillRect(50,100,25,30);
+ctx1.fillRect(195,100,25,30);
+// person standing in between
+ctx1.fillStyle = '#e63946';
+ctx1.beginPath(); ctx1.arc(135,80,12,0,Math.PI*2); ctx1.fill();
+ctx1.fillRect(132,92,6,20);
+ctx1.fillStyle = '#fff'; ctx1.font = '9px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('人',135,84);
+
+// arrow showing space
+ctx1.strokeStyle = '#7b4ad9'; ctx1.lineWidth = 1.5;
+ctx1.beginPath(); ctx1.moveTo(80,110); ctx1.lineTo(190,110); ctx1.stroke();
+ctx1.fillStyle = '#7b4ad9'; ctx1.font = '10px sans-serif';
+ctx1.fillText('← space（空间）→',135,130);
+
+ctx1.fillStyle = '#888'; ctx1.font = '10px sans-serif';
+ctx1.fillText('I need more space.',135,175);
+
+// ===== SPACED =====
+const e2 = document.getElementById('cardSpaced');
+const ctx2 = e2.getContext('2d');
+df(ctx2,270,200);
+
+// evenly spaced dots
+var positions = [40, 80, 120, 160, 200, 240];
+ctx2.fillStyle = '#7b4ad9';
+positions.forEach(function(x) {
+  ctx2.beginPath(); ctx2.arc(x,75,5,0,Math.PI*2); ctx2.fill();
+});
+// brackets showing equal gaps
+ctx2.strokeStyle = '#7b4ad9'; ctx2.lineWidth = 1;
+for (var i = 0; i < positions.length - 1; i++) {
+  var mid = (positions[i] + positions[i+1]) / 2;
+  ctx2.beginPath(); ctx2.moveTo(mid,65); ctx2.lineTo(mid,85); ctx2.stroke();
+}
+ctx2.fillStyle = '#7b4ad9'; ctx2.font = '10px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('← 等距 →',135,105);
+ctx2.fillText('Evenly spaced',135,130);
+
+// spaced out person
+ctx2.fillStyle = '#999';
+ctx2.beginPath(); ctx2.arc(135,165,12,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#888'; ctx2.font = '9px sans-serif';
+ctx2.fillText('"Spaced out" = 走神了',135,195);
+// thought bubble
+ctx2.strokeStyle = '#ccc'; ctx2.lineWidth = 1;
+ctx2.beginPath(); ctx2.arc(170,155,12,0,Math.PI*2); ctx2.stroke();
+ctx2.beginPath(); ctx2.arc(185,140,8,0,Math.PI*2); ctx2.stroke();
+ctx2.beginPath(); ctx2.arc(195,130,5,0,Math.PI*2); ctx2.stroke();
+ctx2.fillStyle = '#ccc'; ctx2.font = '14px sans-serif';
+ctx2.fillText('💭',195,130);
+
+// ===== SPATIAL =====
+const e3 = document.getElementById('cardSpatial');
+const ctx3 = e3.getContext('2d');
+df(ctx3,270,200);
+
+// abstract spatial relationships drawing
+// a 3D-like cube (wireframe)
+ctx3.strokeStyle = '#7b4ad9'; ctx3.lineWidth = 1.5;
+// front face
+ctx3.strokeRect(80,55,60,60);
+// back face
+ctx3.strokeRect(110,35,60,60);
+// connecting lines
+ctx3.beginPath(); ctx3.moveTo(80,55); ctx3.lineTo(110,35); ctx3.stroke();
+ctx3.beginPath(); ctx3.moveTo(140,55); ctx3.lineTo(170,35); ctx3.stroke();
+ctx3.beginPath(); ctx3.moveTo(80,115); ctx3.lineTo(110,95); ctx3.stroke();
+ctx3.beginPath(); ctx3.moveTo(140,115); ctx3.lineTo(170,95); ctx3.stroke();
+
+// labels
+ctx3.fillStyle = '#7b4ad9'; ctx3.font = '10px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('↑',110,28);
+ctx3.fillText('→',175,60);
+
+ctx3.fillStyle = '#888'; ctx3.font = '11px sans-serif';
+ctx3.fillText('Spatial relationships',135,155);
+ctx3.fillText('空间关系',135,170);
+
+// ===== SPACE noun vs verb =====
+const e4 = document.getElementById('vsNounVerb');
+const ctx4 = e4.getContext('2d');
+df(ctx4,380,180);
+
+// LEFT: SPACE (n.) — empty area
+ctx4.strokeStyle = '#888'; ctx4.lineWidth = 1.5;
+ctx4.strokeRect(30,20,140,100);
+ctx4.fillStyle = '#7b4ad9'; ctx4.font = '9px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('SPACE (n.)',100,15);
+ctx4.fillStyle = '#888'; ctx4.font = '9px sans-serif';
+ctx4.fillText('空荡荡的 = 有空间',100,70);
+ctx4.fillStyle = '#666'; ctx4.font = '9px sans-serif';
+ctx4.fillText('"I need more space."',100,145);
+
+// RIGHT: space (v.) — spacing things out
+ctx4.fillStyle = '#7b4ad9';
+var xs = [210, 250, 290, 330, 370];
+xs.forEach(function(x) {
+  ctx4.beginPath(); ctx4.arc(x,70,4,0,Math.PI*2); ctx4.fill();
+});
+ctx4.fillStyle = '#7b4ad9'; ctx4.font = '9px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('space (v.)',290,15);
+ctx4.strokeStyle = '#7b4ad9'; ctx4.lineWidth = 1;
+xs.forEach(function(x) {
+  ctx4.beginPath(); ctx4.moveTo(x,60); ctx4.lineTo(x,80); ctx4.stroke();
+});
+ctx4.fillStyle = '#888'; ctx4.font = '9px sans-serif';
+ctx4.fillText('把东西等距摆开 = 动词',290,110);
+ctx4.fillText('"Space the chairs evenly."',290,145);
+
+// ===== SPACE vs SPATIAL =====
+const e5 = document.getElementById('vsSpaceSpatial');
+const ctx5 = e5.getContext('2d');
+df(ctx5,380,180);
+
+// LEFT: SPACE = concrete empty area
+ctx5.strokeStyle = '#888'; ctx5.lineWidth = 1.5;
+ctx5.strokeRect(20,20,140,100);
+ctx5.fillStyle = '#7b4ad9'; ctx5.font = '9px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('SPACE',90,15);
+ctx5.fillStyle = '#888'; ctx5.font = '8px sans-serif';
+ctx5.fillText('具体的"空"',90,75);
+ctx5.fillStyle = '#999'; ctx5.font = '8px sans-serif';
+ctx5.fillText('看得见/摸得着的空隙',90,140);
+
+// RIGHT: SPATIAL = about space (abstract)
+ctx5.fillStyle = '#7b4ad9'; ctx5.font = '9px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('SPATIAL',290,15);
+ctx5.strokeStyle = '#7b4ad9'; ctx5.lineWidth = 1.5;
+ctx5.strokeRect(200,25,80,40);
+ctx5.strokeRect(230,20,80,40);
+ctx5.beginPath(); ctx5.moveTo(200,25); ctx5.lineTo(230,20); ctx5.stroke();
+ctx5.beginPath(); ctx5.moveTo(280,25); ctx5.lineTo(310,20); ctx5.stroke();
+ctx5.beginPath(); ctx5.moveTo(200,65); ctx5.lineTo(230,60); ctx5.stroke();
+ctx5.beginPath(); ctx5.moveTo(280,65); ctx5.lineTo(310,60); ctx5.stroke();
+
+ctx5.fillStyle = '#888'; ctx5.font = '8px sans-serif';
+ctx5.fillText('抽象的"空间关系"',290,110);
+ctx5.fillStyle = '#999'; ctx5.font = '8px sans-serif';
+ctx5.fillText('描述/分析空间的概念',290,140);
+
+// arrow connecting them
+ctx5.strokeStyle = '#7b4ad9'; ctx5.lineWidth = 1.5;
+ctx5.beginPath(); ctx5.moveTo(165,75); ctx5.lineTo(195,75); ctx5.stroke();
+ctx5.fillStyle = '#7b4ad9';
+ctx5.beginPath(); ctx5.moveTo(191,71); ctx5.lineTo(201,75); ctx5.lineTo(191,79); ctx5.closePath(); ctx5.fill();
+ctx5.fillStyle = '#7b4ad9'; ctx5.font = '9px sans-serif';
+ctx5.fillText('具体 → 抽象',180,68);
+
+// ===== CRAMPED 1: 拥挤的房间 =====
+const cramp1 = document.getElementById('crampedRoom');
+const ctx6 = cramp1.getContext('2d');
+df(ctx6,260,160);
+
+// 四面墙往中间挤（用箭头表示压力）
+ctx6.strokeStyle = '#e63946'; ctx6.lineWidth = 4;
+// left wall pushing right
+ctx6.beginPath(); ctx6.moveTo(8,15); ctx6.lineTo(8,135); ctx6.stroke();
+// right wall pushing left
+ctx6.beginPath(); ctx6.moveTo(252,15); ctx6.lineTo(252,135); ctx6.stroke();
+// top wall pushing down
+ctx6.beginPath(); ctx6.moveTo(10,10); ctx6.lineTo(250,10); ctx6.stroke();
+// bottom wall pushing up
+ctx6.beginPath(); ctx6.moveTo(10,150); ctx6.lineTo(250,150); ctx6.stroke();
+
+// 向内挤压的箭头（四面墙上都画向内的箭头）
+ctx6.fillStyle = '#e63946';
+// left wall → 向右挤
+ctx6.beginPath(); ctx6.moveTo(18,45); ctx6.lineTo(34,45); ctx6.lineTo(34,35); ctx6.lineTo(44,50); ctx6.lineTo(34,65); ctx6.lineTo(34,55); ctx6.lineTo(18,55); ctx6.closePath(); ctx6.fill();
+ctx6.beginPath(); ctx6.moveTo(18,85); ctx6.lineTo(34,85); ctx6.lineTo(34,75); ctx6.lineTo(44,90); ctx6.lineTo(34,105); ctx6.lineTo(34,95); ctx6.lineTo(18,95); ctx6.closePath(); ctx6.fill();
+// right wall → 向左挤
+ctx6.beginPath(); ctx6.moveTo(242,45); ctx6.lineTo(226,45); ctx6.lineTo(226,35); ctx6.lineTo(216,50); ctx6.lineTo(226,65); ctx6.lineTo(226,55); ctx6.lineTo(242,55); ctx6.closePath(); ctx6.fill();
+ctx6.beginPath(); ctx6.moveTo(242,85); ctx6.lineTo(226,85); ctx6.lineTo(226,75); ctx6.lineTo(216,90); ctx6.lineTo(226,105); ctx6.lineTo(226,95); ctx6.lineTo(242,95); ctx6.closePath(); ctx6.fill();
+// top wall → 向下挤
+ctx6.beginPath(); ctx6.moveTo(65,18); ctx6.lineTo(65,34); ctx6.lineTo(55,34); ctx6.lineTo(70,44); ctx6.lineTo(85,34); ctx6.lineTo(75,34); ctx6.lineTo(75,18); ctx6.closePath(); ctx6.fill();
+ctx6.beginPath(); ctx6.moveTo(135,18); ctx6.lineTo(135,34); ctx6.lineTo(125,34); ctx6.lineTo(140,44); ctx6.lineTo(155,34); ctx6.lineTo(145,34); ctx6.lineTo(145,18); ctx6.closePath(); ctx6.fill();
+ctx6.beginPath(); ctx6.moveTo(205,18); ctx6.lineTo(205,34); ctx6.lineTo(195,34); ctx6.lineTo(210,44); ctx6.lineTo(225,34); ctx6.lineTo(215,34); ctx6.lineTo(215,18); ctx6.closePath(); ctx6.fill();
+// bottom wall → 向上挤
+ctx6.beginPath(); ctx6.moveTo(65,142); ctx6.lineTo(65,126); ctx6.lineTo(55,126); ctx6.lineTo(70,116); ctx6.lineTo(85,126); ctx6.lineTo(75,126); ctx6.lineTo(75,142); ctx6.closePath(); ctx6.fill();
+ctx6.beginPath(); ctx6.moveTo(135,142); ctx6.lineTo(135,126); ctx6.lineTo(125,126); ctx6.lineTo(140,116); ctx6.lineTo(155,126); ctx6.lineTo(145,126); ctx6.lineTo(145,142); ctx6.closePath(); ctx6.fill();
+ctx6.beginPath(); ctx6.moveTo(205,142); ctx6.lineTo(205,126); ctx6.lineTo(195,126); ctx6.lineTo(210,116); ctx6.lineTo(225,126); ctx6.lineTo(215,126); ctx6.lineTo(215,142); ctx6.closePath(); ctx6.fill();
+
+// 中间被挤的人
+ctx6.fillStyle = '#333';
+ctx6.beginPath(); ctx6.arc(130,75,18,0,Math.PI*2); ctx6.fill();
+ctx6.fillRect(125,93,10,30);
+// 被挤扁的难受表情
+ctx6.fillStyle = '#f5f0e8'; ctx6.font = '16px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('😫',130,80);
+// tension lines around person (被挤压的线条)
+ctx6.strokeStyle = '#e63946'; ctx6.lineWidth = 1.5;
+ctx6.beginPath(); ctx6.moveTo(75,55); ctx6.lineTo(108,65);
+ctx6.moveTo(75,95); ctx6.lineTo(108,88);
+ctx6.moveTo(185,55); ctx6.lineTo(152,65);
+ctx6.moveTo(185,95); ctx6.lineTo(152,88);
+ctx6.stroke();
+
+ctx6.fillStyle = '#e63946'; ctx6.font = '8px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('← 四面墙往中间挤！',130,38);
+ctx6.fillStyle = '#888'; ctx6.font = '9px sans-serif';
+ctx6.fillText('cramped = 被夹紧/挤满',130,148);
+
+// ===== CROWDED: 人太多 =====
+const crowd = document.getElementById('crowdedRoom');
+const ctx7 = crowd.getContext('2d');
+df(ctx7,260,160);
+
+// big room (bigger frame than cramped)
+ctx7.strokeStyle = '#2b6cb0'; ctx7.lineWidth = 2;
+ctx7.strokeRect(10,10,240,115);
+
+// lots of people packed in
+var people = [
+  [28,40],[52,38],[76,42],[100,36],[124,40],[148,38],[172,42],[196,36],[220,40],
+  [30,70],[54,68],[78,72],[102,66],[126,70],[150,68],[174,72],[198,66],[222,70],
+  [36,98],[60,96],[84,100],[108,94],[132,98],[156,96],[180,100],[204,94]
+];
+ctx7.fillStyle = '#2b6cb0';
+people.forEach(function(p) {
+  ctx7.beginPath(); ctx7.arc(p[0],p[1],6,0,Math.PI*2); ctx7.fill();
+});
+
+// person in the middle being squished
+ctx7.fillStyle = '#e63946';
+ctx7.beginPath(); ctx7.arc(130,68,7,0,Math.PI*2); ctx7.fill();
+ctx7.fillStyle = '#f5f0e8'; ctx7.font = '8px sans-serif'; ctx7.textAlign = 'center';
+ctx7.fillText('😰',130,71);
+
+ctx7.fillStyle = '#2b6cb0'; ctx7.font = '8px sans-serif'; ctx7.textAlign = 'center';
+ctx7.fillText('空间很大，但人挤满了！',130,18);
+ctx7.fillStyle = '#888'; ctx7.font = '9px sans-serif';
+ctx7.fillText('crowded = 人太多',130,148);
+
+// ===== CRAMPED 2: 抽筋的腿 =====
+const cramp2 = document.getElementById('crampedMuscle');
+const ctx8 = cramp2.getContext('2d');
+df(ctx8,260,160);
+
+// leg outline
+ctx8.strokeStyle = '#333'; ctx8.lineWidth = 2;
+ctx8.beginPath(); ctx8.moveTo(100,40);
+ctx8.lineTo(100,120);
+ctx8.lineTo(160,120);
+ctx8.lineTo(160,40);
+ctx8.stroke();
+
+// calf muscle
+ctx8.fillStyle = '#e8dcc8';
+ctx8.beginPath(); ctx8.ellipse(130,80,20,30,0,0,Math.PI*2); ctx8.fill();
+ctx8.strokeStyle = '#d4c8b0'; ctx8.lineWidth = 1;
+ctx8.beginPath(); ctx8.ellipse(130,80,20,30,0,0,Math.PI*2); ctx8.stroke();
+
+// cramped knot
+ctx8.fillStyle = '#e63946';
+ctx8.beginPath(); ctx8.arc(130,80,10,0,Math.PI*2); ctx8.fill();
+// tension lines
+ctx8.strokeStyle = '#e63946'; ctx8.lineWidth = 1.5;
+ctx8.beginPath(); ctx8.moveTo(110,60); ctx8.lineTo(118,68);
+ctx8.moveTo(145,95); ctx8.lineTo(153,103);
+ctx8.moveTo(148,58); ctx8.lineTo(142,66);
+ctx8.moveTo(112,100); ctx8.lineTo(118,94);
+ctx8.stroke();
+
+// label
+ctx8.fillStyle = '#e63946'; ctx8.font = '8px sans-serif'; ctx8.textAlign = 'center';
+ctx8.fillText('⚡ 肌肉突然收缩成一团！',130,30);
+ctx8.fillStyle = '#888'; ctx8.font = '9px sans-serif';
+ctx8.fillText('"My leg cramped up."',130,148);
+
+})();
+</script>
+</body>
+</html>

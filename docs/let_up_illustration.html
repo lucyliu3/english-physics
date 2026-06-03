@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LET UP 图解 — 减弱 / 放松 / 停止</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f0f5ed 0%,#e8f0e5 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#38a169,#2d7a4f); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#38a169,#4ade80); border-radius:2px; flex-shrink:0; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#38a169; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #c8dcc8; padding-left:10px; }
+
+  .white-box { background:#fff; border:1px solid #d0e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #d0e0d0; border-top:1px solid #d0e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#38a169; }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; color:#333; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+
+  .usage-section { background:linear-gradient(135deg,#f0faf5,#e8f5ec); border:1px solid #d0e0d0; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #dde8dd; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#38a169; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+
+  .spectrum-wrap { background:linear-gradient(135deg,#f0faf5,#e8f5ec); border:1px solid #d0e0d0; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+
+  .green-bg { background:linear-gradient(135deg,#f0faf5,#e0f0e6); }
+  .red-bg { background:linear-gradient(135deg,#fff0f0,#fde0e0); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+  .blue-bg { background:linear-gradient(135deg,#f0f5ff,#e0e8f5); }
+
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>LET UP</h1>
+<p class="subtitle">减弱 / 放松 — 从"rain lets up"到"don't let up on your goals"</p>
+
+<!-- 核心卡片区 -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+
+  <!-- Card 1: 物理意象 — 释放压力 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgGrad1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#f2f8f2"/>
+        </linearGradient>
+        <linearGradient id="handGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f5e6d0"/>
+          <stop offset="100%" stop-color="#e8d5b8"/>
+        </linearGradient>
+        <filter id="shadow">
+          <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#bgGrad1)" rx="8"/>
+
+      <text x="380" y="35" text-anchor="middle" fill="#38a169" font-size="16" font-weight="700" font-family="sans-serif">LET（放开）+ UP（向上）= 释放压力的意象</text>
+
+      <!-- ===== 核心画面：一只手正在松开弹簧/压力阀 ===== -->
+
+      <!-- 左侧：压力状态 (before — 按压中) -->
+      <g filter="url(#shadow)">
+        <!-- 弹簧（压缩状态） -->
+        <path d="M120,280 L120,270 L140,260 L120,250 L140,240 L120,230 L140,220 L120,210 L140,200 L120,190 L140,180 L120,170"
+              fill="none" stroke="#e63946" stroke-width="3" stroke-linecap="round">
+          <animate attributeName="d"
+            values="
+              M120,280 L120,270 L140,260 L120,250 L140,240 L120,230 L140,220 L120,210 L140,200 L120,190 L140,180 L120,170;
+              M120,280 L120,268 L140,256 L120,244 L140,232 L120,220 L140,208 L120,196 L140,184 L120,172 L140,160 L120,148;
+              M120,280 L120,270 L140,260 L120,250 L140,240 L120,230 L140,220 L120,210 L140,200 L120,190 L140,180 L120,170"
+            dur="4s" repeatCount="indefinite"/>
+        </path>
+        <!-- 按压的手 -->
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="0,0; 0,20; 0,0"
+            dur="4s" repeatCount="indefinite"/>
+          <rect x="100" y="148" width="50" height="15" rx="5" fill="url(#handGrad)" stroke="#c8b898" stroke-width="1"/>
+          <circle cx="148" cy="155" r="8" fill="#f5e6d0" stroke="#c8b898" stroke-width="1"/>
+        </g>
+      </g>
+
+      <text x="130" y="315" text-anchor="middle" fill="#e63946" font-size="13" font-weight="600" font-family="sans-serif">⛔ 按压状态</text>
+      <text x="130" y="333" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">压力累积中</text>
+
+      <!-- ===== 中间：LET UP 动作 ===== -->
+      <!-- 手向上松开 -->
+      <g filter="url(#glow)">
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="0,20; 0,-30; 0,20"
+            dur="4s" repeatCount="indefinite"/>
+          <rect x="330" y="160" width="55" height="15" rx="5" fill="url(#handGrad)" stroke="#c8b898" stroke-width="1.5"/>
+          <circle cx="382" cy="167" r="9" fill="#f5e6d0" stroke="#c8b898" stroke-width="1.5"/>
+          <!-- 手向上箭头 -->
+          <path d="M357,155 L357,120" stroke="#38a169" stroke-width="2.5" stroke-linecap="round">
+            <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite"/>
+          </path>
+          <polygon points="357,120 353,128 361,128" fill="#38a169">
+            <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite"/>
+          </polygon>
+        </g>
+      </g>
+
+      <text x="357" y="215" text-anchor="middle" fill="#38a169" font-size="16" font-weight="700" font-family="sans-serif" filter="url(#glow)">LET UP</text>
+      <text x="357" y="235" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">手松开 = 压力释放</text>
+
+      <!-- ===== 右侧：压力释放后 (after) ===== -->
+      <g filter="url(#shadow)">
+        <!-- 弹簧伸展 -->
+        <path d="M570,280 L570,265 L590,250 L570,235 L590,220 L570,205 L590,190 L570,175 L590,160 L570,145"
+              fill="none" stroke="#38a169" stroke-width="3" stroke-linecap="round"/>
+        <!-- 放松/释放标记 -->
+        <circle cx="580" cy="145" r="12" fill="#e8f5ec" stroke="#38a169" stroke-width="2">
+          <animate attributeName="r" values="12;16;12" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <text x="580" y="148" text-anchor="middle" fill="#38a169" font-size="12" font-weight="700" font-family="sans-serif">✓</text>
+      </g>
+
+      <text x="580" y="315" text-anchor="middle" fill="#38a169" font-size="13" font-weight="600" font-family="sans-serif">✅ 释放状态</text>
+      <text x="580" y="333" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">压力减弱/缓解</text>
+
+      <!-- 底部大箭头 -->
+      <path d="M190,270 L310,270" stroke="#38a169" stroke-width="2" stroke-dasharray="5,3" opacity="0.5"/>
+      <path d="M420,270 L530,270" stroke="#38a169" stroke-width="2" stroke-dasharray="5,3" opacity="0.5"/>
+
+      <!-- 底部说明 -->
+      <text x="380" y="375" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">核心意象：用手按住一个压缩的弹簧 — 手松开（LET UP）= 弹簧释放 = 压力/强度减弱</text>
+    </svg>
+    <div class="card-body">
+      <h3>LET UP <span class="hl">/lɛt ʌp/</span></h3>
+      <div class="pos">PHRASAL VERB · 短语动词</div>
+      <div class="def">
+        <strong>本义</strong> 物理动作：放开（LET）+ 向上（UP）= 将压力/约束释放掉<br>
+        <strong>引申</strong> 减弱、缓解、放松（不再保持高强度/高压状态）
+        <span class="eg">"The rain finally let up after three days." 雨下了三天后终于小了。</span>
+      </div>
+      <div class="white-box"><strong>💡 理解关键</strong>：LET（允许/放开）+ UP（向上/离开）。想象用手压住弹簧——当你"let up"（把手松开向上移开），弹簧上的压力就解除了。所以 let up 的核心是"减小施加的压力/强度"。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: 抽象场景 — 不放松目标 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgGrad2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#f0f5f0"/>
+        </linearGradient>
+        <filter id="shadow2">
+          <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#bgGrad2)" rx="8"/>
+
+      <text x="380" y="35" text-anchor="middle" fill="#38a169" font-size="16" font-weight="700" font-family="sans-serif">"Don't let up on your goals" — 不要对目标松懈</text>
+
+      <!-- === 抽象场景：人物爬坡追逐目标 === -->
+      <!-- 山坡 -->
+      <path d="M50,320 Q250,250 450,180 Q550,145 700,100" fill="none" stroke="#ddd" stroke-width="2"/>
+      <path d="M50,320 Q250,250 450,180 Q550,145 700,100 L700,380 L50,380 Z" fill="#f5f8f0" stroke="none"/>
+      <path d="M50,320 Q250,250 450,180 Q550,145 700,100" fill="none" stroke="#b0c8a0" stroke-width="3"/>
+
+      <!-- 目标旗帜 -->
+      <g filter="url(#shadow2)">
+        <line x1="680" y1="90" x2="680" y2="180" stroke="#666" stroke-width="2.5"/>
+        <polygon points="680,90 720,100 680,110" fill="#e63946"/>
+        <text x="690" y="85" text-anchor="middle" fill="#e63946" font-size="11" font-weight="600" font-family="sans-serif">GOAL</text>
+      </g>
+
+      <!-- 爬坡的人 -->
+      <g filter="url(#shadow2)">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 80,-50; 160,-100; 240,-140; 80,-50; 0,0"
+          dur="8s" repeatCount="indefinite"/>
+        <!-- 人物 -->
+        <circle cx="120" cy="272" r="14" fill="#f5e6d0" stroke="#c8b898" stroke-width="1"/>
+        <circle cx="115" cy="269" r="2" fill="#333"/>
+        <circle cx="125" cy="269" r="2" fill="#333"/>
+        <path d="M118,277 Q120,280 124,277" fill="none" stroke="#333" stroke-width="1.2"/>
+        <!-- 身体 -->
+        <rect x="115" y="286" width="10" height="16" rx="3" fill="#38a169"/>
+        <!-- 腿 (爬山动作) -->
+        <g>
+          <animateTransform attributeName="transform" type="rotate"
+            values="-15,120,302; 15,120,302; -15,120,302"
+            dur="0.8s" repeatCount="indefinite"/>
+          <line x1="120" y1="302" x2="112" y2="320" stroke="#444" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <g>
+          <animateTransform attributeName="transform" type="rotate"
+            values="15,125,302; -15,125,302; 15,125,302"
+            dur="0.8s" repeatCount="indefinite"/>
+          <line x1="125" y1="302" x2="133" y2="320" stroke="#444" stroke-width="3" stroke-linecap="round"/>
+        </g>
+      </g>
+
+      <!-- 努力标记 -->
+      <text x="200" y="240" text-anchor="middle" fill="#e63946" font-size="11" font-weight="600" font-family="sans-serif">
+        💪 努力!
+        <animate attributeName="opacity" values="1;0.2;1" dur="1s" repeatCount="indefinite"/>
+      </text>
+
+      <!-- "坚持"标语 -->
+      <text x="380" y="370" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">"Don't let up — keep pushing toward your GOAL!"</text>
+      <text x="380" y="390" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">不要松懈——持续向着目标前进！</text>
+
+      <!-- 右上角: "LET UP" = 松懈 -->
+      <g filter="url(#shadow2)">
+        <rect x="550" y="200" width="180" height="70" rx="10" fill="#fff5f0" stroke="#e63946" stroke-width="1.5"/>
+        <text x="640" y="225" text-anchor="middle" fill="#e63946" font-size="14" font-weight="700" font-family="sans-serif">⚠ LET UP = 松懈</text>
+        <text x="640" y="248" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">一旦松懈（let up），就会原地踏步</text>
+        <text x="640" y="265" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">无法到达目标（GOAL）</text>
+      </g>
+    </svg>
+    <div class="card-body">
+      <h3>DON'T LET UP <span class="hl">(on your goals)</span></h3>
+      <div class="pos">PHRASAL VERB · 抽象用法</div>
+      <div class="def">
+        <strong>Don't let up</strong> = 不要放松 / 不要松懈 / 保持强度<br>
+        表示"持续保持努力状态，不要减弱投入"
+        <span class="eg">"Don't let up on your training — the competition is next week." 训练不要松懈——比赛就在下周。</span>
+      </div>
+      <div class="white-box"><strong>🧠 如何演变的</strong>：物理上"松开手让弹簧释放"→ 引申为"降低施加的压力/强度"。在抽象层面，"let up"就是"放松努力、降低强度"。否定形式"don't let up" = "保持强度，不要松懈"。</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 程度光谱：降雨强度递减 -->
+<div class="section-title"><span class="bar"></span><span>🌧️ 程度光谱：降雨强度递减 (POURING → CLEAR)</span></div>
+<div class="spectrum-wrap">
+  <svg viewBox="0 0 910 340" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="skyGrad" x1="0" y1="0" x2="910" y2="0">
+        <stop offset="0%" stop-color="#2c3e50"/>
+        <stop offset="20%" stop-color="#4a6a8a"/>
+        <stop offset="40%" stop-color="#7a9aba"/>
+        <stop offset="60%" stop-color="#a0b8d0"/>
+        <stop offset="80%" stop-color="#c8d8e8"/>
+        <stop offset="100%" stop-color="#e8f0f5"/>
+      </linearGradient>
+      <linearGradient id="barGrad" x1="0" y1="0" x2="910" y2="0">
+        <stop offset="0%" stop-color="#e63946"/>
+        <stop offset="50%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#38a169"/>
+      </linearGradient>
+      <filter id="glowG">
+        <feGaussianBlur stdDeviation="2" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    <rect width="910" height="340" fill="#f0f5f5" rx="10"/>
+
+    <text x="455" y="30" text-anchor="middle" fill="#333" font-size="14" font-weight="700" font-family="sans-serif">降雨强度光谱 — 从倾盆大雨到完全放晴</text>
+
+    <!-- 天空背景 -->
+    <rect x="50" y="45" width="810" height="120" rx="6" fill="url(#skyGrad)" opacity="0.6"/>
+
+    <!-- 阶段1: POURING -->
+    <g>
+      <rect x="70" y="55" width="120" height="100" rx="4" fill="#2c3e50" opacity="0.3"/>
+      <text x="130" y="80" text-anchor="middle" fill="#e63946" font-size="11" font-weight="700" font-family="sans-serif" opacity="0">POURING</text>
+      <!-- 密集雨线 -->
+      <line x1="85" y1="65" x2="80" y2="145" stroke="#6a8aaa" stroke-width="2">
+        <animate attributeName="y1" values="65;85;65" dur="0.6s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="145;155;145" dur="0.6s" repeatCount="indefinite"/>
+      </line>
+      <line x1="100" y1="60" x2="95" y2="148" stroke="#6a8aaa" stroke-width="2">
+        <animate attributeName="y1" values="60;80;60" dur="0.5s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="148;158;148" dur="0.5s" repeatCount="indefinite"/>
+      </line>
+      <line x1="115" y1="70" x2="110" y2="150" stroke="#6a8aaa" stroke-width="2">
+        <animate attributeName="y1" values="70;88;70" dur="0.7s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="150;160;150" dur="0.7s" repeatCount="indefinite"/>
+      </line>
+      <line x1="130" y1="58" x2="125" y2="142" stroke="#6a8aaa" stroke-width="2">
+        <animate attributeName="y1" values="58;78;58" dur="0.55s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="142;152;142" dur="0.55s" repeatCount="indefinite"/>
+      </line>
+      <line x1="145" y1="68" x2="140" y2="146" stroke="#6a8aaa" stroke-width="2">
+        <animate attributeName="y1" values="68;86;68" dur="0.65s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="146;156;146" dur="0.65s" repeatCount="indefinite"/>
+      </line>
+      <line x1="160" y1="63" x2="155" y2="148" stroke="#6a8aaa" stroke-width="2">
+        <animate attributeName="y1" values="63;82;63" dur="0.55s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="148;158;148" dur="0.55s" repeatCount="indefinite"/>
+      </line>
+      <line x1="175" y1="72" x2="170" y2="145" stroke="#6a8aaa" stroke-width="2">
+        <animate attributeName="y1" values="72;90;72" dur="0.6s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="145;155;145" dur="0.6s" repeatCount="indefinite"/>
+      </line>
+    </g>
+
+    <!-- 阶段2: HEAVY -->
+    <g>
+      <rect x="210" y="55" width="110" height="100" rx="4" fill="#4a6a8a" opacity="0.25"/>
+      <text x="265" y="80" text-anchor="middle" fill="#d94a4a" font-size="11" font-weight="700" font-family="sans-serif" opacity="0">HEAVY</text>
+      <line x1="225" y1="65" x2="220" y2="145" stroke="#7a9aba" stroke-width="1.5">
+        <animate attributeName="y1" values="65;80;65" dur="0.7s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="145;152;145" dur="0.7s" repeatCount="indefinite"/>
+      </line>
+      <line x1="240" y1="60" x2="235" y2="142" stroke="#7a9aba" stroke-width="1.5">
+        <animate attributeName="y1" values="60;78;60" dur="0.65s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="142;150;142" dur="0.65s" repeatCount="indefinite"/>
+      </line>
+      <line x1="255" y1="70" x2="250" y2="148" stroke="#7a9aba" stroke-width="1.5">
+        <animate attributeName="y1" values="70;85;70" dur="0.75s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="148;155;148" dur="0.75s" repeatCount="indefinite"/>
+      </line>
+      <line x1="270" y1="62" x2="265" y2="140" stroke="#7a9aba" stroke-width="1.5">
+        <animate attributeName="y1" values="62;80;62" dur="0.6s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="140;150;140" dur="0.6s" repeatCount="indefinite"/>
+      </line>
+      <line x1="285" y1="68" x2="280" y2="146" stroke="#7a9aba" stroke-width="1.5">
+        <animate attributeName="y1" values="68;84;68" dur="0.7s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="146;154;146" dur="0.7s" repeatCount="indefinite"/>
+      </line>
+    </g>
+
+    <!-- 阶段3: MODERATE -->
+    <g>
+      <rect x="340" y="55" width="100" height="100" rx="4" fill="#7a9aba" opacity="0.2"/>
+      <text x="390" y="80" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="700" font-family="sans-serif" opacity="0">MODERATE</text>
+      <line x1="355" y1="68" x2="352" y2="140" stroke="#a0b8d0" stroke-width="1.2">
+        <animate attributeName="y1" values="68;82;68" dur="0.8s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="140;148;140" dur="0.8s" repeatCount="indefinite"/>
+      </line>
+      <line x1="370" y1="62" x2="367" y2="145" stroke="#a0b8d0" stroke-width="1.2">
+        <animate attributeName="y1" values="62;78;62" dur="0.75s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="145;152;145" dur="0.75s" repeatCount="indefinite"/>
+      </line>
+      <line x1="385" y1="70" x2="382" y2="142" stroke="#a0b8d0" stroke-width="1.2">
+        <animate attributeName="y1" values="70;84;70" dur="0.85s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="142;150;142" dur="0.85s" repeatCount="indefinite"/>
+      </line>
+      <line x1="400" y1="65" x2="397" y2="148" stroke="#a0b8d0" stroke-width="1.2">
+        <animate attributeName="y1" values="65;80;65" dur="0.8s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="148;155;148" dur="0.8s" repeatCount="indefinite"/>
+      </line>
+    </g>
+
+    <!-- 阶段4: LIGHT -->
+    <g>
+      <rect x="460" y="55" width="100" height="100" rx="4" fill="#a0b8d0" opacity="0.15"/>
+      <text x="510" y="80" text-anchor="middle" fill="#38a169" font-size="11" font-weight="700" font-family="sans-serif" opacity="0">LIGHT</text>
+      <line x1="475" y1="68" x2="473" y2="138" stroke="#c0d0e0" stroke-width="1">
+        <animate attributeName="y1" values="68;80;68" dur="1s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="138;145;138" dur="1s" repeatCount="indefinite"/>
+      </line>
+      <line x1="495" y1="70" x2="493" y2="142" stroke="#c0d0e0" stroke-width="1">
+        <animate attributeName="y1" values="70;82;70" dur="1.1s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="142;148;142" dur="1.1s" repeatCount="indefinite"/>
+      </line>
+      <line x1="515" y1="65" x2="513" y2="140" stroke="#c0d0e0" stroke-width="1">
+        <animate attributeName="y1" values="65;78;65" dur="0.9s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="140;146;140" dur="0.9s" repeatCount="indefinite"/>
+      </line>
+    </g>
+
+    <!-- 阶段5: LET UP -->
+    <g filter="url(#glowG)">
+      <rect x="580" y="55" width="100" height="100" rx="4" fill="#c8d8e8" opacity="0.2"/>
+      <!-- 零星的雨滴 -->
+      <line x1="600" y1="75" x2="598" y2="120" stroke="#d0dce8" stroke-width="0.8">
+        <animate attributeName="opacity" values="1;0;1" dur="2.5s" repeatCount="indefinite"/>
+      </line>
+      <line x1="625" y1="80" x2="623" y2="130" stroke="#d0dce8" stroke-width="0.8">
+        <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite"/>
+      </line>
+      <line x1="650" y1="70" x2="648" y2="125" stroke="#d0dce8" stroke-width="0.8">
+        <animate attributeName="opacity" values="1;0;1" dur="3.5s" repeatCount="indefinite"/>
+      </line>
+    </g>
+
+    <!-- 阶段6: CLEAR -->
+    <g>
+      <rect x="700" y="55" width="110" height="100" rx="4" fill="#e8f0f5" opacity="0.15"/>
+      <!-- 太阳 -->
+      <circle cx="755" cy="100" r="20" fill="#fde047" opacity="0.8">
+        <animate attributeName="r" values="20;22;20" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <!-- 光芒 -->
+      <line x1="755" y1="72" x2="755" y2="64" stroke="#fde047" stroke-width="2" opacity="0.6">
+        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/>
+      </line>
+      <line x1="755" y1="128" x2="755" y2="136" stroke="#fde047" stroke-width="2" opacity="0.6"/>
+      <line x1="727" y1="100" x2="719" y2="100" stroke="#fde047" stroke-width="2" opacity="0.6"/>
+      <line x1="783" y1="100" x2="791" y2="100" stroke="#fde047" stroke-width="2" opacity="0.6"/>
+    </g>
+
+    <!-- 底部游标条 -->
+    <rect x="50" y="175" width="810" height="8" rx="4" fill="url(#barGrad)"/>
+
+    <!-- 游标（往返扫描）-->
+    <g filter="url(#glowG)">
+      <circle cx="50" cy="179" r="10" fill="#38a169" stroke="#fff" stroke-width="2">
+        <animate attributeName="cx"
+          values="50;190;310;420;530;650;770;770;650;530;420;310;190;50"
+          dur="20s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- 阶段标签 -->
+    <text x="130" y="210" text-anchor="middle" fill="#e63946" font-size="12" font-weight="700" font-family="sans-serif">
+      POURING
+      <animate attributeName="opacity"
+        values="1;0;0;0;0;0;0;0;0;0;0;0;0;1"
+        dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="265" y="210" text-anchor="middle" fill="#d94a4a" font-size="12" font-weight="700" font-family="sans-serif">
+      HEAVY
+      <animate attributeName="opacity"
+        values="0;1;0;0;0;0;0;0;0;0;0;0;1;0"
+        dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="390" y="210" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="700" font-family="sans-serif">
+      MODERATE
+      <animate attributeName="opacity"
+        values="0;0;1;0;0;0;0;0;0;0;0;1;0;0"
+        dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="510" y="210" text-anchor="middle" fill="#38a169" font-size="12" font-weight="700" font-family="sans-serif">
+      LIGHT
+      <animate attributeName="opacity"
+        values="0;0;0;1;0;0;0;0;0;0;1;0;0;0"
+        dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="630" y="210" text-anchor="middle" fill="#38a169" font-size="14" font-weight="800" font-family="sans-serif">
+      LET UP
+      <animate attributeName="opacity"
+        values="0;0;0;0;1;0;0;0;0;1;0;0;0;0"
+        dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="755" y="210" text-anchor="middle" fill="#38a169" font-size="12" font-weight="700" font-family="sans-serif">
+      CLEAR
+      <animate attributeName="opacity"
+        values="0;0;0;0;0;1;1;0;0;0;0;0;0;0"
+        dur="20s" repeatCount="indefinite"/>
+    </text>
+
+    <!-- 底部状态文字 -->
+    <text x="130" y="240" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">
+      倾盆大雨
+      <animate attributeName="opacity"
+        values="1;0;0;0;0;0;0;0;0;0;0;0;0;1"
+        dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="265" y="240" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">
+      大雨
+      <animate attributeName="opacity"
+        values="0;1;0;0;0;0;0;0;0;0;0;0;1;0"
+        dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="390" y="240" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">
+      中雨
+      <animate attributeName="opacity"
+        values="0;0;1;0;0;0;0;0;0;0;0;1;0;0"
+        dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="510" y="240" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">
+      小雨
+      <animate attributeName="opacity"
+        values="0;0;0;1;0;0;0;0;0;0;1;0;0;0"
+        dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="630" y="240" text-anchor="middle" fill="#38a169" font-size="11" font-weight="600" font-family="sans-serif">
+      🌤️ 雨减弱 / 渐停
+      <animate attributeName="opacity"
+        values="0;0;0;0;1;0;0;0;0;1;0;0;0;0"
+        dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="755" y="240" text-anchor="middle" fill="#38a169" font-size="11" font-weight="600" font-family="sans-serif">
+      ☀️ 完全放晴
+      <animate attributeName="opacity"
+        values="0;0;0;0;0;1;1;0;0;0;0;0;0;0"
+        dur="20s" repeatCount="indefinite"/>
+    </text>
+
+    <!-- 映射说明 -->
+    <text x="455" y="275" text-anchor="middle" fill="#333" font-size="13" font-weight="600" font-family="sans-serif">降雨场景之外的映射</text>
+    <text x="455" y="298" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">💬 "The pain finally let up."（疼痛终于减轻了。）</text>
+    <text x="455" y="316" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">💬 "Don't let up on your efforts!"（不要放松努力！）</text>
+    <text x="455" y="334" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">💬 "There's been no let-up in the criticism."（批评一直没有停止/减弱。）</text>
+  </svg>
+</div>
+
+<!-- 逻辑演化树 -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div class="logic-tree" style="background:#f0faf5; border:1px solid #d0e0d0; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div class="tree-title" style="font-size:16px; font-weight:700; margin-bottom:16px; color:#333;">🧠 逻辑演化树：从物理释放到抽象减弱</div>
+  <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px;">
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #d0e0d0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:110px;">
+      ① 物理义<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">LET（放开/允许）+ UP（向上移开）= 把手从按压物上移开 → 压力释放</span>
+    </div>
+    <div style="font-size:18px; color:#38a169; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #d0e0d0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:110px;">
+      ② 自然现象<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">雨/风/热度"减弱"= 自然界的压力释放。The rain let up.</span>
+    </div>
+    <div style="font-size:18px; color:#38a169; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #d0e0d0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:110px;">
+      ③ 抽象减弱<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">疼痛/压力/批评/努力程度"减轻/变小"</span>
+    </div>
+    <div style="font-size:18px; color:#38a169; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #d0e0d0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:110px;">
+      ④ let up on<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">对某人/某事"放松要求/减小压力"</span>
+    </div>
+    <div style="font-size:18px; color:#38a169; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #d0e0d0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:110px;">
+      ⑤ 否定式 don't let up<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">"不要放松/不要泄气/持续努力"</span>
+    </div>
+  </div>
+  <div class="white-box" style="margin-top:16px;"><strong>💡 关键推导</strong>：LET UP 的所有用法都围绕同一个核心意象——"施加的压力/强度被释放"。区别只在于释放的是什么：自然力(雨/风)、生理感受(疼痛)、心理压力(批评)、还是努力程度(目标)。否定形式"don't let up" = "维持压力/强度，不要释放"。</div>
+</div>
+
+<!-- 易混对比区 -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+
+  <!-- LET UP vs EASE UP vs SLACK OFF -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="380" y="35" text-anchor="middle" fill="#38a169" font-size="16" font-weight="700" font-family="sans-serif">LET UP vs EASE UP vs SLACK OFF</text>
+
+      <!-- LET UP -->
+      <rect x="30" y="55" width="220" height="120" rx="10" fill="#f0faf5" stroke="#38a169" stroke-width="1.5"/>
+      <text x="140" y="80" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">LET UP</text>
+      <text x="140" y="100" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">减弱/减少 <span style="color:#666;">(decrease in intensity)</span></text>
+      <text x="140" y="120" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">客观描述强度降低</text>
+      <text x="140" y="140" text-anchor="middle" fill="#777" font-size="10" font-family="sans-serif">例: The rain let up.</text>
+      <text x="140" y="158" text-anchor="middle" fill="#777" font-size="10" font-family="sans-serif">例: Don't let up!</text>
+
+      <!-- EASE UP -->
+      <rect x="270" y="55" width="220" height="120" rx="10" fill="#f0f5ff" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="380" y="80" text-anchor="middle" fill="#3b82f6" font-size="14" font-weight="700" font-family="sans-serif">EASE UP</text>
+      <text x="380" y="100" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">放松/放缓 <span style="color:#666;">(become less strict)</span></text>
+      <text x="380" y="120" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">主动调整节奏/力度</text>
+      <text x="380" y="140" text-anchor="middle" fill="#777" font-size="10" font-family="sans-serif">例: Ease up on the throttle.</text>
+      <text x="380" y="158" text-anchor="middle" fill="#777" font-size="10" font-family="sans-serif">例: Ease up, you're too strict.</text>
+
+      <!-- SLACK OFF -->
+      <rect x="510" y="55" width="220" height="120" rx="10" fill="#fff5f0" stroke="#e63946" stroke-width="1.5"/>
+      <text x="620" y="80" text-anchor="middle" fill="#e63946" font-size="14" font-weight="700" font-family="sans-serif">SLACK OFF</text>
+      <text x="620" y="100" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">偷懒/懈怠 <span style="color:#666;">(become lazy)</span></text>
+      <text x="620" y="120" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">带贬义，指不够努力</text>
+      <text x="620" y="140" text-anchor="middle" fill="#777" font-size="10" font-family="sans-serif">例: Stop slacking off!</text>
+      <text x="620" y="158" text-anchor="middle" fill="#777" font-size="10" font-family="sans-serif">例: He's been slacking off.</text>
+
+      <!-- 强度对比条 -->
+      <line x1="80" y1="200" x2="680" y2="200" stroke="#e0d8c8" stroke-width="1"/>
+      <text x="380" y="225" text-anchor="middle" fill="#333" font-size="12" font-weight="600" font-family="sans-serif">三个词的语义侧重点不同</text>
+      <text x="380" y="245" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">LET UP = 中性描述"强度降低"（雨小了/疼痛减轻了/不要泄气）</text>
+      <text x="380" y="265" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">EASE UP = 主动"放缓/放轻松"（人主动调节）</text>
+      <text x="380" y="285" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">SLACK OFF = 贬义"偷懒/不努力"（应做而未做）</text>
+    </svg>
+    <div class="label">
+      <div class="p">EASE UP · SLACK OFF</div>
+      <div class="desc">LET UP 是中性的"强度减弱"；EASE UP 是主动"放缓节奏"；SLACK OFF 是带贬义的"偷懒/懈怠"</div>
+    </div>
+  </div>
+
+  <!-- LET UP vs RELENT vs ABATE -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="380" y="35" text-anchor="middle" fill="#38a169" font-size="16" font-weight="700" font-family="sans-serif">LET UP vs RELENT vs ABATE</text>
+
+      <!-- LET UP -->
+      <rect x="30" y="55" width="220" height="120" rx="10" fill="#f0faf5" stroke="#38a169" stroke-width="1.5"/>
+      <text x="140" y="80" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">LET UP</text>
+      <text x="140" y="105" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">日常口语常用</text>
+      <text x="140" y="125" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">雨/风/疼痛/压力/努力</text>
+      <text x="140" y="145" text-anchor="middle" fill="#777" font-size="10" font-family="sans-serif">"The rain let up."</text>
+      <text x="140" y="165" text-anchor="middle" fill="#777" font-size="10" font-family="sans-serif">"Don't let up!"</text>
+
+      <!-- RELENT -->
+      <rect x="270" y="55" width="220" height="120" rx="10" fill="#fff5f0" stroke="#e63946" stroke-width="1.5"/>
+      <text x="380" y="80" text-anchor="middle" fill="#e63946" font-size="14" font-weight="700" font-family="sans-serif">RELENT</text>
+      <text x="380" y="105" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">偏书面/文学用语</text>
+      <text x="380" y="125" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">忍无可忍后终于"松口/让步"</text>
+      <text x="380" y="145" text-anchor="middle" fill="#777" font-size="10" font-family="sans-serif">"The coach relented."</text>
+      <text x="380" y="165" text-anchor="middle" fill="#777" font-size="10" font-family="sans-serif">"The storm relented."</text>
+
+      <!-- ABATE -->
+      <rect x="510" y="55" width="220" height="120" rx="10" fill="#f0f5ff" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="620" y="80" text-anchor="middle" fill="#3b82f6" font-size="14" font-weight="700" font-family="sans-serif">ABATE</text>
+      <text x="620" y="105" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">正式/书面用语</text>
+      <text x="620" y="125" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">（强度/程度）减弱、消退</text>
+      <text x="620" y="145" text-anchor="middle" fill="#777" font-size="10" font-family="sans-serif">"The floodwaters abated."</text>
+      <text x="620" y="165" text-anchor="middle" fill="#777" font-size="10" font-family="sans-serif">"The pain abated."</text>
+
+      <!-- 语言风格对比 -->
+      <line x1="80" y1="200" x2="680" y2="200" stroke="#e0d8c8" stroke-width="1"/>
+      <text x="380" y="225" text-anchor="middle" fill="#333" font-size="12" font-weight="600" font-family="sans-serif">语言风格比较</text>
+      <text x="380" y="248" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">LET UP = 口语化 <span style="color:#a0a0a0; font-size:10px;">【最常用】</span></text>
+      <text x="380" y="268" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">RELENT = 书面/文学 <span style="color:#a0a0a0; font-size:10px;">【常用于人物"让步"或恶劣天气"减弱"】</span></text>
+      <text x="380" y="288" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">ABATE = 正式用语 <span style="color:#a0a0a0; font-size:10px;">【常用于法律、医学、自然灾害等正式描述】</span></text>
+    </svg>
+    <div class="label">
+      <div class="p">RELENT · ABATE</div>
+      <div class="desc">LET UP 最口语化；RELENT 偏文学（人"让步"或自然"减弱"）；ABATE 最正式（常用于法律/医学/自然灾害的正式描述）</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 常见搭配区 -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+<div class="usage-section">
+  <h4>📖 核心搭配与用法</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>let up</strong></span>
+      <span class="usage-cn">减弱/缓解（不接宾语） &nbsp;|&nbsp; 📖 "The rain finally let up." 雨终于小了。物理来源：雨滴施加的"压力"释放了。</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>let up on</strong> someone/something</span>
+      <span class="usage-cn">对某人/某事放松要求 &nbsp;|&nbsp; 📖 "You should let up on him — he's doing his best." 你应该对他宽松点——他已经尽力了。</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>let up on</strong> the gas/pressure</span>
+      <span class="usage-cn">松开油门/减小压力 &nbsp;|&nbsp; 📖 "Let up on the gas pedal when going downhill." 下坡时松开油门踏板。</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>don't let up</strong></span>
+      <span class="usage-cn">不要松懈/继续努力 &nbsp;|&nbsp; 📖 "Don't let up now — we're almost there!" 现在别松懈——我们快到了！</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>without let-up</strong> / <strong>no let-up</strong></span>
+      <span class="usage-cn">持续不断地/没有减弱 &nbsp;|&nbsp; 📖 "The criticism continued without let-up." 批评一直没有停止。</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">the pain <strong>let up</strong></span>
+      <span class="usage-cn">疼痛减轻了 &nbsp;|&nbsp; 📖 "The pain didn't let up all night." 疼痛一整晚都没有减轻。</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>never let up</strong></span>
+      <span class="usage-cn">从不松懈/从不放弃 &nbsp;|&nbsp; 📖 "She never lets up in her pursuit of excellence." 她在追求卓越的路上从不松懈。</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">the pressure <strong>let up</strong></span>
+      <span class="usage-cn">压力减轻了 &nbsp;|&nbsp; 📖 "The pressure on the team let up after they won." 赢了之后，队伍的压力减轻了。</span>
+    </div>
+  </div>
+</div>
+
+<!-- 小白框额外解释 -->
+<div class="white-box" style="margin-bottom:24px;"><strong>💡 about "let up on someone"</strong>：物理来源——用手按压某人肩膀施加压力→手松开/向上移开（let up）= 不再施加压力→引申为"不再对人严格要求/减少批评"。</div>
+<div class="white-box" style="margin-bottom:24px;"><strong>💡 about "without let-up" / "no let-up"</strong>：名词化用法。let-up 作名词 = "缓解/减弱的时段"。without let-up = "没有片刻缓解地，持续不断"。例："The rain continued without let-up for days."（雨连续下了好几天没有停过。）</div>
+
+<!-- 反义/相似 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#f0faf5; border:1px solid #d0e0d0; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card green-bg">
+      <h5 style="color:#38a169;">近义</h5>
+      <p><strong>EASE UP / EASE OFF</strong> — 放缓/放松 <small>主动调整节奏</small></p>
+      <p><strong>RELENT</strong> — 让步/减弱 <small>书面/文学用语</small></p>
+      <p><strong>ABATE</strong> — 减弱/消退 <small>正式用语</small></p>
+      <p><strong>SUBSIDE</strong> — 平息/减缓 <small>洪水/情绪/风暴等</small></p>
+      <p><strong>DIE DOWN</strong> — 逐渐减弱 <small>风/火/声音等</small></p>
+    </div>
+    <div class="info-card red-bg">
+      <h5 style="color:#e63946;">反义</h5>
+      <p><strong>INTENSIFY</strong> — 增强 <small>let up 的直接反义</small></p>
+      <p><strong>PERSIST</strong> — 持续 <small>vs 减弱/停止</small></p>
+      <p><strong>POUR</strong> — 倾盆大雨 <small>降雨光谱的另一端</small></p>
+      <p><strong>KEEP UP</strong> — 保持 <small>don't let up 的反义是 keep up</small></p>
+      <p><strong>STEP UP</strong> — 加大力度 <small>增加压力 vs 减少压力</small></p>
+    </div>
+    <div class="info-card purple-bg">
+      <h5 style="color:#7c5cbf;">记忆提示</h5>
+      <p><strong>🖐️ 动作联想</strong>：想象你的手按在桌面上——"let up"就是把手抬起来。不管是按着弹簧、按着油门、还是"按着"一个人施加压力，"放手抬起"=压力减小。</p>
+      <p><strong>🌧️ 降雨联想</strong>：最经典的用法就是"the rain let up"——从倾盆大雨变为淅淅沥沥，再到完全放晴。记住这个画面就记住了 let up 的核心。</p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

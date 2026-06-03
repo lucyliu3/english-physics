@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOUCH 空间意象图解</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f0;
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+    color: #1a1a1a;
+  }
+  .container {
+    max-width: 960px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px 56px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  h1 { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #666; font-size: 15px; margin-bottom: 40px; }
+  .section-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #333; }
+  .section-title .bar { display: inline-block; width: 4px; height: 18px; background: #d94a5c; margin-right: 12px; vertical-align: middle; border-radius: 2px; }
+  .section-title span { vertical-align: middle; }
+
+  /* 核心意象 */
+  .core-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 44px;
+  }
+  .core-card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 18px 16px 22px;
+    text-align: center;
+  }
+  .core-card canvas {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    aspect-ratio: 380 / 220;
+    display: block; margin: 0 auto 12px; border-radius: 6px;
+    background: #fafaf8;
+  }
+  .core-card .card-label { font-size: 18px; font-weight: 700; color: #d94a5c; }
+  .core-card .card-desc { font-size: 14px; color: #555; line-height: 1.5; margin-top: 4px; }
+
+  /* 三层展开 */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .card canvas {
+    width: 100%; height: auto;
+    aspect-ratio: 270 / 200;
+    display: block; background: #fafaf8;
+  }
+  .card-body { padding: 14px 18px 16px; }
+  .card-body h3 { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+  .card-body h3 .hl { color: #d94a5c; }
+  .card-body .ref { font-size: 13px; color: #888; margin-bottom: 6px; }
+  .card-body .def { font-size: 13.5px; color: #444; line-height: 1.6; }
+  .card-body .def .eg { color: #777; font-style: italic; display: block; margin-top: 1px; }
+  .card-body .def .key { color: #d94a5c; font-weight: 600; }
+
+  .cat-section { margin-bottom: 36px; }
+  .cat-section .cat-label {
+    font-size: 16px; font-weight: 700; color: #d94a5c;
+    margin-bottom: 14px; padding: 10px 16px;
+    background: #fdf0f2; border-radius: 8px;
+  }
+
+  .usage-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 32px;
+  }
+  .usage-item { padding: 5px 0; border-bottom: 1px dashed #eee; }
+  .usage-item:last-child, .usage-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .usage-en { font-size: 14px; font-weight: 600; color: #333; }
+  .usage-en strong { color: #d94a5c; }
+  .usage-cn { font-size: 13px; color: #777; margin-top: 1px; }
+
+  .spatial-note {
+    margin-top: 36px;
+    padding: 20px 24px;
+    background: #fdf0f2;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.7;
+  }
+  .spatial-note .big { font-size: 18px; font-weight: 700; color: #d94a5c; }
+  .spatial-note strong { color: #d94a5c; }
+
+  @media (max-width: 720px) {
+    .container { padding: 28px 16px 36px; }
+    .core-row { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+    .usage-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>TOUCH 的空间意象</h1>
+  <p class="subtitle">核心逻辑：两者之间零距离接触</p>
+
+  <!-- 核心图 -->
+  <div class="section-title"><span class="bar"></span><span>核心空间逻辑</span></div>
+  <div class="core-row">
+    <div class="core-card">
+      <canvas id="coreTouch" width="380" height="220"></canvas>
+      <div class="card-label">TOUCH = 零距离</div>
+      <div class="card-desc">
+        两者之间没有间隔，表面与表面直接相接。<br>
+        核心 = <strong>接触</strong>（不是靠近，不是进入——就是刚好碰上了）
+      </div>
+    </div>
+    <div class="core-card">
+      <canvas id="coreTouchVs" width="380" height="220"></canvas>
+      <div class="card-label">NEAR ≠ TOUCH ≠ HOLD</div>
+      <div class="card-desc">
+        <strong>NEAR</strong> = 有距离但靠近 &nbsp;|&nbsp; <strong>TOUCH</strong> = 零距离接触<br>
+        <strong>HOLD</strong> = 接触后持续握持 / 包含
+      </div>
+    </div>
+  </div>
+
+  <!-- 三层展开 -->
+  <div class="section-title"><span class="bar"></span><span>三层展开</span></div>
+  <div class="cards">
+
+    <div class="card">
+      <canvas id="tier1" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>第一层：物理接触 <span class="hl">TOUCH</span></h3>
+        <div class="ref">手指 / 身体与物体的接触</div>
+        <div class="def">
+          最基本的空间意义——<span class="key">指腹碰到某物表面</span>。
+          人或动物的皮肤和另一个表面之间没有空隙。
+          <span class="eg">"Don't touch the wet paint."<br>"Her hand touched his cheek."</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="tier2" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>第二层：抽象接触 <span class="hl">TOUCH</span></h3>
+        <div class="ref">情感 / 关系 / 影响上的"碰到"</div>
+        <div class="def">
+          从物理接触引申到<span class="key">人与人之间的精神/情感接触</span>。
+          不是"进入"对方，也不是"握着"不放——就是碰上了。
+          <span class="eg">"Stay in touch."<br>"That touched my heart."</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="tier3" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>第三层：轻微触及 <span class="hl">A TOUCH of</span></h3>
+        <div class="ref">程度上的"轻轻沾到"</div>
+        <div class="def">
+          从"轻轻碰到"引申为<span class="key">极少量的、轻微的</span>。
+          不是铺满、不是充满——只是沾到一点边。
+          <span class="eg">"A touch of salt."<br>"A touch of humor."</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 第一类：物理接触 ===== -->
+  <div class="section-title"><span class="bar"></span><span>第一层：物理接触（空间原型）</span></div>
+
+  <div class="cat-section">
+    <div class="cat-label">👆 基本物理接触</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en">Don't <strong>touch</strong> the stove.</span>
+        <span class="usage-cn">别碰炉子。（手指碰到表面）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The branches <strong>touched</strong> the water.</span>
+        <span class="usage-cn">树枝碰到了水面。（表面相接）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Our knees were <strong>touching</strong>.</span>
+        <span class="usage-cn">我们的膝盖碰在一起了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He <strong>touched</strong> her arm gently.</span>
+        <span class="usage-cn">他轻轻碰了碰她的手臂。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I <strong>touched</strong> the fabric to feel it.</span>
+        <span class="usage-cn">我摸了摸布料感受质感。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Glass, do not <strong>touch</strong>.</span>
+        <span class="usage-cn">玻璃，请勿触摸。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-section">
+    <div class="cat-label">🧹 接触并施力（碰 + 推/擦/弄）</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en">Who <strong>touched</strong> my stuff?</span>
+        <span class="usage-cn">谁动了我的东西？（碰到并改变了位置）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Don't <strong>touch</strong> anything!</span>
+        <span class="usage-cn">什么都别碰！（别碰也别动）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Touch up</strong> the paint.</span>
+        <span class="usage-cn">补一下漆。（轻轻碰到表面去修补）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>touched up</strong> her makeup.</span>
+        <span class="usage-cn">她补了一下妆。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I just need to <strong>touch</strong> it <strong>up</strong> a bit.</span>
+        <span class="usage-cn">我只需要稍微润色一下。（修改少量细节）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He <strong>touched</strong> the ball <strong>in</strong> for a goal.</span>
+        <span class="usage-cn">他轻轻一碰把球捅进去了。（足球"蹭"进球门）</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第二类：抽象接触 ===== -->
+  <div class="section-title"><span class="bar"></span><span>第二层：抽象接触（人际·情感·影响）</span></div>
+
+  <div class="cat-section">
+    <div class="cat-label">📞 保持联系（Keep in touch——最核心高频）</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Keep in touch</strong>!</span>
+        <span class="usage-cn">保持联系！（超高頻！分别时说）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let's <strong>stay in touch</strong>.</span>
+        <span class="usage-cn">我们保持联系。（同样超高頻）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I'll <strong>get in touch</strong> with you.</span>
+        <span class="usage-cn">我会联系你的。（进入"接触"状态）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">We've <strong>lost touch</strong> over the years.</span>
+        <span class="usage-cn">我们这些年失去联系了。"接触"断开了</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">We've been <strong>out of touch</strong>.</span>
+        <span class="usage-cn">我们很久没联系了。"接触"关系之外</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I'm <strong>in touch with</strong> the team.</span>
+        <span class="usage-cn">我和团队保持联系中。"接触"状态里</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-section">
+    <div class="cat-label">💝 打动情感（Touched——心被碰到了）</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en">I was deeply <strong>touched</strong>.</span>
+        <span class="usage-cn">我深受感动。（心被"碰到"了）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">That really <strong>touched</strong> my heart.</span>
+        <span class="usage-cn">那真的触动了我的心。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Her story <strong>touched</strong> everyone.</span>
+        <span class="usage-cn">她的故事打动了每个人。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">It was a <strong>touching</strong> moment.</span>
+        <span class="usage-cn">那是一个感人的时刻。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">It <strong>touched</strong> a nerve.</span>
+        <span class="usage-cn">戳到痛处了 / 触到了敏感神经。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">That doesn't even <strong>touch</strong> the surface.</span>
+        <span class="usage-cn">那连表面都没碰到。（远远不够 / 不够深刻）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-section">
+    <div class="cat-label">🎯 涉及 / 触及（Touch on —— 说到某点就停）</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en">He <strong>touched on</strong> that issue briefly.</span>
+        <span class="usage-cn">他简短地提到了那个问题。"碰"一下就过了</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">We only <strong>touched on</strong> the basics.</span>
+        <span class="usage-cn">我们只涉及了基础内容。（没有深入）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">This <strong>touches on</strong> security concerns.</span>
+        <span class="usage-cn">这涉及到了安全问题。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">How does this <strong>touch</strong> you?</span>
+        <span class="usage-cn">这跟你有什么关系？（这话"碰到"你了吗）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">This <strong>touches</strong> everyone in this room.</span>
+        <span class="usage-cn">这关系到在座的每一个人。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The issue <strong>touches</strong> our core values.</span>
+        <span class="usage-cn">这个问题触及了我们的核心价值观。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第三类：轻微 ===== -->
+  <div class="section-title"><span class="bar"></span><span>第三层：轻微程度（A touch of —— 轻轻沾到一点）</span></div>
+
+  <div class="cat-section">
+    <div class="cat-label">🧂 极少量 / 轻微（A touch of + 名词）</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en">Add a <strong>touch</strong> of salt.</span>
+        <span class="usage-cn">加一点点盐。（不是一勺，是"轻轻沾到"的量）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">A <strong>touch</strong> of lemon juice.</span>
+        <span class="usage-cn">一点点柠檬汁。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She has a <strong>touch</strong> of the flu.</span>
+        <span class="usage-cn">她有点轻微感冒。（刚"沾上"感冒）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">There's a <strong>touch</strong> of irony in his voice.</span>
+        <span class="usage-cn">他语气里带着一点讽刺。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Just a <strong>touch</strong> more pepper.</span>
+        <span class="usage-cn">再来一点点胡椒。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">It's a <strong>touch</strong> too expensive.</span>
+        <span class="usage-cn">稍微贵了一点点。（副詞用法）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-section">
+    <div class="cat-label">🎨 特色 / 点缀（A personal touch —— 轻轻加点料）</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en">It needs a <strong>touch</strong> of color.</span>
+        <span class="usage-cn">它需要加一点颜色点缀。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Add a personal <strong>touch</strong>.</span>
+        <span class="usage-cn">加一点个人特色。（让对方感到"被碰到"）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">That's a nice <strong>touch</strong>.</span>
+        <span class="usage-cn">这个点缀真不错。（细节上的巧思）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She put the finishing <strong>touch</strong> on the cake.</span>
+        <span class="usage-cn">她做了最后的点缀。（完成作品的最后一步）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The room needs a woman's <strong>touch</strong>.</span>
+        <span class="usage-cn">这房间需要女性来布置一下。（加一点XX风格）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">It's the little <strong>touches</strong> that count.</span>
+        <span class="usage-cn">细节上的小点缀才是关键。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 特殊高频 ===== -->
+  <div class="section-title"><span class="bar"></span><span>美国人口语超高頻固定搭配</span></div>
+
+  <div class="cat-section">
+    <div class="cat-label" style="background:#fef6e6;color:#b8860b;">⚡ 不能按字面直译的高频习语</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en">You <strong>touched</strong> my balls!</span>
+        <span class="usage-cn">你戳到我笑点了！（超高頻！不雅但常见，you got me! 更温和）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He's <strong>untouchable</strong>.</span>
+        <span class="usage-cn">没人动得了他 / 他地位不可撼动。（碰不到他）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Touch wood</strong>.</span>
+        <span class="usage-cn">摸木头/好运！（英式说法，说完好事后敲木头防霉运）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Kick</strong> it into <strong>touch</strong>.</span>
+        <span class="usage-cn">把球踢出界/故意避开话题。（英式橄榄球→引申）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Touch</strong> base.</span>
+        <span class="usage-cn">碰个头 / 简单聊一下。（超高頻办公用语！棒球术语"触垒"引申）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let's <strong>touch base</strong> next week.</span>
+        <span class="usage-cn">我们下周简单碰一下。（不是深谈，就是"碰一下"确认状态）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I'm <strong>touching base</strong> with the client.</span>
+        <span class="usage-cn">我跟客户简单沟通一下。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">We <strong>touched base</strong> on the project status.</span>
+        <span class="usage-cn">我们简单过了一下项目进度。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I <strong>wouldn't touch that</strong> with a ten-foot pole.</span>
+        <span class="usage-cn">我打死也不会碰那件事。（超高頻！强烈回避）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">That's a <strong>touchy</strong> subject.</span>
+        <span class="usage-cn">那是个敏感话题。（一碰就炸毛的话题）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="spatial-note">
+    <div class="big">TOUCH 的统一逻辑</div>
+    <strong>物理上</strong>：两个表面之间没有空隙——指腹碰到物体、膝盖碰到膝盖<br>
+    <strong>关系上</strong>：两个人之间建立了联系——"碰"到了对方（keep in touch / lose touch）<br>
+    <strong>情感上</strong>：心被"碰到"了——感动（touched / touching）<br>
+    <strong>程度上</strong>：只"沾到"一点点——少量（a touch of salt）<br>
+    <strong>沟通上</strong>：简单"碰"一下确认状态——不深入（touch base）<br><br>
+    <strong>所有用法都围绕同一个空间意象：刚好碰到，没有空隙，也没有深入。</strong>
+  </div>
+
+</div>
+
+<script>
+(function() {
+function df(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ===== 核心图1：TOUCH = 零距离 =====
+const c1 = document.getElementById('coreTouch');
+const ctx1 = c1.getContext('2d');
+df(ctx1,380,220);
+
+// two objects
+ctx1.fillStyle = '#d94a5c';
+ctx1.beginPath(); ctx1.arc(160,110,20,0,Math.PI*2); ctx1.fill();
+ctx1.fillStyle = '#4a90d9';
+ctx1.beginPath(); ctx1.arc(200,110,20,0,Math.PI*2); ctx1.fill();
+
+// touching point
+ctx1.fillStyle = '#f5a623';
+ctx1.beginPath(); ctx1.arc(180,110,4,0,Math.PI*2); ctx1.fill();
+ctx1.fillStyle = '#f5a623'; ctx1.font = '12px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('零距离接触点',180,90);
+
+// gap comparison
+ctx1.fillStyle = '#bbb'; ctx1.font = '12px sans-serif';
+ctx1.fillText('← 间隔 = 0 →',180,150);
+
+// label
+ctx1.fillStyle = '#d94a5c'; ctx1.font = 'bold 15px sans-serif';
+ctx1.fillText('TOUCH',80,180);
+ctx1.fillStyle = '#4a90d9'; ctx1.font = 'bold 15px sans-serif';
+ctx1.fillText('TOUCH',285,180);
+
+// ===== 核心图2：NEAR vs TOUCH vs HOLD =====
+const c2 = document.getElementById('coreTouchVs');
+const ctx2 = c2.getContext('2d');
+df(ctx2,380,220);
+
+// NEAR
+ctx2.fillStyle = '#aaa';
+ctx2.beginPath(); ctx2.arc(60,100,15,0,Math.PI*2); ctx2.fill();
+ctx2.beginPath(); ctx2.arc(110,100,15,0,Math.PI*2); ctx2.fill();
+ctx2.strokeStyle = '#aaa'; ctx2.lineWidth = 1;
+ctx2.beginPath(); ctx2.moveTo(75,100); ctx2.lineTo(95,100); ctx2.stroke();
+ctx2.fillStyle = '#999'; ctx2.font = '12px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('NEAR',85,140);
+ctx2.fillText('靠近但有空隙',85,158);
+
+// TOUCH
+ctx2.fillStyle = '#d94a5c';
+ctx2.beginPath(); ctx2.arc(200,100,15,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#4a90d9';
+ctx2.beginPath(); ctx2.arc(230,100,15,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#d94a5c'; ctx2.font = '12px sans-serif';
+ctx2.fillText('TOUCH',215,140);
+ctx2.fillText('零距离接触',215,158);
+
+// HOLD
+ctx2.fillStyle = '#7b4ad9';
+ctx2.beginPath(); ctx2.arc(345,100,15,0,Math.PI*2); ctx2.fill();
+ctx2.strokeStyle = '#7b4ad9'; ctx2.lineWidth = 3;
+ctx2.beginPath(); ctx2.arc(315,100,20,0,Math.PI*2); ctx2.stroke();
+ctx2.fillStyle = '#7b4ad9'; ctx2.font = '12px sans-serif';
+ctx2.fillText('HOLD',330,140);
+ctx2.fillText('接触+握持包裹',330,158);
+
+// ===== 三层卡片 =====
+
+// Tier 1: 物理接触
+const e1 = document.getElementById('tier1');
+const ctx3 = e1.getContext('2d');
+df(ctx3,270,200);
+
+// hand reaching
+ctx3.fillStyle = '#d94a5c';
+ctx3.beginPath(); ctx3.moveTo(20,130); ctx3.lineTo(60,100); ctx3.lineTo(60,140); ctx3.closePath(); ctx3.fill();
+// fingers
+ctx3.fillRect(55,95,30,8);
+ctx3.fillRect(55,115,30,8);
+ctx3.fillRect(55,135,30,8);
+
+// object
+ctx3.fillStyle = '#4a90d9';
+ctx3.fillRect(160,60,60,60);
+ctx3.fillStyle = '#fff'; ctx3.font = '12px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('wet paint',190,95);
+
+ctx3.strokeStyle = '#f5a623'; ctx3.lineWidth = 2.5;
+ctx3.beginPath(); ctx3.moveTo(85,110); ctx3.lineTo(155,90); ctx3.stroke();
+ctx3.fillStyle = '#f5a623';
+ctx3.beginPath(); ctx3.moveTo(150,87); ctx3.lineTo(160,90); ctx3.lineTo(150,94); ctx3.closePath(); ctx3.fill();
+
+ctx3.fillStyle = '#d94a5c'; ctx3.font = 'bold 14px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('Don\'t touch the wet paint!',135,35);
+
+// Tier 2: 抽象接触
+const e2 = document.getElementById('tier2');
+const ctx4 = e2.getContext('2d');
+df(ctx4,270,200);
+
+// two people
+ctx4.fillStyle = '#4a5568';
+ctx4.beginPath(); ctx4.arc(70,85,12,0,Math.PI*2); ctx4.fill();
+ctx4.fillRect(66,97,8,22);
+ctx4.fillStyle = '#888';
+ctx4.beginPath(); ctx4.arc(200,85,12,0,Math.PI*2); ctx4.fill();
+ctx4.fillRect(196,97,8,22);
+
+// connection line
+ctx4.strokeStyle = '#d94a5c'; ctx4.lineWidth = 2;
+ctx4.beginPath(); ctx4.moveTo(82,90); ctx4.lineTo(188,90); ctx4.stroke();
+// touch point
+ctx4.fillStyle = '#d94a5c';
+ctx4.beginPath(); ctx4.arc(135,90,5,0,Math.PI*2); ctx4.fill();
+
+ctx4.fillStyle = '#d94a5c'; ctx4.font = 'bold 15px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('Keep in touch!',135,50);
+
+ctx4.fillStyle = '#888'; ctx4.font = '12px sans-serif';
+ctx4.fillText('← 保持"接触" →',135,150);
+
+// Tier 3: 轻微
+const e3 = document.getElementById('tier3');
+const ctx5 = e3.getContext('2d');
+df(ctx5,270,200);
+
+// big circle (the dish)
+ctx5.strokeStyle = '#bbb'; ctx5.lineWidth = 2;
+ctx5.beginPath(); ctx5.arc(135,105,55,0,Math.PI*2); ctx5.stroke();
+ctx5.fillStyle = '#f5f0e8'; ctx5.beginPath(); ctx5.arc(135,105,55,0,Math.PI*2); ctx5.fill();
+
+// tiny salt specks
+ctx5.fillStyle = '#d94a5c';
+ctx5.beginPath(); ctx5.arc(120,90,3,0,Math.PI*2); ctx5.fill();
+ctx5.beginPath(); ctx5.arc(145,85,2.5,0,Math.PI*2); ctx5.fill();
+ctx5.beginPath(); ctx5.arc(130,100,2,0,Math.PI*2); ctx5.fill();
+
+ctx5.fillStyle = '#d94a5c'; ctx5.font = 'bold 16px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('A touch of salt',135,40);
+
+ctx5.fillStyle = '#888'; ctx5.font = '12px sans-serif';
+ctx5.fillText('只"沾到"一点点点',135,175);
+
+})();
+</script>
+
+</body>
+</html>

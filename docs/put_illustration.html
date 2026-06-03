@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PUT 图解 — 放置 / 说 / 表达</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#e67e22,#d35400); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#e67e22,#f39c12); border-radius:2px; flex-shrink:0; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#e67e22; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#e67e22; }
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:13px; color:#666; margin-top:3px; line-height:1.55; }
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#e67e22; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+  .put-bg { background:linear-gradient(135deg,#fde8e0,#f5d0c0); }
+  .place-bg { background:linear-gradient(135deg,#f0f5ff,#e0eaf5); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+  @media (max-width:720px) { .container { padding:24px 16px 32px; } .cards, .compare-row { grid-template-columns:1fr; } .usage-list { grid-template-columns:1fr; } .three-col { grid-template-columns:1fr; } h1 { font-size:26px; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>PUT</h1>
+<p class="subtitle">放置 — 从"把书放在桌上"到"put off / put up with"</p>
+
+<!-- ===== 核心卡片 ===== -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+
+  <!-- CARD 1: PUT 核心意象 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pBg" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#fdf5f0"/>
+          <stop offset="100%" stop-color="#f5ece0"/>
+        </linearGradient>
+        <filter id="shadow">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#pBg)" rx="8"/>
+
+      <!-- 桌子 -->
+      <rect x="80" y="260" width="300" height="16" rx="4" fill="#c8a870" stroke="#a88850" stroke-width="1.5"/>
+      <rect x="100" y="276" width="10" height="30" fill="#a88850"/>
+      <rect x="350" y="276" width="10" height="30" fill="#a88850"/>
+
+      <!-- 桌上的位置标记 -->
+      <circle cx="230" cy="255" r="25" fill="none" stroke="#e67e22" stroke-width="2" stroke-dasharray="6,4" opacity="0.6"/>
+      <text x="230" y="245" text-anchor="middle" fill="#e67e22" font-size="12" font-family="sans-serif">目标位置</text>
+
+      <!-- 手拿着书 -->
+      <g filter="url(#shadow)">
+        <animateTransform attributeName="transform" type="translate"
+          values="-60,-30; 0,0"
+          dur="3s" repeatCount="indefinite"/>
+        <!-- 书 -->
+        <rect x="210" y="215" width="40" height="30" rx="3" fill="#e67e22" stroke="#d35400" stroke-width="1.5"/>
+        <text x="230" y="234" text-anchor="middle" fill="#fff" font-size="10" font-family="sans-serif">📖</text>
+        <!-- 手 -->
+        <path d="M200,215 Q195,205 205,200" fill="none" stroke="#f5e6d0" stroke-width="5" stroke-linecap="round"/>
+      </g>
+
+      <!-- 向下放置的箭头 -->
+      <line x1="230" y1="195" x2="230" y2="215" stroke="#e67e22" stroke-width="2" stroke-dasharray="4,3">
+        <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite"/>
+      </line>
+      <polygon points="230,215 226,208 234,208" fill="#e67e22"/>
+
+      <text x="380" y="370" text-anchor="middle" fill="#444" font-size="14" font-weight="600" font-family="sans-serif">本义：把物体放到某个特定位置</text>
+    </svg>
+    <div class="card-body">
+      <h3>PUT <span class="hl">/pʊt/</span></h3>
+      <div class="pos">verb · 放置 / 表达 / 施加</div>
+      <div class="def">
+        <strong>本义</strong> 把手上的东西放到某处<br>
+        <strong>引申义 1</strong> 表达/说（put it simply）<br>
+        <strong>引申义 2</strong> 施加/投入（put pressure / put effort）
+        <span class="eg">"put the book on the table" 把书放在桌上<br>"put it simply" 简单说来<br>"put pressure" 施加压力</span>
+      </div>
+      <div class="white-box"><strong>💡 核心逻辑</strong>：PUT 就是把一个东西"安置"到某个位置——这个位置可以是物理的（桌上）、语言的（用什么词来表达）、或抽象的（施加压力/投入精力）。所有 PUT 短语动词共享"把一个事物安置到另一个事物上/中"的逻辑。</div>
+    </div>
+  </div>
+
+  <!-- CARD 2: PUT vs PLACE -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pBg2L" x1="0" y1="0" x2="370" y2="400">
+          <stop offset="0%" stop-color="#fdf5f0"/>
+          <stop offset="100%" stop-color="#f5ece0"/>
+        </linearGradient>
+        <linearGradient id="pBg2R" x1="390" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#f0f5ff"/>
+          <stop offset="100%" stop-color="#e0eaf5"/>
+        </linearGradient>
+      </defs>
+      <rect width="370" height="400" fill="url(#pBg2L)"/>
+      <rect x="390" width="370" height="400" fill="url(#pBg2R)"/>
+      <line x1="380" y1="20" x2="380" y2="380" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- LEFT: PUT 随手一放 -->
+      <rect x="100" y="260" width="180" height="12" rx="3" fill="#c8a870"/>
+      <rect x="120" y="230" width="40" height="25" rx="3" fill="#e67e22">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,-10; 0,0"
+          dur="2s" repeatCount="indefinite"/>
+      </rect>
+      <text x="185" y="370" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">PUT</text>
+      <text x="185" y="388" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">随意放置（口语）</text>
+
+      <!-- RIGHT: PLACE 小心摆放 -->
+      <rect x="490" y="260" width="180" height="12" rx="3" fill="#c8a870"/>
+      <rect x="510" y="230" width="40" height="25" rx="3" fill="#7b4ad9">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,-10; 0,0"
+          dur="3s" repeatCount="indefinite"/>
+      </rect>
+      <!-- 小心摆放的标记 -->
+      <circle cx="530" cy="225" r="3" fill="#7b4ad9" opacity="0.5">
+        <animate attributeName="opacity" values="0.5;0;0.5" dur="1s" repeatCount="indefinite"/>
+      </circle>
+      <text x="575" y="370" text-anchor="middle" fill="#7b4ad9" font-size="14" font-weight="bold" font-family="sans-serif">PLACE</text>
+      <text x="575" y="388" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">小心/正式摆放</text>
+    </svg>
+    <div class="card-body">
+      <h3>PUT vs PLACE — 随手放 vs 小心放</h3>
+      <div class="pos">两个"放"的区别</div>
+      <div class="def">
+        <strong>PUT</strong> = 最通用的"放"，日常口语<br>
+        <strong>PLACE</strong> = 小心/正式地放，强调"放在正确的位置"
+        <span class="eg">"put the keys on the table" 把钥匙放桌上<br>"place the vase carefully" 小心地把花瓶放好</span>
+      </div>
+      <div class="white-box"><strong>🧠 区别</strong>：PUT 不关心怎么放——只关心"放到哪"。PLACE 暗示"放在了该放的位置"（place an order, place a bet）。PUT 不能用于正式场合，PLACE 不能用于口语。"put pressure" ✔ vs "place pressure" ✘（不是常用搭配）。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 逻辑演化树 ===== -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div style="background:#fdf5ef; border:1px solid #e8d0c8; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div style="font-size:16px; font-weight:700; margin-bottom:16px;">🧠 逻辑演化树：PUT 的短语动词宇宙</div>
+  <div style="display:flex; flex-wrap:wrap; align-items:center; gap:6px;">
+    <div style="background:#fafaf8; border:1px solid #e0d0c0; border-radius:8px; padding:10px 14px; text-align:center; min-width:90px; font-weight:600;">
+      ① 放桌上<br><span style="font-weight:400; font-size:12px; color:#888;">物理放置</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #e0d0c0; border-radius:8px; padding:10px 14px; text-align:center; min-width:90px; font-weight:600;">
+      ② put on 穿上<br><span style="font-weight:400; font-size:12px; color:#888;">把衣服放在身体上</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #e0d0c0; border-radius:8px; padding:10px 14px; text-align:center; min-width:90px; font-weight:600;">
+      ③ put off 推迟<br><span style="font-weight:400; font-size:12px; color:#888;">把某事"放到"远处</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #e0d0c0; border-radius:8px; padding:10px 14px; text-align:center; min-width:90px; font-weight:600;">
+      ④ put up with<br><span style="font-weight:400; font-size:12px; color:#888;">把自己"放置"在忍耐中</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #e0d0c0; border-radius:8px; padding:10px 14px; text-align:center; min-width:90px; font-weight:600;">
+      ⑤ put out 熄灭<br><span style="font-weight:400; font-size:12px; color:#888;">把火"放"出去</span>
+    </div>
+  </div>
+  <div style="margin-top:16px; padding-top:16px; border-top:1px dashed #e0d0c0; font-size:14px; color:#555; line-height:1.65;">
+    <strong>🧠 核心逻辑链</strong>：PUT 的所有短语动词都可以理解为"把 X 放到 Y 位置/状态"。put on clothes = 把衣服放到身体上；put off = 把任务放到远处（推迟）；put up with = 把自己放到容忍的状态中；put out = 把火放到外面（熄灭/扑灭）；put forward = 把想法放到前面（提出）。<br>
+    规律：<strong>PUT + 介词 = 主语把宾语移动到介词所指的方向/状态</strong>。
+  </div>
+</div>
+
+<!-- ===== 易混对比 ===== -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+
+  <!-- PUT vs SET vs LAY -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="253" height="340" fill="#fdf6ee"/>
+      <rect x="254" width="253" height="340" fill="#f0f5ff"/>
+      <rect x="508" width="252" height="340" fill="#fdf6ee"/>
+      <line x1="253" y1="20" x2="253" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+      <line x1="507" y1="20" x2="507" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- PUT -->
+      <rect x="50" y="180" width="60" height="30" rx="3" fill="#e67e22"/>
+      <text x="115" y="310" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="bold" font-family="sans-serif">PUT</text>
+      <text x="115" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">放，日常</text>
+
+      <!-- SET -->
+      <rect x="310" y="180" width="60" height="30" rx="3" fill="#7b4ad9"/>
+      <text x="365" y="310" text-anchor="middle" fill="#7b4ad9" font-size="13" font-weight="bold" font-family="sans-serif">SET</text>
+      <text x="365" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">精心摆放/设定</text>
+
+      <!-- LAY -->
+      <rect x="560" y="180" width="60" height="30" rx="3" fill="#38a169"/>
+      <text x="605" y="310" text-anchor="middle" fill="#38a169" font-size="13" font-weight="bold" font-family="sans-serif">LAY</text>
+      <text x="605" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">平放/横放</text>
+    </svg>
+    <div class="label">
+      <div class="p" style="color:#e67e22;">PUT vs SET vs LAY</div>
+      <div class="desc">PUT 最通用；SET 强调"放到正确位置/状态"（set the table, set a trap）；LAY 特指"横着平放"（lay down, lay eggs）。</div>
+    </div>
+  </div>
+
+  <!-- PUT ON vs WEAR vs DRESS -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="253" height="340" fill="#fdf6ee"/>
+      <rect x="254" width="253" height="340" fill="#f0f5ff"/>
+      <rect x="508" width="252" height="340" fill="#fdf6ee"/>
+      <line x1="253" y1="20" x2="253" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+      <line x1="507" y1="20" x2="507" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- PUT ON -->
+      <text x="50" y="130" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="bold" font-family="sans-serif">PUT ON</text>
+      <circle cx="110" cy="180" r="16" fill="#f5e6d0"/>
+      <rect x="80" y="196" width="60" height="18" rx="4" fill="#e67e22" opacity="0.6">
+        <animateTransform attributeName="transform" type="translate"
+          values="-30,0; 0,0"
+          dur="2s" repeatCount="indefinite"/>
+      </rect>
+      <text x="50" y="310" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="bold" font-family="sans-serif">PUT ON</text>
+      <text x="50" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">穿上（动作）</text>
+
+      <!-- WEAR -->
+      <text x="360" y="130" text-anchor="middle" fill="#7b4ad9" font-size="13" font-weight="bold" font-family="sans-serif">WEAR</text>
+      <circle cx="370" cy="180" r="16" fill="#f5e6d0"/>
+      <rect x="340" y="196" width="60" height="18" rx="4" fill="#7b4ad9" opacity="0.6"/>
+      <text x="360" y="310" text-anchor="middle" fill="#7b4ad9" font-size="13" font-weight="bold" font-family="sans-serif">WEAR</text>
+      <text x="360" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">穿着（状态）</text>
+
+      <!-- DRESS -->
+      <text x="610" y="130" text-anchor="middle" fill="#38a169" font-size="13" font-weight="bold" font-family="sans-serif">DRESS</text>
+      <circle cx="610" cy="180" r="24" fill="#f5e6d0"/>
+      <rect x="580" y="200" width="60" height="20" rx="5" fill="#38a169" opacity="0.6"/>
+      <text x="610" y="310" text-anchor="middle" fill="#38a169" font-size="13" font-weight="bold" font-family="sans-serif">DRESS</text>
+      <text x="610" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">穿衣服（全套动作）</text>
+    </svg>
+    <div class="label">
+      <div class="p" style="color:#e67e22;">PUT ON vs WEAR vs DRESS</div>
+      <div class="desc">PUT ON = 穿上的动作；WEAR = 穿着的状态；DRESS = 穿好衣服的全套动作（get dressed, dress up）。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 常见搭配 ===== -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+<div class="usage-section">
+  <h4>📦 物理放置</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>put</strong> sth. on / in / under</span><span class="usage-cn">把某物放在...上/里/下 &nbsp;|&nbsp; 📖 基本空间放置</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>put</strong> sth. away</span><span class="usage-cn">收好某物 &nbsp;|&nbsp; 📖 放到该放的地方</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>put</strong> sth. back</span><span class="usage-cn">放回原处 &nbsp;|&nbsp; 📖 放回之前的位置</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>put</strong> sth. together</span><span class="usage-cn">组装/拼装 &nbsp;|&nbsp; 📖 把零件放到一起</span></div>
+  </div>
+</div>
+<div class="usage-section">
+  <h4>👕 身体相关</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>put on</strong> clothes / shoes</span><span class="usage-cn">穿上衣服/鞋子 &nbsp;|&nbsp; 📖 把衣服放在身体上</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>put on</strong> weight</span><span class="usage-cn">长胖 &nbsp;|&nbsp; 📖 把重量"放"到身上</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>put on</strong> a show / act</span><span class="usage-cn">表演/假装 &nbsp;|&nbsp; 📖 "穿上"一场表演</span></div>
+  </div>
+</div>
+<div class="usage-section">
+  <h4>🗣️ 高频口语短语</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>put off</strong></span><span class="usage-cn">推迟/使反感 &nbsp;|&nbsp; 📖 把某事"放到远处"</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>put up with</strong></span><span class="usage-cn">忍受 &nbsp;|&nbsp; 📖 把自己放在忍耐状态中</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>put out</strong></span><span class="usage-cn">熄灭/发布 &nbsp;|&nbsp; 📖 把火放到外面 / 内容放出去</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>put forward</strong></span><span class="usage-cn">提出/建议 &nbsp;|&nbsp; 📖 把想法放到前面</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>put down</strong></span><span class="usage-cn">放下/贬低 &nbsp;|&nbsp; 📖 放下来 / 把某人放到下面去</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>put through</strong></span><span class="usage-cn">接通电话/使经历 &nbsp;|&nbsp; 📖 把某人"放"过去</span></div>
+  </div>
+  <div class="white-box" style="margin-top:12px;"><strong>🔄 put off</strong> = 推迟。物理画面：把某件事"放到"远离当前时间点的位置。所以"put off a meeting"就是 把会议放到远处（推迟）。引申义"使反感"：你的行为把别人"推开"了。<em>"Don't put off until tomorrow what you can do today."</em>（今日事今日毕）</div>
+  <div class="white-box" style="margin-top:8px;"><strong>🔄 put up with</strong> = 忍受。"put up" 本身是"举起/搭建"，但 "put up with" 有特殊含义：你把自己"放置"在某种状态中并"和它在一起（with）"——即你选择处在容忍的状态中。<em>"I can't put up with this noise anymore!"</em>（我再也受不了这噪音了！）</div>
+  <div class="white-box" style="margin-top:8px;"><strong>🔄 put down</strong> = 放下（物理）/ 贬低（抽象）。物理义：把东西放下来。抽象义：把某人"放到下面"=贬低/打压。同样一个"向下放"的动作，对物是中性，对人就是负面。<em>"He's always putting me down."</em>（他老是贬低我）</div>
+  <div class="white-box" style="margin-top:8px;"><strong>🔄 put through</strong> = 接通（电话）/ 使经历（磨难）。物理画面：把某人"放"过一道门/通道——电话接线员把你"放过去"接通对方，或者生活把你"放过去"一段艰难经历。<em>"Please put me through to the manager."</em>（请帮我接通经理）</div>
+</div>
+
+<!-- ===== 反义/相似 ===== -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card put-bg">
+      <h5 style="color:#e67e22;">🚫 反义词</h5>
+      <p><strong>REMOVE</strong> — 拿开 <small>把东西取走</small></p>
+      <p><strong>TAKE</strong> — 拿走 <small>把东西拿离</small></p>
+      <p><strong>LIFT</strong> — 抬起 <small>从原位拿起</small></p>
+    </div>
+    <div class="info-card place-bg">
+      <h5 style="color:#2b6cb0;">🔗 近义辨析</h5>
+      <p><strong>PUT vs PLACE</strong>：随意 vs 正式</p>
+      <p><strong>PUT vs SET</strong>：放 vs 摆放到位</p>
+      <p><strong>PUT vs LAY</strong>：任意放 vs 平放</p>
+      <p><strong>PUT vs STICK</strong>：放 vs 塞</p>
+    </div>
+    <div class="info-card purple-bg">
+      <h5 style="color:#7b4ad9;">💡 名词用法</h5>
+      <p><strong>putt</strong> — 高尔夫推杆 <small>(拼写不同)</small></p>
+      <p><strong>put-down</strong> — 贬低的话</p>
+      <p><strong>put-on</strong> — 假装/戏弄</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

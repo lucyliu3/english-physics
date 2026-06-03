@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWAY 图解 — 离开 / 远离 / 持续</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#e67e22,#d35400); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#e67e22,#f39c12); border-radius:2px; flex-shrink:0; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#e67e22; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#e67e22; }
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:13px; color:#666; margin-top:3px; line-height:1.55; }
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#e67e22; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+  .away-bg { background:linear-gradient(135deg,#fde8e0,#f5d0c0); }
+  .toward-bg { background:linear-gradient(135deg,#f0f5ff,#e0eaf5); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+  @media (max-width:720px) { .container { padding:24px 16px 32px; } .cards, .compare-row { grid-template-columns:1fr; } .usage-list { grid-template-columns:1fr; } .three-col { grid-template-columns:1fr; } h1 { font-size:26px; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>AWAY</h1>
+<p class="subtitle">离开 / 远离 / 持续 — 从"go away"到"fire away"</p>
+
+<!-- ===== 核心卡片 ===== -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+
+  <!-- CARD 1: AWAY 核心意象 — 离开 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="aBg" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#fdf5f0"/>
+          <stop offset="100%" stop-color="#f5ece0"/>
+        </linearGradient>
+        <filter id="shadow">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#aBg)" rx="8"/>
+
+      <!-- 人物/出发点 -->
+      <circle cx="200" cy="200" r="28" fill="#f5e6d0"/>
+      <circle cx="190" cy="195" r="3" fill="#333"/>
+      <circle cx="210" cy="195" r="3" fill="#333"/>
+      <path d="M193,205 Q200,210 207,205" fill="none" stroke="#333" stroke-width="1.5"/>
+      <rect x="185" y="228" width="30" height="35" rx="6" fill="#e67e22" opacity="0.7"/>
+      <line x1="195" y1="263" x2="185" y2="285" stroke="#f5e6d0" stroke-width="5" stroke-linecap="round"/>
+      <line x1="205" y1="263" x2="215" y2="285" stroke="#f5e6d0" stroke-width="5" stroke-linecap="round"/>
+
+      <!-- 离开方向箭头 -->
+      <path d="M240,200 Q340,160 440,200" fill="none" stroke="#e67e22" stroke-width="3" stroke-dasharray="8,6"/>
+      <polygon points="440,200 430,194 430,206" fill="#e67e22"/>
+
+      <!-- 远去的小人 -->
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 80,0; 160,0; 240,0; 320,0"
+          dur="6s" repeatCount="indefinite"/>
+        <circle cx="440" cy="200" r="16" fill="#f5e6d0" opacity="0.6"/>
+        <rect x="432" y="216" width="16" height="20" rx="4" fill="#e67e22" opacity="0.5"/>
+      </g>
+
+      <!-- 原点标记 -->
+      <circle cx="200" cy="340" r="5" fill="#e63946"/>
+      <text x="200" y="360" text-anchor="middle" fill="#e63946" font-size="13" font-family="sans-serif">原点</text>
+
+      <!-- 距离标注 -->
+      <line x1="200" y1="320" x2="600" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,4"/>
+      <text x="400" y="315" text-anchor="middle" fill="#999" font-size="12" font-family="sans-serif">← distance away from 原点 →</text>
+
+      <text x="380" y="370" text-anchor="middle" fill="#444" font-size="14" font-weight="600" font-family="sans-serif">核心意象：从某点向远处离开 / 距离原点越来越远</text>
+    </svg>
+    <div class="card-body">
+      <h3>AWAY <span class="hl">/əˈweɪ/</span></h3>
+      <div class="pos">adverb / adjective · 离开 / 远离 / 持续</div>
+      <div class="def">
+        <strong>本义</strong> 离开某处，向远处去<br>
+        <strong>引申义 1</strong> 不在（sb. is away）<br>
+        <strong>引申义 2</strong> 持续不停地做（dance away / fire away）
+        <span class="eg">"go away" 走开<br>"he's away" 他不在<br>"fire away" 尽管问/说吧</span>
+      </div>
+      <div class="white-box"><strong>💡 核心逻辑</strong>：AWAY = "从原点离开"。物理上：一个人离开一个地方。抽象上：你不在某个地方 = 你从那里"离开"了。持续意义：你一直做某事 = 你"离开"了其他所有事，专注于这一件事。</div>
+    </div>
+  </div>
+
+  <!-- CARD 2: AWAY vs TOWARD -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="aBg2L" x1="0" y1="0" x2="370" y2="400">
+          <stop offset="0%" stop-color="#fdf5f0"/>
+          <stop offset="100%" stop-color="#f5ece0"/>
+        </linearGradient>
+        <linearGradient id="aBg2R" x1="390" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#f0f5ff"/>
+          <stop offset="100%" stop-color="#e0eaf5"/>
+        </linearGradient>
+      </defs>
+      <rect width="370" height="400" fill="url(#aBg2L)"/>
+      <rect x="390" width="370" height="400" fill="url(#aBg2R)"/>
+      <line x1="380" y1="20" x2="380" y2="380" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- LEFT: AWAY -->
+      <circle cx="185" cy="200" r="22" fill="#f5e6d0"/>
+      <rect x="175" y="222" width="20" height="28" rx="6" fill="#e67e22" opacity="0.7"/>
+      <line x1="185" y1="250" x2="175" y2="275" stroke="#f5e6d0" stroke-width="5"/>
+      <line x1="185" y1="250" x2="195" y2="275" stroke="#f5e6d0" stroke-width="5"/>
+      <!-- 脚印向右 -->
+      <circle cx="215" cy="275" r="5" fill="#e67e22" opacity="0.4">
+        <animate attributeName="opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="240" cy="270" r="5" fill="#e67e22" opacity="0.3">
+        <animate attributeName="opacity" values="0.3;0;0.3" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <text x="185" y="365" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">AWAY</text>
+      <text x="185" y="385" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">远离原点</text>
+
+      <!-- RIGHT: TOWARD -->
+      <circle cx="575" cy="200" r="22" fill="#f5e6d0"/>
+      <rect x="565" y="222" width="20" height="28" rx="6" fill="#38a169" opacity="0.7"/>
+      <line x1="575" y1="250" x2="565" y2="275" stroke="#f5e6d0" stroke-width="5"/>
+      <line x1="575" y1="250" x2="585" y2="275" stroke="#f5e6d0" stroke-width="5"/>
+      <!-- 走向目标 -->
+      <rect x="540" y="260" width="30" height="20" rx="4" fill="#38a169" opacity="0.4">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; -30,0"
+          dur="2s" repeatCount="indefinite"/>
+      </rect>
+      <text x="575" y="365" text-anchor="middle" fill="#38a169" font-size="14" font-weight="bold" font-family="sans-serif">TOWARD</text>
+      <text x="575" y="385" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">趋近目标</text>
+    </svg>
+    <div class="card-body">
+      <h3>AWAY vs TOWARD — 离开 vs 靠近</h3>
+      <div class="pos">方向的对立</div>
+      <div class="def">
+        <strong>AWAY</strong> = 从原点向外运动<br>
+        <strong>TOWARD</strong> = 向目标靠近的运动
+        <span class="eg">"look away" 移开视线<br>"look toward" 看向</span>
+      </div>
+      <div class="white-box"><strong>🧠 理解关键</strong>：AWAY 永远以"原点"为参照——你在远离什么。TOWARD 永远以"目标"为参照——你在接近什么。方向不同，语法也不同：away from、toward(s)。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 逻辑演化树 ===== -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div style="background:#fdf5ef; border:1px solid #e8d0c8; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div style="font-size:16px; font-weight:700; margin-bottom:16px;">🧠 AWAY 的三条语义分支</div>
+  <div style="display:flex; flex-direction:column; gap:12px;">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:6px; padding:10px 14px; background:#fdf5f0; border-radius:8px;">
+      <span style="font-weight:700; color:#e67e22;">分支 A：空间离开</span>
+      <span style="font-size:13px; color:#666;">go away → run away → get away → stay away → move away</span>
+    </div>
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:6px; padding:10px 14px; background:#f0f5ff; border-radius:8px;">
+      <span style="font-weight:700; color:#2b6cb0;">分支 B：不在/消失</span>
+      <span style="font-size:13px; color:#666;">sb. is away → put away → throw away → give away → fade away</span>
+    </div>
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:6px; padding:10px 14px; background:#f5f0ff; border-radius:8px;">
+      <span style="font-weight:700; color:#7b4ad9;">分支 C：持续/不受限</span>
+      <span style="font-size:13px; color:#666;">dance away → fire away → chat away → sleep away → right away（立刻）</span>
+    </div>
+  </div>
+  <div style="margin-top:16px; padding-top:16px; border-top:1px dashed #e0d0c0; font-size:14px; color:#555; line-height:1.65;">
+    <strong>🧠 核心逻辑链</strong>：所有用法都从"远离原点"出发。A 是物理上的远离。B 是状态上的"不在/消失"——东西收起来了/扔掉了/不见了。C 最特别：持续做某事 = 你"远离"了其他一切活动，专注于这件事；或者"right away" = 没有任何距离 = 立刻。<br>
+    <strong>💡 记住</strong>：away 的核心画面就是一个原点 + 一个向远处去的箭头。三个分支只是同一个箭头的不同解读方式。
+  </div>
+</div>
+
+<!-- ===== 易混对比 ===== -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+
+  <!-- AWAY vs OFF -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="253" height="340" fill="#fdf6ee"/>
+      <rect x="254" width="253" height="340" fill="#f0f5ff"/>
+      <rect x="508" width="252" height="340" fill="#fdf6ee"/>
+      <line x1="253" y1="20" x2="253" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+      <line x1="507" y1="20" x2="507" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- AWAY 离开 -->
+      <circle cx="80" cy="180" r="16" fill="#f5e6d0"/>
+      <line x1="95" y1="180" x2="140" y2="180" stroke="#e67e22" stroke-width="2.5"/>
+      <polygon points="140,176 150,180 140,184" fill="#e67e22"/>
+      <text x="115" y="310" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="bold" font-family="sans-serif">AWAY</text>
+      <text x="115" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">离开（不强调起点）</text>
+
+      <!-- OFF 脱离 -->
+      <circle cx="350" cy="180" r="16" fill="#f5e6d0"/>
+      <line x1="350" y1="180" x2="390" y2="160" stroke="#7b4ad9" stroke-width="2.5"/>
+      <polygon points="390,160 385,168 395,168" fill="#7b4ad9"/>
+      <text x="380" y="310" text-anchor="middle" fill="#7b4ad9" font-size="13" font-weight="bold" font-family="sans-serif">OFF</text>
+      <text x="380" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">脱离/断开（强调分离）</text>
+
+      <!-- 箭头说明 -->
+      <text x="250" y="240" text-anchor="middle" fill="#999" font-size="11" font-family="sans-serif">away = 水平远去 | off = 脱离表面</text>
+    </svg>
+    <div class="label">
+      <div class="p" style="color:#e67e22;">AWAY vs OFF — 远去 vs 脱离</div>
+      <div class="desc">AWAY 是"远离某点"（水平方向），OFF 是"从表面/连接点脱离"（常含断裂意味）。go away（走开）vs go off（爆炸/离开去某地）。put away（收好）vs put off（推迟）。</div>
+    </div>
+  </div>
+
+  <!-- AWAY vs OUT -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="253" height="340" fill="#fdf6ee"/>
+      <rect x="254" width="253" height="340" fill="#f0f5ff"/>
+      <rect x="508" width="252" height="340" fill="#fdf6ee"/>
+      <line x1="253" y1="20" x2="253" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+      <line x1="507" y1="20" x2="507" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- AWAY 离开区域 -->
+      <rect x="50" y="140" width="80" height="80" rx="8" fill="#ddd"/>
+      <circle cx="130" cy="180" r="16" fill="#f5e6d0"/>
+      <line x1="145" y1="180" x2="190" y2="180" stroke="#e67e22" stroke-width="2.5"/>
+      <text x="115" y="310" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="bold" font-family="sans-serif">AWAY</text>
+      <text x="115" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">远离</text>
+
+      <!-- OUT 从内到外 -->
+      <rect x="320" y="140" width="80" height="80" rx="8" fill="#ddd"/>
+      <circle cx="360" cy="140" r="16" fill="#f5e6d0"/>
+      <line x1="360" y1="140" x2="380" y2="90" stroke="#38a169" stroke-width="2.5"/>
+      <polygon points="380,85 376,95 384,95" fill="#38a169"/>
+      <text x="380" y="310" text-anchor="middle" fill="#38a169" font-size="13" font-weight="bold" font-family="sans-serif">OUT</text>
+      <text x="380" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">从内部出去</text>
+    </svg>
+    <div class="label">
+      <div class="p" style="color:#e67e22;">AWAY vs OUT — 远离 vs 出去</div>
+      <div class="desc">AWAY 只需要"离开某点"（不关心有没边界），OUT 强调"从容器/边界内部出去"。walk away（走开不干了）vs walk out（走出去/退席抗议）。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 常见搭配 ===== -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+<div class="usage-section">
+  <h4>🚶 空间离开</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>go away</strong></span><span class="usage-cn">走开/离开 &nbsp;|&nbsp; 📖 物理上远离</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>run away</strong></span><span class="usage-cn">逃跑 &nbsp;|&nbsp; 📖 快速逃离</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>get away</strong></span><span class="usage-cn">逃脱/离开 &nbsp;|&nbsp; 📖 成功脱离</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>stay away</strong></span><span class="usage-cn">远离/别靠近 &nbsp;|&nbsp; 📖 保持距离</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>move away</strong></span><span class="usage-cn">搬走/挪开 &nbsp;|&nbsp; 📖 移居远处</span></div>
+  </div>
+</div>
+<div class="usage-section">
+  <h4>🗑️ 不在/消失/处理</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>put away</strong></span><span class="usage-cn">收好 &nbsp;|&nbsp; 📖 放到"远离"视线的地方</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>throw away</strong></span><span class="usage-cn">扔掉 &nbsp;|&nbsp; 📖 丢到远处</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>give away</strong></span><span class="usage-cn">赠送/泄露 &nbsp;|&nbsp; 📖 把东西/秘密送"走"</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>fade away</strong></span><span class="usage-cn">渐渐消失 &nbsp;|&nbsp; 📖 颜色/声音越来越远</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>pass away</strong></span><span class="usage-cn">去世 &nbsp;|&nbsp; 📖 委婉说"离开了"</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>do away with</strong></span><span class="usage-cn">废除/消灭 &nbsp;|&nbsp; 📖 让某物"走开"</span></div>
+  </div>
+</div>
+<div class="usage-section">
+  <h4>🗣️ 高频口语短语</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>right away</strong></span><span class="usage-cn">立刻/马上 &nbsp;|&nbsp; 📖 "没有任何距离"=立即</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>fire away</strong></span><span class="usage-cn">尽管问/说吧 &nbsp;|&nbsp; 📖 开枪一样不停地说</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>dance / eat / type away</strong></span><span class="usage-cn">不停地跳舞/吃/打字 &nbsp;|&nbsp; 📖 持续不断地做</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>away with you!</strong></span><span class="usage-cn">走开！/ 别胡说！ &nbsp;|&nbsp; 📖 命令式的"滚开"</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>get away with</strong></span><span class="usage-cn">逃脱惩罚 &nbsp;|&nbsp; 📖 带着（罪行/秘密）走开</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>straight away</strong></span><span class="usage-cn">立刻（英式） &nbsp;|&nbsp; 📖 同 right away</span></div>
+  </div>
+  <div class="white-box" style="margin-top:12px;"><strong>🔄 right away</strong> = 立刻/马上。物理画面："right"（正好/直接）+ "away"（离开）= 没有任何偏离地直接离开原点 = 没有延迟 = 马上。<em>"I'll be there right away."</em>（我马上到）</div>
+  <div class="white-box" style="margin-top:8px;"><strong>🔄 fire away</strong> = 尽管问/说吧。从"开枪"（fire a gun）来的比喻——像扣动扳机后子弹不停地出膛一样，"away"表示"持续不断地进行"。<em>"If you have questions, fire away."</em>（有问题就问吧）</div>
+  <div class="white-box" style="margin-top:8px;"><strong>🔄 get away with</strong> = 逃脱惩罚/侥幸成功。"get away"（逃离）+ "with"（带着）= 你犯了错但"带着"这个秘密"跑掉了"，没被抓到。<em>"He got away with cheating on the test."</em>（他考试作弊没被抓到）</div>
+  <div class="white-box" style="margin-top:8px;"><strong>🔄 do away with</strong> = 废除/消灭。做掉某物让它"走开"——让某事物消失。<em>"They did away with the old system."</em>（他们废除了旧系统）</div>
+</div>
+
+<!-- ===== 反义/相似 ===== -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card away-bg">
+      <h5 style="color:#e67e22;">🚫 反义词</h5>
+      <p><strong>TOWARD</strong> — 向...靠近 <small>方向相反</small></p>
+      <p><strong>NEAR</strong> — 附近 <small>距离近</small></p>
+      <p><strong>HERE</strong> — 在这里 <small>没离开</small></p>
+      <p><strong>BACK</strong> — 回来 <small>方向相反</small></p>
+    </div>
+    <div class="info-card toward-bg">
+      <h5 style="color:#2b6cb0;">🔗 近义辨析</h5>
+      <p><strong>AWAY vs OFF</strong>：远去 vs 脱离</p>
+      <p><strong>AWAY vs OUT</strong>：远离 vs 出来</p>
+      <p><strong>AWAY vs FAR</strong>：副词 vs 形容词</p>
+      <p><strong>AWAY vs APART</strong>：远离 vs 分离</p>
+    </div>
+    <div class="info-card purple-bg">
+      <h5 style="color:#7b4ad9;">💡 常用搭配</h5>
+      <p><strong>far away</strong> = 遥远</p>
+      <p><strong>away from</strong> = 远离</p>
+      <p><strong>keep away</strong> = 保持距离</p>
+      <p><strong>carry away</strong> = 带走/冲昏头脑</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>基础位置小品词空间对比：IN / OUT / ON / OFF / AT / BY</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#f5f5f0; display:flex; justify-content:center; padding:40px 20px; }
+  .container { max-width:960px; width:100%; background:#fff; border-radius:16px; padding:40px 36px 48px; box-shadow:0 2px 20px rgba(0,0,0,0.06); }
+  h1 { font-size:26px; font-weight:700; text-align:center; margin-bottom:4px; }
+  .subtitle { text-align:center; color:#888; font-size:14px; margin-bottom:32px; }
+
+  .scene-box {
+    background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:18px; margin-bottom:32px;
+  }
+  .scene-box canvas { width:100%; height:auto; aspect-ratio:880/340; display:block; border-radius:8px; background:#fafaf8; }
+  .scene-title { font-size:15px; font-weight:600; margin-bottom:10px; color:#333; }
+
+  .compare-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px;
+  }
+  .compare-card {
+    background:#fafaf8; border:1px solid #e8e8e4; border-radius:10px; overflow:hidden;
+  }
+  .compare-card canvas { width:100%; height:auto; aspect-ratio:420/200; display:block; background:#fafaf8; }
+  .compare-card .label { padding:8px 14px 10px; }
+  .compare-card .label .p { font-size:18px; font-weight:700; }
+  .compare-card .label .desc { font-size:12.5px; color:#666; margin-top:2px; line-height:1.5; }
+
+  .usage-list { margin-bottom:32px; }
+  .usage-list h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
+  .usage-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px 28px; }
+  .usage-item { padding:4px 0; border-bottom:1px dashed #eee; font-size:13px; color:#555; }
+  .usage-item .kw { font-weight:600; }
+
+  @media (max-width:720px) {
+    .container { padding:24px 14px 32px; }
+    .compare-grid { grid-template-columns:1fr; }
+    .usage-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>📍 基础位置：第一类小品词空间对比</h1>
+<p class="subtitle">IN · OUT · ON · OFF · AT · BY — 同一个场景，不同位置关系</p>
+
+<!-- 总场景图 -->
+<div class="scene-box">
+  <div class="scene-title">🎯 总场景：一个盒子 + 一个平面 + 一个点</div>
+  <canvas id="sceneAll" width="880" height="340"></canvas>
+</div>
+
+<!-- 逐个对比 -->
+<div class="scene-title">🔍 逐词对比：同一个盒子，不同的小品词表达不同的空间关系</div>
+<div class="compare-grid">
+
+  <div class="compare-card">
+    <canvas id="cIn" width="420" height="200"></canvas>
+    <div class="label">
+      <div class="p" style="color:#d97706;">IN</div>
+      <div class="desc"><strong>在三维空间/容器里面</strong>。物体被容器包围。你看不到盒子里的东西的全部，它在"里面"。</div>
+    </div>
+  </div>
+
+  <div class="compare-card">
+    <canvas id="cOut" width="420" height="200"></canvas>
+    <div class="label">
+      <div class="p" style="color:#d97706;">OUT</div>
+      <div class="desc"><strong>从里面出来 / 在外面</strong>。物体脱离了容器的包围。和IN相反。</div>
+    </div>
+  </div>
+
+  <div class="compare-card">
+    <canvas id="cOn" width="420" height="200"></canvas>
+    <div class="label">
+      <div class="p" style="color:#d97706;">ON</div>
+      <div class="desc"><strong>在表面上面 / 接触</strong>。物体和表面有接触。不是"里面"，是"上面贴着/放着"。</div>
+    </div>
+  </div>
+
+  <div class="compare-card">
+    <canvas id="cOff" width="420" height="200"></canvas>
+    <div class="label">
+      <div class="p" style="color:#d97706;">OFF</div>
+      <div class="desc"><strong>从表面脱离</strong>。原本在表面上的东西离开了。和ON相反。</div>
+    </div>
+  </div>
+
+  <div class="compare-card">
+    <canvas id="cAt" width="420" height="200"></canvas>
+    <div class="label">
+      <div class="p" style="color:#d97706;">AT</div>
+      <div class="desc"><strong>在某一个点</strong>。不强调"里面"或"上面"，只强调"在这个位置"——一个点。</div>
+    </div>
+  </div>
+
+  <div class="compare-card">
+    <canvas id="cBy" width="420" height="200"></canvas>
+    <div class="label">
+      <div class="p" style="color:#d97706;">BY</div>
+      <div class="desc"><strong>在旁边 / 紧挨着</strong>。物体在主物的侧面，靠近但不接触（或轻轻接触）。</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 高频用法 -->
+<div class="usage-list">
+  <h3 style="color:#d97706;">📝 IN / OUT / ON / OFF / AT / BY 高频搭配</h3>
+  <div class="usage-grid">
+    <div class="usage-item"><span class="kw" style="color:#d97706;">IN</span> — in the box / in love / in trouble / check in / come in / give in</div>
+    <div class="usage-item"><span class="kw" style="color:#d97706;">OUT</span> — out of the box / run out / figure out / break out / out of control</div>
+    <div class="usage-item"><span class="kw" style="color:#d97706;">ON</span> — on the table / put on / go on / turn on / on time / on the way</div>
+    <div class="usage-item"><span class="kw" style="color:#d97706;">OFF</span> — off the table / take off / call off / turn off / off work / show off</div>
+    <div class="usage-item"><span class="kw" style="color:#d97706;">AT</span> — at the door / at 5 o'clock / look at / at home / at first / at least</div>
+    <div class="usage-item"><span class="kw" style="color:#d97706;">BY</span> — by the door / stand by / go by / by car / by the way / by law</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+(function() {
+function df(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ========== 总场景 ==========
+const s = document.getElementById('sceneAll');
+const ctx = s.getContext('2d');
+df(ctx,880,340);
+
+// 盒子（大箱子）
+ctx.strokeStyle = '#333'; ctx.lineWidth = 3;
+ctx.strokeRect(160,110,140,120);
+ctx.fillStyle = '#f5f0e8';
+ctx.fillRect(160,110,140,120);
+ctx.fillStyle = '#333'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center';
+ctx.fillText('盒子/容器',230,175);
+ctx.fillStyle = '#888'; ctx.font = '11px sans-serif';
+ctx.fillText('（代表一个三维空间）',230,195);
+
+// 平面（桌子）
+ctx.fillStyle = '#c8b89a';
+ctx.fillRect(390,210,200,12);
+
+// 一个点（门）
+ctx.strokeStyle = '#555'; ctx.lineWidth = 2;
+ctx.strokeRect(620,110,50,90);
+ctx.fillStyle = '#888'; ctx.font = '10px sans-serif';
+ctx.fillText('🚪 一个点（门/位置）',645,105);
+
+// 标注
+ctx.fillStyle = '#999'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+ctx.fillText('← IN = 在盒子里面',230,280);
+ctx.fillText('→ OUT = 在盒子外面 / 从里面出来',230,300);
+ctx.fillText('← ON = 在桌面上（接触）',490,255);
+ctx.fillText('→ OFF = 从桌面脱离',490,275);
+ctx.fillText('← AT = 在门那个点',645,230);
+ctx.fillText('→ BY = 在门旁边',645,250);
+
+// ========== 逐个卡片 ==========
+function drawBox(ctx,w,h,label,insideColor,hasObj) {
+  df(ctx,w,h);
+  // 盒子
+  ctx.strokeStyle = '#666'; ctx.lineWidth = 2.5;
+  ctx.strokeRect(160,80,100,90);
+  ctx.fillStyle = '#f5f0e8';
+  ctx.fillRect(160,80,100,90);
+  if(hasObj) {
+    ctx.fillStyle = insideColor;
+    ctx.beginPath(); ctx.arc(210,125,16,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#000'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('物体',210,130);
+  }
+  ctx.fillStyle = '#666'; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(label,210,60);
+  ctx.fillStyle = '#aaa'; ctx.font = '11px sans-serif';
+  ctx.fillText('盒子剖视图',210,210);
+}
+
+// IN
+const c1 = document.getElementById('cIn');
+const ctx1 = c1.getContext('2d');
+drawBox(ctx1,420,200,'IN ⬇️','#d97706',true);
+ctx1.fillStyle = '#888'; ctx1.font = '11px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('→ 物体在盒子内部 → 被包围',210,185);
+
+// OUT
+const c2 = document.getElementById('cOut');
+const ctx2 = c2.getContext('2d');
+drawBox(ctx2,420,200,'OUT ⬆️','#d97706',false);
+// 物体在盒子外面
+ctx2.fillStyle = '#d97706';
+ctx2.beginPath(); ctx2.arc(310,125,16,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#000'; ctx2.font = '12px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('物体',310,130);
+// 箭头从里面出来
+ctx2.strokeStyle = '#d97706'; ctx2.lineWidth = 2;
+ctx2.beginPath(); ctx2.moveTo(260,125); ctx2.lineTo(288,125); ctx2.stroke();
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif';
+ctx2.fillText('从里面→外面',210,185);
+
+// ON
+const c3 = document.getElementById('cOn');
+const ctx3 = c3.getContext('2d');
+df(ctx3,420,200);
+// 平面
+ctx3.fillStyle = '#c8b89a';
+ctx3.fillRect(110,140,200,10);
+// 物体在上面
+ctx3.fillStyle = '#d97706';
+ctx3.beginPath(); ctx3.arc(200,118,16,0,Math.PI*2); ctx3.fill();
+ctx3.fillStyle = '#000'; ctx3.font = '12px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('物体',200,123);
+ctx3.fillStyle = '#888'; ctx3.font = '11px sans-serif';
+ctx3.fillText('接触表面',200,180);
+ctx3.fillStyle = '#888'; ctx3.font = 'bold 16px sans-serif';
+ctx3.fillText('ON 🔛',200,55);
+ctx3.fillStyle = '#aaa'; ctx3.font = '11px sans-serif';
+ctx3.fillText('平面（桌面）',200,200);
+
+// OFF
+const c4 = document.getElementById('cOff');
+const ctx4 = c4.getContext('2d');
+df(ctx4,420,200);
+// 平面
+ctx4.fillStyle = '#c8b89a';
+ctx4.fillRect(110,140,200,10);
+// 物体离开
+ctx4.fillStyle = '#d97706';
+ctx4.beginPath(); ctx4.arc(330,80,16,0,Math.PI*2); ctx4.fill();
+ctx4.fillStyle = '#000'; ctx4.font = '12px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('物体',330,85);
+// 弧线离开
+ctx4.strokeStyle = '#d97706'; ctx4.lineWidth = 2; ctx4.setLineDash([4,3]);
+ctx4.beginPath(); ctx4.moveTo(200,118); ctx4.quadraticCurveTo(260,60,320,78);
+ctx4.stroke(); ctx4.setLineDash([]);
+ctx4.fillStyle = '#888'; ctx4.font = '11px sans-serif';
+ctx4.fillText('脱离表面',265,55);
+ctx4.fillStyle = '#888'; ctx4.font = 'bold 16px sans-serif';
+ctx4.fillText('OFF 🔚',200,55);
+ctx4.fillStyle = '#aaa'; ctx4.font = '11px sans-serif';
+ctx4.fillText('平面（桌面）',200,200);
+
+// AT
+const c5 = document.getElementById('cAt');
+const ctx5 = c5.getContext('2d');
+df(ctx5,420,200);
+// 门
+ctx5.fillStyle = '#ddd';
+ctx5.fillRect(180,70,40,80);
+ctx5.fillStyle = '#bbb'; ctx5.font = '14px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('🚪 门',200,120);
+// 一个点标记
+ctx5.fillStyle = '#d97706';
+ctx5.beginPath(); ctx5.arc(260,110,8,0,Math.PI*2); ctx5.fill();
+ctx5.fillStyle = '#000'; ctx5.font = '11px sans-serif';
+ctx5.fillText('人',260,105);
+ctx5.fillStyle = '#888'; ctx5.font = '11px sans-serif';
+ctx5.fillText('→ at the door = 人在门那个点',200,185);
+ctx5.fillStyle = '#888'; ctx5.font = 'bold 16px sans-serif';
+ctx5.fillText('AT 📍',200,45);
+
+// BY
+const c6 = document.getElementById('cBy');
+const ctx6 = c6.getContext('2d');
+df(ctx6,420,200);
+// 门
+ctx6.fillStyle = '#ddd';
+ctx6.fillRect(180,70,40,80);
+ctx6.fillStyle = '#bbb'; ctx6.font = '14px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('🚪 门',200,120);
+// 人在旁边
+ctx6.fillStyle = '#d97706';
+ctx6.beginPath(); ctx6.arc(140,110,8,0,Math.PI*2); ctx6.fill();
+ctx6.fillStyle = '#000'; ctx6.font = '11px sans-serif';
+ctx6.fillText('人',140,105);
+ctx6.fillStyle = '#888'; ctx6.font = '11px sans-serif';
+ctx6.fillText('→ by the door = 人在门的"旁边"',200,185);
+ctx6.fillStyle = '#888'; ctx6.font = 'bold 16px sans-serif';
+ctx6.fillText('BY 👥',200,45);
+
+})();
+</script>
+</body>
+</html>

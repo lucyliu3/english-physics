@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BY 空间意象图解</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f0;
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+    color: #1a1a1a;
+  }
+  .container {
+    max-width: 960px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px 56px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .section-title .bar {
+    display: inline-block;
+    width: 4px; height: 18px;
+    background: #38a169;
+    margin-right: 12px;
+    vertical-align: middle;
+    border-radius: 2px;
+  }
+  .section-title span { vertical-align: middle; }
+
+  .core-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 44px;
+  }
+  .core-card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 18px 16px 22px;
+    text-align: center;
+  }
+  .core-card canvas {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    aspect-ratio: 380 / 220;
+    display: block;
+    margin: 0 auto 12px;
+    border-radius: 6px;
+    background: #fafaf8;
+  }
+  .core-card .card-label { font-size: 18px; font-weight: 700; color: #38a169; }
+  .core-card .card-desc { font-size: 14px; color: #555; line-height: 1.5; margin-top: 4px; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .card canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 380 / 200;
+    display: block;
+    background: #fafaf8;
+  }
+  .card-body { padding: 16px 18px 20px; }
+  .card-body h3 { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+  .card-body h3 .hl { color: #38a169; }
+  .card-body .ref { font-size: 13px; color: #888; margin-bottom: 6px; }
+  .card-body .def { font-size: 13.5px; color: #444; line-height: 1.6; }
+  .card-body .def .eg { color: #777; font-style: italic; display: block; margin-top: 2px; }
+  .card-body .def .key { color: #38a169; font-weight: 600; }
+  .card-body .chain { font-size: 12px; color: #38a169; background: #e8f8ef; border-radius: 6px; padding: 6px 10px; margin-top: 8px; line-height: 1.5; }
+
+  .usage-category {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .cat-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #38a169;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e8e8e4;
+  }
+  .cat-chain {
+    font-size: 12.5px;
+    color: #555;
+    background: #e8f8ef;
+    border-radius: 6px;
+    padding: 8px 14px;
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+  .cat-chain strong { color: #38a169; }
+  .usage-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 32px;
+  }
+  .usage-item { padding: 6px 0; border-bottom: 1px dashed #eee; }
+  .usage-item:last-child,
+  .usage-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .usage-en { font-size: 14px; font-weight: 600; color: #333; }
+  .usage-en strong { color: #38a169; }
+  .usage-cn { font-size: 13px; color: #777; margin-top: 1px; }
+
+  .spatial-note {
+    margin-top: 36px;
+    padding: 20px 24px;
+    background: #e8f8ef;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.7;
+  }
+  .spatial-note strong { color: #38a169; }
+
+  @media (max-width: 720px) {
+    .container { padding: 28px 16px 36px; }
+    .core-row { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+    .usage-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>BY 的空间意象</h1>
+  <p class="subtitle">核心逻辑：在旁边 / 从旁边经过 → 再从"旁边"向各方向延伸</p>
+
+  <!-- 核心图 -->
+  <div class="section-title"><span class="bar"></span><span>核心空间逻辑</span></div>
+  <div class="core-row">
+    <div class="core-card">
+      <canvas id="coreBy" width="380" height="220"></canvas>
+      <div class="card-label">BY 的核心空间：在旁边</div>
+      <div class="card-desc">
+        一个物体在另一个物体旁边，靠近但不一定是接触。<br>
+        核心 = <strong>"旁"</strong>（侧向靠近）
+      </div>
+    </div>
+    <div class="core-card">
+      <canvas id="coreByVsAt" width="380" height="220"></canvas>
+      <div class="card-label">BY vs AT vs BESIDE vs NEAR vs NEXT TO</div>
+      <div class="card-desc">
+        五个词都表示"在……"，但是距离和视角不同。<br>
+        理解它们的区别 = 理解 BY 的精确空间位置。
+      </div>
+    </div>
+  </div>
+
+  <!-- 逻辑演变总图 -->
+  <div class="section-title"><span class="bar"></span><span>BY 的逻辑演变树</span></div>
+  <div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+    <div style="font-size:14px; line-height:1.8; color:#444;">
+      <div style="margin-bottom:12px; font-weight:700; color:#38a169; font-size:13px;">核心意象：在主体旁边 / 从主体旁边经过</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; font-size:12.5px;">
+        <div style="background:#e8f8ef; border-radius:8px; padding:12px;">
+          <div style="font-weight:700; color:#38a169; margin-bottom:4px;">① 在旁边</div>
+          <div style="color:#666;">stand by / sit by / by the door / by the window<br><span style="color:#999;">空间上的侧向靠近</span></div>
+        </div>
+        <div style="background:#e8f8ef; border-radius:8px; padding:12px;">
+          <div style="font-weight:700; color:#38a169; margin-bottom:4px;">② 经过</div>
+          <div style="color:#666;">go by / walk by / pass by / time goes by<br><span style="color:#999;">从旁边经过 = 顺便/流逝</span></div>
+        </div>
+        <div style="background:#e8f8ef; border-radius:8px; padding:12px;">
+          <div style="font-weight:700; color:#38a169; margin-bottom:4px;">③ 手段/方式</div>
+          <div style="color:#666;">by car / by mail / by law / by chance<br><span style="color:#999;">通过某个"中介"达成</span></div>
+        </div>
+        <div style="background:#e8f8ef; border-radius:8px; padding:12px;">
+          <div style="font-weight:700; color:#38a169; margin-bottom:4px;">④ 按照/依据</div>
+          <div style="color:#666;">by the rules / by design / by the way / by law<br><span style="color:#999;">以某物为标准"靠"着它</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 四大类卡片 -->
+  <div class="section-title"><span class="bar"></span><span>四大自然类别</span></div>
+  <div class="cards">
+
+    <div class="card">
+      <canvas id="cardNear" width="380" height="200"></canvas>
+      <div class="card-body">
+        <h3>① 在旁边 <span class="hl">空间上的侧向靠近</span></h3>
+        <div class="ref">stand by / sit by / by the door / by the bed / by the river</div>
+        <div class="def">
+          物体 A 在物体 B 的侧面，很近。<span class="key">侧向靠近 = 在……旁边</span>。<br>
+          和 beside 几乎一样，但 by 更强调"靠得近/就在手边"。<br>
+          <strong>NEXT TO</strong> 是所有"在旁边"的词里最近的——<span class="key">"紧挨着 / 零距离"</span>。
+          <span class="eg">"Come sit by me." / "The keys are by the door." / "Sit next to me."</span>
+        </div>
+        <div class="chain">🧠 逻辑：一个物体在另一个物体的侧面 = 在旁边。NEXT TO 强调"中间没有空隙"。</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardPass" width="380" height="200"></canvas>
+      <div class="card-body">
+        <h3>② 经过 <span class="hl">从旁边过去 = 顺便 / 流逝</span></h3>
+        <div class="ref">go by / walk by / pass by / run by / stop by</div>
+        <div class="def">
+          移动的物体从另一个物体旁边"经过"。<span class="key">经过 = 不停留 / 顺便</span>。<br>
+          因为"经过"是短暂的，所以引申为"顺便做一下"。
+          <span class="eg">"Time goes by." / "I'll stop by later." / "A car went by."</span>
+        </div>
+        <div class="chain">🧠 逻辑：我在路边站着 → 车从我旁边开过去 = 经过 → 短暂接触 = 顺便做</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardMeans" width="380" height="200"></canvas>
+      <div class="card-body">
+        <h3>③ 手段 / 方式 <span class="hl">通过某个"中介"</span></h3>
+        <div class="ref">by car / by email / by hand / by accident / by force</div>
+        <div class="def">
+          不是直接做，而是"通过某个中间工具/方式"来做。<span class="key">通过 = 经由</span>。<br>
+          画面：你想达成某件事 → 让某个"中介"站在你和目标之间 = by X。
+          <span class="eg">"Go by car." / "Contact me by email." / "By law, you must..."</span>
+        </div>
+        <div class="chain">🧠 逻辑：你→[车/邮件/法律]→目标。车/邮件/法律"站在你和目标之间"帮你达成 = 通过/手段</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardStandard" width="380" height="200"></canvas>
+      <div class="card-body">
+        <h3>④ 按照 / 依据 <span class="hl">以某物为标准</span></h3>
+        <div class="ref">by the rules / by law / by design / by the way</div>
+        <div class="def">
+          你的行为"靠着"某个标准来做。<span class="key">靠着……做 = 按照 / 依据</span>。<br>
+          画面：你"贴在"规则旁边 = 你严格按照规则做。抽象化后="根据……"。
+          <span class="eg">"Do it by the book." / "By the way, ..." / "By law, you must stop."</span>
+        </div>
+        <div class="chain">🧠 逻辑：你贴在规则旁边 = 你严格按照它的要求做 → 按照/依据</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 高频用法 -->
+  <div class="section-title"><span class="bar"></span><span>BY 高频用法（每条都带逻辑解释）</span></div>
+
+  <div class="usage-category">
+    <div class="cat-label">① 在旁边 — 空间靠近</div>
+    <div class="cat-chain">🧠 逻辑链：A在B的侧面，很近但不一定接触。这是 BY 最原始的空间含义。和 beside 几乎同义，但 by 更强调"近到手边"。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">Come <strong>sit by</strong> me.</span>
+        <span class="usage-cn">坐我旁边来。<br><span style="font-size:11px;color:#999;">📖 在我侧面、靠近我</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The keys are <strong>by</strong> the door.</span>
+        <span class="usage-cn">钥匙在门旁边。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let's walk <strong>by</strong> the river.</span>
+        <span class="usage-cn">咱们沿着河边走。<br><span style="font-size:11px;color:#999;">📖 在河的侧面走 = 沿河</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I want to live <strong>by</strong> the sea.</span>
+        <span class="usage-cn">我想住在海边。<br><span style="font-size:11px;color:#999;">📖 在海旁边</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She stood <strong>by</strong> the window.</span>
+        <span class="usage-cn">她站在窗边。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The house <strong>by</strong> the lake.</span>
+        <span class="usage-cn">湖边的房子。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">② 在旁边 → 在一旁支持 / 支持某人</div>
+    <div class="cat-chain">🧠 逻辑链："站在某人旁边" ≠ 只是空间位置 → 我站在你旁边 = 我和你站在一起 = 我支持你。这个抽象非常好理解——你遇到困难时，谁站在你旁边？支持你的人。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">I'll <strong>stand by</strong> you no matter what.</span>
+        <span class="usage-cn">不管怎样我都会支持你。<br><span style="font-size:11px;color:#999;">📖 我会"站在你旁边"= 支持你</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She has always <strong>stood by</strong> me.</span>
+        <span class="usage-cn">她一直支持我。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>By</strong> your side.</span>
+        <span class="usage-cn">在你身边。<br><span style="font-size:11px;color:#999;">📖 在你旁边 = 陪伴/支持</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">①⓫ NEXT TO — 紧挨着 / 零距离 / 仅次于</div>
+    <div class="cat-chain">🧠 逻辑链：NEXT TO 是所有"在旁边"的词里距离最近的——中间没有空隙。"next"本身就暗示"下一个/紧接"→ next to = 紧挨着。抽象化后 = "仅次于"（紧挨着第一）和"几乎"（紧挨着零）。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">He sat <strong>next to</strong> me on the couch.</span>
+        <span class="usage-cn">他在沙发上挨着我坐。<br><span style="font-size:11px;color:#999;">📖 紧挨着，中间没空位</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The hotel is <strong>next to</strong> the station.</span>
+        <span class="usage-cn">酒店就在车站隔壁。<br><span style="font-size:11px;color:#999;">📖 紧挨着，零距离</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Next to</strong> English, Spanish is the most spoken language in the US.</span>
+        <span class="usage-cn">在美国，仅次于英语，西班牙语是说得最多的语言。<br><span style="font-size:11px;color:#999;">📖 "紧挨着"第一名 = 第二名 / 仅次于</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">It costs <strong>next to</strong> nothing.</span>
+        <span class="usage-cn">这几乎不花钱。<br><span style="font-size:11px;color:#999;">📖 "紧挨着"零 = 接近于零</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She put her bag <strong>next to</strong> mine.</span>
+        <span class="usage-cn">她把包紧挨着我的放着。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I parked <strong>next to</strong> a red car.</span>
+        <span class="usage-cn">我停在一辆红车旁边。<br><span style="font-size:11px;color:#999;">📖 并排紧挨着停</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">③ 经过 — 从旁边经过 / 时间流逝</div>
+    <div class="cat-chain">🧠 逻辑链：你在路边站着 → 某物从你旁边过去 = by。所以：车从旁边过去 = go by，时间从你旁边过去 = time goes by（你站着不动，时间像车一样从你旁边驶过）。因为"经过"是顺路的，所以引申为"顺便做"（stop by / come by）。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">Time <strong>goes by</strong> so fast.</span>
+        <span class="usage-cn">时间过得真快。<br><span style="font-size:11px;color:#999;">📖 你站着不动，时间像车一样从你旁边驶过</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">A car <strong>went by</strong>.</span>
+        <span class="usage-cn">一辆车开过去了。<br><span style="font-size:11px;color:#999;">📖 从你旁边经过→继续走了</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">A week <strong>went by</strong>.</span>
+        <span class="usage-cn">一周过去了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I'll <strong>stop by</strong> your office.</span>
+        <span class="usage-cn">我会顺路去你办公室。<br><span style="font-size:11px;color:#999;">📖 我经过你办公室"旁边"时停一下 = 顺便拜访</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Can you <strong>come by</strong> later?</span>
+        <span class="usage-cn">你一会儿能过来一下吗？<br><span style="font-size:11px;color:#999;">📖 你"经过"我这里时顺便进来一下 = 顺便过来</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He <strong>walked by</strong> without saying hi.</span>
+        <span class="usage-cn">他走过去没打招呼。<br><span style="font-size:11px;color:#999;">📖 从我旁边走过去</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I'll finish it <strong>by</strong> Friday.</span>
+        <span class="usage-cn">我周五之前（最晚周五）做完。<br><span style="font-size:11px;color:#999;">📖 时间"经过"周五这个点 = 不晚于周五</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>By the time</strong> we arrived, the movie had started.</span>
+        <span class="usage-cn">我们到的时候，电影已经开始了。<br><span style="font-size:11px;color:#999;">📖 在"我们到达"这个时间点经过时 = 到……的时候</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>By the time</strong> you wake up, I'll be gone.</span>
+        <span class="usage-cn">等你醒了，我已经走了。<br><span style="font-size:11px;color:#999;">📖 时间"经过"你醒来的那个点 = 你醒来时/之前</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Please reply <strong>by</strong> Monday.</span>
+        <span class="usage-cn">请周一之前回复。<br><span style="font-size:11px;color:#999;">📖 不晚于周一这个时间点</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">④ 手段 / 方式 — 通过某个"中介"达成</div>
+    <div class="cat-chain">🧠 逻辑链：你想从A到B，但你不是自己直接走过去——你"通过"一个中间工具（车/邮件/手）来帮你。车站在"你和目的地之间"= 通过 / 用。同样：by email（通过邮件）、by hand（用手工）、by force（用武力）。这里的 by ≈ through / via。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">I go to work <strong>by</strong> car.</span>
+        <span class="usage-cn">我开车上班。<br><span style="font-size:11px;color:#999;">📖 车作为"中介"帮我从家到公司</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Contact me <strong>by</strong> email.</span>
+        <span class="usage-cn">通过邮件联系我。<br><span style="font-size:11px;color:#999;">📖 邮件作为中介</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Made <strong>by</strong> hand.</span>
+        <span class="usage-cn">手工制作。<br><span style="font-size:11px;color:#999;">📖 用手作为工具</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She pushed the door open <strong>by</strong> accident.</span>
+        <span class="usage-cn">她不小心把门推开了。<br><span style="font-size:11px;color:#999;">📖 "意外"作为中介=不是故意的</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Learn English <strong>by</strong> watching movies.</span>
+        <span class="usage-cn">通过看电影学英语。<br><span style="font-size:11px;color:#999;">📖 看电影作为"工具/方法"</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Pay <strong>by</strong> credit card.</span>
+        <span class="usage-cn">用信用卡支付。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">⑤ 按照 / 依据 — 靠着规则做</div>
+    <div class="cat-chain">🧠 逻辑链："在旁边"→ 抽象化：你的行为"贴着"规则/标准走 = 你严格按照它做。by the book = 贴着书本（规则）做 = 照章办事。by law = 贴着法律做 = 依法。by design = 贴着设计做 = 故意设计好的。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">Do it <strong>by</strong> the book.</span>
+        <span class="usage-cn">照章办事。<br><span style="font-size:11px;color:#999;">📖 你的行为贴着规则"书"做</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>By</strong> law, you must wear a seatbelt.</span>
+        <span class="usage-cn">法律规定你必须系安全带。<br><span style="font-size:11px;color:#999;">📖 贴着法律做 = 依法</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">It was <strong>by</strong> design, not accident.</span>
+        <span class="usage-cn">这是设计好的，不是意外。<br><span style="font-size:11px;color:#999;">📖 贴着"设计"走=是故意的</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Everything is fine <strong>by</strong> me.</span>
+        <span class="usage-cn">我这边都没问题。<br><span style="font-size:11px;color:#999;">📖 "按我的标准来看"= 在我看来</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>By</strong> the way, did you call her?</span>
+        <span class="usage-cn">顺便问一下，你给她打电话了吗？<br><span style="font-size:11px;color:#999;">📖 "顺着这条路"= 说话中顺便提起</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">It's 3 pm <strong>by</strong> my watch.</span>
+        <span class="usage-cn">我手表上显示下午3点。<br><span style="font-size:11px;color:#999;">📖 以我的手表的"标准"来看</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">⑥ 被动句 — 动作的发出者（by + 人）</div>
+    <div class="cat-chain">🧠 逻辑链：The cake was eaten → 蛋糕被吃了，但被谁吃了？"by John" = John 站在蛋糕旁边（作为动作的发出者）= 被动句中的"被某人"。这里的 by 和"在旁边"的逻辑相通——执行者"在旁边"参与了动作。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">The cake was made <strong>by</strong> my mom.</span>
+        <span class="usage-cn">蛋糕是我妈妈做的。<br><span style="font-size:11px;color:#999;">📖 妈妈是动作的发出者 = "被妈妈"</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">This book was written <strong>by</strong> J.K. Rowling.</span>
+        <span class="usage-cn">这本书是J.K.罗琳写的。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The window was broken <strong>by</strong> a kid.</span>
+        <span class="usage-cn">窗户被一个孩子打破了。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">⑦ 数量 / 尺寸 — 以……为单位 / 相差</div>
+    <div class="cat-chain">🧠 逻辑链：by 可以表示"以……为计量单位"。画面：你"贴着"某个计量标准来衡量。by the hour = 以小时为单位来算钱；by inches = 以英寸为单位；increase by 10% = 以10%为单位增加。by far = "远比……"= 远远超过其他。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">Paid <strong>by</strong> the hour.</span>
+        <span class="usage-cn">按小时计酬。<br><span style="font-size:11px;color:#999;">📖 以小时为"标准单位"来算</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Sales increased <strong>by</strong> 20%.</span>
+        <span class="usage-cn">销售额增长了20%。<br><span style="font-size:11px;color:#999;">📖 以20%为单位增长</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She is taller than me <strong>by</strong> 5 cm.</span>
+        <span class="usage-cn">她比我高5厘米。<br><span style="font-size:11px;color:#999;">📖 以5厘米为单位超过我</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">One <strong>by</strong> one.</span>
+        <span class="usage-cn">一个一个地。<br><span style="font-size:11px;color:#999;">📖 以"一个"为单位依次做</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Step <strong>by</strong> step.</span>
+        <span class="usage-cn">一步一步地。<br><span style="font-size:11px;color:#999;">📖 以"一步"为单位</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">This is <strong>by far</strong> the best.</span>
+        <span class="usage-cn">这是目前为止最好的。<br><span style="font-size:11px;color:#999;">📖 远远超过 = "旁边"所有其他</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="spatial-note">
+    <strong>BY 的统一逻辑</strong>：所有用法都从一个核心画面出发——<strong>"在旁边 / 从旁边经过"</strong>。<br><br>
+    ① <strong>在旁边</strong>：物理空间的侧面靠近（stand by me / by the door）<br>
+    ② <strong>在旁边→支持</strong>：站在你旁边 = 支持你（stand by you）<br>
+    ③ <strong>经过</strong>：从旁边过去 = 时间流逝 / 顺便（go by / stop by）<br>
+    ④ <strong>手段/方式</strong>：通过"中介"来做（by car / by email）← 中介站在你和目标之间<br>
+    ⑤ <strong>按照/依据</strong>：行为"贴着"标准走（by the book / by law）<br>
+    ⑥ <strong>被动</strong>：动作发出者"在旁边"参与了（made by ...）<br>
+    ⑦ <strong>数量/单位</strong>：贴着计量标准（by the hour / step by step / by far）<br><br>
+    <strong>⚠️ 注意区分五个"在旁边"系列词</strong>（从近到远）：<br>
+    <strong>NEXT TO</strong> = 紧挨着，零距离（sit next to me = 贴着坐）<br>
+    <strong>BY</strong> = 在旁边，很近（stand by the door = 在门边）<br>
+    <strong>BESIDE</strong> = 并排，强调并列关系（walk beside me = 和我并排走）<br>
+    <strong>NEAR</strong> = 在附近，不一定看得到／不一定很近（near the station = 车站附近）<br>
+    <strong>AT</strong> = 在某个精确的点上（at the door = 在门那个位置）<br>
+    —— NEXT TO ≈ BY ≈ BESIDE 在日常生活中经常互换，但需要强调"紧贴着"时用 NEXT TO。<br>
+    <strong>⚠️ 注意区分 BY 和 PAST</strong>：两者都表示"经过"。by 强调"从旁边过去"（go by = 经过、流逝），past 强调"超过了某个点"（walk past = 走过、超过）。
+  </div>
+
+</div>
+
+<script>
+(function() {
+function drawFrame(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ===== 核心图1：BY 在旁边 =====
+const c1 = document.getElementById('coreBy');
+const ctx1 = c1.getContext('2d');
+drawFrame(ctx1,380,220);
+
+// main object (door)
+ctx1.fillStyle = '#ddd'; ctx1.strokeStyle = '#bbb'; ctx1.lineWidth = 1.5;
+ctx1.fillRect(170,60,50,100);
+ctx1.strokeRect(170,60,50,100);
+ctx1.fillStyle = '#888'; ctx1.font = '12px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('门',195,115);
+
+// person BY the door (right side, close)
+ctx1.fillStyle = '#38a169';
+ctx1.beginPath(); ctx1.arc(280,110,16,0,Math.PI*2); ctx1.fill();
+ctx1.fillRect(277,126,6,22);
+ctx1.fillStyle = '#fff'; ctx1.font = '11px sans-serif';
+ctx1.fillText('人',280,114);
+
+// "by" label
+ctx1.fillStyle = '#38a169'; ctx1.font = 'bold 18px sans-serif';
+ctx1.fillText('BY',280,58);
+
+// bracket showing distance
+ctx1.strokeStyle = '#38a169'; ctx1.lineWidth = 1.5; ctx1.setLineDash([3,3]);
+ctx1.beginPath(); ctx1.moveTo(220,135); ctx1.lineTo(260,135); ctx1.stroke(); ctx1.setLineDash([]);
+ctx1.fillStyle = '#38a169'; ctx1.font = '10px sans-serif';
+ctx1.fillText('← 在旁边（近）',240,150);
+
+// person FAR (for comparison)
+ctx1.fillStyle = '#999';
+ctx1.beginPath(); ctx1.arc(60,110,10,0,Math.PI*2); ctx1.fill();
+ctx1.fillStyle = '#999'; ctx1.font = '10px sans-serif';
+ctx1.fillText('NEAR（远）',60,85);
+
+// ===== 核心图2：BY vs AT vs BESIDE vs NEAR vs NEXT TO =====
+const c2 = document.getElementById('coreByVsAt');
+const ctx2 = c2.getContext('2d');
+drawFrame(ctx2,380,220);
+
+// center object: a door
+ctx2.fillStyle = '#ddd'; ctx2.strokeStyle = '#bbb'; ctx2.lineWidth = 1.5;
+ctx2.fillRect(175,50,50,100);
+ctx2.strokeRect(175,50,50,100);
+ctx2.fillStyle = '#888'; ctx2.font = '13px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('🚪 门',200,105);
+
+// AT — exactly at the point (on the door)
+ctx2.fillStyle = '#d97706';
+ctx2.beginPath(); ctx2.arc(200,30,10,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#d97706'; ctx2.font = '11px sans-serif';
+ctx2.fillText('AT = 在门那个点',200,18);
+
+// NEXT TO — immediately adjacent, touching
+ctx2.fillStyle = '#c0392b';
+ctx2.beginPath(); ctx2.arc(245,70,12,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#c0392b'; ctx2.font = '10px sans-serif';
+ctx2.fillText("NEXT TO = 紧挨着",245,48);
+
+// BY — close, by the side
+ctx2.fillStyle = '#38a169';
+ctx2.beginPath(); ctx2.arc(310,110,12,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#38a169'; ctx2.font = '10px sans-serif';
+ctx2.fillText('BY = 旁边（近）',310,90);
+
+// BESIDE — side by side
+ctx2.fillStyle = '#7b4ad9';
+ctx2.beginPath(); ctx2.arc(110,80,12,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#7b4ad9'; ctx2.font = '10px sans-serif';
+ctx2.fillText('BESIDE = 并排',110,60);
+
+// NEAR — in the area
+ctx2.fillStyle = '#555';
+ctx2.beginPath(); ctx2.arc(70,155,10,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#555'; ctx2.font = '10px sans-serif';
+ctx2.fillText('NEAR = 在附近',70,155);
+
+// arrows pointing to door
+ctx2.strokeStyle = '#c0392b'; ctx2.lineWidth = 1; ctx2.setLineDash([3,3]);
+ctx2.beginPath(); ctx2.moveTo(230,75); ctx2.lineTo(225,95); ctx2.stroke(); ctx2.setLineDash([]);
+ctx2.strokeStyle = '#38a169'; ctx2.setLineDash([3,3]);
+ctx2.beginPath(); ctx2.moveTo(295,110); ctx2.lineTo(230,110); ctx2.stroke(); ctx2.setLineDash([]);
+ctx2.strokeStyle = '#7b4ad9'; ctx2.setLineDash([3,3]);
+ctx2.beginPath(); ctx2.moveTo(130,85); ctx2.lineTo(175,85); ctx2.stroke(); ctx2.setLineDash([]);
+
+// ===== 四大类 =====
+
+// 1. 在旁边
+const e1 = document.getElementById('cardNear');
+const ctx3 = e1.getContext('2d');
+drawFrame(ctx3,380,200);
+
+// window
+ctx3.fillStyle = '#d0e8f0'; ctx3.strokeStyle = '#888'; ctx3.lineWidth = 2;
+ctx3.fillRect(180,40,50,70);
+ctx3.strokeRect(180,40,50,70);
+ctx3.fillStyle = '#888'; ctx3.font = '11px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('窗户',205,80);
+
+// person by window
+ctx3.fillStyle = '#38a169';
+ctx3.beginPath(); ctx3.arc(140,90,12,0,Math.PI*2); ctx3.fill();
+ctx3.fillRect(137,102,6,18);
+ctx3.fillStyle = '#fff'; ctx3.font = '10px sans-serif';
+ctx3.fillText('人',140,94);
+ctx3.fillStyle = '#38a169'; ctx3.font = '11px sans-serif';
+ctx3.fillText('by the window',140,140);
+
+// person by door (right)
+ctx3.fillStyle = '#38a169';
+ctx3.beginPath(); ctx3.arc(300,90,12,0,Math.PI*2); ctx3.fill();
+ctx3.fillRect(297,102,6,18);
+ctx3.fillStyle = '#fff'; ctx3.font = '10px sans-serif';
+ctx3.fillText('人',300,94);
+ctx3.fillStyle = '#38a169'; ctx3.font = '11px sans-serif';
+ctx3.fillText('by the river',300,140);
+
+ctx3.fillStyle = '#888'; ctx3.font = '11px sans-serif';
+ctx3.fillText('A在B的侧面，很近',190,185);
+
+// 2. 经过
+const e2 = document.getElementById('cardPass');
+const ctx4 = e2.getContext('2d');
+drawFrame(ctx4,380,200);
+
+// ground
+ctx4.fillStyle = '#ddd'; ctx4.fillRect(0,130,380,3);
+
+// person standing (left)
+ctx4.fillStyle = '#38a169';
+ctx4.beginPath(); ctx4.arc(60,100,12,0,Math.PI*2); ctx4.fill();
+ctx4.fillRect(57,112,6,18);
+ctx4.fillStyle = '#fff'; ctx4.font = '9px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('你',60,103);
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif';
+ctx4.fillText('（站着不动）',60,148);
+
+// car moving by
+ctx4.fillStyle = '#38a169';
+ctx4.fillRect(250,88,40,18);
+ctx4.fillStyle = '#fff'; ctx4.font = '8px sans-serif';
+ctx4.fillText('🚗',270,102);
+// motion lines
+ctx4.strokeStyle = '#aaa'; ctx4.lineWidth = 1;
+ctx4.beginPath(); ctx4.moveTo(210,95); ctx4.lineTo(240,95);
+ctx4.moveTo(215,100); ctx4.lineTo(240,100);
+ctx4.moveTo(210,105); ctx4.lineTo(240,105); ctx4.stroke();
+
+ctx4.fillStyle = '#38a169'; ctx4.font = '11px sans-serif';
+ctx4.fillText('→ 车从你旁边"经过" (go by)',200,78);
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif';
+ctx4.fillText('停在旁边 = 顺便 (stop by / come by)',190,180);
+
+// 3. 手段
+const e3 = document.getElementById('cardMeans');
+const ctx5 = e3.getContext('2d');
+drawFrame(ctx5,380,200);
+
+// you
+ctx5.fillStyle = '#e63946';
+ctx5.beginPath(); ctx5.arc(50,100,12,0,Math.PI*2); ctx5.fill();
+ctx5.fillStyle = '#fff'; ctx5.font = '9px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('你',50,103);
+
+// destination
+ctx5.fillStyle = '#666';
+ctx5.fillRect(310,50,40,40);
+ctx5.fillStyle = '#888'; ctx5.font = '10px sans-serif';
+ctx5.fillText('目的地',330,75);
+
+// car (the "by" thing)
+ctx5.fillStyle = '#38a169';
+ctx5.fillRect(150,75,50,25);
+ctx5.fillStyle = '#fff'; ctx5.font = '9px sans-serif';
+ctx5.fillText('🚗 车',175,91);
+
+// arrow: you → car → destination
+ctx5.strokeStyle = '#38a169'; ctx5.lineWidth = 2;
+ctx5.beginPath(); ctx5.moveTo(65,100); ctx5.lineTo(140,88); ctx5.stroke();
+ctx5.beginPath(); ctx5.moveTo(145,88); ctx5.lineTo(140,83); ctx5.lineTo(140,93); ctx5.closePath(); ctx5.fill();
+ctx5.beginPath(); ctx5.moveTo(210,88); ctx5.lineTo(300,75); ctx5.stroke();
+ctx5.fillStyle = '#38a169';
+ctx5.beginPath(); ctx5.moveTo(296,71); ctx5.lineTo(304,75); ctx5.lineTo(296,79); ctx5.closePath(); ctx5.fill();
+
+ctx5.fillStyle = '#38a169'; ctx5.font = '10px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('by car = 车作为"中间工具"帮你到达',190,50);
+ctx5.fillStyle = '#888'; ctx5.font = '10px sans-serif';
+ctx5.fillText('by email / by hand / by force / by accident',190,180);
+
+// 4. 按照
+const e4 = document.getElementById('cardStandard');
+const ctx6 = e4.getContext('2d');
+drawFrame(ctx6,380,200);
+
+// book/rules on the left
+ctx6.fillStyle = '#4a90d9';
+ctx6.fillRect(40,50,35,70);
+ctx6.fillStyle = '#fff'; ctx6.font = '9px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('规则',57,90);
+
+// person "sticking to" the book
+ctx6.fillStyle = '#38a169';
+ctx6.beginPath(); ctx6.arc(150,85,12,0,Math.PI*2); ctx6.fill();
+ctx6.fillRect(147,97,6,18);
+ctx6.fillStyle = '#fff'; ctx6.font = '9px sans-serif';
+ctx6.fillText('人',150,89);
+
+// arrow showing "sticking to"
+ctx6.strokeStyle = '#38a169'; ctx6.lineWidth = 2;
+ctx6.beginPath(); ctx6.moveTo(80,85); ctx6.lineTo(130,85); ctx6.stroke();
+ctx6.fillStyle = '#38a169';
+ctx6.beginPath(); ctx6.moveTo(126,81); ctx6.lineTo(136,85); ctx6.lineTo(126,89); ctx6.closePath(); ctx6.fill();
+
+ctx6.fillStyle = '#38a169'; ctx6.font = '11px sans-serif';
+ctx6.fillText('"贴着"规则做',110,70);
+
+// action on the right
+ctx6.strokeStyle = '#38a169'; ctx6.lineWidth = 2;
+ctx6.beginPath(); ctx6.moveTo(165,85); ctx6.lineTo(250,85); ctx6.stroke();
+ctx6.fillStyle = '#38a169';
+ctx6.beginPath(); ctx6.moveTo(246,81); ctx6.lineTo(256,85); ctx6.lineTo(246,89); ctx6.closePath(); ctx6.fill();
+
+ctx6.fillStyle = '#666'; ctx6.font = '11px sans-serif';
+ctx6.fillText('→ 按照规则做',210,75);
+
+ctx6.fillStyle = '#888'; ctx6.font = '10px sans-serif';
+ctx6.fillText('by the book / by law / by the way / by my watch',190,180);
+
+})();
+</script>
+
+</body>
+</html>

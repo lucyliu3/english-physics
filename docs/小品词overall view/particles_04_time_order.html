@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>时间/顺序小品词空间对比：AFTER / BEFORE / AFTERWARD(S) / FORWARD / BACKWARD(S) / SINCE / UNTIL</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#f5f5f0; display:flex; justify-content:center; padding:40px 20px; }
+  .container { max-width:960px; width:100%; background:#fff; border-radius:16px; padding:40px 36px 48px; box-shadow:0 2px 20px rgba(0,0,0,0.06); }
+  h1 { font-size:22px; font-weight:700; text-align:center; margin-bottom:4px; }
+  .subtitle { text-align:center; color:#888; font-size:13px; margin-bottom:28px; }
+
+  .scene-box { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:18px; margin-bottom:30px; }
+  .scene-box canvas { width:100%; height:auto; aspect-ratio:880/300; display:block; border-radius:8px; background:#fafaf8; }
+
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:10px; overflow:hidden; }
+  .card canvas { width:100%; height:auto; aspect-ratio:420/170; display:block; background:#fafaf8; }
+  .card .label { padding:6px 10px 10px; }
+  .card .label .p { font-size:16px; font-weight:700; }
+  .card .label .desc { font-size:11.5px; color:#666; margin-top:1px; line-height:1.5; }
+  .card .label .eg { font-size:11px; color:#999; margin-top:2px; }
+
+  .section-title { font-size:15px; font-weight:600; margin:16px 0 8px; color:#333; }
+
+  @media (max-width:720px) {
+    .container { padding:24px 12px 28px; }
+    .grid-2 { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>⏱️ 时间 / 顺序：第四类小品词空间对比</h1>
+<p class="subtitle">AFTER / BEFORE / AFTERWARD(S) / FORWARD / BACKWARD(S) / SINCE / UNTIL</p>
+<p style="text-align:center; color:#888; font-size:12px; margin-bottom:20px;">
+注意：时间词的本质就是把<strong>空间关系映射到时间轴上</strong>。看到任何一个时间词，先想它的空间意象。
+</p>
+
+<!-- 总场景图 -->
+<div class="scene-box">
+  <div class="section-title">🎯 时间轴上的空间关系</div>
+  <canvas id="sceneAll" width="880" height="300"></canvas>
+</div>
+
+<div class="section-title">⏮️⏭️ 在……之前 / 之后（顺序关系）</div>
+<div class="grid-2">
+  <div class="card">
+    <canvas id="cBefore" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#38a169;">BEFORE</div>
+      <div class="desc"><strong>在……之前</strong>。从空间"在前面"映射到时间"在之前"。和AFTER相反。</div>
+      <div class="eg">before lunch / before the war / before class / before long</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cAfter" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#38a169;">AFTER</div>
+      <div class="desc"><strong>在……之后</strong>。从空间"跟在后面"映射到时间"晚于"。抽象：追求、模仿。</div>
+      <div class="eg">after school / go after / take after / after all</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">⏪⏩ 向前 / 向后（方向）</div>
+<div class="grid-2">
+  <div class="card">
+    <canvas id="cForward" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#38a169;">FORWARD</div>
+      <div class="desc"><strong>向前</strong>。朝前方移动。抽象：进步、提出、期待。</div>
+      <div class="eg">go forward / come forward / put forward / look forward to</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cBackward" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#38a169;">BACKWARD(S)</div>
+      <div class="desc"><strong>向后</strong>。朝后方移动。抽象：倒退、退步。</div>
+      <div class="eg">step backward / bend over backward / backward thinking</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">🔄 AFTERWARD(S) 和 -WARD 系列</div>
+<div class="grid-2">
+  <div class="card">
+    <canvas id="cAfterward" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#38a169;">AFTERWARD(S)</div>
+      <div class="desc"><strong>之后 / 后来</strong>= AFTER（之后）+ WARD（朝……方向）。副词，表示"在那之后的时间点上"。</div>
+      <div class="eg">soon afterward / shortly afterward / What happened afterward?</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cWard" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#38a169;">-WARD 系列总览</div>
+      <div class="desc">AFTER + WARD = 之后 / FOR + WARD = 向前 / BACK + WARD = 向后 / TO + WARD = 朝 / UP + WARD = 向上 / DOWN + WARD = 向下 / OUT + WARD = 向外 / IN + WARD = 向内。全部来自空间方向！</div>
+      <div class="eg">same pattern: afterward, forward, backward, toward, upward, downward, outward, inward</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">📌 时间端点：SINCE / UNTIL</div>
+<div class="grid-2">
+  <div class="card">
+    <canvas id="cSince" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#38a169;">SINCE</div>
+      <div class="desc"><strong>自从</strong>。从过去某个时间点一直到现在。强调"从那时起"。</div>
+      <div class="eg">since 2020 / since then / since I was a kid / ever since</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cUntil" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#38a169;">UNTIL</div>
+      <div class="desc"><strong>直到</strong>。从现在到未来的某个时间点。强调"到那时为止"。</div>
+      <div class="eg">until tomorrow / until now / until I come back / not until</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+(function() {
+function df(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ========== 总场景 ==========
+const s = document.getElementById('sceneAll');
+const ctx = s.getContext('2d');
+df(ctx,880,300);
+
+// 时间轴
+ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
+ctx.beginPath(); ctx.moveTo(60,150); ctx.lineTo(820,150); ctx.stroke();
+ctx.fillStyle = '#888'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+ctx.fillText('过去 ← 时间轴 → 未来',440,135);
+
+// 箭头
+ctx.fillStyle = '#333';
+ctx.beginPath(); ctx.moveTo(814,146); ctx.lineTo(826,150); ctx.lineTo(814,154); ctx.closePath(); ctx.fill();
+
+// 现在的位置
+ctx.fillStyle = '#d97706';
+ctx.beginPath(); ctx.arc(440,150,8,0,Math.PI*2); ctx.fill();
+ctx.fillStyle = '#000'; ctx.font = '11px sans-serif';
+ctx.fillText('你现在',440,125);
+
+// 之前
+ctx.fillStyle = '#38a169';
+ctx.beginPath(); ctx.arc(200,150,6,0,Math.PI*2); ctx.fill();
+ctx.fillStyle = '#888'; ctx.font = '10px sans-serif';
+ctx.fillText('BEFORE ← 之前',200,120);
+
+// 之后
+ctx.fillStyle = '#38a169';
+ctx.beginPath(); ctx.arc(680,150,6,0,Math.PI*2); ctx.fill();
+ctx.fillStyle = '#888'; ctx.font = '10px sans-serif';
+ctx.fillText('AFTER → 之后',680,120);
+
+// AFTERWARD
+ctx.fillStyle = '#2b6cb0';
+ctx.beginPath(); ctx.arc(580,170,6,0,Math.PI*2); ctx.fill();
+ctx.fillStyle = '#888'; ctx.font = '9px sans-serif';
+ctx.fillText('AFTERWARD',580,195);
+
+// 时间跨越（SINCE）
+ctx.strokeStyle = '#7b4ad9'; ctx.lineWidth = 2; ctx.setLineDash([4,3]);
+ctx.beginPath(); ctx.moveTo(100,150); ctx.lineTo(440,150); ctx.stroke();
+ctx.setLineDash([]);
+ctx.fillStyle = '#7b4ad9'; ctx.font = '10px sans-serif';
+ctx.fillText('← SINCE（自过去某点到现在）→',260,170);
+
+// UNTIL
+ctx.strokeStyle = '#c0392b'; ctx.lineWidth = 2; ctx.setLineDash([4,3]);
+ctx.beginPath(); ctx.moveTo(440,150); ctx.lineTo(720,150); ctx.stroke();
+ctx.setLineDash([]);
+ctx.fillStyle = '#c0392b'; ctx.font = '10px sans-serif';
+ctx.fillText('← UNTIL（从现在到未来某点）→',580,170);
+
+// ========== 各卡片 ==========
+
+// BEFORE
+const c1 = document.getElementById('cBefore');
+const ctx1 = c1.getContext('2d');
+df(ctx1,420,170);
+ctx1.strokeStyle = '#333'; ctx1.lineWidth = 2;
+ctx1.beginPath(); ctx1.moveTo(30,85); ctx1.lineTo(390,85); ctx1.stroke();
+ctx1.fillStyle = '#333';
+ctx1.beginPath(); ctx1.moveTo(384,81); ctx1.lineTo(396,85); ctx1.lineTo(384,89); ctx1.closePath(); ctx1.fill();
+// 时间点：BEFORE
+ctx1.fillStyle = '#38a169';
+ctx1.beginPath(); ctx1.arc(120,85,8,0,Math.PI*2); ctx1.fill();
+ctx1.fillStyle = '#000'; ctx1.font = '10px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('午饭',120,70);
+// 现在
+ctx1.fillStyle = '#d97706';
+ctx1.beginPath(); ctx1.arc(320,85,8,0,Math.PI*2); ctx1.fill();
+ctx1.fillStyle = '#000'; ctx1.font = '10px sans-serif';
+ctx1.fillText('现在',320,70);
+ctx1.fillStyle = '#888'; ctx1.font = '11px sans-serif';
+ctx1.fillText('→ before lunch = 午饭之前',220,130);
+ctx1.fillStyle = '#38a169'; ctx1.font = 'bold 16px sans-serif';
+ctx1.fillText('    BEFORE',200,165);
+
+// AFTER
+const c2 = document.getElementById('cAfter');
+const ctx2 = c2.getContext('2d');
+df(ctx2,420,170);
+ctx2.strokeStyle = '#333'; ctx2.lineWidth = 2;
+ctx2.beginPath(); ctx2.moveTo(30,85); ctx2.lineTo(390,85); ctx2.stroke();
+ctx2.fillStyle = '#333';
+ctx2.beginPath(); ctx2.moveTo(384,81); ctx2.lineTo(396,85); ctx2.lineTo(384,89); ctx2.closePath(); ctx2.fill();
+// 现在
+ctx2.fillStyle = '#d97706';
+ctx2.beginPath(); ctx2.arc(120,85,8,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#000'; ctx2.font = '10px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('现在',120,70);
+// AFTER
+ctx2.fillStyle = '#38a169';
+ctx2.beginPath(); ctx2.arc(320,85,8,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#000'; ctx2.font = '10px sans-serif';
+ctx2.fillText('放学',320,70);
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif';
+ctx2.fillText('→ after school = 放学之后',220,130);
+ctx2.fillStyle = '#38a169'; ctx2.font = 'bold 16px sans-serif';
+ctx2.fillText('    AFTER',200,165);
+
+// FORWARD
+const c3 = document.getElementById('cForward');
+const ctx3 = c3.getContext('2d');
+df(ctx3,420,170);
+// 人
+ctx3.fillStyle = '#38a169';
+ctx3.beginPath(); ctx3.arc(80,85,10,0,Math.PI*2); ctx3.fill();
+ctx3.fillRect(77,95,6,20);
+ctx3.fillStyle = '#000'; ctx3.font = '10px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('人',80,78);
+// 箭头向前
+ctx3.strokeStyle = '#38a169'; ctx3.lineWidth = 2.5;
+ctx3.beginPath(); ctx3.moveTo(95,85); ctx3.lineTo(300,85); ctx3.stroke();
+ctx3.fillStyle = '#38a169';
+ctx3.beginPath(); ctx3.moveTo(296,81); ctx3.lineTo(308,85); ctx3.lineTo(296,89); ctx3.closePath(); ctx3.fill();
+ctx3.fillStyle = '#38a169'; ctx3.font = 'bold 16px sans-serif';
+ctx3.fillText('FORWARD →',200,50);
+ctx3.fillStyle = '#888'; ctx3.font = '10px sans-serif';
+ctx3.fillText('朝前方移动',200,135);
+ctx3.fillStyle = '#888'; ctx3.font = '10px sans-serif';
+ctx3.fillText('Look forward to = 期待（看向前方）',200,150);
+
+// BACKWARD
+const c4 = document.getElementById('cBackward');
+const ctx4 = c4.getContext('2d');
+df(ctx4,420,170);
+// 人
+ctx4.fillStyle = '#38a169';
+ctx4.beginPath(); ctx4.arc(320,85,10,0,Math.PI*2); ctx4.fill();
+ctx4.fillRect(317,95,6,20);
+ctx4.fillStyle = '#000'; ctx4.font = '10px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('人',320,78);
+// 箭头向后
+ctx4.strokeStyle = '#38a169'; ctx4.lineWidth = 2.5;
+ctx4.beginPath(); ctx4.moveTo(300,85); ctx4.lineTo(95,85); ctx4.stroke();
+ctx4.fillStyle = '#38a169';
+ctx4.beginPath(); ctx4.moveTo(99,81); ctx4.lineTo(87,85); ctx4.lineTo(99,89); ctx4.closePath(); ctx4.fill();
+ctx4.fillStyle = '#38a169'; ctx4.font = 'bold 16px sans-serif';
+ctx4.fillText('← BACKWARD',200,50);
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif';
+ctx4.fillText('朝后方移动',200,135);
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif';
+ctx4.fillText('Bend over backward = 竭尽全力（向后弯腰）',200,150);
+
+// AFTERWARD
+const c5 = document.getElementById('cAfterward');
+const ctx5 = c5.getContext('2d');
+df(ctx5,420,170);
+ctx5.strokeStyle = '#333'; ctx5.lineWidth = 2;
+ctx5.beginPath(); ctx5.moveTo(30,85); ctx5.lineTo(390,85); ctx5.stroke();
+ctx5.fillStyle = '#333';
+ctx5.beginPath(); ctx5.moveTo(384,81); ctx5.lineTo(396,85); ctx5.lineTo(384,89); ctx5.closePath(); ctx5.fill();
+// 事件
+ctx5.fillStyle = '#d97706';
+ctx5.beginPath(); ctx5.arc(120,85,8,0,Math.PI*2); ctx5.fill();
+ctx5.fillStyle = '#000'; ctx5.font = '10px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('事件',120,70);
+// AFTERWARD
+ctx5.fillStyle = '#38a169';
+ctx5.beginPath(); ctx5.arc(310,85,8,0,Math.PI*2); ctx5.fill();
+ctx5.fillStyle = '#000'; ctx5.font = '10px sans-serif';
+ctx5.fillText('之后',310,70);
+ctx5.fillStyle = '#888'; ctx5.font = '9px sans-serif';
+ctx5.fillText('AFTER + WARD = "朝后的方向" = 之后',215,125);
+ctx5.fillStyle = '#38a169'; ctx5.font = 'bold 16px sans-serif';
+ctx5.fillText('AFTERWARD(S)',210,160);
+
+// -WARD
+const c6 = document.getElementById('cWard');
+const ctx6 = c6.getContext('2d');
+df(ctx6,420,170);
+// 一个中心点 + 各个方向
+ctx6.fillStyle = '#d97706';
+ctx6.beginPath(); ctx6.arc(140,85,12,0,Math.PI*2); ctx6.fill();
+ctx6.fillStyle = '#fff'; ctx6.font = 'bold 11px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('核心',140,90);
+// 箭头到各个方向
+const wards = [
+  {label:'FORWARD →',x:300,y:40,color:'#38a169'},
+  {label:'← BACKWARD',x:40,y:40,color:'#2b6cb0'},
+  {label:'TOWARD →',x:280,y:85,color:'#7b4ad9'},
+  {label:'UPWARD ↑',x:200,y:20,color:'#d97706'},
+  {label:'↓ DOWNWARD',x:200,y:155,color:'#c0392b'},
+  {label:'← OUTWARD',x:60,y:130,color:'#b7791f'},
+  {label:'INWARD →',x:260,y:130,color:'#7b4ad9'},
+];
+wards.forEach(w => {
+  ctx6.fillStyle = w.color; ctx6.font = '11px sans-serif';
+  ctx6.fillText(w.label, w.x, w.y);
+});
+
+// SINCE
+const c7 = document.getElementById('cSince');
+const ctx7 = c7.getContext('2d');
+df(ctx7,420,170);
+ctx7.strokeStyle = '#333'; ctx7.lineWidth = 2;
+ctx7.beginPath(); ctx7.moveTo(30,85); ctx7.lineTo(390,85); ctx7.stroke();
+// 过去点
+ctx7.fillStyle = '#7b4ad9';
+ctx7.beginPath(); ctx7.arc(100,85,8,0,Math.PI*2); ctx7.fill();
+ctx7.fillStyle = '#000'; ctx7.font = '10px sans-serif'; ctx7.textAlign = 'center';
+ctx7.fillText('2020',100,70);
+// 现在
+ctx7.fillStyle = '#d97706';
+ctx7.beginPath(); ctx7.arc(320,85,8,0,Math.PI*2); ctx7.fill();
+ctx7.fillStyle = '#000'; ctx7.font = '10px sans-serif';
+ctx7.fillText('现在',320,70);
+// 跨越线
+ctx7.strokeStyle = '#7b4ad9'; ctx7.lineWidth = 2; ctx7.setLineDash([4,3]);
+ctx7.beginPath(); ctx7.moveTo(108,85); ctx7.lineTo(312,85); ctx7.stroke();
+ctx7.setLineDash([]);
+ctx7.fillStyle = '#7b4ad9'; ctx7.font = 'bold 16px sans-serif';
+ctx7.fillText('SINCE 2020 →',200,50);
+ctx7.fillStyle = '#888'; ctx7.font = '10px sans-serif';
+ctx7.fillText('从2020年到现在',200,140);
+
+// UNTIL
+const c8 = document.getElementById('cUntil');
+const ctx8 = c8.getContext('2d');
+df(ctx8,420,170);
+ctx8.strokeStyle = '#333'; ctx8.lineWidth = 2;
+ctx8.beginPath(); ctx8.moveTo(30,85); ctx8.lineTo(390,85); ctx8.stroke();
+// 现在
+ctx8.fillStyle = '#d97706';
+ctx8.beginPath(); ctx8.arc(100,85,8,0,Math.PI*2); ctx8.fill();
+ctx8.fillStyle = '#000'; ctx8.font = '10px sans-serif'; ctx8.textAlign = 'center';
+ctx8.fillText('现在',100,70);
+// 未来点
+ctx8.fillStyle = '#c0392b';
+ctx8.beginPath(); ctx8.arc(320,85,8,0,Math.PI*2); ctx8.fill();
+ctx8.fillStyle = '#000'; ctx8.font = '10px sans-serif';
+ctx8.fillText('明天',320,70);
+// 跨越线
+ctx8.strokeStyle = '#c0392b'; ctx8.lineWidth = 2; ctx8.setLineDash([4,3]);
+ctx8.beginPath(); ctx8.moveTo(108,85); ctx8.lineTo(312,85); ctx8.stroke();
+ctx8.setLineDash([]);
+ctx8.fillStyle = '#c0392b'; ctx8.font = 'bold 16px sans-serif';
+ctx8.fillText('→ UNTIL tomorrow',200,50);
+ctx8.fillStyle = '#888'; ctx8.font = '10px sans-serif';
+ctx8.fillText('从现在到明天',200,140);
+
+})();
+</script>
+</body>
+</html>

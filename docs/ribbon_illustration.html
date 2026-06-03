@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RIBBON 图解</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; color:#e63946; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#e63946,#ff6b6b); border-radius:2px; flex-shrink:0; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#e63946; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#e63946; }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#e63946; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+
+  .spectrum-wrap { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+
+  .red-light { background:linear-gradient(135deg,#fff5f5,#fde8e8); }
+  .red-bg { background:linear-gradient(135deg,#fff5f5,#fde8e8); }
+
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>RIBBON 图解</h1>
+<p class="subtitle">丝带 / 缎带 — 从"hair ribbon"到"ribbon of highway"</p>
+
+<!-- 核心卡片区 -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+  <!-- Card 1: 物理丝带 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ribbonBg1" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#fff5f5"/>
+        </linearGradient>
+        <filter id="shadowR">
+          <feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#ribbonBg1)" rx="8"/>
+
+      <!-- 蝴蝶结丝带 - 中心 -->
+      <g filter="url(#shadowR)">
+        <!-- 左环 -->
+        <path d="M350,160 Q280,100 300,180 Q320,260 350,220" fill="#e63946" opacity="0.8">
+          <animate attributeName="d"
+            values="M350,160 Q280,100 300,180 Q320,260 350,220;
+                    M350,160 Q275,100 295,180 Q315,260 350,220;
+                    M350,160 Q280,100 300,180 Q320,260 350,220"
+            dur="4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.8;0.7;0.8" dur="4s" repeatCount="indefinite"/>
+        </path>
+        <!-- 右环 -->
+        <path d="M410,160 Q480,100 460,180 Q440,260 410,220" fill="#e63946" opacity="0.8">
+          <animate attributeName="d"
+            values="M410,160 Q480,100 460,180 Q440,260 410,220;
+                    M410,160 Q485,100 465,180 Q445,260 410,220;
+                    M410,160 Q480,100 460,180 Q440,260 410,220"
+            dur="4s" repeatCount="indefinite"/>
+        </path>
+        <!-- 中心结 -->
+        <circle cx="380" cy="160" r="20" fill="#e63946"/>
+        <circle cx="380" cy="160" r="12" fill="#d62d3a" opacity="0.6"/>
+        <!-- 飘带 - 左下方 -->
+        <path d="M365,175 Q345,220 320,260 Q310,280 325,290" fill="none" stroke="#e63946" stroke-width="5" stroke-linecap="round" opacity="0.7">
+          <animate attributeName="d"
+            values="M365,175 Q345,220 320,260 Q310,280 325,290;
+                    M365,175 Q345,215 318,255 Q305,275 320,285;
+                    M365,175 Q345,220 320,260 Q310,280 325,290"
+            dur="5s" repeatCount="indefinite"/>
+        </path>
+        <!-- 飘带 - 右下方 -->
+        <path d="M395,175 Q415,220 440,260 Q450,280 435,290" fill="none" stroke="#e63946" stroke-width="5" stroke-linecap="round" opacity="0.7">
+          <animate attributeName="d"
+            values="M395,175 Q415,220 440,260 Q450,280 435,290;
+                    M395,175 Q415,215 442,255 Q455,275 440,285;
+                    M395,175 Q415,220 440,260 Q450,280 435,290"
+            dur="5.5s" repeatCount="indefinite"/>
+        </path>
+      </g>
+
+      <!-- 标注 -->
+      <text x="380" y="330" text-anchor="middle" fill="#e63946" font-size="16" font-weight="bold" font-family="sans-serif">Hair Ribbon / Gift Ribbon</text>
+      <text x="380" y="355" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">丝带 = 细长带状 + 柔软可弯曲 + 装饰性</text>
+
+      <!-- 小白框 -->
+      <rect x="100" y="368" width="560" height="28" rx="6" fill="#fff" stroke="#e8d0d0" stroke-width="1"/>
+      <text x="110" y="386" fill="#555" font-size="12" font-family="sans-serif"><tspan fill="#e63946" font-weight="bold">💡 理解核心</tspan>：ribbon = 细长柔软的带状物，核心特征是"长"+"窄"+"柔"+"装饰性"。</text>
+    </svg>
+    <div class="card-body">
+      <h3>RIBBON <span class="hl">/ˈrɪbən/</span></h3>
+      <div class="pos">noun · 丝带 / 缎带 / 带状物</div>
+      <div class="def">
+        <strong>本义</strong> 一种细长柔软的装饰性织物条带<br>
+        <strong>引申</strong> 任何细长、连续、带状的事物
+        <span class="eg">"She tied her hair with a red ribbon." 她用一条红丝带扎起头发。</span>
+        <span class="eg">"A ribbon of road stretched across the valley." 一条带状的公路穿过山谷。</span>
+      </div>
+      <div class="white-box"><strong>💡 核心意象</strong>：丝带的视觉特征 = 细长 + 连续 + 柔软 + 可弯曲。任何具有这些特征的东西都可以比喻为 ribbon。关键不是"装饰"而是"带状连续"。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: ribbon of road -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ribbonBg2" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#fff5f5"/>
+        </linearGradient>
+        <filter id="shadowR2">
+          <feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#ribbonBg2)" rx="8"/>
+
+      <!-- 山地背景 -->
+      <path d="M0,260 L100,100 L200,180 L300,80 L400,160 L500,90 L600,170 L700,110 L760,140 L760,260Z" fill="#e8e0d0" opacity="0.4"/>
+      <path d="M0,260 L150,160 L250,220 L350,140 L450,200 L550,150 L650,210 L760,180 L760,260Z" fill="#d8d0c0" opacity="0.3"/>
+
+      <!-- 公路 - 蜿蜒的丝带状 -->
+      <g filter="url(#shadowR2)">
+        <path d="M-20,240 Q100,200 200,210 Q320,225 400,190 Q480,155 560,170 Q640,185 760,160"
+          fill="none" stroke="#555" stroke-width="20" stroke-linecap="round"/>
+        <!-- 路面中线 -->
+        <path d="M-20,240 Q100,200 200,210 Q320,225 400,190 Q480,155 560,170 Q640,185 760,160"
+          fill="none" stroke="#ffd700" stroke-width="2" stroke-dasharray="10,8"/>
+        <!-- 路沿 -->
+        <path d="M-20,240 Q100,200 200,210 Q320,225 400,190 Q480,155 560,170 Q640,185 760,160"
+          fill="none" stroke="#fff" stroke-width="24" opacity="0.3"/>
+      </g>
+
+      <!-- 行驶的车辆 -->
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="-100,0; 880,0"
+          dur="8s" repeatCount="indefinite"/>
+        <rect x="400" y="100" width="18" height="8" rx="3" fill="#e63946"/>
+      </g>
+
+      <!-- 标注箭头 -->
+      <path d="M200,260 Q300,280 400,260" fill="none" stroke="#e63946" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+      <text x="380" y="335" text-anchor="middle" fill="#e63946" font-size="16" font-weight="bold" font-family="sans-serif">A Ribbon of Highway</text>
+      <text x="380" y="358" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">公路像丝带一样蜿蜒穿过山谷</text>
+
+      <!-- 小白框 -->
+      <rect x="100" y="368" width="560" height="28" rx="6" fill="#fff" stroke="#e8d0d0" stroke-width="1"/>
+      <text x="110" y="386" fill="#555" font-size="12" font-family="sans-serif"><tspan fill="#e63946" font-weight="bold">🧠 比喻逻辑</tspan>：公路在远处看起来 = 细长 + 蜿蜒 + 连续 + 带状 — 和丝带的视觉完全一致，所以叫"ribbon of road"。</text>
+    </svg>
+    <div class="card-body">
+      <h3>比喻用法 <span class="hl">→ 带状物</span></h3>
+      <div class="pos">FIGURATIVE · 比喻扩展</div>
+      <div class="def">
+        <strong>ribbon of road</strong> 丝带般的公路<br>
+        <strong>ribbon of light</strong> 带状光线<br>
+        <strong>ribbon of water</strong> 带状水域
+        <span class="eg">"The river was a blue ribbon winding through the valley." 这条河像一条蓝丝带蜿蜒穿过山谷。</span>
+        <span class="eg">"A ribbon of smoke rose from the chimney." 一缕带状炊烟从烟囱升起。</span>
+      </div>
+      <div class="white-box"><strong>💡 比喻核心</strong>：凡"细长 + 连续 + 蜿蜒"的物体，都可以比喻为 ribbon。重点是"视觉上的带状连续性"，不局限于织物。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 逻辑演化树 -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div class="logic-tree" style="background:#fffdf7; border:1px solid #e8e0d0; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+    <div class="tree-node" style="background:#fff5f5; border:1px solid #e8c8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ① 织物丝带<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">装饰用织物条带</span>
+    </div>
+    <div style="font-size:18px; color:#e63946; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#fff5f5; border:1px solid #e8c8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:105px;">
+      ② 象征性丝带<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">颁奖/剪彩/纪念</span>
+    </div>
+    <div style="font-size:18px; color:#e63946; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#fff5f5; border:1px solid #e8c8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:105px;">
+      ③ 技术带状物<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">typewriter ribbon/ink ribbon</span>
+    </div>
+    <div style="font-size:18px; color:#e63946; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#fff5f5; border:1px solid #e8c8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:115px;">
+      ④ 视觉比喻<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">ribbon of road/light/water</span>
+    </div>
+  </div>
+
+  <div class="white-box" style="margin-top:16px;"><strong>💡 逻辑链</strong>：装饰丝带（hair ribbon）→ 象征仪式（cut the ribbon / blue ribbon）→ 技术带状物（typewriter ribbon）→ 视觉比喻（ribbon of road）。所有用法共享同一个视觉核心："细长+连续+带状"。</div>
+</div>
+
+<!-- 易混对比区 -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="c1rbg" x1="0" y1="0" x2="760" y2="340">
+          <stop offset="0%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#fff5f5"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="340" fill="url(#c1rbg)" rx="8"/>
+
+      <text x="380" y="30" text-anchor="middle" fill="#e63946" font-size="16" font-weight="bold" font-family="sans-serif">RIBBON vs STRIP vs BAND</text>
+
+      <!-- RIBBON 左 -->
+      <path d="M100,80 Q150,70 200,85 Q250,100 300,80" fill="none" stroke="#e63946" stroke-width="6" stroke-linecap="round"/>
+      <path d="M100,80 Q150,90 200,85 Q250,80 300,85" fill="none" stroke="#e63946" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
+      <text x="200" y="140" text-anchor="middle" fill="#e63946" font-size="14" font-weight="600" font-family="sans-serif">RIBBON</text>
+      <text x="200" y="160" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">可弯曲 + 装饰性</text>
+      <text x="200" y="178" text-anchor="middle" fill="#777" font-size="11" font-family="sans-serif">通常柔软可打结</text>
+
+      <!-- STRIP 中 -->
+      <rect x="340" y="75" width="80" height="20" rx="2" fill="#38a169" opacity="0.7"/>
+      <text x="380" y="140" text-anchor="middle" fill="#38a169" font-size="14" font-weight="600" font-family="sans-serif">STRIP</text>
+      <text x="380" y="160" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">被切/撕下的条</text>
+      <text x="380" y="178" text-anchor="middle" fill="#777" font-size="11" font-family="sans-serif">不强调柔软性</text>
+
+      <!-- BAND 右 -->
+      <ellipse cx="570" cy="85" rx="40" ry="25" fill="none" stroke="#e67e22" stroke-width="5"/>
+      <text x="570" y="140" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="600" font-family="sans-serif">BAND</text>
+      <text x="570" y="160" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">环形/闭合带状</text>
+      <text x="570" y="178" text-anchor="middle" fill="#777" font-size="11" font-family="sans-serif">通常闭合有张力</text>
+
+      <rect x="30" y="200" width="700" height="55" rx="6" fill="#fff" stroke="#e8d0d0" stroke-width="1"/>
+      <text x="45" y="220" fill="#555" font-size="11.5" font-family="sans-serif"><tspan fill="#e63946" font-weight="bold">💡 三者区别</tspan>：RIBBON = 装饰性柔软条带（可打结/弯曲）；STRIP = 被切割下的条形材料（a strip of paper）；</text>
+      <text x="45" y="240" fill="#555" font-size="11.5" font-family="sans-serif">BAND = 通常闭合的带状物（a rubber band/headband/wedding band），强调围绕/束缚功能。</text>
+    </svg>
+    <div class="label">
+      <div class="p">RIBBON vs STRIP vs BAND</div>
+      <div class="desc">RIBBON强调可弯曲装饰性，STRIP是被切割的条，BAND是闭合的圈</div>
+    </div>
+  </div>
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="c2rbg" x1="0" y1="0" x2="760" y2="340">
+          <stop offset="0%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#fff5f5"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="340" fill="url(#c2rbg)" rx="8"/>
+
+      <!-- RIBBON vs TAPE -->
+      <text x="380" y="30" text-anchor="middle" fill="#e63946" font-size="16" font-weight="bold" font-family="sans-serif">RIBBON 丝带 vs TAPE 胶带</text>
+
+      <!-- RIBBON -->
+      <path d="M150,80 Q160,65 180,65 C200,65 210,80 200,95 C190,110 170,110 160,100" fill="none" stroke="#e63946" stroke-width="5" stroke-linecap="round"/>
+      <text x="190" y="150" text-anchor="middle" fill="#e63946" font-size="14" font-weight="600" font-family="sans-serif">RIBBON</text>
+      <text x="190" y="170" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">织物，装饰用</text>
+      <text x="190" y="188" text-anchor="middle" fill="#777" font-size="11" font-family="sans-serif">打蝴蝶结/扎头发</text>
+
+      <!-- TAPE -->
+      <rect x="420" y="75" width="120" height="12" rx="2" fill="#ccc"/>
+      <rect x="420" y="75" width="120" height="12" rx="2" fill="#ddd" opacity="0.5"/>
+      <circle cx="420" cy="81" r="30" fill="none" stroke="#aaa" stroke-width="2"/>
+      <circle cx="420" cy="81" r="18" fill="none" stroke="#aaa" stroke-width="1.5"/>
+      <text x="500" y="150" text-anchor="middle" fill="#888" font-size="14" font-weight="600" font-family="sans-serif">TAPE</text>
+      <text x="500" y="170" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">粘性/功能性</text>
+      <text x="500" y="188" text-anchor="middle" fill="#777" font-size="11" font-family="sans-serif">粘贴/封装/遮蔽</text>
+
+      <line x1="380" y1="60" x2="380" y2="200" stroke="#ccc" stroke-width="1" stroke-dasharray="3,3"/>
+
+      <rect x="30" y="215" width="700" height="50" rx="6" fill="#fff" stroke="#e8d0d0" stroke-width="1"/>
+      <text x="45" y="235" fill="#555" font-size="11.5" font-family="sans-serif"><tspan fill="#e63946" font-weight="bold">💡 RIBBON vs TAPE</tspan>：RIBBON = 织物/装饰（柔软、美观、可打结），TAPE = 粘性/工业（功能性、通常单面有胶）。</text>
+      <text x="45" y="255" fill="#555" font-size="11.5" font-family="sans-serif">注意：typewriter ribbon 用的是 ribbon（色带），而 packing tape 用的是 tape（包装胶带）。</text>
+    </svg>
+    <div class="label">
+      <div class="p">RIBBON vs TAPE</div>
+      <div class="desc">RIBBON是织物装饰，TAPE是粘性功能材料</div>
+    </div>
+  </div>
+</div>
+
+<!-- 常见搭配区 -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+
+<div class="usage-section">
+  <h4>🎀 织物/装饰</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>hair ribbon</strong></span>
+      <span class="usage-cn">发带/扎头绳 &nbsp;|&nbsp; 📖 用来扎头发的装饰丝带</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>gift ribbon</strong></span>
+      <span class="usage-cn">礼物丝带 &nbsp;|&nbsp; 📖 包装礼物用的丝带</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>ribbon</strong> of satin</span>
+      <span class="usage-cn">缎带 &nbsp;|&nbsp; 📖 光滑的丝绸质地丝带</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>blue ribbon</strong></span>
+      <span class="usage-cn">蓝绶带/最高荣誉 &nbsp;|&nbsp; 📖 第一名或最高奖项的标志</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>✂️ 仪式/象征</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>cut the ribbon</strong></span>
+      <span class="usage-cn">剪彩 &nbsp;|&nbsp; 📖 开幕/开业仪式，剪断红丝带宣布开放</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>ribbon</strong> cutting ceremony</span>
+      <span class="usage-cn">剪彩仪式 &nbsp;|&nbsp; 📖 新店/新建筑开业的官方仪式</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>red ribbon</strong></span>
+      <span class="usage-cn">红丝带（防艾标志） &nbsp;|&nbsp; 📖 AIDS 关怀的象征</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>yellow ribbon</strong></span>
+      <span class="usage-cn">黄丝带（欢迎归来） &nbsp;|&nbsp; 📖 欢迎远方亲人归来的象征</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>🏞️ 技术/比喻</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>typewriter ribbon</strong></span>
+      <span class="usage-cn">打字机色带 &nbsp;|&nbsp; 📖 打字机上的带状墨带</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>ribbon</strong> of road/highway</span>
+      <span class="usage-cn">带状的公路 &nbsp;|&nbsp; 📖 像丝带一样蜿蜒的公路</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>ribbon</strong> development</span>
+      <span class="usage-cn">带状开发 &nbsp;|&nbsp; 📖 沿公路两侧呈带状延伸的城市发展模式</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>ribbon</strong> of light</span>
+      <span class="usage-cn">带状光线 &nbsp;|&nbsp; 📖 细长连续的光束/光带</span>
+    </div>
+  </div>
+</div>
+
+<div class="white-box" style="margin-bottom:24px;"><strong>💡 用法演变总结</strong>：物理丝带（hair ribbon）→ 仪式象征（cut the ribbon）→ 荣誉象征（blue ribbon）→ 技术品（typewriter ribbon）→ 视觉比喻（ribbon of road）。所有用法共享"细长连续带状"的核心画面。</div>
+
+<!-- 反义/相似词 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card" style="background:linear-gradient(135deg,#fff5f5,#fde8e8);">
+      <h5 style="color:#e63946;">近义/相似</h5>
+      <p><strong>BAND</strong> — 带状/环形带 <small>通常闭合</small></p>
+      <p><strong>STRIP</strong> — 长条材料 <small>切割而来</small></p>
+      <p><strong>TAPE</strong> — 胶带/带子 <small>功能性</small></p>
+    </div>
+    <div class="info-card" style="background:linear-gradient(135deg,#f0f5ff,#e0e8f5);">
+      <h5 style="color:#2b6cb0;">仪式相关</h5>
+      <p><strong>cut the ribbon</strong> 剪彩</p>
+      <p><strong>ribbon cutting</strong> 剪彩仪式</p>
+      <p><strong>blue ribbon</strong> 最高奖项</p>
+    </div>
+    <div class="info-card" style="background:linear-gradient(135deg,#f5f0ff,#e8e0f5);">
+      <h5 style="color:#7b4ad9;">易混提醒</h5>
+      <p><strong>RIBBON ≠ STRIP</strong></p>
+      <p>strip 强调"切割"</p>
+      <p>ribbon 强调"柔软装饰"</p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

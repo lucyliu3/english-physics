@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WALK vs STROLL vs MARCH vs STRUT vs STOMP 对比图解</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f0f5ff 0%,#e8ecf5 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:1020px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#5a6aa0,#3d4d8a); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#5a6aa0,#7a8abf); border-radius:2px; flex-shrink:0; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#5a6aa0; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#5a6aa0; }
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#5a6aa0; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+  .spectrum-wrap { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+  .stroll-c { color:#8a7abf; }
+  .walk-c { color:#5a6aa0; }
+  .march-c { color:#c05621; }
+  .strut-c { color:#c0392b; }
+  .stomp-c { color:#8b4513; }
+  @media (max-width:800px) {
+    .container { padding:24px 16px 32px; }
+    .cards, .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>WALK · STROLL · MARCH · STRUT · STOMP</h1>
+<p class="subtitle">同一个"行走"动作，5种不同风格和情绪</p>
+
+<!-- ===== 行走风格光谱 ===== -->
+<div class="section-title"><span class="bar"></span><span>行走风格光谱 — 速度/姿态/情绪递进</span></div>
+<div class="spectrum-wrap">
+<svg viewBox="0 0 880 380" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="walkSpecBg" x1="0" y1="0" x2="880" y2="380">
+      <stop offset="0%" stop-color="#f5f5ff"/>
+      <stop offset="100%" stop-color="#eeedf8"/>
+    </linearGradient>
+    <filter id="ws"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="#5a6aa0" flood-opacity="0.12"/></filter>
+  </defs>
+  <rect width="880" height="380" fill="url(#walkSpecBg)" rx="10"/>
+
+  <!-- 地面 -->
+  <rect x="30" y="290" width="820" height="6" rx="3" fill="#d0d0d8"/>
+  <line x1="30" y1="293" x2="850" y2="293" stroke="#b8b8c8" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- 人物1: STROLL 悠闲 -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 3,0; 0,0" dur="3s" repeatCount="indefinite"/>
+    <circle cx="90" cy="235" r="18" fill="#8a7abf"/>
+    <ellipse cx="90" cy="258" rx="10" ry="16" fill="#8a7abf"/>
+    <!-- 双手背在身后 -->
+    <path d="M85,260 Q75,265 70,270" fill="none" stroke="#8a7abf" stroke-width="3" stroke-linecap="round"/>
+    <path d="M95,260 Q105,265 110,270" fill="none" stroke="#8a7abf" stroke-width="3" stroke-linecap="round"/>
+    <!-- 腿 -->
+    <line x1="88" y1="274" x2="82" y2="300" stroke="#8a7abf" stroke-width="4" stroke-linecap="round">
+      <animate attributeName="x2" values="82;86;82" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <line x1="92" y1="274" x2="98" y2="300" stroke="#8a7abf" stroke-width="4" stroke-linecap="round">
+      <animate attributeName="x2" values="98;94;98" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <!-- 微笑 -->
+    <path d="M82,242 Q90,248 98,242" fill="none" stroke="#fff" stroke-width="1.5"/>
+  </g>
+  <text x="90" y="325" text-anchor="middle" fill="#8a7abf" font-size="14" font-weight="800" font-family="sans-serif">STROLL</text>
+  <text x="90" y="342" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">悠闲漫步</text>
+
+  <!-- 人物2: WALK 正常 -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 0,0; 0,0" dur="2s" repeatCount="indefinite"/>
+    <circle cx="240" cy="235" r="18" fill="#5a6aa0"/>
+    <ellipse cx="240" cy="258" rx="10" ry="16" fill="#5a6aa0"/>
+    <line x1="230" y1="250" x2="220" y2="260" stroke="#5a6aa0" stroke-width="3" stroke-linecap="round">
+      <animate attributeName="x2" values="220;225;220" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="250" y1="250" x2="260" y2="260" stroke="#5a6aa0" stroke-width="3" stroke-linecap="round">
+      <animate attributeName="x2" values="260;255;260" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="237" y1="274" x2="231" y2="300" stroke="#5a6aa0" stroke-width="4" stroke-linecap="round">
+      <animate attributeName="x2" values="231;235;231" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="243" y1="274" x2="249" y2="300" stroke="#5a6aa0" stroke-width="4" stroke-linecap="round">
+      <animate attributeName="x2" values="249;245;249" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  <text x="240" y="325" text-anchor="middle" fill="#5a6aa0" font-size="14" font-weight="800" font-family="sans-serif">WALK</text>
+  <text x="240" y="342" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">正常步行</text>
+
+  <!-- 人物3: MARCH 正步 -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 0,-2; 0,0" dur="1.2s" repeatCount="indefinite"/>
+    <circle cx="410" cy="235" r="18" fill="#c05621"/>
+    <ellipse cx="410" cy="258" rx="10" ry="16" fill="#c05621"/>
+    <!-- 手臂笔直摆动 -->
+    <line x1="400" y1="248" x2="388" y2="240" stroke="#c05621" stroke-width="3" stroke-linecap="round">
+      <animate attributeName="x2" values="388;392;388" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="420" y1="248" x2="432" y2="240" stroke="#c05621" stroke-width="3" stroke-linecap="round">
+      <animate attributeName="x2" values="432;428;432" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+    <!-- 高抬腿 -->
+    <line x1="407" y1="274" x2="400" y2="300" stroke="#c05621" stroke-width="4" stroke-linecap="round">
+      <animate attributeName="x2" values="400;404;400" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="413" y1="274" x2="420" y2="300" stroke="#c05621" stroke-width="4" stroke-linecap="round">
+      <animate attributeName="x2" values="420;416;420" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+    <!-- 严肃表情 -->
+    <line x1="403" y1="242" x2="417" y2="242" stroke="#fff" stroke-width="1.5"/>
+  </g>
+  <text x="410" y="325" text-anchor="middle" fill="#c05621" font-size="14" font-weight="800" font-family="sans-serif">MARCH</text>
+  <text x="410" y="342" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">正步前进</text>
+
+  <!-- 人物4: STRUT 昂首 -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 0,-3; 0,0" dur="1.8s" repeatCount="indefinite"/>
+    <circle cx="580" cy="232" r="18" fill="#c0392b"/>
+    <!-- 仰头姿态 -->
+    <ellipse cx="580" cy="255" rx="10" ry="16" fill="#c0392b"/>
+    <!-- 手叉腰 -->
+    <path d="M570,248 Q560,255 558,262" fill="none" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/>
+    <path d="M590,248 Q600,255 602,262" fill="none" stroke="#c0392b" stroke-width="3" stroke-linecap="round"/>
+    <!-- 大步走 -->
+    <line x1="577" y1="271" x2="568" y2="298" stroke="#c0392b" stroke-width="4" stroke-linecap="round">
+      <animate attributeName="x2" values="568;572;568" dur="1.8s" repeatCount="indefinite"/>
+    </line>
+    <line x1="583" y1="271" x2="592" y2="298" stroke="#c0392b" stroke-width="4" stroke-linecap="round">
+      <animate attributeName="x2" values="592;588;592" dur="1.8s" repeatCount="indefinite"/>
+    </line>
+    <!-- 得意的笑 -->
+    <path d="M574,239 Q580,244 586,239" fill="none" stroke="#fff" stroke-width="1.5"/>
+  </g>
+  <text x="580" y="325" text-anchor="middle" fill="#c0392b" font-size="14" font-weight="800" font-family="sans-serif">STRUT</text>
+  <text x="580" y="342" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">昂首阔步</text>
+
+  <!-- 人物5: STOMP 跺脚 -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 0,-1; 0,0" dur="2.2s" repeatCount="indefinite"/>
+    <circle cx="760" cy="240" r="18" fill="#8b4513"/>
+    <ellipse cx="760" cy="263" rx="12" ry="16" fill="#8b4513"/>
+    <!-- 握拳 -->
+    <circle cx="748" cy="252" r="5" fill="#8b4513"/>
+    <circle cx="772" cy="252" r="5" fill="#8b4513"/>
+    <!-- 脚重踏 -->
+    <line x1="756" y1="279" x2="750" y2="305" stroke="#8b4513" stroke-width="5" stroke-linecap="round">
+      <animate attributeName="y2" values="305;300;305" dur="2.2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="764" y1="279" x2="770" y2="305" stroke="#8b4513" stroke-width="5" stroke-linecap="round">
+      <animate attributeName="y2" values="305;300;305" dur="2.2s" repeatCount="indefinite"/>
+    </line>
+    <!-- 生气表情 -->
+    <line x1="754" y1="246" x2="758" y2="250" stroke="#fff" stroke-width="1.5"/>
+    <line x1="762" y1="246" x2="766" y2="250" stroke="#fff" stroke-width="1.5"/>
+    <!-- 震动波纹 -->
+    <path d="M740,312 Q760,308 780,312" fill="none" stroke="#8b4513" stroke-width="1.5" opacity="0.5">
+      <animate attributeName="opacity" values="0.5;0;0.5" dur="2.2s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  <text x="760" y="330" text-anchor="middle" fill="#8b4513" font-size="14" font-weight="800" font-family="sans-serif">STOMP</text>
+  <text x="760" y="347" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">用力跺脚</text>
+
+  <!-- 速度条 -->
+  <rect x="60" y="190" width="760" height="10" rx="5" fill="#e0e0e8"/>
+  <text x="60" y="185" fill="#999" font-size="10" font-family="sans-serif">速度/力度 →</text>
+  <text x="150" y="208" text-anchor="middle" fill="#8a7abf" font-size="10" font-weight="600" font-family="sans-serif">慢</text>
+  <text x="400" y="208" text-anchor="middle" fill="#5a6aa0" font-size="10" font-weight="600" font-family="sans-serif">中速</text>
+  <text x="660" y="208" text-anchor="middle" fill="#c0392b" font-size="10" font-weight="600" font-family="sans-serif">快/重</text>
+
+  <text x="440" y="370" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">STROLL(悠闲) → WALK(正常) → MARCH(正步) → STRUT(昂首) → STOMP(跺脚)</text>
+</svg>
+</div>
+
+<!-- ===== 对比卡片区 ===== -->
+<div class="section-title"><span class="bar"></span><span>两两对比 — 看清步态差异</span></div>
+<div class="compare-row">
+  <!-- Card 1: STROLL vs WALK -->
+  <div class="compare-card">
+    <svg viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg">
+      <rect width="420" height="280" fill="#fafaf8" rx="8"/>
+      <rect x="0" y="220" width="420" height="60" fill="#e8e8e4" rx="0"/>
+      <line x1="0" y1="220" x2="420" y2="220" stroke="#ccc" stroke-width="2"/>
+      <text x="210" y="32" text-anchor="middle" fill="#8a7abf" font-size="16" font-weight="700" font-family="sans-serif">STROLL vs WALK — 轻松 vs 正常</text>
+      <!-- STROLL -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 2,0; 0,0" dur="3s" repeatCount="indefinite"/>
+        <circle cx="90" cy="170" r="18" fill="#8a7abf"/>
+        <ellipse cx="90" cy="193" rx="10" ry="16" fill="#8a7abf"/>
+        <path d="M82,240 Q90,245 98,240" fill="none" stroke="#8a7abf" stroke-width="1.5"/>
+      </g>
+      <text x="90" y="265" text-anchor="middle" fill="#8a7abf" font-size="14" font-weight="700" font-family="sans-serif">STROLL</text>
+      <text x="90" y="280" text-anchor="middle" fill="#888" font-size="10" font-family="sans-serif">悠闲无目的</text>
+      <!-- VS -->
+      <circle cx="210" cy="195" r="18" fill="#eee" stroke="#ddd" stroke-width="1.5"/>
+      <text x="210" y="200" text-anchor="middle" fill="#bbb" font-size="15" font-weight="700" font-family="sans-serif">VS</text>
+      <!-- WALK -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,0; 0,0" dur="2s" repeatCount="indefinite"/>
+        <circle cx="330" cy="170" r="18" fill="#5a6aa0"/>
+        <ellipse cx="330" cy="193" rx="10" ry="16" fill="#5a6aa0"/>
+      </g>
+      <text x="330" y="265" text-anchor="middle" fill="#5a6aa0" font-size="14" font-weight="700" font-family="sans-serif">WALK</text>
+      <text x="330" y="280" text-anchor="middle" fill="#888" font-size="10" font-family="sans-serif">有目的前行</text>
+      <!-- 底部 -->
+      <text x="210" y="240" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">STROLL 更慢更放松，WALK 有明确目的地</text>
+    </svg>
+    <div class="label">
+      <div class="p">STROLL vs WALK — 目的和节奏不同</div>
+      <div class="desc">STROLL 是悠闲漫步，没有明确目的地，边走边看享受过程。WALK 是正常步行速度，通常有目的地。STROLL 更慢、更随意；WALK 是中性默认值。</div>
+      <div class="white-box" style="margin-top:10px; font-size:12px;"><strong>区分口诀</strong>：STROLL = 散步（enjoy the moment），WALK = 走路（get somewhere）</div>
+    </div>
+  </div>
+
+  <!-- Card 2: MARCH vs STRUT -->
+  <div class="compare-card">
+    <svg viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg">
+      <rect width="420" height="280" fill="#fafaf8" rx="8"/>
+      <rect x="0" y="220" width="420" height="60" fill="#e8e8e4" rx="0"/>
+      <line x1="0" y1="220" x2="420" y2="220" stroke="#ccc" stroke-width="2"/>
+      <text x="210" y="32" text-anchor="middle" fill="#c05621" font-size="16" font-weight="700" font-family="sans-serif">MARCH vs STRUT — 纪律 vs 炫耀</text>
+      <!-- MARCH -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-2; 0,0" dur="1.2s" repeatCount="indefinite"/>
+        <circle cx="90" cy="170" r="18" fill="#c05621"/>
+        <ellipse cx="90" cy="193" rx="10" ry="16" fill="#c05621"/>
+        <line x1="80" y1="185" x2="72" y2="178" stroke="#c05621" stroke-width="2.5" stroke-linecap="round">
+          <animate attributeName="x2" values="72;76;72" dur="1.2s" repeatCount="indefinite"/>
+        </line>
+        <line x1="100" y1="185" x2="108" y2="178" stroke="#c05621" stroke-width="2.5" stroke-linecap="round">
+          <animate attributeName="x2" values="108;104;108" dur="1.2s" repeatCount="indefinite"/>
+        </line>
+      </g>
+      <text x="90" y="265" text-anchor="middle" fill="#c05621" font-size="14" font-weight="700" font-family="sans-serif">MARCH</text>
+      <text x="90" y="280" text-anchor="middle" fill="#888" font-size="10" font-family="sans-serif">队列纪律</text>
+      <!-- VS -->
+      <circle cx="210" cy="195" r="18" fill="#eee" stroke="#ddd" stroke-width="1.5"/>
+      <text x="210" y="200" text-anchor="middle" fill="#bbb" font-size="15" font-weight="700" font-family="sans-serif">VS</text>
+      <!-- STRUT -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-3; 0,0" dur="1.8s" repeatCount="indefinite"/>
+        <circle cx="330" cy="168" r="18" fill="#c0392b"/>
+        <ellipse cx="330" cy="191" rx="10" ry="16" fill="#c0392b"/>
+        <path d="M320,180 Q310,188 308,195" fill="none" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M340,180 Q350,188 352,195" fill="none" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M324,176 Q330,180 336,176" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+      </g>
+      <text x="330" y="265" text-anchor="middle" fill="#c0392b" font-size="14" font-weight="700" font-family="sans-serif">STRUT</text>
+      <text x="330" y="280" text-anchor="middle" fill="#888" font-size="10" font-family="sans-serif">炫耀式昂首</text>
+      <!-- 底部 -->
+      <text x="210" y="240" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">MARCH 是服从纪律，STRUT 是我很了不起</text>
+    </svg>
+    <div class="label">
+      <div class="p">MARCH vs STRUT — 群体 vs 个人</div>
+      <div class="desc">MARCH 是军人/队伍的整齐正步，强调统一和纪律；STRUT 是个人的昂首阔步，强调自信和炫耀。MARCH（严肃），STRUT（得意）。</div>
+      <div class="white-box" style="margin-top:10px; font-size:12px;"><strong>区分口诀</strong>：MARCH = 跟队伍一起走（纪律），STRUT = 一个人走着秀（炫耀）</div>
+    </div>
+  </div>
+</div>
+
+<div class="compare-row">
+  <!-- Card 3: STOMP vs WALK -->
+  <div class="compare-card">
+    <svg viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg">
+      <rect width="420" height="280" fill="#fafaf8" rx="8"/>
+      <rect x="0" y="220" width="420" height="60" fill="#e8e8e4" rx="0"/>
+      <line x1="0" y1="220" x2="420" y2="220" stroke="#ccc" stroke-width="2"/>
+      <text x="210" y="32" text-anchor="middle" fill="#8b4513" font-size="16" font-weight="700" font-family="sans-serif">STOMP vs WALK — 用力 vs 正常</text>
+      <!-- STOMP -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-1; 0,0" dur="2.2s" repeatCount="indefinite"/>
+        <circle cx="90" cy="170" r="18" fill="#8b4513"/>
+        <ellipse cx="90" cy="193" rx="10" ry="16" fill="#8b4513"/>
+        <circle cx="78" cy="183" r="4" fill="#8b4513"/>
+        <circle cx="102" cy="183" r="4" fill="#8b4513"/>
+        <!-- 跺脚震动 -->
+        <line x1="70" y1="228" x2="110" y2="228" stroke="#8b4513" stroke-width="1.5" opacity="0.5">
+          <animate attributeName="opacity" values="0.5;0;0.5" dur="2.2s" repeatCount="indefinite"/>
+        </line>
+        <line x1="65" y1="234" x2="115" y2="234" stroke="#8b4513" stroke-width="1" opacity="0.3">
+          <animate attributeName="opacity" values="0.3;0;0.3" dur="2.2s" repeatCount="indefinite"/>
+        </line>
+      </g>
+      <text x="90" y="265" text-anchor="middle" fill="#8b4513" font-size="14" font-weight="700" font-family="sans-serif">STOMP</text>
+      <text x="90" y="280" text-anchor="middle" fill="#888" font-size="10" font-family="sans-serif">用力踩地</text>
+      <!-- VS -->
+      <circle cx="210" cy="195" r="18" fill="#eee" stroke="#ddd" stroke-width="1.5"/>
+      <text x="210" y="200" text-anchor="middle" fill="#bbb" font-size="15" font-weight="700" font-family="sans-serif">VS</text>
+      <!-- WALK -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,0; 0,0" dur="2s" repeatCount="indefinite"/>
+        <circle cx="330" cy="170" r="18" fill="#5a6aa0"/>
+        <ellipse cx="330" cy="193" rx="10" ry="16" fill="#5a6aa0"/>
+      </g>
+      <text x="330" y="265" text-anchor="middle" fill="#5a6aa0" font-size="14" font-weight="700" font-family="sans-serif">WALK</text>
+      <text x="330" y="280" text-anchor="middle" fill="#888" font-size="10" font-family="sans-serif">正常脚步</text>
+      <!-- 底部 -->
+      <text x="210" y="240" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">STOMP 带有强烈情绪（愤怒/抗议），WALK 情绪中性</text>
+    </svg>
+    <div class="label">
+      <div class="p">STOMP vs WALK — 情绪差异</div>
+      <div class="desc">STOMP 是用力踩踏地面，通常伴随愤怒、抗议或不耐烦情绪，脚步声沉重响亮。WALK 是正常行走，没有额外情绪。STOMP 比 WALK 多了"发泄"意味。</div>
+      <div class="white-box" style="margin-top:10px; font-size:12px;"><strong>区分口诀</strong>：WALK = 走路（中性），STOMP = 跺脚（愤怒）</div>
+    </div>
+  </div>
+
+  <!-- Card 4: 比喻用法 -->
+  <div class="compare-card">
+    <svg viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg">
+      <rect width="420" height="280" fill="#fafaf8" rx="8"/>
+      <text x="210" y="30" text-anchor="middle" fill="#5a6aa0" font-size="16" font-weight="700" font-family="sans-serif">比喻用法 — 从行走到抽象</text>
+      <g transform="translate(25,50)">
+        <text x="0" y="0" fill="#5a6aa0" font-size="13" font-weight="700" font-family="sans-serif">WALK ➔</text>
+        <text x="65" y="0" fill="#333" font-size="12" font-family="sans-serif">walk the talk 言行一致</text>
+        <text x="65" y="20" fill="#999" font-size="10" font-family="sans-serif">用行动证明说过的话</text>
+      </g>
+      <g transform="translate(25,90)">
+        <text x="0" y="0" fill="#8a7abf" font-size="13" font-weight="700" font-family="sans-serif">STROLL ➔</text>
+        <text x="65" y="0" fill="#333" font-size="12" font-family="sans-serif">stroll down memory lane</text>
+        <text x="65" y="20" fill="#999" font-size="10" font-family="sans-serif">漫步回忆中，回想过去</text>
+      </g>
+      <g transform="translate(25,130)">
+        <text x="0" y="0" fill="#c05621" font-size="13" font-weight="700" font-family="sans-serif">MARCH ➔</text>
+        <text x="65" y="0" fill="#333" font-size="12" font-family="sans-serif">march to your own beat</text>
+        <text x="65" y="20" fill="#999" font-size="10" font-family="sans-serif">按自己的节奏/方式行事</text>
+      </g>
+      <g transform="translate(25,170)">
+        <text x="0" y="0" fill="#c0392b" font-size="13" font-weight="700" font-family="sans-serif">STRUT ➔</text>
+        <text x="65" y="0" fill="#333" font-size="12" font-family="sans-serif">strut your stuff</text>
+        <text x="65" y="20" fill="#999" font-size="10" font-family="sans-serif">展示自己的才华/魅力</text>
+      </g>
+      <g transform="translate(25,210)">
+        <text x="0" y="0" fill="#8b4513" font-size="13" font-weight="700" font-family="sans-serif">STOMP ➔</text>
+        <text x="65" y="0" fill="#333" font-size="12" font-family="sans-serif">stomp out 消灭/根除</text>
+        <text x="65" y="20" fill="#999" font-size="10" font-family="sans-serif">像踩灭一样彻底消除</text>
+      </g>
+      <line x1="30" y1="230" x2="30" y2="55" stroke="#e0d8c8" stroke-width="1" stroke-dasharray="4,3"/>
+    </svg>
+    <div class="label">
+      <div class="p">比喻用法 — 五词各具特色的比喻表达</div>
+      <div class="desc">每个词的比喻义都保留了核心行走意象的"态度"：WALK（中性→言行一致）、STROLL（轻松→漫游记忆）、MARCH（纪律→按自己步调）、STRUT（炫耀→秀才华）、STOMP（用力→根除）。</div>
+      <div class="white-box" style="margin-top:10px; font-size:12px;"><strong>关键</strong>：行走姿态决定了比喻的"情绪色彩" — 越重的脚步，比喻越有力</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 常见搭配区 ===== -->
+<div class="section-title"><span class="bar"></span><span>常见搭配 — 每个词2-3个，共15个</span></div>
+
+<div class="usage-section">
+  <h4><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#5a6aa0;"></span> WALK 常见搭配</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>walk</strong> the talk</span><span class="usage-cn">言行一致<br><small style="color:#999;">📖 "走你所说的话"→ 用行动证明说过的话，非空谈</small></span></div>
+    <div class="usage-item"><span class="usage-en"><strong>walk</strong> out</span><span class="usage-cn">走出 / 罢工退出<br><small style="color:#999;">📖 离开某地以示抗议或不满</small></span></div>
+    <div class="usage-item"><span class="usage-en"><strong>walk</strong> it off</span><span class="usage-cn">走走就没事了<br><small style="color:#999;">📖 通过散步来缓解疼痛或情绪</small></span></div>
+    <div class="usage-item"><span class="usage-en"><strong>walk</strong> of shame</span><span class="usage-cn">羞愧之旅<br><small style="color:#999;">📖 指穿着昨晚的衣服尴尬走回家的场景</small></span></div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#8a7abf;"></span> STROLL 常见搭配</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en">take a <strong>stroll</strong></span><span class="usage-cn">去散步<br><small style="color:#999;">📖 悠闲地走一走，不赶时间</small></span></div>
+    <div class="usage-item"><span class="usage-en"><strong>stroll</strong> down memory lane</span><span class="usage-cn">回忆往事<br><small style="color:#999;">📖 像在"回忆小巷"里漫步，回想过去的时光</small></span></div>
+    <div class="usage-item"><span class="usage-en"><strong>stroll</strong> along</span><span class="usage-cn">沿着…漫步<br><small style="color:#999;">📖 沿着海滩/河边等风景优美的地方散步</small></span></div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#c05621;"></span> MARCH 常见搭配</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>march</strong> on</span><span class="usage-cn">继续前进 / 挺进<br><small style="color:#999;">📖 不顾困难继续前行，常用于军事或时间的前进</small></span></div>
+    <div class="usage-item"><span class="usage-en"><strong>march</strong> to the beat</span><span class="usage-cn">按节奏前进<br><small style="color:#999;">📖 "按鼓点正步走"，引申为跟随主流或按规则行事</small></span></div>
+    <div class="usage-item"><span class="usage-en"><strong>march</strong> orders</span><span class="usage-cn">行军命令 / 逐客令<br><small style="color:#999;">📖 原指军令，口语中=get marching orders=被解雇/被要求离开</small></span></div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#c0392b;"></span> STRUT 常见搭配</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>strut</strong> your stuff</span><span class="usage-cn">展示才华 / 大显身手<br><small style="color:#999;">📖 像模特走秀一样自信地展示自己的技能/魅力</small></span></div>
+    <div class="usage-item"><span class="usage-en"><strong>strut</strong> around</span><span class="usage-cn">昂首走来走去<br><small style="color:#999;">📖 带着高傲或自信的姿态四处走动</small></span></div>
+    <div class="usage-item"><span class="usage-en"><strong>strut</strong> and fret</span><span class="usage-cn">装腔作势<br><small style="color:#999;">📖 莎士比亚用语，指人一生在舞台上趾高气扬然后焦虑消退</small></span></div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#8b4513;"></span> STOMP 常见搭配</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>stomp</strong> out</span><span class="usage-cn">消灭 / 根除<br><small style="color:#999;">📖 像用脚踩灭火种一样彻底消除（问题/疾病）</small></span></div>
+    <div class="usage-item"><span class="usage-en"><strong>stomp</strong> on</span><span class="usage-cn">踩踏 / 践踏<br><small style="color:#999;">📖 用力踩在某物上，引申为严厉压制或欺负</small></span></div>
+    <div class="usage-item"><span class="usage-en"><strong>stomp</strong> ground</span><span class="usage-cn">跺地 / 用力踩地面<br><small style="color:#999;">📖 愤怒或抗议时用力踩地的动作</small></span></div>
+  </div>
+</div>
+
+<!-- 总结 -->
+<div class="white-box"><strong>五词核心区别总结</strong>：STROLL（悠闲无目的）→ WALK（正常步速）→ MARCH（正步纪律）→ STRUT（昂首炫耀）→ STOMP（愤怒跺脚）。速度、姿态、情绪三者构成了五词的核心区别。STROLL 最慢最放松，STOMP 最重最情绪化。</div>
+
+</div>
+</body>
+</html>

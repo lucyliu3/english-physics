@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEVELOP 空间意象图解</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f0;
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+    color: #1a1a1a;
+  }
+  .container {
+    max-width: 960px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px 56px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  h1 { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #666; font-size: 15px; margin-bottom: 40px; }
+  .section-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #333; }
+  .section-title .bar { display: inline-block; width: 4px; height: 18px; background: #38a169; margin-right: 12px; vertical-align: middle; border-radius: 2px; }
+  .section-title span { vertical-align: middle; }
+
+  .core-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 44px;
+  }
+  .core-card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 18px 16px 22px;
+    text-align: center;
+  }
+  .core-card canvas {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    aspect-ratio: 380 / 220;
+    display: block; margin: 0 auto 12px; border-radius: 6px; background: #fafaf8;
+  }
+  .core-card .card-label { font-size: 18px; font-weight: 700; color: #38a169; }
+  .core-card .card-desc { font-size: 14px; color: #555; line-height: 1.5; margin-top: 4px; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .card canvas { width: 100%; height: auto; aspect-ratio: 270 / 200; display: block; background: #fafaf8; }
+  .card-body { padding: 14px 18px 16px; }
+  .card-body h3 { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+  .card-body h3 .hl { color: #38a169; }
+  .card-body .ref { font-size: 13px; color: #888; margin-bottom: 6px; }
+  .card-body .def { font-size: 13.5px; color: #444; line-height: 1.6; }
+  .card-body .def .eg { color: #777; font-style: italic; display: block; margin-top: 1px; }
+  .card-body .def .key { color: #38a169; font-weight: 600; }
+
+  .cat-section { margin-bottom: 36px; }
+  .cat-section .cat-label {
+    font-size: 16px; font-weight: 700; color: #38a169;
+    margin-bottom: 14px; padding: 10px 16px;
+    background: #edf7f2; border-radius: 8px;
+  }
+
+  .usage-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 32px;
+  }
+  .usage-item { padding: 5px 0; border-bottom: 1px dashed #eee; }
+  .usage-item:last-child, .usage-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .usage-en { font-size: 14px; font-weight: 600; color: #333; }
+  .usage-en strong { color: #38a169; }
+  .usage-cn { font-size: 13px; color: #777; margin-top: 1px; }
+
+  .spatial-note {
+    margin-top: 36px;
+    padding: 20px 24px;
+    background: #edf7f2;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.7;
+  }
+  .spatial-note .big { font-size: 18px; font-weight: 700; color: #38a169; }
+  .spatial-note strong { color: #38a169; }
+
+  @media (max-width: 720px) {
+    .container { padding: 28px 16px 36px; }
+    .core-row, .cards { grid-template-columns: 1fr; }
+    .usage-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>DEVELOP 的空间意象</h1>
+  <p class="subtitle">核心逻辑：从种子到果实——潜在可能性的逐步展开</p>
+
+  <!-- 核心图 -->
+  <div class="section-title"><span class="bar"></span><span>核心空间逻辑</span></div>
+  <div class="core-row">
+    <div class="core-card">
+      <canvas id="coreDevelop" width="380" height="220"></canvas>
+      <div class="card-label">DEVELOP = 卷着的东西展开 / 潜在变为现实</div>
+      <div class="card-desc">
+        词源：de-（去掉）+ veloper（包着/卷着）→ "把包着的东西打开"<br>
+        核心 = <strong>展开</strong>（本来收着的、卷着的、潜在的东西，逐步释放出来）
+      </div>
+    </div>
+    <div class="core-card">
+      <canvas id="coreDevelopVs" width="380" height="220"></canvas>
+      <div class="card-label">DEVELOP = 从无到有的逐步过程</div>
+      <div class="card-desc">
+        不是"改变"（change——变成了别的东西），<br>
+        不是"创造"（create——从0到1），<br>
+        而是<strong>本来就有的潜能，被逐步展开、显露出来</strong>。
+      </div>
+    </div>
+  </div>
+
+  <!-- 三层展开 -->
+  <div class="section-title"><span class="bar"></span><span>三层展开</span></div>
+  <div class="cards">
+
+    <div class="card">
+      <canvas id="tier1" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>第一层：生物生长 <span class="hl">DEVELOP</span></h3>
+        <div class="ref">种子→芽，胎儿→器官</div>
+        <div class="def">
+          生命体自带的基因蓝图<span class="key">逐步展开</span>。
+          种子有长成参天大树的全部潜能——develop 就是这个潜能变成现实的过程。
+          <span class="eg">"The seed develops into a plant."<br>"The fetus develops limbs."</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="tier2" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>第二层：人的能力 <span class="hl">DEVELOP</span></h3>
+        <div class="ref">技能 / 习惯 / 关系</div>
+        <div class="def">
+          人的内在潜能在实践中<span class="key">逐步培养出来</span>。
+          不是从外部塞进去的知识，而是内部被激活的。
+          <span class="eg">"Develop a skill."<br>"Develop a habit."<br>"Develop a relationship."</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="tier3" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>第三层：抽象展开 <span class="hl">DEVELOP</span></h3>
+        <div class="ref">事件 / 想法 / 产品</div>
+        <div class="def">
+          一个想法、计划或事件<span class="key">逐步展现全貌</span>。
+          一开始只有雏形（或者只有苗头），后来一步步露出全貌。
+          <span class="eg">"Develop an app."<br>"The situation developed."<br>"Develop a theory."</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 第一类：生物生长 ===== -->
+  <div class="section-title"><span class="bar"></span><span>第一层：生物生长 —— 基因蓝图的展开</span></div>
+
+  <div class="cat-section">
+    <div class="cat-label">🌱 种子 / 植物 / 生物体的发育</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en">The seed <strong>develops</strong> into a plant.</span>
+        <span class="usage-cn">种子长成植物。（种子里本来就有一切）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The embryo <strong>develops</strong> organs.</span>
+        <span class="usage-cn">胚胎发育出器官。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The plant is <strong>developing</strong> new leaves.</span>
+        <span class="usage-cn">植物正在长出新叶子。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The caterpillar <strong>develops</strong> into a butterfly.</span>
+        <span class="usage-cn">毛毛虫变成蝴蝶。（基因程序的展开）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The roots <strong>developed</strong> deep into the soil.</span>
+        <span class="usage-cn">根系往土壤深处发育了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The flower bud <strong>developed</strong> into full bloom.</span>
+        <span class="usage-cn">花苞完全绽放了。（包裹的东西展开了）</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第二类：人的能力 ===== -->
+  <div class="section-title"><span class="bar"></span><span>第二层：人的能力 / 习惯 / 关系 —— 内在潜能的释放</span></div>
+
+  <div class="cat-section">
+    <div class="cat-label">🧠 技能 / 习惯 / 兴趣</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> a skill.</span>
+        <span class="usage-cn">培养一项技能。（通过练习让能力展开）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> a habit.</span>
+        <span class="usage-cn">养成一个习惯。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> an interest in sth.</span>
+        <span class="usage-cn">对某事物产生了兴趣。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> your own style.</span>
+        <span class="usage-cn">形成自己的风格。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>developed</strong> a taste for wine.</span>
+        <span class="usage-cn">她慢慢学会了品酒/对酒产生了品味。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> a sense of humor.</span>
+        <span class="usage-cn">培养幽默感。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-section">
+    <div class="cat-label">🤝 人际关系</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> a relationship.</span>
+        <span class="usage-cn">发展一段关系。（从不认识到熟悉的过程展开）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">We <strong>developed</strong> a friendship.</span>
+        <span class="usage-cn">我们建立了友谊。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">They <strong>developed</strong> feelings for each other.</span>
+        <span class="usage-cn">他们之间产生了感情。（本来没有，慢慢展开）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Trust <strong>developed</strong> between them.</span>
+        <span class="usage-cn">信任在他们之间建立起来了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">A bond <strong>developed</strong> between the mentor and student.</span>
+        <span class="usage-cn">导师和学生之间产生了纽带。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The relationship <strong>developed</strong> naturally over time.</span>
+        <span class="usage-cn">这段关系随着时间自然而然地发展起来了。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-section">
+    <div class="cat-label">😷 负面变化也适用（展开的东西也可以是不好的）</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> a disease / symptom.</span>
+        <span class="usage-cn">患上疾病 / 出现症状。（病在体内"展开"）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He <strong>developed</strong> a cough.</span>
+        <span class="usage-cn">他开始咳嗽了。（症状"出现了"）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>developed</strong> an allergic reaction.</span>
+        <span class="usage-cn">她出现了过敏反应。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The mold is <strong>developing</strong> in the basement.</span>
+        <span class="usage-cn">地下室的霉菌在滋生。（不受欢迎的"展开"）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">A problem is <strong>developing</strong>.</span>
+        <span class="usage-cn">一个问题正在酝酿/出现。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Tension <strong>developed</strong> between them.</span>
+        <span class="usage-cn">他们之间产生了紧张关系。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 第三类：抽象展开 ===== -->
+  <div class="section-title"><span class="bar"></span><span>第三层：抽象展开 —— 想法 / 事件 / 产品的逐步呈现</span></div>
+
+  <div class="cat-section">
+    <div class="cat-label">💡 想法 / 理论 / 计划</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> an idea.</span>
+        <span class="usage-cn">展开/完善一个想法。（从一个模糊念头逐步成形）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> a theory.</span>
+        <span class="usage-cn">提出/发展一个理论。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> a strategy.</span>
+        <span class="usage-cn">制定一个策略。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The plot <strong>develops</strong> slowly.</span>
+        <span class="usage-cn">情节展开得很慢。（故事一层层揭开）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">We need to <strong>develop</strong> this concept further.</span>
+        <span class="usage-cn">我们需要进一步展开这个概念。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The writer <strong>developed</strong> the character over several chapters.</span>
+        <span class="usage-cn">作者用了几章来展开这个角色。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-section">
+    <div class="cat-label">📱 产品 / 系统 / 房地产</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> an app / software.</span>
+        <span class="usage-cn">开发一个应用/软件。（从一个想法变成可用的产品）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> a product.</span>
+        <span class="usage-cn">开发一个产品。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> the land.</span>
+        <span class="usage-cn">开发土地。（把空地变成可用的房产/社区）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The area was <strong>developed</strong> into a shopping center.</span>
+        <span class="usage-cn">这个区域被开发成了购物中心。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">They're <strong>developing</strong> a new vaccine.</span>
+        <span class="usage-cn">他们正在研发一种新疫苗。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> a new feature.</span>
+        <span class="usage-cn">开发一个新功能。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-section">
+    <div class="cat-label">📸 胶卷显影（DEVELOP 的词源在此最直观）</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> the film.</span>
+        <span class="usage-cn">冲洗胶卷。（把胶卷上潜在的照片"展开"出来）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The photos are being <strong>developed</strong>.</span>
+        <span class="usage-cn">照片正在冲洗中。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I need to get my film <strong>developed</strong>.</span>
+        <span class="usage-cn">我需要把胶卷拿去洗。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The image slowly <strong>developed</strong> on the paper.</span>
+        <span class="usage-cn">图像在相纸上慢慢显现出来。（最接近"展开"原意）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The chemicals <strong>develop</strong> the latent image.</span>
+        <span class="usage-cn">化学药水把潜影"展开"成可见图像。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I watched the Polaroid <strong>develop</strong>.</span>
+        <span class="usage-cn">我看着宝丽来照片慢慢显影。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 特殊高频 ===== -->
+  <div class="section-title"><span class="bar"></span><span>美国人口语/日常超高頻用法</span></div>
+
+  <div class="cat-section">
+    <div class="cat-label" style="background:#fef6e6;color:#b8860b;">🗣️ 日常口语/商务高频</div>
+    <div class="usage-grid">
+      <div class="usage-item">
+        <span class="usage-en">Let's see how things <strong>develop</strong>.</span>
+        <span class="usage-cn">看看情况怎么发展。（超高頻！不确定时说的）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">That's <strong>developing</strong> nicely.</span>
+        <span class="usage-cn">那件事进展得不错。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">We have a <strong>developing</strong> situation.</span>
+        <span class="usage-cn">出了个正在发展中的状况。（新闻用语，情况还在变化）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">It <strong>developed</strong> that he was lying.</span>
+        <span class="usage-cn">后来发现/结果显示他在撒谎。（真相"展开"了）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Things <strong>developed</strong> differently than I expected.</span>
+        <span class="usage-cn">事情的发展跟我预想的不同。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">We'll <strong>develop</strong> that point later.</span>
+        <span class="usage-cn">我们稍后会展开说明那一点。（会议口语）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The story is still <strong>developing</strong>.</span>
+        <span class="usage-cn">事件还在发展中。（新闻用语）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>developed</strong> a sudden interest in cooking.</span>
+        <span class="usage-cn">她突然对做饭产生了兴趣。（兴趣"展开"了）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Develop</strong> your argument.</span>
+        <span class="usage-cn">展开你的论点。（把你的论证一步步展开）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">His skills <strong>developed</strong> over time.</span>
+        <span class="usage-cn">他的技能随着时间慢慢培养起来了。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="spatial-note">
+    <div class="big">DEVELOP 的统一逻辑</div>
+    <strong>词源</strong>：de-（去掉）+ veloper（包着/卷着）→ "把包着的东西打开"<br><br>
+    <strong>种子→植物</strong>：基因蓝图逐步展开 → 生命的发育<br>
+    <strong>胎儿→器官</strong>：细胞分化、功能展开 → 器官发育<br>
+    <strong>技能→习惯</strong>：内在潜能在实践中逐步释放 → 培养<br>
+    <strong>想法→产品</strong>：模糊概念逐步成形 → 开发<br>
+    <strong>胶卷→照片</strong>：潜影被化学过程揭开 → 显影<br>
+    <strong>情况→结果</strong>：事件的苗头逐步展现全貌 → 发展<br><br>
+    <strong>所有用法都围绕同一个核心：本来包着/卷着/收着的东西，被逐步展开、显露出来。</strong>
+  </div>
+
+</div>
+
+<script>
+(function() {
+function df(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ===== 核心图1：DEVELOP = 展开 =====
+const c1 = document.getElementById('coreDevelop');
+const ctx1 = c1.getContext('2d');
+df(ctx1,380,220);
+
+// rolled thing (left)
+ctx1.strokeStyle = '#666'; ctx1.lineWidth = 2;
+ctx1.beginPath(); ctx1.arc(80,110,25,0,Math.PI*2); ctx1.stroke();
+ctx1.strokeStyle = '#bbb'; ctx1.lineWidth = 1.5;
+ctx1.beginPath(); ctx1.arc(80,110,15,0,Math.PI*2); ctx1.stroke();
+ctx1.beginPath(); ctx1.arc(80,110,8,0,Math.PI*2); ctx1.stroke();
+ctx1.fillStyle = '#888'; ctx1.font = '11px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('卷着的、包着的',80,155);
+
+// unfolding arrow
+ctx1.strokeStyle = '#38a169'; ctx1.lineWidth = 2.5;
+ctx1.beginPath(); ctx1.moveTo(110,110); ctx1.lineTo(160,110); ctx1.stroke();
+ctx1.fillStyle = '#38a169';
+ctx1.beginPath(); ctx1.moveTo(155,105); ctx1.lineTo(166,110); ctx1.lineTo(155,115); ctx1.closePath(); ctx1.fill();
+ctx1.fillStyle = '#38a169'; ctx1.font = 'bold 13px sans-serif';
+ctx1.fillText('DEVELOP → 展开',138,95);
+
+// expanding wave (right)
+for (let i = 0; i < 5; i++) {
+  let x = 185 + i * 35;
+  ctx1.strokeStyle = `rgba(56,161,105,${0.3 + i * 0.15})`;
+  ctx1.lineWidth = 2;
+  ctx1.beginPath(); ctx1.arc(x, 110, 12 + i * 6, 0, Math.PI * (0.8 + i * 0.15)); ctx1.stroke();
+}
+
+ctx1.fillStyle = '#38a169'; ctx1.font = '11px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('潜在 → 逐步展现',310,155);
+
+// ===== 核心图2：对比 =====
+const c2 = document.getElementById('coreDevelopVs');
+const ctx2 = c2.getContext('2d');
+df(ctx2,380,220);
+
+// Left: create (0 to 1)
+ctx2.fillStyle = '#e53e3e';
+ctx2.beginPath(); ctx2.arc(80,80,15,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('无 → 有',80,115);
+ctx2.fillStyle = '#e53e3e'; ctx2.font = 'bold 13px sans-serif';
+ctx2.fillText('CREATE',80,138);
+ctx2.fillText('（从0到1）',80,155);
+
+// Middle: change (A to B)
+ctx2.strokeStyle = '#d69e2e'; ctx2.lineWidth = 2.5;
+ctx2.fillStyle = '#d69e2e';
+ctx2.beginPath(); ctx2.arc(190,80,15,0,Math.PI*2); ctx2.fill();
+ctx2.strokeStyle = '#d69e2e'; ctx2.lineWidth = 2; ctx2.setLineDash([4,4]);
+ctx2.beginPath(); ctx2.arc(190,80,22,0,Math.PI*2); ctx2.stroke(); ctx2.setLineDash([]);
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif';
+ctx2.fillText('A → B',190,115);
+ctx2.fillStyle = '#d69e2e'; ctx2.font = 'bold 13px sans-serif';
+ctx2.fillText('CHANGE',190,138);
+ctx2.fillText('（变成了别的）',190,155);
+
+// Right: develop (seed to tree)
+ctx2.fillStyle = '#38a169';
+ctx2.beginPath(); ctx2.arc(310,100,8,0,Math.PI*2); ctx2.fill();
+// sprouting lines
+ctx2.strokeStyle = '#38a169'; ctx2.lineWidth = 2;
+ctx2.beginPath();
+ctx2.moveTo(310,92); ctx2.lineTo(310,60);
+ctx2.moveTo(310,75); ctx2.lineTo(295,55);
+ctx2.moveTo(310,70); ctx2.lineTo(325,50);
+ctx2.stroke();
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif';
+ctx2.fillText('种子 → 参天大树',310,115);
+ctx2.fillStyle = '#38a169'; ctx2.font = 'bold 13px sans-serif';
+ctx2.fillText('DEVELOP',310,138);
+ctx2.fillText('（潜能的展开）',310,155);
+
+// ===== 三层卡片 =====
+
+// Tier 1: 生物生长
+const e1 = document.getElementById('tier1');
+const ctx3 = e1.getContext('2d');
+df(ctx3,270,200);
+
+// seed
+ctx3.fillStyle = '#8B6914';
+ctx3.beginPath(); ctx3.ellipse(100,135,16,12,0,0,Math.PI*2); ctx3.fill();
+
+// sprout
+ctx3.strokeStyle = '#38a169'; ctx3.lineWidth = 2.5;
+ctx3.beginPath(); ctx3.moveTo(100,123); ctx3.lineTo(100,85);
+ctx3.moveTo(100,95); ctx3.lineTo(85,78);
+ctx3.moveTo(100,90); ctx3.lineTo(115,72);
+ctx3.stroke();
+ctx3.fillStyle = '#38a169';
+ctx3.beginPath(); ctx3.ellipse(85,78,8,5,-0.3,0,Math.PI*2); ctx3.fill();
+ctx3.beginPath(); ctx3.ellipse(115,72,8,5,0.3,0,Math.PI*2); ctx3.fill();
+
+// label
+ctx3.fillStyle = '#38a169'; ctx3.font = 'bold 14px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('The seed develops',135,40);
+ctx3.fillText('into a plant.',135,58);
+ctx3.fillStyle = '#888'; ctx3.font = '11px sans-serif';
+ctx3.fillText('基因蓝图 → 展开',135,175);
+
+// Tier 2: 人的能力
+const e2 = document.getElementById('tier2');
+const ctx4 = e2.getContext('2d');
+df(ctx4,270,200);
+
+// person
+ctx4.fillStyle = '#4a5568';
+ctx4.beginPath(); ctx4.arc(100,65,14,0,Math.PI*2); ctx4.fill();
+ctx4.fillRect(96,79,8,25);
+ctx4.fillRect(92,98,5,20);
+ctx4.fillRect(103,98,5,20);
+
+// skills expanding
+ctx4.strokeStyle = '#38a169'; ctx4.lineWidth = 1.5;
+ctx4.beginPath();
+ctx4.moveTo(80,75); ctx4.lineTo(45,55);
+ctx4.moveTo(120,75); ctx4.lineTo(160,55);
+ctx4.moveTo(70,105); ctx4.lineTo(35,120);
+ctx4.moveTo(130,105); ctx4.lineTo(165,120);
+ctx4.stroke();
+
+ctx4.fillStyle = '#38a169'; ctx4.font = '10px sans-serif';
+ctx4.fillText('技能',45,52);
+ctx4.fillText('习惯',160,52);
+ctx4.fillText('关系',35,123);
+ctx4.fillText('兴趣',165,123);
+
+ctx4.fillStyle = '#38a169'; ctx4.font = 'bold 14px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('Develop a skill / habit',135,40);
+ctx4.fillStyle = '#888'; ctx4.font = '11px sans-serif';
+ctx4.fillText('内在潜能在实践中展开',135,175);
+
+// Tier 3: 抽象展开
+const e3 = document.getElementById('tier3');
+const ctx5 = e3.getContext('2d');
+df(ctx5,270,200);
+
+// blurry idea (left)
+ctx5.fillStyle = 'rgba(56,161,105,0.2)';
+ctx5.beginPath(); ctx5.arc(60,105,25,0,Math.PI*2); ctx5.fill();
+ctx5.strokeStyle = '#bbb'; ctx5.lineWidth = 1.5; ctx5.setLineDash([3,3]);
+ctx5.beginPath(); ctx5.arc(60,105,25,0,Math.PI*2); ctx5.stroke(); ctx5.setLineDash([]);
+ctx5.fillStyle = '#888'; ctx5.font = '11px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('模糊想法',60,175);
+
+// arrow
+ctx5.strokeStyle = '#38a169'; ctx5.lineWidth = 2.5;
+ctx5.beginPath(); ctx5.moveTo(85,105); ctx5.lineTo(120,105); ctx5.stroke();
+ctx5.fillStyle = '#38a169';
+ctx5.beginPath(); ctx5.moveTo(115,100); ctx5.lineTo(126,105); ctx5.lineTo(115,110); ctx5.closePath(); ctx5.fill();
+ctx5.fillStyle = '#38a169'; ctx5.font = '10px sans-serif';
+ctx5.fillText('DEVELOP',108,95);
+
+// clear product (right)
+ctx5.fillStyle = '#38a169';
+ctx5.fillRect(130,80,80,50);
+ctx5.fillStyle = '#fff'; ctx5.font = '10px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('Product',170,107);
+ctx5.fillStyle = '#888'; ctx5.font = '11px sans-serif';
+ctx5.fillText('成熟产品',170,175);
+
+ctx5.fillStyle = '#38a169'; ctx5.font = 'bold 14px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('Develop an app / idea',135,40);
+
+})();
+</script>
+
+</body>
+</html>

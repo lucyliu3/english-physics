@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIVIDE 空间意象图解</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f0;
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+    color: #1a1a1a;
+  }
+  .container {
+    max-width: 960px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px 56px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  h1 { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #666; font-size: 15px; margin-bottom: 40px; }
+  .section-title { font-size: 18px; font-weight: 600; margin: 36px 0 20px; color: #333; }
+  .section-title .bar { display: inline-block; width: 4px; height: 18px; margin-right: 12px; vertical-align: middle; border-radius: 2px; }
+  .bar1 { background: #c05621; }
+  .bar2 { background: #2b6cb0; }
+
+  .core-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+  .core-card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 14px 14px 18px;
+    text-align: center;
+  }
+  .core-card canvas {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    aspect-ratio: 380 / 220;
+    display: block; margin: 0 auto 10px; border-radius: 6px; background: #fafaf8;
+  }
+  .core-card .card-label { font-size: 18px; font-weight: 700; }
+  .core-card .card-desc { font-size: 14px; color: #555; line-height: 1.5; margin-top: 4px; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .card canvas { width: 100%; height: auto; aspect-ratio: 360 / 180; display: block; background: #fafaf8; }
+  .card-body { padding: 12px 16px 16px; }
+  .card-body h3 { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+  .card-body .hl { font-weight: 700; }
+  .card-body .c1 { color: #c05621; }
+  .card-body .c2 { color: #2b6cb0; }
+  .card-body .ref { font-size: 13px; color: #888; margin-bottom: 4px; }
+  .card-body .def { font-size: 13.5px; color: #444; line-height: 1.6; }
+  .card-body .def .eg { color: #777; font-style: italic; display: block; margin-top: 1px; }
+  .card-body .def strong { font-weight: 600; color: #c05621; }
+
+  .cat-section { margin-bottom: 30px; }
+  .cat-section .cat-label {
+    font-size: 16px; font-weight: 700;
+    margin-bottom: 12px; padding: 10px 16px;
+    border-radius: 8px;
+  }
+
+  .usage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px 36px; }
+  .usage-item { padding: 5px 0; border-bottom: 1px dashed #eee; }
+  .usage-item:last-child, .usage-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .usage-en { font-size: 14px; font-weight: 600; color: #333; }
+  .usage-en .kw { font-weight: 700; }
+  .usage-cn { font-size: 13px; color: #777; margin-top: 1px; }
+
+  .spatial-note {
+    margin-top: 36px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #fdf6ef, #fafaf8);
+    border: 1px solid #f0e4d8;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.7;
+  }
+  .spatial-note .big { font-size: 18px; font-weight: 700; color: #c05621; }
+
+  @media (max-width: 720px) {
+    .container { padding: 24px 14px 32px; }
+    .core-row, .cards { grid-template-columns: 1fr; }
+    .usage-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>DIVIDE 的空间意象</h1>
+  <p class="subtitle">核心意象："把一个整体分成若干部分"</p>
+
+  <!-- 核心意象 -->
+  <div class="section-title"><span class="bar bar1"></span><span>核心意象：分割一个整体</span></div>
+  <div class="core-row">
+    <div class="core-card">
+      <canvas id="coreDivide1" width="380" height="220"></canvas>
+      <div class="card-label" style="color:#c05621;">DIVIDE = 把整体切开</div>
+      <div class="card-desc">
+        核心意象是一个<strong>原本完整的东西被一分为二（或多份）</strong>。<br>
+        注意！divide 强调"分"的动作或结果，重点在<strong>整体变成了多个部分</strong>。
+      </div>
+    </div>
+    <div class="core-card">
+      <canvas id="coreDivide2" width="380" height="220"></canvas>
+      <div class="card-label" style="color:#2b6cb0;">DIVIDE = 分隔 / 隔离</div>
+      <div class="card-desc">
+        引申为<strong>把人群、区域、观点分隔开</strong>。<br>
+        原本在一起的，被"分到两边"——<br>
+        这是 divide 在社会关系中的核心用法。
+      </div>
+    </div>
+  </div>
+
+  <!-- 三层展开 -->
+  <div class="section-title"><span class="bar bar2"></span><span>三层展开：物 · 人 · 事/状态</span></div>
+  <div class="cards">
+
+    <div class="card">
+      <canvas id="tier1" width="360" height="180"></canvas>
+      <div class="card-body">
+        <h3>① 物 <span class="hl c1">把实物分开</span></h3>
+        <div class="ref">物理层面——最本源的用法</div>
+        <div class="def">
+          把一整个东西切/割/分成几块。<br>
+          <strong>核心："整体→碎片"</strong>。
+          <span class="eg">"Divide the pizza into slices." — 把披萨切成片。<br>"Divide the money equally." — 把钱平分。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="tier2" width="360" height="180"></canvas>
+      <div class="card-body">
+        <h3>② 人 <span class="hl c1">人群 / 关系分裂</span></h3>
+        <div class="ref">人际关系层面</div>
+        <div class="def">
+          原本团结的人群/关系被"分开"。<br>
+          <strong>核心："团结→分裂"</strong>。
+          <span class="eg">"The issue divided the family." — 那个问题使家庭分裂。<br>"Divide and conquer." — 分而治之。</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <canvas id="tier3a" width="360" height="180"></canvas>
+      <div class="card-body">
+        <h3>③a 事/状态 <span class="hl c2">观点 / 意见分歧</span></h3>
+        <div class="ref">认知层面——divided opinions</div>
+        <div class="def">
+          人们对同一件事的看法"分开了"——<br>
+          不统一、有分歧。<br>
+          <strong>核心："一致→分歧"</strong>。
+          <span class="eg">"Experts are divided on this issue." — 专家意见分歧。<br>"A divided opinion." — 意见不统一。</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <canvas id="tier3b" width="360" height="180"></canvas>
+      <div class="card-body">
+        <h3>③b 事/状态 <span class="hl c2">分类 / 分配</span></h3>
+        <div class="ref">逻辑层面——把整体"分成"不同类别</div>
+        <div class="def">
+          不是物理切割，而是<strong>逻辑上的划分</strong>。<br>
+          <strong>核心："混杂→归类"</strong>。
+          <span class="eg">"Divide into groups." — 分成小组。<br>"Divide the tasks." — 分配任务<br>（把工作"拆开"给不同的人）。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 高频用法 -->
+  <div class="section-title"><span class="bar bar1"></span><span>DIVIDE 美国口语高频用法</span></div>
+
+  <div class="cat-section" style="border-left:4px solid #c05621; padding-left:16px;">
+    <div style="font-size:16px; font-weight:700; margin-bottom:12px; color:#c05621;">🔪 物理分割（空间原型）</div>
+    <div class="usage-grid">
+      <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c05621;">Divide</span> the pizza into 6 slices.</span><span class="usage-cn">把披萨切成6块。</span></div>
+      <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c05621;">Divide</span> the dough in half.</span><span class="usage-cn">把面团分成两半。</span></div>
+      <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c05621;">Divide</span> the money between you.</span><span class="usage-cn">你们俩把钱分了。</span></div>
+      <div class="usage-item"><span class="usage-en">The river <span class="kw" style="color:#c05621;">divides</span> the city.</span><span class="usage-cn">那条河把城市分成两半。</span></div>
+      <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c05621;">Divide</span> the cake equally.</span><span class="usage-cn">把蛋糕平分。</span></div>
+      <div class="usage-item"><span class="usage-en">The wall <span class="kw" style="color:#c05621;">divides</span> the two rooms.</span><span class="usage-cn">这堵墙把两个房间隔开。</span></div>
+    </div>
+  </div>
+
+  <div class="cat-section" style="border-left:4px solid #2b6cb0; padding-left:16px;">
+    <div style="font-size:16px; font-weight:700; margin-bottom:12px; color:#2b6cb0;">👥 社会/人际关系分裂（高频！）</div>
+    <div class="usage-grid">
+      <div class="usage-item"><span class="usage-en">Politics <span class="kw" style="color:#2b6cb0;">divides</span> people.</span><span class="usage-cn">政治让人们分裂。</span></div>
+      <div class="usage-item"><span class="usage-en">A <span class="kw" style="color:#2b6cb0;">divided</span> nation.</span><span class="usage-cn">一个分裂的国家。</span></div>
+      <div class="usage-item"><span class="usage-en">Don't let this <span class="kw" style="color:#2b6cb0;">divide</span> us.</span><span class="usage-cn">别让这事分裂我们。</span></div>
+      <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#2b6cb0;">Divide</span> and conquer.</span><span class="usage-cn">分而治之。（经典策略）</span></div>
+      <div class="usage-item"><span class="usage-en">A <span class="kw" style="color:#2b6cb0;">dividing</span> line.</span><span class="usage-cn">分界线。（社会/种族/政治）</span></div>
+      <div class="usage-item"><span class="usage-en">The issue <span class="kw" style="color:#2b6cb0;">divided</span> the family.</span><span class="usage-cn">这个问题让家庭分裂。</span></div>
+    </div>
+  </div>
+
+  <div class="cat-section" style="border-left:4px solid #7b4ad9; padding-left:16px;">
+    <div style="font-size:16px; font-weight:700; margin-bottom:12px; color:#7b4ad9;">💭 意见分歧 / 观点分裂</div>
+    <div class="usage-grid">
+      <div class="usage-item"><span class="usage-en">Experts are <span class="kw" style="color:#7b4ad9;">divided</span>.</span><span class="usage-cn">专家意见不统一。（超高頻！）</span></div>
+      <div class="usage-item"><span class="usage-en">Opinions are <span class="kw" style="color:#7b4ad9;">divided</span>.</span><span class="usage-cn">意见有分歧。</span></div>
+      <div class="usage-item"><span class="usage-en">The court was <span class="kw" style="color:#7b4ad9;">divided</span> on the ruling.</span><span class="usage-cn">法院对该裁决意见分歧。</span></div>
+      <div class="usage-item"><span class="usage-en">A deeply <span class="kw" style="color:#7b4ad9;">divided</span> opinion.</span><span class="usage-cn">严重分歧的意见。</span></div>
+      <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#7b4ad9;">Divided</span> loyalties.</span><span class="usage-cn">忠诚分裂——两边都想要（比如两个朋友吵架）</span></div>
+      <div class="usage-item"><span class="usage-en">I'm <span class="kw" style="color:#7b4ad9;">divided</span> on whether to go.</span><span class="usage-cn">我去不去还在纠结（内心分裂）</span></div>
+    </div>
+  </div>
+
+  <div class="cat-section" style="border-left:4px solid #38a169; padding-left:16px;">
+    <div style="font-size:16px; font-weight:700; margin-bottom:12px; color:#38a169;">📋 分类 / 分配 / 安排</div>
+    <div class="usage-grid">
+      <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Divide</span> into groups.</span><span class="usage-cn">分成小组。</span></div>
+      <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Divide</span> the tasks.</span><span class="usage-cn">分配任务。（工作被"分开"）</span></div>
+      <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Divide</span> your time.</span><span class="usage-cn">分配时间。（把时间"分开"给不同事情）</span></div>
+      <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Divide</span> attention.</span><span class="usage-cn">分散注意力（把注意力"分开"）</span></div>
+      <div class="usage-item"><span class="usage-en">Let's <span class="kw" style="color:#38a169;">divide</span> and conquer the work.</span><span class="usage-cn">我们分工合作吧。（口语常用）</span></div>
+      <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Divided</span> into three parts.</span><span class="usage-cn">分成三个部分。</span></div>
+    </div>
+  </div>
+
+  <!-- ===== 重点专题：鸿沟的衍生逻辑 ===== -->
+  <div class="section-title"><span class="bar bar1"></span><span>重点专题："鸿沟"（a divide）的衍生逻辑</span></div>
+
+  <div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:12px; padding:20px 24px; margin-bottom:30px;">
+    <div style="display:grid; grid-template-columns:1fr; gap:16px;">
+      <div style="text-align:center;">
+        <canvas id="gapDerivation" width="760" height="200" style="width:100%; max-width:760px; height:auto; aspect-ratio:760/200; border-radius:6px; background:#fafaf8;"></canvas>
+      </div>
+      <div style="font-size:14px; color:#444; line-height:1.8;">
+        <p><strong>衍生链条：</strong></p>
+        <p><strong style="color:#c05621;">动词"切开"</strong> → 被切开后，中间自然留下一条<strong style="color:#d94a5c;">缝/沟</strong> → 这条沟把两边隔开 → 抽象的"差距/隔阂/鸿沟"（名词 a divide）</p>
+        <p style="margin-top:8px; background:#fdf6ef; padding:10px 14px; border-radius:6px;">
+        💡 <strong>关键理解</strong>：动词 divide 强调"切的<em>动作</em>"，名词 a divide 强调"切完之后留下的<em>那条缝</em>"。所以 a divide = 两个群体之间的那条"沟"，既可以是实际的（峡谷/分水岭），也可以是抽象的（数字鸿沟、南北差距）。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-section" style="border-left:4px solid #d94a5c; padding-left:16px;">
+    <div style="font-size:16px; font-weight:700; margin-bottom:12px; color:#d94a5c;">🧮 数学 / 鸿沟 / 差距（名词高频用法）</div>
+    <div class="usage-grid">
+      <div class="usage-item"><span class="usage-en">10 <span class="kw" style="color:#d94a5c;">divided</span> by 2 is 5.</span><span class="usage-cn">10除以2等于5。（最基础的数学用法）</span></div>
+      <div class="usage-item"><span class="usage-en">Don't <span class="kw" style="color:#d94a5c;">divide</span> by zero.</span><span class="usage-cn">不要除以0。</span></div>
+      <div class="usage-item"><span class="usage-en">The <span class="kw" style="color:#d94a5c;">digital divide</span>.</span><span class="usage-cn">数字鸿沟——有网络的人和没网络的人之间的差距。</span></div>
+      <div class="usage-item"><span class="usage-en">The North-South <span class="kw" style="color:#d94a5c;">divide</span>.</span><span class="usage-cn">南北差距。（经济/文化鸿沟）</span></div>
+      <div class="usage-item"><span class="usage-en">A <span class="kw" style="color:#d94a5c;">divide</span> between theory and practice.</span><span class="usage-cn">理论和实践的鸿沟。</span></div>
+      <div class="usage-item"><span class="usage-en">The <span class="kw" style="color:#d94a5c;">great divide</span>.</span><span class="usage-cn">巨大的分歧/鸿沟。（也指"阴阳两隔"）</span></div>
+      <div class="usage-item"><span class="usage-en">A deep <span class="kw" style="color:#d94a5c;">divide</span> in the party.</span><span class="usage-cn">政党内部的深刻分歧。</span></div>
+      <div class="usage-item"><span class="usage-en">Bridging the <span class="kw" style="color:#d94a5c;">divide</span>.</span><span class="usage-cn">弥合鸿沟。（bridge the divide = 在沟上架桥）</span></div>
+    </div>
+  </div>
+
+  <!-- 空间逻辑总结 -->
+  <div class="spatial-note">
+    <div class="big">DIVIDE 的空间逻辑</div>
+    <div style="margin:12px 0; display:grid; grid-template-columns:1fr 1fr; gap:16px; text-align:center;">
+      <div style="background:#fff; border-radius:8px; padding:12px;">
+        <strong style="color:#c05621;">🟫 物理</strong><br>
+        <span style="font-size:13px;">实物 ○ → ◐ ◑<br>整体被切"开"</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:12px;">
+        <strong style="color:#2b6cb0;">👥 社会</strong><br>
+        <span style="font-size:13px;">人群 ● → ◐ ◑<br>团结被"撕裂"</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:12px;">
+        <strong style="color:#7b4ad9;">💭 观点</strong><br>
+        <span style="font-size:13px;">意见一致 → 各执一词<br>"意见分开"</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:12px;">
+        <strong style="color:#38a169;">📋 分类</strong><br>
+        <span style="font-size:13px;">混杂 → 归类<br>"逻辑分开"</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:12px; border:2px solid #d94a5c;">
+        <strong style="color:#d94a5c;">🕳️ 鸿沟（名词）</strong><br>
+        <span style="font-size:13px;">动词"切" → 留下的"缝"<br>→ 抽象为差距/隔阂</span>
+      </div>
+    </div>
+    一句话记住：<strong style="color:#c05621;">DIVIDE 就是把"完整"变成"不完整"</strong>——不管是切蛋糕、分裂国家、意见不合，还是人与人之间的那条鸿沟。
+  </div>
+
+</div>
+
+<script>
+(function() {
+function df(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ===== 核心意象 1：分割 =====
+const c1 = document.getElementById('coreDivide1');
+const ctx1 = c1.getContext('2d');
+df(ctx1,380,220);
+
+// 完整圆
+ctx1.fillStyle = '#c05621';
+ctx1.beginPath(); ctx1.arc(100,110,50,0,Math.PI*2); ctx1.fill();
+ctx1.fillStyle = '#fff'; ctx1.font = '10px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('完整',100,115);
+
+// 分割后的两个半圆
+ctx1.fillStyle = '#c05621';
+ctx1.beginPath(); ctx1.arc(260,80,40,-Math.PI*0.3,Math.PI*0.3); ctx1.closePath(); ctx1.fill();
+ctx1.beginPath(); ctx1.arc(260,140,40,Math.PI*0.7,Math.PI*1.3); ctx1.closePath(); ctx1.fill();
+ctx1.fillStyle = '#fff'; ctx1.font = '10px sans-serif';
+ctx1.fillText('部分 A',260,75);
+ctx1.fillText('部分 B',260,155);
+
+// 中间的切开线（虚线）
+ctx1.setLineDash([4,4]);
+ctx1.strokeStyle = '#c05621'; ctx1.lineWidth = 2;
+ctx1.beginPath(); ctx1.moveTo(220,60); ctx1.lineTo(300,120); ctx1.stroke();
+ctx1.setLineDash([]);
+
+// 箭头
+ctx1.strokeStyle = '#c05621'; ctx1.lineWidth = 2.5;
+ctx1.beginPath(); ctx1.moveTo(155,110); ctx1.lineTo(200,110); ctx1.stroke();
+ctx1.fillStyle = '#c05621';
+ctx1.beginPath(); ctx1.moveTo(195,106); ctx1.lineTo(206,110); ctx1.lineTo(195,114); ctx1.closePath(); ctx1.fill();
+
+ctx1.fillStyle = '#c05621'; ctx1.font = 'bold 13px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('DIVIDE',290,20);
+ctx1.fillStyle = '#888'; ctx1.font = '11px sans-serif';
+ctx1.fillText('切！',185,130);
+
+// ===== 核心意象 2：人群分隔 =====
+const c2 = document.getElementById('coreDivide2');
+const ctx2 = c2.getContext('2d');
+df(ctx2,380,220);
+
+// 6个人排在一起
+for (let i = 0; i < 14; i++) {
+  let x = 70 + i * 18;
+  let y = 110 + Math.sin(i*0.8)*8;
+  ctx2.fillStyle = (i < 7) ? '#2b6cb0' : '#c05621';
+  ctx2.beginPath(); ctx2.arc(x, y, 7, 0, Math.PI*2); ctx2.fill();
+  ctx2.fillRect(x-2, y+7, 4, 14);
+}
+
+// 中间的分隔线
+ctx2.strokeStyle = '#d94a5c'; ctx2.lineWidth = 3;
+ctx2.setLineDash([5,4]);
+ctx2.beginPath(); ctx2.moveTo(195,30); ctx2.lineTo(195,210); ctx2.stroke();
+ctx2.setLineDash([]);
+
+ctx2.fillStyle = '#d94a5c'; ctx2.font = 'bold 11px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('分裂',195,25);
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif';
+ctx2.fillText('← 群体被分成两边 →',195,205);
+
+// ===== Tier 1：物理 =====
+const e1 = document.getElementById('tier1');
+const ctx3 = e1.getContext('2d');
+df(ctx3,360,180);
+ctx3.fillStyle = '#c05621';
+ctx3.beginPath(); ctx3.arc(90,90,35,0,Math.PI*2); ctx3.fill();
+ctx3.fillStyle = '#fff'; ctx3.font = '10px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('整体',90,95);
+// 切成4块
+ctx3.fillStyle = '#c05621';
+ctx3.beginPath(); ctx3.arc(270,75,25,0,Math.PI/2); ctx3.closePath(); ctx3.fill();
+ctx3.beginPath(); ctx3.arc(270,75,25,Math.PI/2,Math.PI); ctx3.closePath(); ctx3.fill(); ctx3.fillStyle = '#e07a45';
+ctx3.beginPath(); ctx3.arc(270,75,25,Math.PI,Math.PI*1.5); ctx3.closePath(); ctx3.fill();
+ctx3.beginPath(); ctx3.arc(270,75,25,Math.PI*1.5,Math.PI*2); ctx3.closePath(); ctx3.fill();
+ctx3.fillStyle = '#fff'; ctx3.font = '9px sans-serif';
+ctx3.fillText('碎片',270,80);
+// arrow
+ctx3.strokeStyle = '#c05621'; ctx3.lineWidth = 2;
+ctx3.beginPath(); ctx3.moveTo(130,90); ctx3.lineTo(180,90); ctx3.stroke();
+ctx3.fillStyle = '#c05621';
+ctx3.beginPath(); ctx3.moveTo(175,86); ctx3.lineTo(186,90); ctx3.lineTo(175,94); ctx3.closePath(); ctx3.fill();
+ctx3.fillStyle = '#888'; ctx3.font = '11px sans-serif';
+ctx3.fillText('Divide the pizza into slices',180,170);
+
+// ===== Tier 2：人群 =====
+const e2 = document.getElementById('tier2');
+const ctx4 = e2.getContext('2d');
+df(ctx4,360,180);
+// 4人在一起
+for (let i = 0; i < 4; i++) {
+  let x = 55 + i * 30;
+  ctx4.fillStyle = '#4a5568';
+  ctx4.beginPath(); ctx4.arc(x, 85, 10, 0, Math.PI*2); ctx4.fill();
+  ctx4.fillRect(x-3, 95, 6, 18);
+}
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('团结的一群人',130,50);
+
+// 两边分开
+for (let i = 0; i < 2; i++) {
+  let x = 245 + i * 40;
+  ctx4.fillStyle = (i === 0) ? '#2b6cb0' : '#c05621';
+  ctx4.beginPath(); ctx4.arc(x, 85, 10, 0, Math.PI*2); ctx4.fill();
+  ctx4.fillRect(x-3, 95, 6, 18);
+}
+for (let i = 0; i < 2; i++) {
+  let x = 245 + i * 40;
+  ctx4.fillStyle = (i === 0) ? '#2b6cb0' : '#c05621';
+  ctx4.beginPath(); ctx4.arc(x, 130, 10, 0, Math.PI*2); ctx4.fill();
+  ctx4.fillRect(x-3, 140, 6, 18);
+}
+// 分界线
+ctx4.strokeStyle = '#d94a5c'; ctx4.lineWidth = 2;
+ctx4.setLineDash([3,3]);
+ctx4.beginPath(); ctx4.moveTo(232,60); ctx4.lineTo(232,170); ctx4.stroke();
+ctx4.setLineDash([]);
+
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif';
+ctx4.fillText('分裂的两派',305,50);
+
+// 箭头
+ctx4.strokeStyle = '#c05621'; ctx4.lineWidth = 2;
+ctx4.beginPath(); ctx4.moveTo(175,85); ctx4.lineTo(225,85); ctx4.stroke();
+ctx4.fillStyle = '#c05621';
+ctx4.beginPath(); ctx4.moveTo(220,81); ctx4.lineTo(231,85); ctx4.lineTo(220,89); ctx4.closePath(); ctx4.fill();
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif';
+ctx4.fillText('The issue divided us',175,175);
+
+// ===== Tier 3a：意见分歧 =====
+const e3 = document.getElementById('tier3a');
+const ctx5 = e3.getContext('2d');
+df(ctx5,360,180);
+// 大脑
+ctx5.strokeStyle = '#7b4ad9'; ctx5.lineWidth = 2;
+ctx5.beginPath(); ctx5.arc(180,90,42,0,Math.PI*2); ctx5.stroke();
+ctx5.fillStyle = '#7b4ad9'; ctx5.font = '10px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('🧠 大脑',180,45);
+// 左半
+ctx5.fillStyle = '#2b6cb0'; ctx5.font = '11px sans-serif';
+ctx5.fillText('👍 赞成',150,90);
+// 右半
+ctx5.fillStyle = '#c05621'; ctx5.font = '11px sans-serif';
+ctx5.fillText('👎 反对',210,90);
+// 分界线
+ctx5.strokeStyle = '#7b4ad9'; ctx5.lineWidth = 2;
+ctx5.setLineDash([3,3]);
+ctx5.beginPath(); ctx5.moveTo(180,55); ctx5.lineTo(180,125); ctx5.stroke();
+ctx5.setLineDash([]);
+ctx5.fillStyle = '#888'; ctx5.font = '10px sans-serif';
+ctx5.fillText('Experts are divided',180,170);
+
+// ===== Tier 3b：分类 =====
+const e4 = document.getElementById('tier3b');
+const ctx6 = e4.getContext('2d');
+df(ctx6,360,180);
+// 混杂的圆圈
+let colors = ['#c05621','#2b6cb0','#38a169','#d94a5c'];
+for (let i = 0; i < 6; i++) {
+  let x = 30 + Math.random() * 50;
+  let y = 60 + Math.random() * 70;
+  ctx6.fillStyle = colors[i%4];
+  ctx6.beginPath(); ctx6.arc(x, y, 7, 0, Math.PI*2); ctx6.fill();
+}
+ctx6.fillStyle = '#888'; ctx6.font = '9px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('混杂',55,50);
+
+// 分成 3 组
+for (let i = 0; i < 2; i++) {
+  ctx6.fillStyle = '#c05621';
+  ctx6.beginPath(); ctx6.arc(200 + i*18, 70, 7, 0, Math.PI*2); ctx6.fill();
+}
+for (let i = 0; i < 2; i++) {
+  ctx6.fillStyle = '#2b6cb0';
+  ctx6.beginPath(); ctx6.arc(200 + i*18, 100, 7, 0, Math.PI*2); ctx6.fill();
+}
+for (let i = 0; i < 2; i++) {
+  ctx6.fillStyle = '#38a169';
+  ctx6.beginPath(); ctx6.arc(200 + i*18, 130, 7, 0, Math.PI*2); ctx6.fill();
+}
+ctx6.fillStyle = '#888'; ctx6.font = '9px sans-serif';
+ctx6.fillText('归类',290,50);
+
+// 箭头
+ctx6.strokeStyle = '#38a169'; ctx6.lineWidth = 2;
+ctx6.beginPath(); ctx6.moveTo(95,95); ctx6.lineTo(150,95); ctx6.stroke();
+ctx6.fillStyle = '#38a169';
+ctx6.beginPath(); ctx6.moveTo(145,91); ctx6.lineTo(156,95); ctx6.lineTo(145,99); ctx6.closePath(); ctx6.fill();
+ctx6.fillStyle = '#888'; ctx6.font = '10px sans-serif';
+ctx6.fillText('Divide into groups',180,175);
+
+// ===== 鸿沟衍生图 =====
+const g = document.getElementById('gapDerivation');
+const ctx7 = g.getContext('2d');
+const w = 760, h = 200;
+df(ctx7,w,h);
+
+// Step 1: 完整的矩形
+ctx7.fillStyle = '#c05621';
+ctx7.fillRect(30,70,90,80);
+ctx7.fillStyle = '#fff'; ctx7.font = 'bold 13px sans-serif'; ctx7.textAlign = 'center';
+ctx7.fillText('完整整体',75,115);
+
+// 箭头
+ctx7.strokeStyle = '#c05621'; ctx7.lineWidth = 2;
+ctx7.beginPath(); ctx7.moveTo(125,110); ctx7.lineTo(155,110); ctx7.stroke();
+ctx7.fillStyle = '#c05621';
+ctx7.beginPath(); ctx7.moveTo(151,106); ctx7.lineTo(162,110); ctx7.lineTo(151,114); ctx7.closePath(); ctx7.fill();
+
+// Step 2: 切开
+ctx7.fillStyle = '#c05621';
+ctx7.fillRect(168,70,40,80);
+ctx7.fillRect(248,70,40,80);
+// 中间缝
+ctx7.fillStyle = '#fafaf8';
+ctx7.fillRect(208,70,40,80);
+// 虚线标注缝
+ctx7.strokeStyle = '#d94a5c'; ctx7.lineWidth = 2;
+ctx7.setLineDash([3,3]);
+ctx7.strokeRect(208,70,40,80);
+ctx7.setLineDash([]);
+ctx7.fillStyle = '#d94a5c'; ctx7.font = '11px sans-serif';
+ctx7.fillText('← 切开后留下的"缝" →',228,112);
+ctx7.fillStyle = '#888'; ctx7.font = '10px sans-serif';
+ctx7.fillText('动词：divide（切）',228,190);
+
+// 箭头
+ctx7.strokeStyle = '#d94a5c'; ctx7.lineWidth = 2;
+ctx7.beginPath(); ctx7.moveTo(295,110); ctx7.lineTo(340,110); ctx7.stroke();
+ctx7.fillStyle = '#d94a5c';
+ctx7.beginPath(); ctx7.moveTo(336,106); ctx7.lineTo(347,110); ctx7.lineTo(336,114); ctx7.closePath(); ctx7.fill();
+
+// Step 3: 两边彻底分开 → 鸿沟
+ctx7.fillStyle = '#2b6cb0';
+ctx7.fillRect(355,60,50,90);
+ctx7.fillStyle = '#c05621';
+ctx7.fillRect(485,60,50,90);
+ctx7.fillStyle = '#888'; ctx7.font = '10px sans-serif';
+ctx7.fillText('派别 A',380,55);
+ctx7.fillText('派别 B',510,55);
+// 中间的鸿沟
+ctx7.fillStyle = '#f5f0eb';
+ctx7.fillRect(405,60,80,90);
+ctx7.strokeStyle = '#d94a5c'; ctx7.lineWidth = 2.5;
+ctx7.setLineDash([5,5]);
+ctx7.strokeRect(405,60,80,90);
+ctx7.setLineDash([]);
+// 鸿沟标注
+ctx7.fillStyle = '#d94a5c'; ctx7.font = 'bold 16px sans-serif';
+ctx7.fillText('🕳️ 鸿沟',445,88);
+ctx7.fillStyle = '#d94a5c'; ctx7.font = '12px sans-serif';
+ctx7.fillText('(the divide)',445,108);
+ctx7.fillStyle = '#888'; ctx7.font = '10px sans-serif';
+ctx7.fillText('名词：a divide = 隔阂 / 差距 / 鸿沟',445,185);
+
+// 底部文字
+ctx7.fillStyle = '#999'; ctx7.font = '11px sans-serif';
+ctx7.fillText('完整整体  →  切开(divide)  →  中间的"缝"成了"鸿沟"(a divide)  →  抽象化：数字鸿沟、南北差距、opinion divide',380,20);
+
+})();
+</script>
+
+</body>
+</html>

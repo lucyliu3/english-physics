@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PICK 图解 — 挑选 / 采摘 / 拾取</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#e67e22,#d35400); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#e67e22,#f39c12); border-radius:2px; flex-shrink:0; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#e67e22; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#e67e22; }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#e67e22; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+
+  .orange-bg { background:linear-gradient(135deg,#fef5ec,#fde8d0); }
+  .green-bg { background:linear-gradient(135deg,#f0faf5,#dff0e0); }
+  .red-bg { background:linear-gradient(135deg,#fff0f0,#fde0e0); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+  .blue-bg { background:linear-gradient(135deg,#f0f5ff,#e0e8f5); }
+
+  .full-width-svg { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:10px; margin-bottom:24px; }
+  .full-width-svg svg { width:100%; height:auto; display:block; border-radius:10px; }
+
+  .white-box-wide { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:16px 20px; margin-top:16px; margin-bottom:20px; font-size:13px; color:#555; line-height:1.7; box-shadow:0 2px 8px rgba(0,0,0,0.03); }
+  .white-box-wide strong { color:#e67e22; }
+  .white-box-wide .phrase { font-weight:600; color:#333; display:inline-block; min-width:90px; }
+
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>PICK 图解</h1>
+<p class="subtitle">挑选 / 采摘 / 拾取 — 从"pick a flower"到"pick up the pieces"</p>
+
+<!-- ============ 核心卡片区 ============ -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+
+  <!-- Card 1: PICK 核心意象 — 手从一堆中选取一个 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pickBg" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#fef9f0"/>
+          <stop offset="100%" stop-color="#fcf3e8"/>
+        </linearGradient>
+        <filter id="shadow">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#pickBg)" rx="8"/>
+
+      <!-- 标题 -->
+      <text x="380" y="38" text-anchor="middle" fill="#e67e22" font-size="16" font-weight="bold" font-family="sans-serif">PICK — 用手从一堆中挑选/采摘/拾取一个</text>
+
+      <!-- 一堆物品（水果/花朵形状） -->
+      <!-- 果实1 -->
+      <circle cx="200" cy="250" r="22" fill="#f4a460" filter="url(#shadow)"/>
+      <circle cx="200" cy="245" r="4" fill="#8B4513"/>
+      <!-- 果实2 -->
+      <circle cx="250" cy="280" r="20" fill="#cd853f" filter="url(#shadow)"/>
+      <circle cx="250" cy="275" r="4" fill="#8B4513"/>
+      <!-- 果实3 -->
+      <circle cx="160" cy="270" r="18" fill="#deb887" filter="url(#shadow)"/>
+      <circle cx="160" cy="266" r="3.5" fill="#8B4513"/>
+      <!-- 果实4 -->
+      <circle cx="290" cy="260" r="16" fill="#d2b48c" filter="url(#shadow)"/>
+      <circle cx="290" cy="256" r="3" fill="#8B4513"/>
+      <!-- 果实5 -->
+      <circle cx="220" cy="300" r="17" fill="#cdaa7d" filter="url(#shadow)"/>
+      <circle cx="220" cy="296" r="3" fill="#8B4513"/>
+      <!-- 果实6 -->
+      <circle cx="270" cy="300" r="15" fill="#daa06d" filter="url(#shadow)"/>
+      <circle cx="270" cy="296" r="3" fill="#8B4513"/>
+
+      <!-- 被选中的果实（被手拿起，向上移动） -->
+      <g filter="url(#glow)">
+        <circle cx="230" cy="140" r="24" fill="#e67e22">
+          <animate attributeName="cy" values="230;130;130" keyTimes="0;0.3;1" dur="4s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="238" cy="134" r="4.5" fill="#8B4513">
+          <animate attributeName="cy" values="224;124;124" keyTimes="0;0.3;1" dur="4s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <!-- 手（从上方伸下来抓取） -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,-80; 0,0; 0,0; 0,-80" keyTimes="0;0.2;0.5;1" dur="4s" repeatCount="indefinite"/>
+        <!-- 手臂 -->
+        <path d="M230,100 L230,180" stroke="#f5d6b8" stroke-width="14" stroke-linecap="round"/>
+        <!-- 手掌 -->
+        <ellipse cx="230" cy="190" rx="18" ry="10" fill="#f5d6b8"/>
+        <!-- 手指 -->
+        <path d="M218,185 Q210,195 215,205" stroke="#f5d6b8" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M230,182 Q228,200 230,208" stroke="#f5d6b8" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M242,185 Q250,195 245,205" stroke="#f5d6b8" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <!-- 选中的圆圈（高亮） -->
+      </g>
+
+      <!-- 选择箭头和标签 -->
+      <path d="M310,175 L350,175" stroke="#e67e22" stroke-width="2" stroke-dasharray="4,3"/>
+      <text x="360" y="180" fill="#e67e22" font-size="14" font-weight="600" font-family="sans-serif">选中这一个！</text>
+
+      <!-- 底部标注 -->
+      <text x="380" y="368" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">用手或工具从一群物体中"挑出"一个 → 区分/选择/拾取</text>
+    </svg>
+    <div class="card-body">
+      <h3>PICK <span class="hl">/pɪk/</span></h3>
+      <div class="pos">verb · noun · 挑选 / 采摘 / 拾取</div>
+      <div class="def">
+        <strong>本义</strong> 用手指或工具从一堆中拿起/摘取一个物体<br>
+        <strong>引申</strong> 选择、挑剔、弹拨、撬锁
+        <span class="eg">"She bent down to pick a flower from the garden." 她弯下腰从花园里摘了一朵花。</span>
+      </div>
+      <div class="white-box"><strong>💡 理解关键</strong>：PICK 的核心画面是"手从一堆里精确地拿取其中一个"。这个"从多中选一 + 用手拿取"的画面，衍生出它所有的抽象含义：选择（pick a candidate）、挑剔（pick at）、弹拨乐器（pick a guitar）、撬锁（pick a lock）——全都离不开"用工具精确作用于一个目标"。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: PICK UP 核心意象 — 从地面拾起 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pickupBg" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#fcf8f0"/>
+          <stop offset="100%" stop-color="#f5f0e8"/>
+        </linearGradient>
+        <filter id="shadow2">
+          <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.15"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#pickupBg)" rx="8"/>
+
+      <text x="380" y="34" text-anchor="middle" fill="#e67e22" font-size="15" font-weight="bold" font-family="sans-serif">PICK UP — 从地面/台面上拾起某物</text>
+
+      <!-- 地面线 -->
+      <line x1="80" y1="330" x2="680" y2="330" stroke="#ccc" stroke-width="2"/>
+
+      <!-- 地上的书（水平放置） -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,0; 0,0" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite"/>
+        <rect x="290" y="300" width="80" height="56" rx="3" fill="#3498db" filter="url(#shadow2)"/>
+        <rect x="295" y="304" width="70" height="48" rx="2" fill="#fff"/>
+        <text x="330" y="330" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">BOOK</text>
+      </g>
+
+      <!-- 手（从上往下伸，把书捡起） -->
+      <g filter="url(#shadow2)">
+        <animateTransform attributeName="transform" type="translate" values="0,-60; 0,0; 0,-140; 0,-140" keyTimes="0;0.2;0.5;1" dur="4s" repeatCount="indefinite"/>
+        <!-- 手臂 -->
+        <path d="M370,100 L350,260" stroke="#f5d6b8" stroke-width="12" stroke-linecap="round"/>
+        <!-- 手掌 -->
+        <ellipse cx="346" cy="270" rx="18" ry="10" fill="#f5d6b8"/>
+        <!-- 手指握住书 -->
+        <path d="M334,264 Q328,278 334,286" stroke="#f5d6b8" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M346,268 Q344,282 346,290" stroke="#f5d6b8" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M358,264 Q362,278 358,286" stroke="#f5d6b8" stroke-width="6" fill="none" stroke-linecap="round"/>
+      </g>
+
+      <!-- 书跟随手移动（被拿起来） -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,0; 0,-140; 0,-140" keyTimes="0;0.2;0.5;1" dur="4s" repeatCount="indefinite"/>
+        <rect x="310" y="290" width="60" height="42" rx="3" fill="#e67e22"/>
+        <rect x="314" y="294" width="52" height="34" rx="2" fill="#fff"/>
+        <text x="340" y="315" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">BOOK</text>
+      </g>
+
+      <!-- 向上箭头 -->
+      <path d="M460,280 L460,220" stroke="#e67e22" stroke-width="2.5" stroke-dasharray="5,3">
+        <animate attributeName="opacity" values="1;0.2;1" dur="1.5s" repeatCount="indefinite"/>
+      </path>
+      <polygon points="457,225 463,225 460,215" fill="#e67e22">
+        <animate attributeName="opacity" values="1;0.2;1" dur="1.5s" repeatCount="indefinite"/>
+      </polygon>
+
+      <text x="510" y="265" fill="#e67e22" font-size="13" font-weight="600" font-family="sans-serif">pick up = 拾起 / 拿起</text>
+
+      <!-- 标签 -->
+      <text x="380" y="375" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">物体从"低处/地面"被手移动到"高处/手中" → 从物理到抽象的"获取/接收"</text>
+    </svg>
+    <div class="card-body">
+      <h3>PICK UP <span class="hl">/pɪk ʌp/</span></h3>
+      <div class="pos">phrasal verb · 拾起 / 拿起 / 接人 / 学会</div>
+      <div class="def">
+        <strong>本义</strong> 从地面或台面上将物体拿起<br>
+        <strong>引申</strong> 接人、接收信号、学会技能、恢复
+        <span class="eg">"Can you pick up the kids from school?" 你能去学校接孩子吗？</span>
+      </div>
+      <div class="white-box"><strong>💡 理解关键</strong>：PICK UP 的物理画面是"从低处拿起"。抽象后变成"从不方便/缺失的状态中获取"——接人是"把某人从一处带到另一处"，学技能是"把知识从零基础掌握到手"，接收信号是"把无线电波捕获到设备中"。</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ 逻辑演化树 ============ -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div style="background:#fffdf7; border:1px solid #e8e0d0; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div class="tree-title" style="font-size:16px; font-weight:700; margin-bottom:16px;">🧠 PICK 的逻辑演化树 — 从"手选一个"到所有抽象含义</div>
+  <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; justify-content:center;">
+    <!-- 根节点 -->
+    <div style="background:#fef5ec; border:2px solid #e67e22; border-radius:8px; padding:10px 16px; font-size:13px; font-weight:600; text-align:center; min-width:100px;">
+      🌱 核心意象<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">手从一堆中选取一个</span>
+    </div>
+
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:100px;">
+      ① 采摘<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">pick flowers/fruit</span>
+    </div>
+
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:100px;">
+      ② 选择<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">pick a candidate</span>
+    </div>
+
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:100px;">
+      ③ 拾起<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">pick up</span>
+    </div>
+
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:100px;">
+      ④ 挑剔<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">pick at/on</span>
+    </div>
+
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:100px;">
+      ⑤ 弹拨<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">pick a guitar</span>
+    </div>
+
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:100px;">
+      ⑥ 撬开<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">pick a lock</span>
+    </div>
+  </div>
+
+  <!-- 白框解释演化 -->
+  <div class="white-box-wide"><strong>🧠 核心逻辑链</strong>：手从一堆中选取一个（物理画面）→ ①采摘时手指捏住花茎扯断（pick flowers）→ ②抽象为从多个选项中决定一个（pick a winner）→ ③加上 UP 方向指从地面"拿起"（pick up）→ ④反复用手指戳同一个点转义为"挑剔/找茬"（pick at/on）→ ⑤指尖轻快地拨动琴弦像"采摘音符"（pick a guitar）→ ⑥用细工具伸入锁孔拨动内部结构（pick a lock）。"精确地作用于一个点上"是所有含义的共同线索。</div>
+</div>
+
+<!-- ============ 常见搭配区（含白框解释）= 5 个核心短语 ============ -->
+<div class="section-title"><span class="bar"></span><span>常见搭配 — 每个搭配都有物理→抽象演变解释</span></div>
+
+<!-- pick up -->
+<div class="full-width-svg">
+  <svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="upBg" x1="0" y1="0" x2="760" y2="260">
+        <stop offset="0%" stop-color="#fefaf5"/>
+        <stop offset="100%" stop-color="#fcf5ea"/>
+      </linearGradient>
+      <filter id="sh3">
+        <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/>
+      </filter>
+    </defs>
+    <rect width="760" height="260" fill="url(#upBg)" rx="8"/>
+
+    <text x="380" y="30" text-anchor="middle" fill="#e67e22" font-size="15" font-weight="bold" font-family="sans-serif">PICK UP — 从低到高 + 获取</text>
+
+    <!-- 场景1: 拾起书 -->
+    <g transform="translate(60,50)">
+      <text x="100" y="15" text-anchor="middle" fill="#333" font-size="12" font-weight="600" font-family="sans-serif">📚 拾起物体</text>
+      <rect x="40" y="120" width="50" height="36" rx="3" fill="#3498db" filter="url(#sh3)"/>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0;0,-80;0,-80" keyTimes="0;0.5;1" dur="3s" repeatCount="indefinite"/>
+        <rect x="40" y="120" width="50" height="36" rx="3" fill="#e67e22"/>
+      </g>
+      <line x1="10" y1="160" x2="150" y2="160" stroke="#ccc" stroke-width="1"/>
+    </g>
+
+    <!-- 场景2: 接人 -->
+    <g transform="translate(290,50)">
+      <text x="100" y="15" text-anchor="middle" fill="#333" font-size="12" font-weight="600" font-family="sans-serif">🚗 开车接人</text>
+      <rect x="30" y="90" width="55" height="24" rx="6" fill="#e67e22" filter="url(#sh3)"/>
+      <circle cx="110" cy="120" r="10" fill="#e63946"/>
+      <path d="M90,115 L110,115" stroke="#38a169" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <polygon points="90,115 96,112 96,118" fill="#38a169"/>
+    </g>
+
+    <!-- 场景3: 学技能 -->
+    <g transform="translate(520,50)">
+      <text x="100" y="15" text-anchor="middle" fill="#333" font-size="12" font-weight="600" font-family="sans-serif">💡 学会技能</text>
+      <circle cx="60" cy="90" r="12" fill="#f5e6d0"/>
+      <circle cx="56" cy="88" r="2" fill="#333"/>
+      <circle cx="64" cy="88" r="2" fill="#333"/>
+      <path d="M60,95 Q65,93 70,95" fill="none" stroke="#333" stroke-width="1.5"/>
+      <path d="M80,90 L100,70" stroke="#e67e22" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <polygon points="100,70 95,73 97,67" fill="#e67e22"/>
+      <text x="100" y="95" fill="#e67e22" font-size="22">📖</text>
+    </g>
+
+    <text x="380" y="240" text-anchor="middle" fill="#666" font-size="12.5" font-family="sans-serif">物理：从地面拿起 → 抽象：接人(把某人从A带到B)、学技能(把知识获取到手)、接收信号(把信号捕获到)</text>
+  </svg>
+  <div class="white-box-wide"><strong>🧠 PICK UP 的演变路径</strong>：<span class="phrase">物理义</span>手从较低位置拿起物体 → <span class="phrase" style="color:#e67e22;">① 接人</span>"pick someone up" = 开车到某地"接上"那个人（把TA从A点带到B点，像拿起物体一样把TA"带离"原地）→ <span class="phrase" style="color:#e67e22;">② 学会</span>"pick up a language/skill" = 不经意地学会（像随手捡起一个东西一样轻松获取知识）→ <span class="phrase" style="color:#e67e22;">③ 接收</span>"pick up a signal" = 设备捕获到无线电信号 → <span class="phrase" style="color:#e67e22;">④ 恢复</span>"pick up where we left off" = 从之前中断的地方重新开始。例句：<em>"I picked up Spanish just by living in Mexico."</em>（我在墨西哥生活时不经意就学会了西班牙语。）</div>
+</div>
+
+<!-- pick out -->
+<div class="full-width-svg">
+  <svg viewBox="0 0 760 220" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="outBg" x1="0" y1="0" x2="760" y2="220">
+        <stop offset="0%" stop-color="#fefaf5"/>
+        <stop offset="100%" stop-color="#fcf5ea"/>
+      </linearGradient>
+      <filter id="sh4">
+        <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/>
+      </filter>
+    </defs>
+    <rect width="760" height="220" fill="url(#outBg)" rx="8"/>
+
+    <text x="380" y="30" text-anchor="middle" fill="#e67e22" font-size="15" font-weight="bold" font-family="sans-serif">PICK OUT — 从群体中辨认/挑出</text>
+
+    <!-- 一堆形状不同的物体 -->
+    <g transform="translate(100,50)">
+      <circle cx="30" cy="80" r="18" fill="#aaa"/>
+      <rect x="65" y="62" width="18" height="36" rx="4" fill="#aaa"/>
+      <circle cx="110" cy="78" r="16" fill="#aaa"/>
+      <rect x="145" y="65" width="18" height="30" rx="4" fill="#aaa"/>
+      <!-- 被挑出的特殊形状（星形）加高亮 -->
+      <g filter="url(#sh4)">
+        <animate attributeName="opacity" values="0.3;1;1;0.3" keyTimes="0;0.3;0.7;1" dur="3s" repeatCount="indefinite"/>
+        <polygon points="185,70 188,78 196,78 190,83 192,92 185,87 178,92 180,83 174,78 182,78" fill="#e67e22"/>
+      </g>
+      <text x="190" y="110" text-anchor="middle" fill="#e67e22" font-size="11" font-weight="600" font-family="sans-serif">挑出这个</text>
+    </g>
+
+    <!-- 箭头 -->
+    <path d="M280,100 L320,100" stroke="#e67e22" stroke-width="2" stroke-dasharray="4,3"/>
+
+    <!-- 右边解释 -->
+    <text x="340" y="90" fill="#444" font-size="13" font-family="sans-serif">从一堆中"取出"一个 →</text>
+    <text x="340" y="110" fill="#444" font-size="13" font-family="sans-serif">辨认、识别、选出</text>
+
+    <text x="380" y="200" text-anchor="middle" fill="#666" font-size="12.5" font-family="sans-serif">物理：从群体中选出一个目标物 → 抽象：从众多选项中"识别/辨认"出正确的一个</text>
+  </svg>
+  <div class="white-box-wide"><strong>🧠 PICK OUT 的演变路径</strong>：<span class="phrase">物理义</span>从一堆物体中用手指夹出特定的一个（pick one out of the pile）→ <span class="phrase" style="color:#e67e22;">① 辨认</span>"pick someone out of a crowd" = 在人群中认出某人（用眼睛代替手指"挑出"目标）→ <span class="phrase" style="color:#e67e22;">② 选择</span>"pick out a gift" = 精心挑选一件礼物 → <span class="phrase" style="color:#e67e22;">③ 区分</span>从相似的东西中辨别出差异。例句：<em>"I can't pick her out in this old photo."</em>（我在这张老照片里认不出她来。）</div>
+</div>
+
+<!-- pick on -->
+<div class="full-width-svg">
+  <svg viewBox="0 0 760 220" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="onBg" x1="0" y1="0" x2="760" y2="220">
+        <stop offset="0%" stop-color="#fefaf5"/>
+        <stop offset="100%" stop-color="#fcf5ea"/>
+      </linearGradient>
+      <filter id="sh5">
+        <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/>
+      </filter>
+    </defs>
+    <rect width="760" height="220" fill="url(#onBg)" rx="8"/>
+
+    <text x="380" y="30" text-anchor="middle" fill="#e67e22" font-size="15" font-weight="bold" font-family="sans-serif">PICK ON — 持续针对某个人（欺负/找茬）</text>
+
+    <!-- 一群人 -->
+    <g transform="translate(100,50)">
+      <!-- 被针对的人（缩小，低头） -->
+      <g transform="translate(120,110)">
+        <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
+        <circle cx="0" cy="-8" r="10" fill="#ddd"/>
+        <circle cx="-3" cy="-10" r="2" fill="#666"/>
+        <circle cx="3" cy="-10" r="2" fill="#666"/>
+        <path d="M-3,0 Q0,-2 3,0" fill="none" stroke="#666" stroke-width="1.2"/>
+      </g>
+
+      <!-- 欺负者（大个子，手指指） -->
+      <g transform="translate(60,80)">
+        <circle cx="0" cy="-12" r="14" fill="#e63946"/>
+        <circle cx="-4" cy="-14" r="2.5" fill="#333"/>
+        <circle cx="4" cy="-14" r="2.5" fill="#333"/>
+        <path d="M-4,-3 Q0,2 4,-3" fill="none" stroke="#333" stroke-width="1.5"/>
+        <!-- 指人的手 -->
+        <line x1="20" y1="5" x2="50" y2="15" stroke="#e63946" stroke-width="3">
+          <animateTransform attributeName="transform" type="rotate" values="0,20,5;10,20,5;0,20,5" dur="1.5s" repeatCount="indefinite"/>
+        </line>
+      </g>
+
+      <!-- 其他人围观 -->
+      <circle cx="180" cy="85" r="12" fill="#ccc"/>
+      <circle cx="210" cy="90" r="10" fill="#ccc"/>
+      <circle cx="155" cy="95" r="11" fill="#ccc"/>
+
+      <text x="130" y="145" text-anchor="middle" fill="#e63946" font-size="12" font-weight="600" font-family="sans-serif">"就针对你！"</text>
+    </g>
+
+    <text x="380" y="200" text-anchor="middle" fill="#666" font-size="12.5" font-family="sans-serif">物理：手指反复"戳"同一个人 → 抽象：持续地针对/欺负某个人</text>
+  </svg>
+  <div class="white-box-wide"><strong>🧠 PICK ON 的演变路径</strong>：<span class="phrase">物理义</span>用手指反复指点/戳某个人（从"pick"的本义延伸——精确作用于一个点上，叠加"on"的持续接触感）→ <span class="phrase" style="color:#e67e22;">欺负</span>"stop picking on your little brother!" = 反复找茬/挑刺、针对一个人 → <span class="phrase" style="color:#e67e22;">唠叨/埋怨</span>持续批评一个人。注意：pick on 和 pick at 的区别在于——pick on 是针对一个人（欺负），pick at 是针对一个物或细节（挑剔）。例句：<em>"Why do you always pick on me?"</em>（你为什么总是针对我？）</div>
+</div>
+
+<!-- pick at -->
+<div class="full-width-svg">
+  <svg viewBox="0 0 760 220" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="atBg" x1="0" y1="0" x2="760" y2="220">
+        <stop offset="0%" stop-color="#fefaf5"/>
+        <stop offset="100%" stop-color="#fcf5ea"/>
+      </linearGradient>
+    </defs>
+    <rect width="760" height="220" fill="url(#atBg)" rx="8"/>
+
+    <text x="380" y="30" text-anchor="middle" fill="#e67e22" font-size="15" font-weight="bold" font-family="sans-serif">PICK AT — 反复拨弄/挑剔细节/小口吃</text>
+
+    <!-- 场景: 用手指反复戳/挑一个东西 -->
+    <g transform="translate(160,60)">
+      <!-- 目标物 -->
+      <rect x="70" y="50" width="50" height="50" rx="6" fill="#ddd"/>
+      <text x="95" y="82" text-anchor="middle" fill="#888" font-size="10" font-family="sans-serif">细节</text>
+
+      <!-- 手反复指/戳 -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 10,0; 0,0" dur="0.8s" repeatCount="indefinite"/>
+        <line x1="30" y1="30" x2="70" y2="60" stroke="#f5d6b8" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="72" cy="62" r="4" fill="#f5d6b8"/>
+      </g>
+
+      <text x="95" y="125" text-anchor="middle" fill="#e67e22" font-size="11" font-weight="600" font-family="sans-serif">反复戳/拨弄</text>
+    </g>
+
+    <!-- 右边：小口吃饭 -->
+    <g transform="translate(420,60)">
+      <text x="95" y="15" text-anchor="middle" fill="#333" font-size="12" font-weight="600" font-family="sans-serif">🍽️ 小口挑着吃</text>
+      <rect x="50" y="40" width="60" height="45" rx="6" fill="#e8e0d0"/>
+      <ellipse cx="80" cy="40" rx="30" ry="10" fill="#e8d8c0"/>
+      <!-- 叉子 -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 20,-5; 0,0" dur="1.5s" repeatCount="indefinite"/>
+        <line x1="35" y1="30" x2="70" y2="50" stroke="#aaa" stroke-width="2"/>
+        <circle cx="72" cy="52" r="2" fill="#aaa"/>
+      </g>
+      <text x="80" y="110" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">没胃口，只挑了几口</text>
+    </g>
+
+    <text x="380" y="200" text-anchor="middle" fill="#666" font-size="12.5" font-family="sans-serif">物理：用手指或叉子反复戳/拨弄一个东西但不拿起 → 抽象：挑剔、勉强吃几口</text>
+  </svg>
+  <div class="white-box-wide"><strong>🧠 PICK AT 的演变路径</strong>：<span class="phrase">物理义</span>用手指反复戳/拨弄一个物体但没有"拿起来"的动作（区别于 pick up）→ <span class="phrase" style="color:#e67e22;">① 挑剔</span>"pick at every detail" = 反复审视细节中的小毛病（像用手指反复戳同一个点找问题）→ <span class="phrase" style="color:#e67e22;">② 小口吃</span>"pick at one's food" = 没胃口时只用叉子戳着食物吃几口（而不是正常地吃）→ <span class="phrase" style="color:#e67e22;">③ 反复拨弄</span>"pick at a scab" = 反复抠伤疤（伤口愈合时的痒让人反复去碰）。例句：<em>"She just picked at her dinner, not saying a word."</em>（她只是挑了几口饭，一句话也没说。）</div>
+</div>
+
+<!-- pick off -->
+<div class="full-width-svg">
+  <svg viewBox="0 0 760 220" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="offBg" x1="0" y1="0" x2="760" y2="220">
+        <stop offset="0%" stop-color="#fefaf5"/>
+        <stop offset="100%" stop-color="#fcf5ea"/>
+      </linearGradient>
+      <filter id="sh6">
+        <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/>
+      </filter>
+    </defs>
+    <rect width="760" height="220" fill="url(#offBg)" rx="8"/>
+
+    <text x="380" y="30" text-anchor="middle" fill="#e67e22" font-size="15" font-weight="bold" font-family="sans-serif">PICK OFF — 逐个摘除/精准消灭</text>
+
+    <!-- 场景: 从树上摘掉叶子 -->
+    <g transform="translate(100,50)">
+      <!-- 树枝 -->
+      <line x1="10" y1="40" x2="140" y2="40" stroke="#8B4513" stroke-width="5"/>
+      <!-- 叶子们 -->
+      <ellipse cx="40" cy="30" rx="14" ry="8" fill="#38a169" transform="rotate(-20,40,30)"/>
+      <ellipse cx="80" cy="25" rx="14" ry="8" fill="#38a169" transform="rotate(15,80,25)"/>
+      <ellipse cx="115" cy="30" rx="14" ry="8" fill="#38a169" transform="rotate(-10,115,30)"/>
+      <!-- 被摘掉的叶子（飞走） -->
+      <ellipse cx="60" cy="20" rx="14" ry="8" fill="#e67e22" transform="rotate(-30,60,20)">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 40,-30; 80,-50" dur="2.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0.6;0" dur="2.5s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="rotate" values="0,60,20; -45,60,20; -90,60,20" dur="2.5s" repeatCount="indefinite" additive="sum"/>
+      </ellipse>
+      <text x="80" y="75" text-anchor="middle" fill="#e67e22" font-size="11" font-weight="600" font-family="sans-serif">逐个摘掉</text>
+    </g>
+
+    <!-- 场景2: 精准射击（狙击手） -->
+    <g transform="translate(380,50)">
+      <text x="95" y="15" text-anchor="middle" fill="#333" font-size="12" font-weight="600" font-family="sans-serif">🎯 狙击手逐个击中目标</text>
+      <!-- 瞄准十字 -->
+      <line x1="50" y1="45" x2="90" y2="45" stroke="#e63946" stroke-width="1.5"/>
+      <line x1="70" y1="25" x2="70" y2="65" stroke="#e63946" stroke-width="1.5"/>
+      <circle cx="70" cy="45" r="5" fill="none" stroke="#e63946" stroke-width="1"/>
+      <!-- 目标 -->
+      <circle cx="100" cy="45" r="8" fill="#888"/>
+      <circle cx="100" cy="45" r="3" fill="#e63946">
+        <animate attributeName="opacity" values="1;0;1" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <!-- 击中标记 -->
+      <text x="130" y="50" fill="#e63946" font-size="18">✕</text>
+    </g>
+
+    <text x="380" y="200" text-anchor="middle" fill="#666" font-size="12.5" font-family="sans-serif">物理：用手指摘掉/拔掉一个附着物 → 抽象：逐个精准清除/消灭（常用于军事或竞技）</text>
+  </svg>
+  <div class="white-box-wide"><strong>🧠 PICK OFF 的演变路径</strong>：<span class="phrase">物理义</span>用手指"摘掉"一个附着在表面上的物体（pick a leaf off a branch）→ "off"表示分离/脱离 → <span class="phrase" style="color:#e67e22;">① 逐个消灭</span>"sniper picked off the targets one by one" = 狙击手逐个精准击杀（像摘叶子一样一个个清除）→ <span class="phrase" style="color:#e67e22;">② 竞技中逐个淘汰</span>"the runner picked off the bases"（棒球中的牵制出局）。例句：<em>"The soldier picked off the enemies from the hilltop."</em>（士兵从山顶逐个精准击倒了敌人。）</div>
+</div>
+
+<!-- ============ 易混对比区 ============ -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+
+  <!-- PICK vs CHOOSE -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="vs1" x1="0" y1="0" x2="760" y2="340">
+          <stop offset="0%" stop-color="#fefaf5"/>
+          <stop offset="100%" stop-color="#fcf3e8"/>
+        </linearGradient>
+        <filter id="sh7">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/>
+        </filter>
+      </defs>
+      <rect width="760" height="340" fill="url(#vs1)" rx="8"/>
+
+      <text x="380" y="30" text-anchor="middle" fill="#333" font-size="15" font-weight="bold" font-family="sans-serif">PICK vs CHOOSE vs SELECT vs PICK UP</text>
+
+      <!-- PICK -->
+      <g transform="translate(40,50)">
+        <text x="85" y="15" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">PICK</text>
+        <circle cx="60" cy="50" r="12" fill="#e67e22"/>
+        <circle cx="85" cy="55" r="10" fill="#ddd"/>
+        <circle cx="110" cy="50" r="12" fill="#ddd"/>
+        <path d="M60,50 L75,50" stroke="#e67e22" stroke-width="2"/>
+        <polygon points="72,47 78,50 72,53" fill="#e67e22"/>
+        <text x="85" y="85" text-anchor="middle" fill="#444" font-size="11" font-family="sans-serif">用手"拿取"</text>
+        <text x="85" y="100" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">口语化、具体动作</text>
+      </g>
+
+      <!-- CHOOSE -->
+      <g transform="translate(200,50)">
+        <text x="85" y="15" text-anchor="middle" fill="#38a169" font-size="14" font-weight="bold" font-family="sans-serif">CHOOSE</text>
+        <circle cx="60" cy="50" r="12" fill="#38a169"/>
+        <circle cx="85" cy="55" r="10" fill="#ddd"/>
+        <circle cx="110" cy="50" r="12" fill="#ddd"/>
+        <text x="85" y="85" text-anchor="middle" fill="#444" font-size="11" font-family="sans-serif">凭决定"选择"</text>
+        <text x="85" y="100" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">内心决策、偏主观</text>
+      </g>
+
+      <!-- SELECT -->
+      <g transform="translate(360,50)">
+        <text x="85" y="15" text-anchor="middle" fill="#8e44ad" font-size="14" font-weight="bold" font-family="sans-serif">SELECT</text>
+        <circle cx="60" cy="50" r="12" fill="#8e44ad"/>
+        <circle cx="85" cy="55" r="10" fill="#ddd"/>
+        <circle cx="110" cy="50" r="12" fill="#ddd"/>
+        <text x="85" y="85" text-anchor="middle" fill="#444" font-size="11" font-family="sans-serif">按标准"筛选"</text>
+        <text x="85" y="100" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">正式、基于标准</text>
+      </g>
+
+      <!-- PICK UP -->
+      <g transform="translate(520,50)">
+        <text x="85" y="15" text-anchor="middle" fill="#2980b9" font-size="14" font-weight="bold" font-family="sans-serif">PICK UP</text>
+        <rect x="50" y="40" width="30" height="22" rx="3" fill="#3498db"/>
+        <g>
+          <animateTransform attributeName="transform" type="translate" values="0,0;0,-25;0,-25;0,0" keyTimes="0;0.3;0.7;1" dur="3s" repeatCount="indefinite"/>
+          <rect x="50" y="40" width="30" height="22" rx="3" fill="#2980b9"/>
+        </g>
+        <text x="85" y="85" text-anchor="middle" fill="#444" font-size="11" font-family="sans-serif">从低处"捡起"</text>
+        <text x="85" y="100" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">加上方向 = 获取/接人</text>
+      </g>
+
+      <!-- 底部对比说明 -->
+      <text x="380" y="170" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="600" font-family="sans-serif">关键区别</text>
+
+      <text x="50" y="195" fill="#444" font-size="12" font-family="sans-serif">PICK vs CHOOSE：</text>
+      <text x="50" y="212" fill="#666" font-size="11.5" font-family="sans-serif">• PICK 更口语化，带有"用手拿"的物理感。"I'll pick the red one."</text>
+      <text x="50" y="228" fill="#666" font-size="11.5" font-family="sans-serif">• CHOOSE 强调内心的决定。"I choose to stay."（我选择留下）</text>
+
+      <text x="50" y="252" fill="#444" font-size="12" font-family="sans-serif">PICK vs SELECT：</text>
+      <text x="50" y="269" fill="#666" font-size="11.5" font-family="sans-serif">• SELECT 更正式，暗示基于标准筛选。"The committee selected three finalists."</text>
+      <text x="50" y="285" fill="#666" font-size="11.5" font-family="sans-serif">• PICK 更随意。"Just pick one, any one!"（随便挑一个！）</text>
+
+      <text x="50" y="309" fill="#444" font-size="12" font-family="sans-serif">PICK vs PICK UP：</text>
+      <text x="50" y="326" fill="#666" font-size="11.5" font-family="sans-serif">• PICK = 从一堆中"挑出/选取" • PICK UP = 从地面/台面"捡起/拿起"（强调方向的改变）</text>
+    </svg>
+    <div class="label">
+      <span class="p">PICK vs CHOOSE vs SELECT vs PICK UP</span>
+      <div class="desc">四个词都和"选择"有关，但侧重点不同。PICK和PICK UP有物理动作感，CHOOSE是心理决策，SELECT是正式筛选。</div>
+      <div class="white-box"><strong>💡 记忆口诀</strong>：你<strong>PICK</strong>一个苹果（用手拿），<strong>CHOOSE</strong>要不要吃（做决定），<strong>SELECT</strong>最好的那个（筛选标准），<strong>PICK UP</strong>掉在地上的水果（从低处拿起）。四个词不能互换！</div>
+    </div>
+  </div>
+
+  <!-- PICK vs PICK UP (详细对比) -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="vs2" x1="0" y1="0" x2="760" y2="340">
+          <stop offset="0%" stop-color="#fefaf5"/>
+          <stop offset="100%" stop-color="#fcf3e8"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="340" fill="url(#vs2)" rx="8"/>
+
+      <text x="380" y="30" text-anchor="middle" fill="#333" font-size="15" font-weight="bold" font-family="sans-serif">PICK 进阶辨析：其他易混词</text>
+
+      <!-- PICK vs PECK -->
+      <g transform="translate(30,55)">
+        <text x="170" y="15" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">PICK /pɪk/ vs PECK /pek/</text>
+        <text x="0" y="38" fill="#444" font-size="12" font-family="sans-serif">PICK 是用手指或工具选取。</text>
+        <text x="0" y="56" fill="#444" font-size="12" font-family="sans-serif">PECK 是鸟用嘴啄。"the bird pecked at the seed"</text>
+        <text x="0" y="74" fill="#666" font-size="11" font-family="sans-serif">发音不同：pick [ɪ] vs peck [e]</text>
+      </g>
+
+      <!-- PICK vs PILFER -->
+      <g transform="translate(30,100)">
+        <text x="170" y="15" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">PICK vs PILFER (小偷小摸)</text>
+        <text x="0" y="38" fill="#444" font-size="12" font-family="sans-serif">"Pick someone's pocket" = 扒窃（从口袋中"挑出"钱包）</text>
+        <text x="0" y="56" fill="#444" font-size="12" font-family="sans-serif">"Pick a lock" = 撬锁（用细工具"拨动"锁芯）</text>
+        <text x="0" y="74" fill="#666" font-size="11" font-family="sans-serif">💡 这两个用法都保留了"用工具精确操作"的核心画面</text>
+      </g>
+
+      <!-- PICK vs PLUCK -->
+      <g transform="translate(30,155)">
+        <text x="170" y="15" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">PICK vs PLUCK (弹拨乐器)</text>
+        <text x="0" y="38" fill="#444" font-size="12" font-family="sans-serif">Pick a guitar = 用拨片/手指拨弦（弹奏）</text>
+        <text x="0" y="56" fill="#444" font-size="12" font-family="sans-serif">Pluck = 用手指"拔"弦（pluck a chicken = 拔鸡毛）</text>
+        <text x="0" y="74" fill="#666" font-size="11" font-family="sans-serif">💡 拨弦就像"采摘音符"——每次拨动一个音</text>
+      </g>
+
+      <!-- PICK vs PICKY -->
+      <g transform="translate(30,210)">
+        <text x="170" y="15" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">PICKY (形容词) — 挑剔的</text>
+        <text x="0" y="38" fill="#444" font-size="12" font-family="sans-serif">"He's a picky eater." = 他挑食。</text>
+        <text x="0" y="56" fill="#666" font-size="11" font-family="sans-serif">💡 来自 pick at → 反复挑挑拣拣 → 变成形容词"挑剔的"</text>
+      </g>
+
+      <!-- BONE TO PICK -->
+      <g transform="translate(30,265)">
+        <text x="170" y="15" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">"A bone to pick" — 有意见要提</text>
+        <text x="0" y="38" fill="#444" font-size="12" font-family="sans-serif">"I have a bone to pick with you." = 我有意见要跟你说。</text>
+        <text x="0" y="56" fill="#666" font-size="11" font-family="sans-serif">💡 来源：狗啃骨头反复挑→比喻有疙瘩要"挑"出来说清楚</text>
+      </g>
+
+      <text x="380" y="330" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">所有派生用法都根植于"用手/工具精确作用于一个点"的核心意象</text>
+    </svg>
+    <div class="label">
+      <span class="p">更多 PICK 相关辨析</span>
+      <div class="desc">PICK 在不同场景中的易混词辨析，包括发音/拼写/含义上的区别。</div>
+      <div class="white-box"><strong>💡 核心规律</strong>：PICK 的所有用法——扒窃、撬锁、弹吉他、挑剔——都源于同一个物理画面：手指或工具<strong>精确地作用于一个点</strong>。记住这个画面，所有抽象用法都有线索可循。</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ 常见搭配列表（补充更多搭配） ============ -->
+<div class="section-title"><span class="bar"></span><span>更多常见搭配（口语高频）</span></div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px;">
+
+  <div class="usage-section" style="margin-bottom:0;">
+    <h4>📖 PICK 动词短语</h4>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick</strong> a fight</span>
+        <span class="usage-cn">故意找茬吵架 &nbsp;|&nbsp; 📖 像"挑选"一个话题来争吵</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick</strong> a lock</span>
+        <span class="usage-cn">撬锁 &nbsp;|&nbsp; 📖 用细工具"拨动"锁芯内的弹子</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick</strong> a guitar</span>
+        <span class="usage-cn">弹吉他 &nbsp;|&nbsp; 📖 用手指/拨片"拨"弦</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick</strong> and choose</span>
+        <span class="usage-cn">精挑细选 &nbsp;|&nbsp; 📖 反复地"挑来挑去"</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick</strong> holes in</span>
+        <span class="usage-cn">挑毛病 &nbsp;|&nbsp; 📖 像"戳洞"一样找出缺点</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick</strong> someone's brain</span>
+        <span class="usage-cn">请教/取经 &nbsp;|&nbsp; 📖 从别人的脑子里"挑出"知识</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-section" style="margin-bottom:0;">
+    <h4>📖 PICK UP 常见用法</h4>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick up</strong> the phone</span>
+        <span class="usage-cn">接电话 &nbsp;|&nbsp; 📖 把听筒"拿起来"</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick up</strong> the tab</span>
+        <span class="usage-cn">买单 &nbsp;|&nbsp; 📖 "拿起"账单=付钱</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick up</strong> speed</span>
+        <span class="usage-cn">加速 &nbsp;|&nbsp; 📖 "获取"速度</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick up</strong> the pieces</span>
+        <span class="usage-cn">收拾残局 &nbsp;|&nbsp; 📖 把碎片"捡起来"=修复局面</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick up</strong> a habit</span>
+        <span class="usage-cn">养成习惯 &nbsp;|&nbsp; 📖 不经意"捡到"一个习惯</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick up</strong> after someone</span>
+        <span class="usage-cn">替某人收拾 &nbsp;|&nbsp; 📖 跟在某人后面"捡"乱扔的东西</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-section" style="margin-bottom:0;">
+    <h4>📖 PICK 名词用法</h4>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick</strong> (guitar pick)</span>
+        <span class="usage-cn">拨片 &nbsp;|&nbsp; 📖 用来"拨"弦的小片</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick</strong> (toothpick)</span>
+        <span class="usage-cn">牙签 &nbsp;|&nbsp; 📖 用来"剔"牙的细棒</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick</strong> of the litter</span>
+        <span class="usage-cn">一窝里最好的 &nbsp;|&nbsp; 📖 从一窝幼崽中"挑出"最好的</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">take your <strong>pick</strong></span>
+        <span class="usage-cn">随便选 &nbsp;|&nbsp; 📖 "拿走你挑的"</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">first <strong>pick</strong></span>
+        <span class="usage-cn">首选 &nbsp;|&nbsp; 📖 第一个"被挑中的"</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">ice <strong>pick</strong></span>
+        <span class="usage-cn">冰锥 &nbsp;|&nbsp; 📖 用来"凿/挑"冰的尖工具</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-section" style="margin-bottom:0;">
+    <h4>📖 口语高频短语</h4>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick</strong> yourself up</span>
+        <span class="usage-cn">振作起来 &nbsp;|&nbsp; 📖 把自己"从地上捡起来"=克服困难</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick</strong> and choose</span>
+        <span class="usage-cn">挑三拣四 &nbsp;|&nbsp; 📖 反复挑选</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">pick-me-up</span>
+        <span class="usage-cn">提神的东西 &nbsp;|&nbsp; 📖 能把你"捡起来"的东西=咖啡/饮料</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick</strong> sides</span>
+        <span class="usage-cn">选边站 &nbsp;|&nbsp; 📖 "挑选"一方支持</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>pick</strong> a winner</span>
+        <span class="usage-cn">选中赢家 &nbsp;|&nbsp; 📖 "挑出"胜利者</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">have a bone to <strong>pick</strong></span>
+        <span class="usage-cn">有意见要提 &nbsp;|&nbsp; 📖 有根骨头要"挑"（比喻有疙瘩）</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ 小白框补充：上面列表中需要解释的白框 ============ -->
+<div style="margin-bottom:24px;">
+  <div class="white-box-wide"><strong>🧠 额外白框解释</strong>：</div>
+  <div class="white-box-wide"><span class="phrase">pick a fight</span> = 故意找茬。"挑"一个（pick）架来打——物理画面是你从一堆中性选项里"挑出"一个冲突点。</div>
+  <div class="white-box-wide"><span class="phrase">pick someone's brain</span> = 请教他人。物理画面：用手"掏/挑"出别人脑子里的知识——非常形象的比喻。</div>
+  <div class="white-box-wide"><span class="phrase">pick up the tab</span> = 买单。在餐厅结账时"拿起（pick up）"账单的物理动作 → 引申为承担费用。</div>
+  <div class="white-box-wide"><span class="phrase">pick up the pieces</span> = 收拾残局。把摔碎的碎片"一块块捡起来（pick up）"拼回去 → 比喻在失败/灾难后重建。</div>
+  <div class="white-box-wide"><span class="phrase">pick-me-up</span> = 提神物。一杯咖啡或饮料能把你从疲惫状态"捡起来（pick up）"→ 名词化变成"提神的东西"。</div>
+</div>
+
+<!-- ============ 反义/相似词区 ============ -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+
+    <div class="info-card red-bg">
+      <h5 style="color:#e63946;">反义词</h5>
+      <p><strong>DROP</strong> — 丢下 / 放手 <small>与"拾起"相反——把手中的东西放下</small></p>
+      <p><strong>PUT DOWN</strong> — 放下 <small>与 pick up 相反——把拿着的物体放回台面</small></p>
+      <p><strong>REJECT</strong> — 拒绝 <small>与"选中"相反——在挑选中否定一个选项</small></p>
+      <p><strong>IGNORE</strong> — 无视 <small>与"挑出/注意"相反——完全不关注</small></p>
+    </div>
+
+    <div class="info-card green-bg">
+      <h5 style="color:#38a169;">近义词（同中有异）</h5>
+      <p><strong>CHOOSE</strong> — 选择 <small>强调内心决定，无物理动作</small></p>
+      <p><strong>SELECT</strong> — 筛选 <small>正式，基于标准</small></p>
+      <p><strong>PLUCK</strong> — 拔/摘 <small>拔取（pluck a feather）比 pick 用力更大</small></p>
+      <p><strong>GATHER</strong> — 收集 <small>把多个东西聚拢（不是选一个）</small></p>
+    </div>
+
+    <div class="info-card purple-bg">
+      <h5 style="color:#8e44ad;">易混提醒</h5>
+      <p><strong>PICK vs PECK</strong> <small>[ɪ] vs [e] 发音不同，意思也不同</small></p>
+      <p><strong>PICK vs PICKET</strong> <small>picket = 纠察队 / 木桩</small></p>
+      <p><strong>PICK vs PICKLE</strong> <small>pickle = 泡菜 / 困境（in a pickle）</small></p>
+      <p><strong>PICK vs PICKAXE</strong> <small>pickaxe = 镐头（挖土工具）</small></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ 大场景图 ============ -->
+<div class="section-title"><span class="bar"></span><span>全景场景 — PICK 在日常生活场景中的多角色</span></div>
+<div class="full-width-svg">
+  <svg viewBox="0 0 1720 400" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="wideBg" x1="0" y1="0" x2="1720" y2="400">
+        <stop offset="0%" stop-color="#fefaf5"/>
+        <stop offset="50%" stop-color="#fcf6ec"/>
+        <stop offset="100%" stop-color="#faf2e3"/>
+      </linearGradient>
+      <filter id="shW">
+        <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/>
+      </filter>
+    </defs>
+    <rect width="1720" height="400" fill="url(#wideBg)" rx="8"/>
+
+    <!-- 场景1: 花园采摘 -->
+    <g transform="translate(60,50)">
+      <text x="120" y="20" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">🌻 花园采摘</text>
+      <!-- 花茎 -->
+      <line x1="80" y1="180" x2="80" y2="60" stroke="#38a169" stroke-width="3"/>
+      <line x1="130" y1="180" x2="130" y2="80" stroke="#38a169" stroke-width="3"/>
+      <!-- 花朵 -->
+      <circle cx="80" cy="55" r="12" fill="#e74c3c"/>
+      <circle cx="80" cy="55" r="5" fill="#f1c40f"/>
+      <circle cx="130" cy="75" r="10" fill="#e74c3c"/>
+      <circle cx="130" cy="75" r="4" fill="#f1c40f"/>
+      <!-- 手摘花 -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0;0,-60;0,-60;0,0" keyTimes="0;0.25;0.75;1" dur="4s" repeatCount="indefinite"/>
+        <path d="M100,180 L100,140" stroke="#f5d6b8" stroke-width="8" stroke-linecap="round"/>
+        <ellipse cx="100" cy="140" rx="12" ry="7" fill="#f5d6b8"/>
+        <path d="M92,138 Q88,145 92,152" stroke="#f5d6b8" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M100,136 Q98,145 100,152" stroke="#f5d6b8" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M108,138 Q112,145 108,152" stroke="#f5d6b8" stroke-width="5" fill="none" stroke-linecap="round"/>
+      </g>
+      <text x="120" y="260" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">pick flowers</text>
+    </g>
+
+    <!-- 场景2: 挑选水果 -->
+    <g transform="translate(340,50)">
+      <text x="120" y="20" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">🍎 挑选水果</text>
+      <circle cx="70" cy="160" r="20" fill="#e74c3c" filter="url(#shW)"/>
+      <line x1="70" y1="140" x2="70" y2="130" stroke="#8B4513" stroke-width="2"/>
+      <circle cx="120" cy="170" r="18" fill="#f1c40f" filter="url(#shW)"/>
+      <line x1="120" y1="152" x2="120" y2="145" stroke="#8B4513" stroke-width="2"/>
+      <circle cx="170" cy="165" r="16" fill="#2ecc71" filter="url(#shW)"/>
+      <line x1="170" y1="149" x2="170" y2="142" stroke="#8B4513" stroke-width="2"/>
+      <!-- 被选中的 -->
+      <g filter="url(#shW)">
+        <animate attributeName="opacity" values="0.3;1;1;0.3" keyTimes="0;0.3;0.7;1" dur="3s" repeatCount="indefinite"/>
+        <circle cx="120" cy="170" r="20" fill="none" stroke="#e67e22" stroke-width="2.5"/>
+      </g>
+      <text x="120" y="260" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">pick the best one</text>
+    </g>
+
+    <!-- 场景3: 从地上捡书 -->
+    <g transform="translate(620,50)">
+      <text x="120" y="20" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">📚 捡起书本</text>
+      <line x1="30" y1="200" x2="210" y2="200" stroke="#ccc" stroke-width="1.5"/>
+      <rect x="70" y="170" width="50" height="34" rx="3" fill="#3498db" filter="url(#shW)"/>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0;0,-90;0,-90;0,0" keyTimes="0;0.25;0.75;1" dur="4s" repeatCount="indefinite"/>
+        <rect x="80" y="170" width="45" height="30" rx="3" fill="#e67e22"/>
+      </g>
+      <text x="120" y="260" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">pick up a book</text>
+    </g>
+
+    <!-- 场景4: 弹吉他 -->
+    <g transform="translate(900,50)">
+      <text x="120" y="20" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">🎸 弹吉他</text>
+      <!-- 吉他形状 -->
+      <ellipse cx="120" cy="180" rx="35" ry="50" fill="#d4a055" filter="url(#shW)"/>
+      <rect x="115" y="110" width="10" height="50" rx="3" fill="#8B4513"/>
+      <circle cx="120" cy="110" r="8" fill="#8B4513"/>
+      <!-- 弦 -->
+      <line x1="115" y1="120" x2="115" y2="200" stroke="#ddd" stroke-width="0.8"/>
+      <line x1="120" y1="120" x2="120" y2="200" stroke="#ddd" stroke-width="0.8"/>
+      <line x1="125" y1="120" x2="125" y2="200" stroke="#ddd" stroke-width="0.8"/>
+      <!-- 拨弦的手指 -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 15,-5; 0,0" dur="1s" repeatCount="indefinite"/>
+        <circle cx="135" cy="170" r="5" fill="#f5d6b8"/>
+      </g>
+      <text x="120" y="260" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">pick a guitar</text>
+    </g>
+
+    <!-- 场景5: 撬锁 -->
+    <g transform="translate(1180,50)">
+      <text x="120" y="20" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">🔒 撬锁</text>
+      <rect x="80" y="140" width="60" height="50" rx="6" fill="#888" filter="url(#shW)"/>
+      <circle cx="90" cy="165" r="8" fill="#333"/>
+      <!-- 锁孔 -->
+      <circle cx="90" cy="165" r="4" fill="#111"/>
+      <!-- 撬锁工具 -->
+      <g>
+        <animateTransform attributeName="transform" type="rotate" values="-5,70,165; 5,70,165; -5,70,165" dur="1.5s" repeatCount="indefinite"/>
+        <line x1="40" y1="165" x2="88" y2="165" stroke="#aaa" stroke-width="2"/>
+        <polygon points="88,161 94,165 88,169" fill="#aaa"/>
+      </g>
+      <text x="120" y="260" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">pick a lock</text>
+    </g>
+
+    <!-- 场景6: 接人 -->
+    <g transform="translate(1460,50)">
+      <text x="120" y="20" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">🚗 开车接人</text>
+      <!-- 车 -->
+      <rect x="60" y="160" width="55" height="24" rx="6" fill="#e67e22" filter="url(#shW)"/>
+      <circle cx="70" cy="186" r="6" fill="#333"/>
+      <circle cx="105" cy="186" r="6" fill="#333"/>
+      <!-- 小人 -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; -60,0; -60,0; 0,0" keyTimes="0;0.3;0.7;1" dur="4s" repeatCount="indefinite"/>
+        <circle cx="150" cy="145" r="8" fill="#e63946"/>
+        <line x1="150" y1="153" x2="150" y2="180" stroke="#e63946" stroke-width="3"/>
+        <line x1="150" y1="163" x2="138" y2="170" stroke="#e63946" stroke-width="2"/>
+        <line x1="150" y1="163" x2="162" y2="170" stroke="#e63946" stroke-width="2"/>
+        <line x1="150" y1="180" x2="140" y2="195" stroke="#e63946" stroke-width="2"/>
+        <line x1="150" y1="180" x2="160" y2="195" stroke="#e63946" stroke-width="2"/>
+      </g>
+      <text x="120" y="260" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">pick up kids</text>
+    </g>
+
+    <!-- 底部总标题 -->
+    <text x="860" y="360" text-anchor="middle" fill="#e67e22" font-size="15" font-weight="600" font-family="sans-serif">同一个 PICK，六个场景 — 全部根植于"手/工具精确作用于一点"</text>
+    <text x="860" y="382" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">采摘 | 挑选 | 捡起 | 弹拨 | 撬锁 | 接人</text>
+
+  </svg>
+</div>
+
+<!-- ============ 总结白框 ============ -->
+<div style="background:linear-gradient(135deg,#fef5ec,#fde8d0); border:1px solid #e8d8c0; border-radius:14px; padding:22px 26px; margin-bottom:10px;">
+  <div style="font-size:15px; font-weight:700; color:#e67e22; margin-bottom:10px;">🎯 PICK 核心要点总结</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:13px; color:#444; line-height:1.6;">
+    <div>
+      <strong>核心画面</strong>：手指或工具从一堆物体中<strong style="color:#e67e22;">精确地选取/拿取</strong>一个。
+    </div>
+    <div>
+      <strong>核心规律</strong>：所有用法共享"<strong style="color:#e67e22;">精确作用于一个点</strong>"的意象。
+    </div>
+    <div>
+      <strong>语法特点</strong>：pick + 名词（pick a flower）；pick + up/out/at/on/off（短语动词）。
+    </div>
+    <div>
+      <strong>高频使用</strong>：日常口语中 PICK UP 是最常见的短语动词之一，含义多达10+种。
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

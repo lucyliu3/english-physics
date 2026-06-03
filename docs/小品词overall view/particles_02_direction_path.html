@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方向/路径小品词空间对比：UP / DOWN / TO / FROM / INTO / OUT OF / TOWARD / THROUGH / ACROSS / OVER / UNDER</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#f5f5f0; display:flex; justify-content:center; padding:40px 20px; }
+  .container { max-width:960px; width:100%; background:#fff; border-radius:16px; padding:40px 36px 48px; box-shadow:0 2px 20px rgba(0,0,0,0.06); }
+  h1 { font-size:24px; font-weight:700; text-align:center; margin-bottom:4px; }
+  .subtitle { text-align:center; color:#888; font-size:13px; margin-bottom:28px; }
+
+  .scene-box {
+    background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:18px; margin-bottom:30px;
+  }
+  .scene-box canvas { width:100%; height:auto; aspect-ratio:880/360; display:block; border-radius:8px; background:#fafaf8; }
+
+  .grid-3 {
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:20px;
+  }
+  .grid-2 {
+    display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;
+  }
+  .card {
+    background:#fafaf8; border:1px solid #e8e8e4; border-radius:10px; overflow:hidden;
+  }
+  .card canvas { width:100%; height:auto; aspect-ratio:280/150; display:block; background:#fafaf8; }
+  .card .label { padding:6px 10px 10px; }
+  .card .label .p { font-size:16px; font-weight:700; }
+  .card .label .desc { font-size:11.5px; color:#666; margin-top:1px; line-height:1.5; }
+  .card .label .eg { font-size:11px; color:#999; margin-top:3px; }
+
+  .section-title { font-size:15px; font-weight:600; margin:16px 0 10px; color:#333; }
+
+  @media (max-width:720px) {
+    .container { padding:24px 12px 28px; }
+    .grid-3 { grid-template-columns:1fr; }
+    .grid-2 { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🧭 方向 / 路径：第二类小品词空间对比</h1>
+<p class="subtitle">UP / DOWN / TO / FROM / INTO / OUT OF / TOWARD / THROUGH / ACROSS / OVER / UNDER</p>
+
+<!-- 总图 -->
+<div class="scene-box">
+  <div class="section-title">🎯 总场景：一条路 + 一个盒子 + 一个障碍物</div>
+  <canvas id="sceneAll" width="880" height="360"></canvas>
+</div>
+
+<!-- 上下 -->
+<div class="section-title">⬆️⬇️ 上下方向</div>
+<div class="grid-2">
+  <div class="card">
+    <canvas id="cUp" width="280" height="150"></canvas>
+    <div class="label">
+      <div class="p" style="color:#2b6cb0;">UP</div>
+      <div class="desc"><strong>从低到高</strong>。向上移动。抽象：增加、改善、出现。</div>
+      <div class="eg">Get up / Show up / Give up / Grow up / Up to you</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cDown" width="280" height="150"></canvas>
+    <div class="label">
+      <div class="p" style="color:#2b6cb0;">DOWN</div>
+      <div class="desc"><strong>从高到低</strong>。向下移动。抽象：减少、变差、崩溃。</div>
+      <div class="eg">Sit down / Break down / Calm down / Write down</div>
+    </div>
+  </div>
+</div>
+
+<!-- 到达/来源 -->
+<div class="section-title">🎯 到达 / 来源</div>
+<div class="grid-2">
+  <div class="card">
+    <canvas id="cTo" width="280" height="150"></canvas>
+    <div class="label">
+      <div class="p" style="color:#2b6cb0;">TO</div>
+      <div class="desc"><strong>朝向 / 到达</strong>。指向目的地，强调"到达"。</div>
+      <div class="eg">Come to / Go to / Lead to / Stick to / to be honest</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cFrom" width="280" height="150"></canvas>
+    <div class="label">
+      <div class="p" style="color:#2b6cb0;">FROM</div>
+      <div class="desc"><strong>从某处来 / 来源</strong>。运动的起点。</div>
+      <div class="eg">Come from / Suffer from / Tell from / from now on</div>
+    </div>
+  </div>
+</div>
+
+<!-- 进入/出来 -->
+<div class="section-title">🚪 进入 / 出来</div>
+<div class="grid-2">
+  <div class="card">
+    <canvas id="cInto" width="280" height="150"></canvas>
+    <div class="label">
+      <div class="p" style="color:#2b6cb0;">INTO</div>
+      <div class="desc"><strong>从外到内</strong>。强调进入的<em>过程</em>（IN只强调在里面）。</div>
+      <div class="eg">Get into / Run into / Look into / into details</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cOutOf" width="280" height="150"></canvas>
+    <div class="label">
+      <div class="p" style="color:#2b6cb0;">OUT OF</div>
+      <div class="desc"><strong>从内到外</strong>。出来的过程。抽象：缺乏/离开状态。</div>
+      <div class="eg">Get out of / out of stock / out of breath</div>
+    </div>
+  </div>
+</div>
+
+<!-- 朝向 vs 穿过 vs 横穿 -->
+<div class="section-title">🚶 方向：朝向 / 穿过 / 横穿 / 越过 / 下方</div>
+<div class="grid-3">
+  <div class="card">
+    <canvas id="cToward" width="280" height="150"></canvas>
+    <div class="label">
+      <div class="p" style="color:#2b6cb0;">TOWARD(S)</div>
+      <div class="desc"><strong>朝向（不一定到达）</strong>。往那个方向走。</div>
+      <div class="eg">Go toward / attitude toward / work toward a goal</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cThrough" width="280" height="150"></canvas>
+    <div class="label">
+      <div class="p" style="color:#2b6cb0;">THROUGH</div>
+      <div class="desc"><strong>从一端穿到另一端</strong>。贯穿过程。</div>
+      <div class="eg">Go through / Get through / Break through</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cAcross" width="280" height="150"></canvas>
+    <div class="label">
+      <div class="p" style="color:#2b6cb0;">ACROSS</div>
+      <div class="desc"><strong>横穿一个平面</strong>。从平面一边到另一边。</div>
+      <div class="eg">Come across / Get across / across the street</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <canvas id="cOver" width="280" height="150"></canvas>
+    <div class="label">
+      <div class="p" style="color:#2b6cb0;">OVER</div>
+      <div class="desc"><strong>从上方越过 / 覆盖</strong>。跨越障碍或覆盖表面。</div>
+      <div class="eg">Come over / Get over / Take over / Think over / over there</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cUnder" width="280" height="150"></canvas>
+    <div class="label">
+      <div class="p" style="color:#2b6cb0;">UNDER</div>
+      <div class="desc"><strong>在……下面 / 低于</strong>。正下方。抽象：受控、进行中。</div>
+      <div class="eg">under the table / under control / under construction</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+(function() {
+function df(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ========== 总场景 ==========
+const s = document.getElementById('sceneAll');
+const ctx = s.getContext('2d');
+df(ctx,880,360);
+
+// 路
+ctx.fillStyle = '#ddd';
+ctx.fillRect(50,160,780,16);
+ctx.fillStyle = '#bbb'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+ctx.fillText('← 一条路 →',440,195);
+
+// 山/障碍物
+ctx.fillStyle = '#8b8';
+ctx.beginPath(); ctx.moveTo(380,160); ctx.lineTo(440,60); ctx.lineTo(500,160); ctx.closePath(); ctx.fill();
+ctx.fillStyle = '#666'; ctx.font = '10px sans-serif';
+ctx.fillText('⛰️ 山',440,90);
+
+// 盒子
+ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
+ctx.strokeRect(540,100,60,60);
+ctx.fillStyle = '#f5f0e8';
+ctx.fillRect(540,100,60,60);
+ctx.fillStyle = '#666'; ctx.font = '10px sans-serif';
+ctx.fillText('盒子',570,135);
+
+// 隧道
+ctx.strokeStyle = '#999'; ctx.lineWidth = 2;
+ctx.beginPath(); ctx.moveTo(320,160); ctx.lineTo(320,176); ctx.stroke();
+ctx.beginPath(); ctx.moveTo(340,160); ctx.lineTo(340,176); ctx.stroke();
+ctx.fillStyle = '#999'; ctx.font = '9px sans-serif';
+ctx.fillText('隧道',330,185);
+
+// 标注
+ctx.fillStyle = '#888'; ctx.font = '11px sans-serif';
+ctx.fillText('TOWARD → 朝山走（不一定到）',150,90);
+ctx.fillText('THROUGH → 穿过隧道',200,230);
+ctx.fillText('ACROSS → 横穿马路',150,140);
+ctx.fillText('OVER → 越过山',400,50);
+ctx.fillText('UNDER → 在山下面',400,240);
+ctx.fillText('TO → 到达盒子',620,185);
+ctx.fillText('FROM → 从某处来',80,75);
+ctx.fillText('INTO → 进入盒子',540,90);
+ctx.fillText('OUT OF → 从盒子出来',620,220);
+
+// ========== 各卡片 ==========
+// UP
+const c1 = document.getElementById('cUp');
+const ctx1 = c1.getContext('2d');
+df(ctx1,280,150);
+ctx1.strokeStyle = '#2b6cb0'; ctx1.lineWidth = 3;
+ctx1.beginPath(); ctx1.moveTo(140,130); ctx1.lineTo(140,20); ctx1.stroke();
+ctx1.fillStyle = '#2b6cb0';
+ctx1.beginPath(); ctx1.moveTo(136,28); ctx1.lineTo(140,14); ctx1.lineTo(144,28); ctx1.closePath(); ctx1.fill();
+ctx1.fillStyle = '#2b6cb0'; ctx1.font = 'bold 18px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('↑ UP ↑',140,75);
+ctx1.fillStyle = '#888'; ctx1.font = '10px sans-serif';
+ctx1.fillText('从低到高',140,105);
+
+// DOWN
+const c2 = document.getElementById('cDown');
+const ctx2 = c2.getContext('2d');
+df(ctx2,280,150);
+ctx2.strokeStyle = '#2b6cb0'; ctx2.lineWidth = 3;
+ctx2.beginPath(); ctx2.moveTo(140,20); ctx2.lineTo(140,130); ctx2.stroke();
+ctx2.fillStyle = '#2b6cb0';
+ctx2.beginPath(); ctx2.moveTo(136,122); ctx2.lineTo(140,136); ctx2.lineTo(144,122); ctx2.closePath(); ctx2.fill();
+ctx2.fillStyle = '#2b6cb0'; ctx2.font = 'bold 18px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('↓ DOWN ↓',140,75);
+ctx2.fillStyle = '#888'; ctx2.font = '10px sans-serif';
+ctx2.fillText('从高到低',140,105);
+
+// TO
+const c3 = document.getElementById('cTo');
+const ctx3 = c3.getContext('2d');
+df(ctx3,280,150);
+// 人
+ctx3.fillStyle = '#2b6cb0';
+ctx3.beginPath(); ctx3.arc(50,75,10,0,Math.PI*2); ctx3.fill();
+ctx3.fillRect(47,85,6,18);
+// 箭头到目标
+ctx3.strokeStyle = '#2b6cb0'; ctx3.lineWidth = 2.5;
+ctx3.beginPath(); ctx3.moveTo(65,78); ctx3.lineTo(180,78); ctx3.stroke();
+ctx3.fillStyle = '#2b6cb0';
+ctx3.beginPath(); ctx3.moveTo(176,74); ctx3.lineTo(188,78); ctx3.lineTo(176,82); ctx3.closePath(); ctx3.fill();
+// 目标
+ctx3.strokeStyle = '#333'; ctx3.lineWidth = 2;
+ctx3.strokeRect(200,55,40,40);
+ctx3.fillStyle = '#888'; ctx3.font = '10px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('目标',220,80);
+ctx3.fillStyle = '#2b6cb0'; ctx3.font = 'bold 16px sans-serif';
+ctx3.fillText('→ TO →',110,50);
+ctx3.fillStyle = '#888'; ctx3.font = '10px sans-serif';
+ctx3.fillText('强调到达',140,120);
+
+// FROM
+const c4 = document.getElementById('cFrom');
+const ctx4 = c4.getContext('2d');
+df(ctx4,280,150);
+// 起点
+ctx4.fillStyle = '#999';
+ctx4.strokeRect(40,55,40,40);
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('起点',60,80);
+// 箭头
+ctx4.strokeStyle = '#2b6cb0'; ctx4.lineWidth = 2.5;
+ctx4.beginPath(); ctx4.moveTo(85,78); ctx4.lineTo(200,78); ctx4.stroke();
+ctx4.fillStyle = '#2b6cb0';
+ctx4.beginPath(); ctx4.moveTo(196,74); ctx4.lineTo(208,78); ctx4.lineTo(196,82); ctx4.closePath(); ctx4.fill();
+// 人
+ctx4.fillStyle = '#2b6cb0';
+ctx4.beginPath(); ctx4.arc(240,75,10,0,Math.PI*2); ctx4.fill();
+ctx4.fillRect(237,85,6,18);
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif';
+ctx4.fillText('人',240,68);
+ctx4.fillStyle = '#2b6cb0'; ctx4.font = 'bold 16px sans-serif';
+ctx4.fillText('FROM →',140,50);
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif';
+ctx4.fillText('强调来源',140,120);
+
+// INTO
+const c5 = document.getElementById('cInto');
+const ctx5 = c5.getContext('2d');
+df(ctx5,280,150);
+// 人从外面进入盒子
+ctx5.fillStyle = '#2b6cb0';
+ctx5.beginPath(); ctx5.arc(50,75,10,0,Math.PI*2); ctx5.fill();
+ctx5.fillRect(47,85,6,18);
+// 箭头
+ctx5.strokeStyle = '#2b6cb0'; ctx5.lineWidth = 2.5;
+ctx5.beginPath(); ctx5.moveTo(65,78); ctx5.lineTo(145,78); ctx5.stroke();
+ctx5.fillStyle = '#2b6cb0';
+ctx5.beginPath(); ctx5.moveTo(141,74); ctx5.lineTo(153,78); ctx5.lineTo(141,82); ctx5.closePath(); ctx5.fill();
+// 盒子
+ctx5.strokeStyle = '#333'; ctx5.lineWidth = 2;
+ctx5.strokeRect(155,50,50,55);
+ctx5.fillStyle = '#f5f0e8';
+ctx5.fillRect(155,50,50,55);
+ctx5.fillStyle = '#2b6cb0'; ctx5.font = 'bold 14px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('→ INTO →',105,45);
+ctx5.fillStyle = '#888'; ctx5.font = '10px sans-serif';
+ctx5.fillText('进入的过程',140,130);
+
+// OUT OF
+const c6 = document.getElementById('cOutOf');
+const ctx6 = c6.getContext('2d');
+df(ctx6,280,150);
+// 盒子
+ctx6.strokeStyle = '#333'; ctx6.lineWidth = 2;
+ctx6.strokeRect(70,50,50,55);
+ctx6.fillStyle = '#f5f0e8';
+ctx6.fillRect(70,50,50,55);
+// 人从里面出来
+ctx6.fillStyle = '#2b6cb0';
+ctx6.beginPath(); ctx6.arc(200,75,10,0,Math.PI*2); ctx6.fill();
+ctx6.fillRect(197,85,6,18);
+ctx6.fillStyle = '#2b6cb0';
+ctx6.fillText('人',200,68);
+// 箭头
+ctx6.strokeStyle = '#2b6cb0'; ctx6.lineWidth = 2.5;
+ctx6.beginPath(); ctx6.moveTo(125,78); ctx6.lineTo(185,78); ctx6.stroke();
+ctx6.fillStyle = '#2b6cb0';
+ctx6.beginPath(); ctx6.moveTo(181,74); ctx6.lineTo(193,78); ctx6.lineTo(181,82); ctx6.closePath(); ctx6.fill();
+ctx6.fillStyle = '#2b6cb0'; ctx6.font = 'bold 14px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('OUT OF →',140,45);
+ctx6.fillStyle = '#888'; ctx6.font = '10px sans-serif';
+ctx6.fillText('出来的过程',140,130);
+
+// TOWARD
+const c7 = document.getElementById('cToward');
+const ctx7 = c7.getContext('2d');
+df(ctx7,280,150);
+ctx7.fillStyle = '#2b6cb0';
+ctx7.beginPath(); ctx7.arc(40,75,10,0,Math.PI*2); ctx7.fill();
+ctx7.fillRect(37,85,6,18);
+// 箭头（虚线，表示不一定到达）
+ctx7.strokeStyle = '#2b6cb0'; ctx7.lineWidth = 2; ctx7.setLineDash([5,4]);
+ctx7.beginPath(); ctx7.moveTo(55,78); ctx7.lineTo(200,78); ctx7.stroke();
+ctx7.setLineDash([]);
+ctx7.fillStyle = '#2b6cb0';
+ctx7.beginPath(); ctx7.moveTo(196,74); ctx7.lineTo(208,78); ctx7.lineTo(196,82); ctx7.closePath(); ctx7.fill();
+ctx7.fillStyle = '#888'; ctx7.font = '10px sans-serif'; ctx7.textAlign = 'center';
+ctx7.fillText('⛰️ 山',230,75);
+ctx7.fillStyle = '#2b6cb0'; ctx7.font = 'bold 15px sans-serif';
+ctx7.fillText('→ TOWARD →',120,50);
+ctx7.fillStyle = '#888'; ctx7.font = '10px sans-serif';
+ctx7.fillText('朝那个方向（不一定到）',130,130);
+
+// THROUGH
+const c8 = document.getElementById('cThrough');
+const ctx8 = c8.getContext('2d');
+df(ctx8,280,150);
+// 隧道
+ctx8.fillStyle = '#ddd';
+ctx8.fillRect(80,40,100,70);
+ctx8.fillStyle = '#aaa'; ctx8.font = '10px sans-serif'; ctx8.textAlign = 'center';
+ctx8.fillText('隧道',130,80);
+// 入口出口
+ctx8.fillStyle = '#888'; ctx8.font = '9px sans-serif';
+ctx8.fillText('入口',80,38);
+ctx8.fillText('出口',180,38);
+// 箭头贯穿
+ctx8.strokeStyle = '#2b6cb0'; ctx8.lineWidth = 3;
+ctx8.beginPath(); ctx8.moveTo(20,75); ctx8.lineTo(250,75); ctx8.stroke();
+ctx8.fillStyle = '#2b6cb0';
+ctx8.beginPath(); ctx8.moveTo(246,71); ctx8.lineTo(258,75); ctx8.lineTo(246,79); ctx8.closePath(); ctx8.fill();
+ctx8.fillStyle = '#2b6cb0'; ctx8.font = 'bold 15px sans-serif';
+ctx8.fillText('→ THROUGH →',130,50);
+ctx8.fillStyle = '#888'; ctx8.font = '10px sans-serif';
+ctx8.fillText('从一端穿到另一端',130,130);
+
+// ACROSS
+const c9 = document.getElementById('cAcross');
+const ctx9 = c9.getContext('2d');
+df(ctx9,280,150);
+// 路
+ctx9.fillStyle = '#ddd';
+ctx9.fillRect(30,70,220,12);
+ctx9.fillStyle = '#aaa'; ctx9.font = '10px sans-serif'; ctx9.textAlign = 'center';
+ctx9.fillText('一条路',140,82);
+// 箭头横穿
+ctx9.strokeStyle = '#2b6cb0'; ctx9.lineWidth = 3;
+ctx9.beginPath(); ctx9.moveTo(30,58); ctx9.lineTo(250,58); ctx9.stroke();
+ctx9.fillStyle = '#2b6cb0';
+ctx9.beginPath(); ctx9.moveTo(246,54); ctx9.lineTo(258,58); ctx9.lineTo(246,62); ctx9.closePath(); ctx9.fill();
+ctx9.fillStyle = '#2b6cb0'; ctx9.font = 'bold 15px sans-serif';
+ctx9.fillText('→ ACROSS →',130,50);
+ctx9.fillStyle = '#888'; ctx9.font = '10px sans-serif';
+ctx9.fillText('横穿平面（不穿进去）',130,120);
+
+// OVER
+const c10 = document.getElementById('cOver');
+const ctx10 = c10.getContext('2d');
+df(ctx10,280,150);
+// 障碍物
+ctx10.fillStyle = '#8b8';
+ctx10.beginPath(); ctx10.moveTo(100,120); ctx10.lineTo(140,30); ctx10.lineTo(180,120); ctx10.closePath(); ctx10.fill();
+ctx10.fillStyle = '#888'; ctx10.font = '9px sans-serif'; ctx10.textAlign = 'center';
+ctx10.fillText('障碍',140,85);
+// 弧线越过
+ctx10.strokeStyle = '#2b6cb0'; ctx10.lineWidth = 2.5;
+ctx10.beginPath(); ctx10.moveTo(30,90); ctx10.quadraticCurveTo(100,10,240,90); ctx10.stroke();
+ctx10.fillStyle = '#2b6cb0'; ctx10.font = 'bold 15px sans-serif'; ctx10.textAlign = 'center';
+ctx10.fillText('↗ OVER ↖',130,20);
+ctx10.fillStyle = '#888'; ctx10.font = '10px sans-serif';
+ctx10.fillText('从上方越过',130,125);
+
+// UNDER
+const c11 = document.getElementById('cUnder');
+const ctx11 = c11.getContext('2d');
+df(ctx11,280,150);
+// 桥/横梁
+ctx11.fillStyle = '#999';
+ctx11.fillRect(60,30,160,18);
+// 人在下面
+ctx11.fillStyle = '#2b6cb0';
+ctx11.beginPath(); ctx11.arc(140,90,12,0,Math.PI*2); ctx11.fill();
+ctx11.fillRect(137,102,6,20);
+ctx11.fillStyle = '#2b6cb0'; ctx11.font = '10px sans-serif'; ctx11.textAlign = 'center';
+ctx11.fillText('人',140,85);
+ctx11.fillStyle = '#888'; ctx11.font = '9px sans-serif';
+ctx11.fillText('（桥/横梁）',140,25);
+ctx11.fillStyle = '#2b6cb0'; ctx11.font = 'bold 15px sans-serif';
+ctx11.fillText('UNDER',140,65);
+ctx11.fillStyle = '#888'; ctx11.font = '10px sans-serif';
+ctx11.fillText('在……正下方',140,140);
+
+})();
+</script>
+</body>
+</html>

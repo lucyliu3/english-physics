@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HUNT 图解 — 打猎 / 搜索 / 追捕</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#e67e22,#d35400); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#e67e22,#f39c12); border-radius:2px; flex-shrink:0; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#e67e22; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#e67e22; }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#e67e22; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+
+  .spectrum-wrap { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+
+  .hunt-bg { background:linear-gradient(135deg,#fff8f2,#fef0e0); }
+  .search-bg { background:linear-gradient(135deg,#f0f5ff,#e0e8f5); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+  .red-bg { background:linear-gradient(135deg,#fff0f0,#fde0e0); }
+  .green-bg { background:linear-gradient(135deg,#f0faf5,#e0f5e8); }
+
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>HUNT</h1>
+<p class="subtitle">打猎 / 搜索 / 追捕 — 从 "hunt deer" 到 "job hunt"</p>
+
+<!-- ============ 核心意象对比 ============ -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+
+  <!-- Card 1: HUNT 本义 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="huntBg1" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#fdf6ee"/>
+          <stop offset="100%" stop-color="#faf0e0"/>
+        </linearGradient>
+        <filter id="shadow1">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.15"/>
+        </filter>
+        <filter id="glow1">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#huntBg1)" rx="8"/>
+
+      <!-- 地面 -->
+      <rect x="0" y="310" width="760" height="90" fill="#c8b89a" rx="0"/>
+      <rect x="0" y="310" width="760" height="6" fill="#b8a88a"/>
+      <!-- 草丛装饰 -->
+      <path d="M60,310 Q65,280 70,310 M120,310 Q128,275 136,310 M200,310 Q205,285 210,310 M680,310 Q688,278 696,310 M720,310 Q725,290 730,310" fill="none" stroke="#7a9e5a" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- 树木 -->
+      <rect x="28" y="175" width="18" height="135" fill="#8B5E3C" rx="3"/>
+      <ellipse cx="37" cy="155" rx="45" ry="55" fill="#3d7a3d" opacity="0.8"/>
+      <ellipse cx="50" cy="140" rx="35" ry="40" fill="#4a8a4a" opacity="0.6"/>
+
+      <rect x="698" y="200" width="16" height="110" fill="#8B5E3C" rx="3"/>
+      <ellipse cx="706" cy="178" rx="40" ry="48" fill="#3d7a3d" opacity="0.8"/>
+
+      <!-- 右侧小树 -->
+      <rect x="620" y="240" width="12" height="70" fill="#8B5E3C" rx="3"/>
+      <ellipse cx="626" cy="225" rx="30" ry="35" fill="#4a8a4a" opacity="0.5"/>
+
+      <!-- 猎人 (左侧，持弓箭) -->
+      <g filter="url(#shadow1)">
+        <!-- 身体 -->
+        <circle cx="140" cy="190" r="22" fill="#f5e6d0"/>
+        <!-- 头 -->
+        <circle cx="140" cy="162" r="18" fill="#f5e6d0"/>
+        <!-- 头发 -->
+        <path d="M122,158 Q130,140 158,140 Q165,145 158,155" fill="#5a3a1a"/>
+        <!-- 眼 -->
+        <circle cx="133" cy="160" r="2.5" fill="#333"/>
+        <circle cx="147" cy="160" r="2.5" fill="#333"/>
+        <!-- 嘴 -->
+        <path d="M134,168 Q140,172 146,168" fill="none" stroke="#333" stroke-width="1.5"/>
+        <!-- 身体 -->
+        <rect x="128" y="180" width="24" height="40" rx="6" fill="#8B4513"/>
+        <!-- 腿 -->
+        <rect x="130" y="218" width="9" height="50" rx="4" fill="#5a3a1a"/>
+        <rect x="142" y="218" width="9" height="50" rx="4" fill="#5a3a1a"/>
+        <!-- 左臂（握弓） -->
+        <line x1="128" y1="192" x2="100" y2="180" stroke="#f5e6d0" stroke-width="6" stroke-linecap="round"/>
+        <!-- 右臂（拉弦） -->
+        <line x1="152" y1="190" x2="175" y2="170" stroke="#f5e6d0" stroke-width="6" stroke-linecap="round"/>
+        <!-- 弓 -->
+        <path d="M95,165 Q85,190 95,215" fill="none" stroke="#5a3a1a" stroke-width="3" stroke-linecap="round">
+          <animate attributeName="d"
+            values="M95,165 Q85,190 95,215; M95,165 Q85,190 95,215; M98,168 Q110,190 98,212; M95,165 Q85,190 95,215"
+            dur="4s" repeatCount="indefinite"/>
+        </path>
+        <!-- 箭弦 -->
+        <line x1="95" y1="168" x2="175" y2="170" stroke="#c8a060" stroke-width="1.5">
+          <animate attributeName="stroke" values="#c8a060;#c8a060;#e67e22;#c8a060" dur="4s" repeatCount="indefinite"/>
+        </line>
+        <!-- 箭 -->
+        <line x1="175" y1="170" x2="175" y2="170" stroke="#5a3a1a" stroke-width="2.5" stroke-linecap="round">
+          <animate attributeName="x2" values="175;175;350;175" dur="4s" repeatCount="indefinite"/>
+        </line>
+        <polygon points="175,170 175,170 175,170" fill="#e63946">
+          <animate attributeName="points"
+            values="175,170 175,170 175,170; 175,170 175,170 175,170; 350,166 360,170 350,174; 175,170 175,170 175,170"
+            dur="4s" repeatCount="indefinite"/>
+        </polygon>
+      </g>
+
+      <!-- 鹿（右侧，被瞄准） -->
+      <g filter="url(#shadow1)">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 0,0; 0,-15; 0,0"
+          dur="4s" repeatCount="indefinite"/>
+        <!-- 身体 -->
+        <ellipse cx="520" cy="235" rx="40" ry="25" fill="#c89a5a"/>
+        <!-- 腿 -->
+        <rect x="490" y="255" width="7" height="55" rx="3" fill="#b8894a"/>
+        <rect x="500" y="255" width="7" height="55" rx="3" fill="#b8894a"/>
+        <rect x="535" y="255" width="7" height="55" rx="3" fill="#b8894a"/>
+        <rect x="545" y="255" width="7" height="55" rx="3" fill="#b8894a"/>
+        <!-- 颈 -->
+        <path d="M545,225 Q560,200 555,175 L535,175 Q540,200 530,220Z" fill="#c89a5a"/>
+        <!-- 头 -->
+        <ellipse cx="550" cy="168" rx="18" ry="14" fill="#c89a5a"/>
+        <!-- 耳 -->
+        <ellipse cx="542" cy="153" rx="5" ry="8" fill="#c89a5a" transform="rotate(-20,542,153)"/>
+        <ellipse cx="558" cy="153" rx="5" ry="8" fill="#c89a5a" transform="rotate(20,558,153)"/>
+        <!-- 眼 -->
+        <circle cx="555" cy="165" r="2.5" fill="#333"/>
+        <!-- 角 -->
+        <path d="M545,155 L535,130 L530,120 M535,130 L545,120" fill="none" stroke="#8B5E3C" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M555,155 L565,130 L570,120 M565,130 L555,120" fill="none" stroke="#8B5E3C" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- 尾 -->
+        <ellipse cx="480" cy="228" rx="8" ry="6" fill="#f0d8b0"/>
+      </g>
+
+      <!-- 搜索感叹号 -->
+      <g>
+        <animate attributeName="opacity" values="0;0;1;0" dur="4s" repeatCount="indefinite"/>
+        <text x="340" y="150" text-anchor="middle" fill="#e63946" font-size="28" font-weight="bold" font-family="sans-serif">!</text>
+      </g>
+
+      <!-- 脚印轨迹：猎人背后延伸的搜索痕迹 -->
+      <g opacity="0.5">
+        <circle cx="80" cy="305" r="5" fill="#999"/>
+        <circle cx="70" cy="290" r="4" fill="#999"/>
+        <circle cx="85" cy="278" r="4" fill="#999"/>
+        <circle cx="75" cy="262" r="4" fill="#999"/>
+        <path d="M75,262 L90,248" stroke="#999" stroke-width="1.5" stroke-dasharray="3,3"/>
+        <text x="55" y="240" fill="#888" font-size="11" font-family="sans-serif">搜索痕迹</text>
+      </g>
+
+      <!-- 底部标签 -->
+      <text x="140" y="360" text-anchor="middle" fill="#444" font-size="14" font-weight="600" font-family="sans-serif">猎人 / 猎犬</text>
+      <text x="520" y="360" text-anchor="middle" fill="#444" font-size="14" font-weight="600" font-family="sans-serif">猎物</text>
+
+      <!-- 标题 -->
+      <text x="380" y="36" text-anchor="middle" fill="#e67e22" font-size="18" font-weight="bold" font-family="sans-serif">HUNT = 搜索 + 追捕 + 捕获</text>
+
+      <!-- 箭头路径 -->
+      <path d="M160,260 Q300,240 470,260" fill="none" stroke="#e67e22" stroke-width="2" stroke-dasharray="6,4" stroke-linecap="round"/>
+      <polygon points="470,256 480,260 470,264" fill="#e67e22"/>
+    </svg>
+    <div class="card-body">
+      <h3>HUNT <span class="hl">/hʌnt/</span></h3>
+      <div class="pos">verb · noun · 打猎 / 搜索 / 追捕</div>
+      <div class="def">
+        <strong>本义</strong> 追捕猎物（hunt animals for food or sport）<br>
+        <strong>核心动作链</strong> 搜索目标 → 追踪行迹 → 追捕 → 捕获<br>
+        <strong>引申</strong> 任何需要"搜索+追踪+试图找到"的行为
+        <span class="eg">"Lions hunt in packs." 狮子成群猎食。</span>
+      </div>
+      <div class="white-box"><strong>💡 理解关键</strong>：HUNT 的核心不是"杀"，而是"<strong>搜索+追踪+试图找到</strong>"的全过程。从林间打猎到职场求职（job hunt），底层逻辑都是"不放弃地找，直到找到"。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: SEARCH 对比 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="huntBg2" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#f0f5ff"/>
+          <stop offset="100%" stop-color="#e8f0fa"/>
+        </linearGradient>
+        <filter id="shadow2">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#huntBg2)" rx="8"/>
+
+      <!-- 搜索场景：侦探拿着放大镜找东西 -->
+      <!-- 地面 -->
+      <rect x="0" y="330" width="760" height="70" fill="#d8d0c0" rx="0"/>
+
+      <!-- 书架 / 背景 -->
+      <rect x="30" y="80" width="200" height="250" rx="4" fill="#8B6B4A"/>
+      <rect x="40" y="90" width="180" height="40" rx="2" fill="#7a5a3a"/>
+      <rect x="40" y="138" width="180" height="40" rx="2" fill="#7a5a3a"/>
+      <rect x="40" y="186" width="180" height="40" rx="2" fill="#7a5a3a"/>
+      <rect x="40" y="234" width="180" height="40" rx="2" fill="#7a5a3a"/>
+      <!-- 书 -->
+      <rect x="48" y="95" width="14" height="30" rx="2" fill="#c0392b"/>
+      <rect x="65" y="98" width="10" height="28" rx="2" fill="#2980b9"/>
+      <rect x="80" y="93" width="12" height="32" rx="2" fill="#27ae60"/>
+      <rect x="98" y="96" width="15" height="30" rx="2" fill="#8e44ad"/>
+      <rect x="50" y="143" width="12" height="30" rx="2" fill="#d35400"/>
+      <rect x="68" y="145" width="14" height="28" rx="2" fill="#16a085"/>
+      <rect x="90" y="141" width="10" height="32" rx="2" fill="#e74c3c"/>
+
+      <!-- 侦探人物 -->
+      <g filter="url(#shadow2)">
+        <circle cx="420" cy="210" r="22" fill="#f5e6d0"/>
+        <circle cx="420" cy="180" r="20" fill="#f5e6d0"/>
+        <!-- 帽子 -->
+        <path d="M398,175 Q410,155 440,155 Q450,160 442,175" fill="#4a4a4a"/>
+        <rect x="396" y="172" width="48" height="6" rx="3" fill="#4a4a4a"/>
+        <!-- 眼 -->
+        <circle cx="413" cy="180" r="2.5" fill="#333"/>
+        <circle cx="427" cy="180" r="2.5" fill="#333"/>
+        <!-- 嘴 -->
+        <path d="M414,188 Q420,192 426,188" fill="none" stroke="#333" stroke-width="1.5"/>
+        <!-- 身体 -->
+        <rect x="408" y="198" width="24" height="45" rx="6" fill="#6a4a3a"/>
+        <!-- 腿 -->
+        <rect x="410" y="241" width="9" height="48" rx="4" fill="#4a3a2a"/>
+        <rect x="422" y="241" width="9" height="48" rx="4" fill="#4a3a2a"/>
+        <!-- 左臂 -->
+        <line x1="408" y1="210" x2="380" y2="230" stroke="#f5e6d0" stroke-width="6" stroke-linecap="round"/>
+        <!-- 右手拿放大镜 -->
+        <line x1="432" y1="208" x2="460" y2="220" stroke="#f5e6d0" stroke-width="6" stroke-linecap="round"/>
+        <!-- 放大镜（在右侧地面附近晃动） -->
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="0,0; 10,-5; 0,0; -10,5; 0,0"
+            dur="3s" repeatCount="indefinite"/>
+          <circle cx="490" cy="280" r="28" fill="none" stroke="#888" stroke-width="3"/>
+          <line x1="512" y1="302" x2="530" y2="320" stroke="#888" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="490" cy="280" r="24" fill="#d4e6f1" opacity="0.3"/>
+        </g>
+      </g>
+
+      <!-- 问号 -->
+      <g>
+        <animate attributeName="opacity" values="1;0.3;1;0.3;1" dur="3s" repeatCount="indefinite"/>
+        <text x="480" y="240" text-anchor="middle" fill="#2980b9" font-size="36" font-weight="bold" font-family="sans-serif">?</text>
+      </g>
+
+      <!-- 搜索的光束 -->
+      <path d="M460,260 L630,380 L470,380 Z" fill="url(#huntBg2)" opacity="0.3">
+        <animate attributeName="opacity" values="0.3;0.1;0.3" dur="2s" repeatCount="indefinite"/>
+      </path>
+
+      <!-- 地面上的放大区域（线索） -->
+      <rect x="560" y="340" width="30" height="20" rx="3" fill="#e67e22" opacity="0.5">
+        <animate attributeName="opacity" values="0.5;0.8;0.5" dur="1.5s" repeatCount="indefinite"/>
+      </rect>
+
+      <text x="560" y="380" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">线索</text>
+
+      <!-- 标题 -->
+      <text x="380" y="36" text-anchor="middle" fill="#2980b9" font-size="18" font-weight="bold" font-family="sans-serif">SEARCH = 仔细查看已知区域</text>
+
+      <!-- 搜索区域框 -->
+      <rect x="350" y="290" width="240" height="25" rx="4" fill="none" stroke="#2980b9" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="470" y="308" text-anchor="middle" fill="#2980b9" font-size="12" font-family="sans-serif">在一个区域内仔细查看</text>
+
+      <div style="position:relative; top:380px;">
+      </div>
+    </svg>
+    <div class="card-body">
+      <h3>SEARCH <span class="hl">/sɜːrtʃ/</span></h3>
+      <div class="pos">verb · noun · 搜索 / 搜寻</div>
+      <div class="def">
+        <strong>本义</strong> 在一个区域内仔细检查（look carefully in an area）<br>
+        <strong>vs HUNT</strong> SEARCH 侧重"翻找查看"，HUNT 侧重"跟踪追捕"<br>
+        <span class="eg">"I searched my bag for the keys." 我翻包找钥匙。</span>
+      </div>
+      <div class="white-box"><strong>🧠 如何演变的</strong>：HUNT 的核心区别在于——HUNT 的对象通常是<strong>移动的/隐藏的/有生命</strong>的目标，需要"追踪"行为；而 SEARCH 的对象可以是<strong>静止的/无生命的</strong>东西（翻包、搜索资料）。HUNT 有"不找到不罢休"的执着感。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 逻辑演化树 ============ -->
+<div class="section-title"><span class="bar"></span><span>逻辑演化树</span></div>
+<div style="background:#fffdf7; border:1px solid #e8e0d0; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div class="tree-title" style="font-size:16px; font-weight:700; margin-bottom:16px;">从 "林间追猎物" 到 "抽象搜索" 的演化路径</div>
+  <div class="tree-grid" style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+
+    <!-- 节点 1 -->
+    <div class="tree-node" style="background:#fafaf8; border:2px solid #e67e22; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ① 物理义：打猎<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">追赶并猎杀动物</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+
+    <!-- 节点 2 -->
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ② 搜索 / 寻找<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">hunt for keys 找钥匙</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+
+    <!-- 节点 3 -->
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ③ 追捕/缉捕<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">police hunt 警察搜捕</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+
+    <!-- 节点 4 -->
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ④ 求职/寻觅<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">job hunt 找工作</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+
+    <!-- 节点 5 -->
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ⑤ 驱逐/赶走<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">hunt away 赶走</span>
+    </div>
+
+  </div>
+
+  <!-- 小白框解释 -->
+  <div class="white-box" style="margin-top:18px;">
+    <strong>演化逻辑</strong>：原始人类打猎，需要<strong>① 在荒野中发现猎物踪迹 → ② 沿着足迹/气味追踪 → ③ 追赶到猎物 → ④ 围捕/击杀</strong>。这个"发现→追踪→追捕→抓住"的流程，抽象后成为任何需要<strong>主动搜索+持续追踪+最终获得</strong>的行为。
+    比如 <strong>"job hunt"</strong> = 在海量招聘信息中"发现"机会，持续"追踪"申请进度，最终"抓住"offer。
+  </div>
+</div>
+
+<!-- ============ 易混对比区 ============ -->
+<div class="section-title"><span class="bar"></span><span>易混对比：HUNT vs SEARCH vs PURSUE vs TRACK</span></div>
+<div class="compare-row">
+
+  <!-- SEARCH -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="340" fill="#f0f5ff" rx="8"/>
+      <rect x="0" y="270" width="760" height="70" fill="#d8d0c0" rx="0"/>
+      <!-- 人物在翻找桌面 -->
+      <circle cx="180" cy="180" r="18" fill="#f5e6d0"/>
+      <circle cx="180" cy="158" r="16" fill="#f5e6d0"/>
+      <circle cx="174" cy="156" r="2" fill="#333"/>
+      <circle cx="186" cy="156" r="2" fill="#333"/>
+      <rect x="168" y="174" width="24" height="38" rx="5" fill="#2980b9"/>
+      <rect x="170" y="210" width="9" height="42" rx="3" fill="#4a3a2a"/>
+      <rect x="182" y="210" width="9" height="42" rx="3" fill="#4a3a2a"/>
+      <!-- 桌面 -->
+      <rect x="80" y="230" width="200" height="10" rx="3" fill="#8B6B4A"/>
+      <!-- 桌上物品 -->
+      <rect x="120" y="218" width="12" height="12" rx="2" fill="#e74c3c"/>
+      <rect x="150" y="220" width="14" height="10" rx="2" fill="#27ae60"/>
+      <rect x="220" y="216" width="10" height="14" rx="2" fill="#8e44ad"/>
+      <!-- 手臂 -->
+      <line x1="192" y1="185" x2="220" y2="215" stroke="#f5e6d0" stroke-width="5" stroke-linecap="round"/>
+      <!-- 放大镜符号 -->
+      <g opacity="0.4">
+        <circle cx="260" cy="160" r="20" fill="none" stroke="#2980b9" stroke-width="3"/>
+        <line x1="275" y1="175" x2="290" y2="190" stroke="#2980b9" stroke-width="3" stroke-linecap="round"/>
+      </g>
+      <text x="200" y="315" text-anchor="middle" fill="#2980b9" font-size="20" font-weight="bold" font-family="sans-serif">SEARCH</text>
+      <text x="380" y="48" text-anchor="middle" fill="#444" font-size="14" font-weight="600" font-family="sans-serif">在已知区域"翻找查看"</text>
+      <text x="380" y="70" text-anchor="middle" fill="#777" font-size="12" font-family="sans-serif">Search my pockets / Search the database</text>
+    </svg>
+    <div class="label">
+      <div class="p" style="color:#2980b9;">SEARCH 搜索</div>
+      <div class="desc">在已知区域内仔细检查，目标是<strong>静止</strong>的东西（翻口袋、查数据库）。不涉及"跟踪"。</div>
+    </div>
+  </div>
+
+  <!-- PURSUE -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="340" fill="#f5f0ff" rx="8"/>
+      <rect x="0" y="280" width="760" height="60" fill="#d8d0c0" rx="0"/>
+      <!-- 追赶场景：两人前后跑 -->
+      <!-- 追者 -->
+      <g>
+        <circle cx="200" cy="200" r="18" fill="#f5e6d0"/>
+        <circle cx="200" cy="178" r="16" fill="#f5e6d0"/>
+        <circle cx="194" cy="176" r="2" fill="#333"/>
+        <circle cx="206" cy="176" r="2" fill="#333"/>
+        <rect x="188" y="194" width="24" height="36" rx="5" fill="#8e44ad"/>
+        <!-- 跑步姿态 -->
+        <line x1="190" y1="228" x2="185" y2="268" stroke="#4a3a2a" stroke-width="8" stroke-linecap="round"/>
+        <line x1="210" y1="228" x2="218" y2="268" stroke="#4a3a2a" stroke-width="8" stroke-linecap="round"/>
+        <line x1="195" y1="195" x2="175" y2="215" stroke="#f5e6d0" stroke-width="5" stroke-linecap="round"/>
+        <line x1="205" y1="205" x2="220" y2="225" stroke="#f5e6d0" stroke-width="5" stroke-linecap="round"/>
+      </g>
+      <!-- 被追者 -->
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 40,0; 0,0"
+          dur="3s" repeatCount="indefinite"/>
+        <circle cx="440" cy="200" r="18" fill="#f5e6d0"/>
+        <circle cx="440" cy="178" r="16" fill="#f5e6d0"/>
+        <!-- 惊吓表情 -->
+        <circle cx="434" cy="176" r="2.5" fill="#e63946"/>
+        <circle cx="446" cy="176" r="2.5" fill="#e63946"/>
+        <path d="M434,186 Q440,182 446,186" fill="none" stroke="#333" stroke-width="1.5"/>
+        <rect x="428" y="194" width="24" height="36" rx="5" fill="#e74c3c"/>
+        <line x1="430" y1="228" x2="440" y2="268" stroke="#4a3a2a" stroke-width="8" stroke-linecap="round"/>
+        <line x1="450" y1="228" x2="456" y2="268" stroke="#4a3a2a" stroke-width="8" stroke-linecap="round"/>
+      </g>
+      <!-- 方向箭头 -->
+      <line x1="230" y1="215" x2="300" y2="215" stroke="#8e44ad" stroke-width="2.5" stroke-dasharray="6,4"/>
+      <polygon points="300,211 310,215 300,219" fill="#8e44ad"/>
+      <text x="380" y="48" text-anchor="middle" fill="#444" font-size="14" font-weight="600" font-family="sans-serif">持续追逐某个目标（不一定能抓到）</text>
+      <text x="380" y="70" text-anchor="middle" fill="#777" font-size="12" font-family="sans-serif">Pursue a dream / Pursue a suspect</text>
+      <text x="380" y="315" text-anchor="middle" fill="#8e44ad" font-size="20" font-weight="bold" font-family="sans-serif">PURSUE</text>
+    </svg>
+    <div class="label">
+      <div class="p" style="color:#8e44ad;">PURSUE 追求 / 追赶</div>
+      <div class="desc">持续追逐一个目标（理想、嫌疑人、项目），侧重"<strong>努力争取</strong>"，不强调"找到"。比 HUNT 更抽象，更正式。</div>
+    </div>
+  </div>
+
+  <!-- TRACK -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="340" fill="#f0faf0" rx="8"/>
+      <rect x="0" y="270" width="760" height="70" fill="#c8d8b8" rx="0"/>
+      <!-- 脚印追踪 -->
+      <g>
+        <circle cx="120" cy="250" r="6" fill="#8B5E3C" opacity="0.6"/>
+        <circle cx="160" cy="245" r="6" fill="#8B5E3C" opacity="0.6"/>
+        <circle cx="200" cy="250" r="6" fill="#8B5E3C" opacity="0.5"/>
+        <circle cx="240" cy="242" r="6" fill="#8B5E3C" opacity="0.5"/>
+        <circle cx="280" cy="248" r="6" fill="#8B5E3C" opacity="0.4"/>
+        <circle cx="320" cy="240" r="6" fill="#8B5E3C" opacity="0.4"/>
+        <circle cx="360" cy="246" r="6" fill="#8B5E3C" opacity="0.3"/>
+        <circle cx="400" cy="238" r="6" fill="#8B5E3C" opacity="0.3"/>
+        <circle cx="440" cy="244" r="6" fill="#8B5E3C" opacity="0.2"/>
+      </g>
+      <!-- 追踪者 -->
+      <circle cx="120" cy="215" r="16" fill="#f5e6d0"/>
+      <circle cx="120" cy="195" r="15" fill="#f5e6d0"/>
+      <circle cx="115" cy="193" r="2" fill="#333"/>
+      <circle cx="125" cy="193" r="2" fill="#333"/>
+      <path d="M115,200 Q120,203 125,200" fill="none" stroke="#333" stroke-width="1.5"/>
+      <rect x="110" y="210" width="20" height="30" rx="5" fill="#38a169"/>
+      <line x1="112" y1="238" x2="108" y2="265" stroke="#4a3a2a" stroke-width="7" stroke-linecap="round"/>
+      <line x1="128" y1="238" x2="132" y2="265" stroke="#4a3a2a" stroke-width="7" stroke-linecap="round"/>
+      <!-- 放大镜 -->
+      <circle cx="140" cy="210" r="12" fill="none" stroke="#38a169" stroke-width="2"/>
+      <line x1="150" y1="220" x2="158" y2="228" stroke="#38a169" stroke-width="2" stroke-linecap="round"/>
+
+      <text x="380" y="48" text-anchor="middle" fill="#444" font-size="14" font-weight="600" font-family="sans-serif">跟随痕迹/信号追踪目标位置</text>
+      <text x="380" y="70" text-anchor="middle" fill="#777" font-size="12" font-family="sans-serif">Track a package / Track progress</text>
+      <text x="380" y="315" text-anchor="middle" fill="#38a169" font-size="20" font-weight="bold" font-family="sans-serif">TRACK</text>
+    </svg>
+    <div class="label">
+      <div class="p" style="color:#38a169;">TRACK 追踪 / 跟踪</div>
+      <div class="desc">通过痕迹、信号、数据来监控目标的位置或状态。侧重"<strong>持续记录路径</strong>"，不一定在"抓捕"。</div>
+    </div>
+  </div>
+
+  <!-- HUNT 对比总结 -->
+  <div class="compare-card" style="border:2px solid #e67e22;">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="340" fill="#fdf6ee" rx="8"/>
+      <rect x="0" y="270" width="760" height="70" fill="#e8dcc8" rx="0"/>
+      <!-- 综合场景 -->
+      <text x="380" y="40" text-anchor="middle" fill="#e67e22" font-size="18" font-weight="bold" font-family="sans-serif">HUNT = SEARCH + TRACK + PURSUE</text>
+      <!-- 三个子动作 -->
+      <g>
+        <rect x="60" y="85" width="180" height="50" rx="8" fill="#f0f5ff"/>
+        <text x="150" y="106" text-anchor="middle" fill="#2980b9" font-size="13" font-weight="600" font-family="sans-serif">SEARCH</text>
+        <text x="150" y="124" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">搜索发现线索</text>
+      </g>
+      <g>
+        <rect x="290" y="85" width="180" height="50" rx="8" fill="#f0faf0"/>
+        <text x="380" y="106" text-anchor="middle" fill="#38a169" font-size="13" font-weight="600" font-family="sans-serif">TRACK</text>
+        <text x="380" y="124" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">追踪目标行迹</text>
+      </g>
+      <g>
+        <rect x="520" y="85" width="180" height="50" rx="8" fill="#f5f0ff"/>
+        <text x="610" y="106" text-anchor="middle" fill="#8e44ad" font-size="13" font-weight="600" font-family="sans-serif">PURSUE</text>
+        <text x="610" y="124" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">追赶并抓住</text>
+      </g>
+      <!-- 箭头串联 -->
+      <path d="M240,110 L290,110" stroke="#ccc" stroke-width="2" stroke-dasharray="4,3"/>
+      <polygon points="290,106 298,110 290,114" fill="#ccc"/>
+      <path d="M470,110 L520,110" stroke="#ccc" stroke-width="2" stroke-dasharray="4,3"/>
+      <polygon points="520,106 528,110 520,114" fill="#ccc"/>
+
+      <!-- 猎人 -->
+      <circle cx="380" cy="205" r="18" fill="#f5e6d0"/>
+      <circle cx="380" cy="183" r="16" fill="#f5e6d0"/>
+      <circle cx="374" cy="181" r="2" fill="#333"/>
+      <circle cx="386" cy="181" r="2" fill="#333"/>
+      <path d="M374,189 Q380,193 386,189" fill="none" stroke="#333" stroke-width="1.5"/>
+      <rect x="368" y="199" width="24" height="35" rx="5" fill="#e67e22"/>
+      <line x1="370" y1="232" x2="366" y2="262" stroke="#4a3a2a" stroke-width="7" stroke-linecap="round"/>
+      <line x1="390" y1="232" x2="394" y2="262" stroke="#4a3a2a" stroke-width="7" stroke-linecap="round"/>
+
+      <text x="380" y="315" text-anchor="middle" fill="#e67e22" font-size="20" font-weight="bold" font-family="sans-serif">HUNT = 三合一</text>
+    </svg>
+    <div class="label" style="background:#fdf6ee;">
+      <div class="p" style="color:#e67e22;">HUNT 综合 = 搜索 + 追踪 + 追捕</div>
+      <div class="desc">HUNT 是唯一同时包含"<strong>搜索</strong>(找线索)"、"<strong>追踪</strong>(跟痕迹)"和"<strong>追捕</strong>(抓住)"完整链条的词。SEARCH 只是第一步，PURSUE 侧重追赶但不需要找，TRACK 侧重记录路径但不要求抓住。</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="white-box" style="margin-bottom:36px;">
+  <strong>四词辨析速记</strong>：<br>
+  🔍 <strong>SEARCH</strong> = 翻找（已知区域静态找）→ "I searched my room."<br>
+  🕵️ <strong>TRACK</strong> = 追踪（跟痕迹/信号）→ "Track the delivery."<br>
+  🏃 <strong>PURSUE</strong> = 追求（持续追赶目标）→ "Pursue your dreams."<br>
+  🎯 <strong>HUNT</strong> = 打猎（搜索+追踪+追捕三合一）→ "Hunt for a job."<br>
+  <span style="color:#666; font-size:12.5px;">💡 HUNT 是最"有画面感"的词——你能想象一个人在森林里持弓追鹿。其他三个词都是从 HUNT 的不同阶段抽象出来的。</span>
+</div>
+
+<!-- ============ 程度光谱：搜索强度 ============ -->
+<div class="section-title"><span class="bar"></span><span>搜索强度光谱：从随意浏览到全力搜索</span></div>
+<div class="spectrum-wrap">
+  <svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="specGrad" x1="0" y1="0" x2="760" y2="0">
+        <stop offset="0%" stop-color="#38a169"/>
+        <stop offset="50%" stop-color="#e67e22"/>
+        <stop offset="100%" stop-color="#e63946"/>
+      </linearGradient>
+    </defs>
+    <rect width="760" height="260" fill="#fafaf8" rx="8"/>
+
+    <!-- 光谱背景条 -->
+    <rect x="60" y="115" width="640" height="18" rx="9" fill="url(#specGrad)" opacity="0.25"/>
+    <rect x="60" y="115" width="640" height="18" rx="9" fill="none" stroke="#ddd" stroke-width="1"/>
+
+    <!-- 游标 -->
+    <g>
+      <circle r="12" fill="#e67e22" filter="url(#glow1)">
+        <animateTransform attributeName="transform" type="translate"
+          values="130,0; 230,0; 330,0; 430,0; 530,0; 630,0; 530,0; 430,0; 330,0; 230,0; 130,0"
+          dur="12s" repeatCount="indefinite"/>
+        <animate attributeName="fill" values="#38a169;#38a169;#e67e22;#e67e22;#e63946;#e63946;#e63946;#e67e22;#e67e22;#38a169;#38a169"
+          dur="12s" repeatCount="indefinite"/>
+      </circle>
+      <!-- 游标外圈 -->
+      <circle r="18" fill="none" stroke-width="2">
+        <animateTransform attributeName="transform" type="translate"
+          values="130,0; 230,0; 330,0; 430,0; 530,0; 630,0; 530,0; 430,0; 330,0; 230,0; 130,0"
+          dur="12s" repeatCount="indefinite"/>
+        <animate attributeName="stroke" values="#38a169;#38a169;#e67e22;#e67e22;#e63946;#e63946;#e63946;#e67e22;#e67e22;#38a169;#38a169"
+          dur="12s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;0.6;0.6;0.6;0.6;0.6;0.6;0.6;0.6;0.6;0.6"
+          dur="12s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- 阶段标签（5个） -->
+    <text x="130" y="105" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#666">GLANCE</text>
+    <text x="130" y="155" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#999">随便看一眼</text>
+
+    <text x="230" y="105" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#666">LOOK</text>
+    <text x="230" y="155" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#999">看一下</text>
+
+    <text x="330" y="105" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#666">SEARCH</text>
+    <text x="330" y="155" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#999">仔细搜索</text>
+
+    <text x="430" y="105" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#666">HUNT</text>
+    <text x="430" y="155" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#999">全力追查</text>
+
+    <text x="530" y="105" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#666">STALK</text>
+    <text x="530" y="155" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#999">潜行跟踪</text>
+
+    <text x="630" y="105" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#666">MANHUNT</text>
+    <text x="630" y="155" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#999">全城搜捕</text>
+
+    <!-- 状态文字 -->
+    <text x="380" y="210" text-anchor="middle" fill="#444" font-size="13" font-weight="600" font-family="sans-serif">
+      <animate attributeName="opacity" values="0;0;0;1;0;0;0;0;0;0;0" dur="12s" repeatCount="indefinite"/>
+      HUNT：不找到不罢休的执着感
+    </text>
+    <text x="380" y="230" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">
+      <animate attributeName="opacity" values="0;0;0;0;0;1;0;0;0;0;0" dur="12s" repeatCount="indefinite"/>
+      MANHUNT：大规模、紧急的搜捕行动
+    </text>
+    <text x="380" y="210" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">
+      <animate attributeName="opacity" values="1;0;0;0;0;0;0;0;0;0;1" dur="12s" repeatCount="indefinite"/>
+      GLANCE：无意中的一瞥
+    </text>
+    <text x="380" y="230" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">
+      <animate attributeName="opacity" values="0;1;0;0;0;0;0;0;0;0;0" dur="12s" repeatCount="indefinite"/>
+      LOOK：有意识地看
+    </text>
+    <text x="380" y="230" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">
+      <animate attributeName="opacity" values="0;0;1;0;0;0;0;0;0;0;0" dur="12s" repeatCount="indefinite"/>
+      SEARCH：系统性地翻找查看
+    </text>
+    <text x="380" y="230" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">
+      <animate attributeName="opacity" values="0;0;0;0;1;0;0;0;0;0;0" dur="12s" repeatCount="indefinite"/>
+      STALK：小心翼翼地尾随跟踪
+    </text>
+
+    <!-- 刻度标记 -->
+    <line x1="130" y1="115" x2="130" y2="133" stroke="#ccc" stroke-width="1"/>
+    <line x1="230" y1="115" x2="230" y2="133" stroke="#ccc" stroke-width="1"/>
+    <line x1="330" y1="115" x2="330" y2="133" stroke="#ccc" stroke-width="1"/>
+    <line x1="430" y1="115" x2="430" y2="133" stroke="#ccc" stroke-width="1"/>
+    <line x1="530" y1="115" x2="530" y2="133" stroke="#ccc" stroke-width="1"/>
+    <line x1="630" y1="115" x2="630" y2="133" stroke="#ccc" stroke-width="1"/>
+  </svg>
+  <div class="white-box" style="margin-top:8px;"><strong>💡 理解关键</strong>：HUNT 在光谱中处于"中等偏强"的位置——比 SEARCH 更主动、更有目标感，但不像 MANHUNT 那样带有"紧急、大规模"的意味。HUNT 的核心特质是 <strong>determination（决心）</strong>。</div>
+</div>
+
+<!-- ============ 常见搭配/用法 ============ -->
+<div class="section-title"><span class="bar"></span><span>常见搭配 / 短语动词</span></div>
+
+<div class="usage-section">
+  <h4>🏹 基础搭配</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>hunt</strong> animals / deer / rabbits</span>
+      <span class="usage-cn">打猎（动物） &nbsp;|&nbsp; 📖 本义用法，指实际猎杀动物</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>hunt for</strong> something / someone</span>
+      <span class="usage-cn">寻找某物/某人 &nbsp;|&nbsp; 📖 最常用搭配，"hunt for" = 努力找</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>hunt down</strong> a criminal</span>
+      <span class="usage-cn">追捕（直到抓到） &nbsp;|&nbsp; 📖 down = 彻底/直到完成</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>hunt through</strong> piles of documents</span>
+      <span class="usage-cn">翻遍（大量文件） &nbsp;|&nbsp; 📖 through = 从一堆东西中穿过</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">a <strong>job hunt</strong> / house hunt</span>
+      <span class="usage-cn">求职 / 找房 &nbsp;|&nbsp; 📖 名词用法，表示一段寻找过程</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>hunt out</strong> old photos</span>
+      <span class="usage-cn">翻找出来 &nbsp;|&nbsp; 📖 out = 从藏身处找出来</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>still hunting</strong></span>
+      <span class="usage-cn">伏击狩猎（隐蔽等待） &nbsp;|&nbsp; 📖 静止不动地等猎物出现</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>hunt and peck</strong> (typing)</span>
+      <span class="usage-cn">二指禅打字 &nbsp;|&nbsp; 📖 像鸡啄米一样"找"键盘上的按键</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>🔍 抽象用法</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>hunt</strong> for a bargain / deal</span>
+      <span class="usage-cn">淘便宜货 &nbsp;|&nbsp; 📖 在众多商品中"搜索"低价品</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>hunt</strong> for clues / evidence</span>
+      <span class="usage-cn">查找线索/证据 &nbsp;|&nbsp; 📖 侦探/调查语境</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>hunt</strong> for a solution</span>
+      <span class="usage-cn">寻找解决方案 &nbsp;|&nbsp; 📖 在思路中"搜索"可行方案</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>hunt</strong> for treasure / Easter eggs</span>
+      <span class="usage-cn">寻宝 / 找复活节彩蛋 &nbsp;|&nbsp; 📖 游戏/娱乐场景</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>headhunt</strong> / headhunter</span>
+      <span class="usage-cn">猎头（挖人才） &nbsp;|&nbsp; 📖 head = 头脑/人才，hunt = 搜寻</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>witch hunt</strong></span>
+      <span class="usage-cn">政治迫害 &nbsp;|&nbsp; 📖 原指"猎巫"，现指不公正的追查</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">the <strong>hunt</strong> is on</span>
+      <span class="usage-cn">搜索开始了 &nbsp;|&nbsp; 📖 固定表达，宣布开始寻找</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>scavenger hunt</strong></span>
+      <span class="usage-cn">寻宝游戏 &nbsp;|&nbsp; 📖 按清单找物品的团建游戏</span>
+    </div>
+  </div>
+</div>
+
+<!-- 小白框：核心短语演变解释 -->
+<div class="white-box" style="margin-bottom:20px;"><strong>🏹 hunt for → 抽象搜索</strong>：打猎时猎人"寻找"猎物踪迹 → 引申为任何"努力寻找"的行为。"I'm hunting for my keys." = 我在拼命找钥匙（比"I'm looking for my keys"更有"着急、必须找到"的语气）。</div>
+
+<div class="white-box" style="margin-bottom:20px;"><strong>🕵️ hunt down → 追查到底</strong>：物理画面是猎人追捕猎物直到它"倒下（down）"，再也跑不掉 → 追查到底直到找到/抓住。"The police hunted down the serial killer." 警察追捕连环杀手直到归案。down 在此表示"彻底完成"，类似 write down（写下来）、burn down（烧光）。</div>
+
+<div class="white-box" style="margin-bottom:20px;"><strong>📚 hunt through → 翻遍</strong>：物理画面是猎人"穿过（through）"茂密丛林搜索猎物 → 在大量物品中"穿行翻找"。"I hunted through all the drawers but couldn't find it." 我翻遍了所有抽屉都没找到。</div>
+
+<div class="white-box" style="margin-bottom:20px;"><strong>🎯 still hunting → 静待时机</strong>：物理画面是猎人静止不动（still），等待猎物自己靠近 → 引申为"耐心等待最佳时机出击"。"He's still hunting for the right investment opportunity." 他在耐心等待合适的投资机会。</div>
+
+<div class="white-box" style="margin-bottom:20px;"><strong>🐔 hunt and peck → 二指禅打字</strong>：字面义"像鸡啄米一样啄食" → 用一两根手指在键盘上"找"每个按键的位置。"My dad still hunts and pecks on the keyboard." 我爸还在用二指禅打字。</div>
+
+<div class="white-box" style="margin-bottom:30px;"><strong>💼 job hunt → 求职</strong>：找工作就像打一场猎——你需要搜索招聘信息（搜索），追踪申请进度（追踪），面试拿 offer（捕获）。"After months of job hunting, she finally got an offer." 求职数月后，她终于拿到了 offer。</div>
+
+<!-- ============ 反义/相似词扩展 ============ -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+
+    <!-- 反义词 -->
+    <div class="info-card red-bg">
+      <h5 style="color:#e63946;">反义词</h5>
+      <p><strong>IGNORE</strong> — 故意不理睬 <small>与 HUNT 的"主动寻找"相反</small></p>
+      <p><strong>OVERLOOK</strong> — 忽略/没注意到 <small>本应该看到但漏掉了</small></p>
+      <p><strong>NEGLECT</strong> — 疏忽/不关心 <small>应该照顾却不管</small></p>
+      <p><strong>FLEE</strong> — 逃离/逃跑 <small>HUNT 是追，FLEE 是逃</small></p>
+    </div>
+
+    <!-- 近义词辨析 -->
+    <div class="info-card hunt-bg">
+      <h5 style="color:#e67e22;">近义词辨析</h5>
+      <p><strong>SEARCH</strong> — 在已知区域翻找 <small>侧重"查看"，没有"追踪"</small></p>
+      <p><strong>PURSUE</strong> — 持续追求目标 <small>更正式，侧重"努力"，不一定能"找到"</small></p>
+      <p><strong>TRACK</strong> — 跟随痕迹/信号 <small>侧重"记录路径"，不一定在"抓捕"</small></p>
+      <p><strong>STALK</strong> — 潜行跟踪 <small>偷偷尾随，有贬义</small></p>
+      <p><strong>SCOUR</strong> — 彻底搜索 <small>强调"地毯式搜索"</small></p>
+    </div>
+
+    <!-- 特殊用法 -->
+    <div class="info-card purple-bg">
+      <h5 style="color:#8e44ad;">易混提醒</h5>
+      <p><strong>HUNT vs. HUNT FOR</strong> — "hunt deer" = 猎鹿（去抓去杀）；"hunt for deer" = 寻找鹿（不一定抓到）</p>
+      <p><strong>HUNTER</strong> — 猎人 <small>也用于"bargain hunter"（淘便宜货的人）</small></p>
+      <p><strong>MANHUNT</strong> — 全城搜捕 <small>大范围的紧急搜捕行动</small></p>
+      <p><strong>WITCH HUNT</strong> — 政治迫害 <small>现代用法 ≠ 真的猎巫</small></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ 大场景图：HUNT 的多场景应用 ============ -->
+<div class="section-title"><span class="bar"></span><span>HUNT 场景全景</span></div>
+<svg viewBox="0 0 1720 400" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; display:block; border-radius:14px; border:1px solid #e8e8e4; margin-bottom:36px;">
+  <defs>
+    <linearGradient id="panBg" x1="0" y1="0" x2="1720" y2="400">
+      <stop offset="0%" stop-color="#fdf6ee"/>
+      <stop offset="100%" stop-color="#faf0e0"/>
+    </linearGradient>
+    <filter id="panShadow">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+  <rect width="1720" height="400" fill="url(#panBg)" rx="8"/>
+
+  <!-- ===== 场景1：实际打猎（左侧） ===== -->
+  <rect x="20" y="20" width="540" height="360" rx="10" fill="#fff" fill-opacity="0.7" stroke="#e8e0d0" stroke-width="1"/>
+  <text x="290" y="52" text-anchor="middle" fill="#e67e22" font-size="16" font-weight="bold" font-family="sans-serif">🏹 实际打猎</text>
+
+  <!-- 森林 -->
+  <rect x="40" y="290" width="500" height="80" fill="#c8b89a" rx="0"/>
+  <rect x="40" y="290" width="500" height="5" fill="#b8a88a"/>
+
+  <!-- 树 -->
+  <rect x="80" y="160" width="16" height="130" rx="3" fill="#8B5E3C"/>
+  <ellipse cx="88" cy="140" rx="40" ry="48" fill="#3d7a3d" opacity="0.7"/>
+  <rect x="480" y="180" width="14" height="110" rx="3" fill="#8B5E3C"/>
+  <ellipse cx="487" cy="160" rx="35" ry="42" fill="#3d7a3d" opacity="0.7"/>
+
+  <!-- 猎人 -->
+  <g filter="url(#panShadow)">
+    <circle cx="200" cy="185" r="20" fill="#f5e6d0"/>
+    <circle cx="200" cy="162" r="17" fill="#f5e6d0"/>
+    <circle cx="194" cy="160" r="2.5" fill="#333"/>
+    <circle cx="206" cy="160" r="2.5" fill="#333"/>
+    <rect x="188" y="179" width="24" height="38" rx="5" fill="#8B4513"/>
+    <rect x="190" y="215" width="9" height="45" rx="3" fill="#5a3a1a"/>
+    <rect x="202" y="215" width="9" height="45" rx="3" fill="#5a3a1a"/>
+    <!-- 弓 -->
+    <path d="M155,165 Q145,195 155,225" fill="none" stroke="#5a3a1a" stroke-width="3" stroke-linecap="round"/>
+    <line x1="155" y1="168" x2="230" y2="195" stroke="#c8a060" stroke-width="1.5"/>
+  </g>
+
+  <!-- 鹿 -->
+  <g filter="url(#panShadow)">
+    <ellipse cx="400" cy="240" rx="35" ry="22" fill="#c89a5a"/>
+    <rect x="375" y="258" width="6" height="40" rx="3" fill="#b8894a"/>
+    <rect x="385" y="258" width="6" height="40" rx="3" fill="#b8894a"/>
+    <rect x="410" y="258" width="6" height="40" rx="3" fill="#b8894a"/>
+    <rect x="420" y="258" width="6" height="40" rx="3" fill="#b8894a"/>
+    <path d="M420,230 Q435,205 430,185 L418,185 Q422,205 412,220Z" fill="#c89a5a"/>
+    <ellipse cx="425" cy="178" rx="16" ry="12" fill="#c89a5a"/>
+    <path d="M420,168 L415,150 L412,142 M415,150 L422,142" fill="none" stroke="#8B5E3C" stroke-width="2" stroke-linecap="round"/>
+    <path d="M430,168 L435,150 L438,142 M435,150 L428,142" fill="none" stroke="#8B5E3C" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <text x="290" y="360" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">"Lions hunt in packs." 狮子成群猎食。</text>
+
+  <!-- ===== 场景2：求职（中间） ===== -->
+  <rect x="590" y="20" width="540" height="360" rx="10" fill="#fff" fill-opacity="0.7" stroke="#e8e0d0" stroke-width="1"/>
+  <text x="860" y="52" text-anchor="middle" fill="#e67e22" font-size="16" font-weight="bold" font-family="sans-serif">💼 求职 / 搜索</text>
+
+  <!-- 人物坐在电脑前 -->
+  <g filter="url(#panShadow)">
+    <!-- 桌子 -->
+    <rect x="730" y="260" width="180" height="8" rx="3" fill="#8B6B4A"/>
+    <rect x="740" y="268" width="10" height="40" rx="2" fill="#7a5a3a"/>
+    <rect x="890" y="268" width="10" height="40" rx="2" fill="#7a5a3a"/>
+    <!-- 电脑 -->
+    <rect x="780" y="230" width="80" height="30" rx="4" fill="#2c3e50"/>
+    <rect x="795" y="215" width="50" height="18" rx="3" fill="#34495e"/>
+    <!-- 屏幕上的搜索图标 -->
+    <circle cx="820" cy="245" r="7" fill="none" stroke="#e67e22" stroke-width="1.5"/>
+    <line x1="825" y1="250" x2="830" y2="255" stroke="#e67e22" stroke-width="1.5"/>
+
+    <!-- 人 -->
+    <circle cx="820" cy="175" r="20" fill="#f5e6d0"/>
+    <circle cx="820" cy="152" r="17" fill="#f5e6d0"/>
+    <circle cx="814" cy="150" r="2.5" fill="#333"/>
+    <circle cx="826" cy="150" r="2.5" fill="#333"/>
+    <path d="M814,158 Q820,162 826,158" fill="none" stroke="#333" stroke-width="1.5"/>
+    <rect x="808" y="169" width="24" height="40" rx="5" fill="#2c3e50"/>
+    <rect x="810" y="207" width="9" height="53" rx="3" fill="#4a3a2a"/>
+    <rect x="822" y="207" width="9" height="53" rx="3" fill="#4a3a2a"/>
+    <!-- 手臂 -->
+    <line x1="808" y1="182" x2="780" y2="240" stroke="#f5e6d0" stroke-width="5" stroke-linecap="round"/>
+    <line x1="832" y1="182" x2="870" y2="240" stroke="#f5e6d0" stroke-width="5" stroke-linecap="round"/>
+  </g>
+
+  <!-- 搜索相关元素 -->
+  <g opacity="0.3">
+    <rect x="700" y="90" width="30" height="20" rx="3" fill="#e67e22"/>
+    <rect x="750" y="75" width="30" height="20" rx="3" fill="#e67e22"/>
+    <rect x="800" y="85" width="30" height="20" rx="3" fill="#e67e22"/>
+    <rect x="850" y="95" width="30" height="20" rx="3" fill="#e67e22"/>
+    <rect x="900" y="80" width="30" height="20" rx="3" fill="#e67e22"/>
+  </g>
+
+  <text x="860" y="360" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">"She's hunting for a new job." 她在找工作。</text>
+
+  <!-- ===== 场景3：警察搜捕（右侧） ===== -->
+  <rect x="1160" y="20" width="540" height="360" rx="10" fill="#fff" fill-opacity="0.7" stroke="#e8e0d0" stroke-width="1"/>
+  <text x="1430" y="52" text-anchor="middle" fill="#e67e22" font-size="16" font-weight="bold" font-family="sans-serif">🚔 追捕 / 缉捕</text>
+
+  <!-- 城市街道 -->
+  <rect x="1180" y="280" width="500" height="80" fill="#888" rx="0"/>
+  <rect x="1180" y="280" width="500" height="4" fill="#777"/>
+  <line x1="1180" y1="310" x2="1680" y2="310" stroke="#ffd700" stroke-width="2" stroke-dasharray="12,10"/>
+  <!-- 建筑物 -->
+  <rect x="1200" y="130" width="60" height="150" rx="3" fill="#6a7a8a" opacity="0.7"/>
+  <rect x="1205" y="140" width="12" height="15" rx="2" fill="#ffd700" opacity="0.5"/>
+  <rect x="1225" y="140" width="12" height="15" rx="2" fill="#ffd700" opacity="0.5"/>
+  <rect x="1205" y="165" width="12" height="15" rx="2" fill="#ffd700" opacity="0.5"/>
+  <rect x="1225" y="165" width="12" height="15" rx="2" fill="#ffd700" opacity="0.5"/>
+
+  <rect x="1600" y="160" width="60" height="120" rx="3" fill="#7a6a5a" opacity="0.7"/>
+  <rect x="1605" y="170" width="12" height="15" rx="2" fill="#ffd700" opacity="0.5"/>
+  <rect x="1625" y="170" width="12" height="15" rx="2" fill="#ffd700" opacity="0.5"/>
+  <rect x="1605" y="195" width="12" height="15" rx="2" fill="#ffd700" opacity="0.5"/>
+  <rect x="1625" y="195" width="12" height="15" rx="2" fill="#ffd700" opacity="0.5"/>
+
+  <!-- 警车 -->
+  <g filter="url(#panShadow)">
+    <animateTransform attributeName="transform" type="translate"
+      values="0,0; 120,0; 0,0"
+      dur="5s" repeatCount="indefinite"/>
+    <rect x="1280" y="254" width="70" height="26" rx="6" fill="#2c3e50"/>
+    <rect x="1288" y="248" width="55" height="12" rx="4" fill="#34495e"/>
+    <circle cx="1300" cy="280" r="8" fill="#555"/>
+    <circle cx="1330" cy="280" r="8" fill="#555"/>
+    <!-- 警灯 -->
+    <rect x="1295" y="244" width="8" height="6" rx="2" fill="#e63946">
+      <animate attributeName="fill" values="#e63946;#e63946;#e63946;#fff;#e63946;#e63946;#e63946;#fff" dur="1s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="1310" y="244" width="8" height="6" rx="2" fill="#2980b9">
+      <animate attributeName="fill" values="#2980b9;#fff;#2980b9;#2980b9;#2980b9;#fff;#2980b9;#2980b9" dur="1s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- 逃犯 -->
+  <g>
+    <animateTransform attributeName="transform" type="translate"
+      values="0,0; -40,0; 0,0"
+      dur="5s" repeatCount="indefinite"/>
+    <circle cx="1500" cy="240" r="16" fill="#f5e6d0"/>
+    <circle cx="1500" cy="222" r="14" fill="#f5e6d0"/>
+    <rect x="1490" y="236" width="20" height="28" rx="4" fill="#c0392b"/>
+    <line x1="1492" y1="262" x2="1496" y2="278" stroke="#4a3a2a" stroke-width="6" stroke-linecap="round"/>
+    <line x1="1508" y1="262" x2="1516" y2="278" stroke="#4a3a2a" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <!-- 搜索光线（警车灯光） -->
+  <path d="M1315,254 L1200,100 L1280,100 Z" fill="#e63946" opacity="0.06">
+    <animate attributeName="opacity" values="0.06;0.02;0.06" dur="2s" repeatCount="indefinite"/>
+  </path>
+
+  <text x="1430" y="360" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">"Police are hunting for the escaped prisoner." 警方正在搜捕逃犯。</text>
+
+  <!-- 场景标签 -->
+  <text x="1700" y="390" text-anchor="end" fill="#999" font-size="11" font-family="sans-serif">从打猎到求职到追捕 — 同一核心意象的不同场景</text>
+</svg>
+
+<!-- ============ 底部总结 ============ -->
+<div style="background:linear-gradient(135deg,#fdf6ee,#faf0e0); border:1px solid #e8e0d0; border-radius:12px; padding:18px 22px; margin-top:8px;">
+  <p style="font-size:14px; color:#444; line-height:1.7;">
+    <strong style="color:#e67e22;">🎯 HUNT 核心逻辑总结</strong><br>
+    物理画面：猎人在荒野中<strong>搜索猎物踪迹 → 沿脚印追踪 → 追捕 → 捕获</strong>。<br>
+    抽象映射：任何需要"<strong>主动搜寻 + 持续追踪 + 不找到不罢休</strong>"的行为 → job hunt, house hunt, bargain hunt。<br>
+    与其他词的区别：HUNT 同时包含 SEARCH（找）+ TRACK（跟）+ PURSUE（追）三步，是这三个概念的综合体。
+  </p>
+</div>
+
+</div>
+</body>
+</html>

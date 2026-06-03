@@ -82,9 +82,7 @@ SNAP 的例子：
 
 ## 快速上手
 
-在线访问：**https://lucyliu3.github.io/english-physics/**（推荐）
-
-或本地打开 [docs/index.html](docs/index.html) → 点击任意单词 → 看动画 + 读小白框。
+打开 [index.html](index.html) → 点击任意单词 → 看动画 + 读小白框。
 
 双击任何 HTML 文件即可在浏览器打开，零依赖。
 
@@ -93,26 +91,14 @@ SNAP 的例子：
 ## 文件结构
 
 ```
-English-Physics/
-├── README.md                    ← 你正在看的
-├── skill/
-│   ├── SKILL.md                 ← from-physics 技能（AI 生成图解的完整提示词 + 规范）
-│   └── vocab/                   ← 词库分类索引
-│       ├── particles.md         ← 小品词/介词
-│       ├── verbs.md             ← 动词
-│       ├── adjectives.md        ← 形容词
-│       ├── nouns.md             ← 名词
-│       └── adverbs.md           ← 副词
-├── docs/                        ← GitHub Pages 发布目录
-│   ├── index.html               ← 目录入口（点击任一单词进入图解）
-│   ├── README.md                ← 图解页面的说明
-│   ├── snap_illustration.html   ← 单词深挖页 × 74
-│   ├── up_illustration.html
-│   ├── ...
-│   ├── break_broke_broken_compare.html  ← 词族对比页 × 10
-│   ├── ...
-│   └── 小品词overall view/       ← 小品词全景图
-└── illustrations/               ← 图解页面的原始副本
+介词图例/
+├── index.html             ← 目录入口（点击任一单词进入图解）
+├── snap_illustration.html ← 单词深挖页 × 74
+├── up_illustration.html
+├── ...
+├── break_broke_broken_compare.html ← 词族对比页 × 10
+├── ...
+└── vocab/                 ← 词库分类索引
 ```
 
 ### 单词深挖页（74个）包含：
@@ -132,11 +118,11 @@ English-Physics/
 
 | 词性 | 文件 |
 |------|------|
-| 小品词/介词 | [skill/vocab/particles.md](skill/vocab/particles.md) |
-| 动词 | [skill/vocab/verbs.md](skill/vocab/verbs.md) |
-| 形容词 | [skill/vocab/adjectives.md](skill/vocab/adjectives.md) |
-| 名词 | [skill/vocab/nouns.md](skill/vocab/nouns.md) |
-| 副词 | [skill/vocab/adverbs.md](skill/vocab/adverbs.md) |
+| 小品词/介词 | [vocab/particles.md](vocab/particles.md) |
+| 动词 | [vocab/verbs.md](vocab/verbs.md) |
+| 形容词 | [vocab/adjectives.md](vocab/adjectives.md) |
+| 名词 | [vocab/nouns.md](vocab/nouns.md) |
+| 副词 | [vocab/adverbs.md](vocab/adverbs.md) |
 
 ---
 
@@ -144,4 +130,4 @@ English-Physics/
 
 纯 SVG 矢量绘图 · SVG 动画 · 单文件 HTML · 零依赖 · 双击即开
 
-设计规范详见 [skill/SKILL.md](skill/SKILL.md)。
+设计规范详见 [from-physics 技能](SKILL.md)。

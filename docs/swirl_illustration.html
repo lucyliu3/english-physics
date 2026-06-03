@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWIRL 图解</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; color:#7b4ad9; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#7b4ad9,#9b6fe0); border-radius:2px; flex-shrink:0; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#7b4ad9; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#7b4ad9; }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#7b4ad9; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+
+  .spectrum-wrap { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+
+  .purple-light { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>SWIRL 图解</h1>
+<p class="subtitle">旋涡 / 打旋 — 从"water swirls"到"swirl of emotions"</p>
+
+<!-- 核心卡片区 -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+  <!-- Card 1: 物理旋涡 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="swirlBg1" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#f5f0ff"/>
+        </linearGradient>
+        <filter id="shadow1">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+        <radialGradient id="vortexGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#7b4ad9" stop-opacity="0.05"/>
+          <stop offset="60%" stop-color="#7b4ad9" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#7b4ad9" stop-opacity="0.3"/>
+        </radialGradient>
+      </defs>
+      <rect width="760" height="400" fill="url(#swirlBg1)" rx="8"/>
+
+      <!-- 水面背景 -->
+      <ellipse cx="380" cy="220" rx="240" ry="100" fill="#e8e0f5" opacity="0.3"/>
+
+      <!-- 旋涡螺旋线 - 外圈 -->
+      <g filter="url(#shadow1)">
+        <path d="M380,220
+          C380,170 440,150 470,180
+          C500,210 480,260 440,260
+          C400,260 370,230 380,200
+          C390,170 420,165 430,185"
+          fill="none" stroke="#7b4ad9" stroke-width="4" stroke-linecap="round" opacity="0.6">
+          <animate attributeName="stroke-dashoffset" values="0;-600" dur="4s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="rotate" values="0,380,220;360,380,220" dur="6s" repeatCount="indefinite"/>
+        </path>
+      </g>
+
+      <!-- 旋涡螺旋线 - 中圈 -->
+      <g>
+        <path d="M380,220
+          C380,185 425,170 445,195
+          C465,220 450,250 425,250
+          C400,250 382,235 385,215"
+          fill="none" stroke="#7b4ad9" stroke-width="3" stroke-linecap="round" opacity="0.5">
+          <animateTransform attributeName="transform" type="rotate" values="0,380,220;-360,380,220" dur="5s" repeatCount="indefinite"/>
+        </path>
+      </g>
+
+      <!-- 旋涡中心 -->
+      <circle cx="380" cy="220" r="10" fill="#7b4ad9" opacity="0.7">
+        <animate attributeName="r" values="8;12;8" dur="2s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- 漂浮碎片 -->
+      <g>
+        <rect x="0" y="0" width="8" height="8" rx="4" fill="#9b6fe0" opacity="0.6">
+          <animateTransform attributeName="transform" type="translate"
+            values="480,180; 440,210; 400,225; 380,220"
+            dur="5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.8;0.6;0.3;0" dur="5s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+      <g>
+        <rect x="0" y="0" width="6" height="10" rx="3" fill="#b896f0" opacity="0.5">
+          <animateTransform attributeName="transform" type="translate"
+            values="300,190; 350,215; 370,222; 380,220"
+            dur="6s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.7;0.5;0.2;0" dur="6s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+      <g>
+        <circle cx="0" cy="0" r="5" fill="#7b4ad9" opacity="0.4">
+          <animateTransform attributeName="transform" type="translate"
+            values="460,250; 430,240; 400,228; 380,220"
+            dur="4.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.6;0.4;0.2;0" dur="4.5s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <!-- 水面波纹 -->
+      <path d="M140,140 Q200,130 260,140 Q320,150 380,140 Q440,130 500,140 Q560,150 620,140" fill="none" stroke="#7b4ad9" stroke-width="1.5" opacity="0.2">
+        <animate attributeName="d" values="M140,140 Q200,130 260,140 Q320,150 380,140 Q440,130 500,140 Q560,150 620,140;M140,145 Q200,135 260,145 Q320,155 380,145 Q440,135 500,145 Q560,155 620,145;M140,140 Q200,130 260,140 Q320,150 380,140 Q440,130 500,140 Q560,150 620,140" dur="3s" repeatCount="indefinite"/>
+      </path>
+
+      <!-- 文字标注 -->
+      <text x="380" y="310" text-anchor="middle" fill="#7b4ad9" font-size="16" font-weight="bold" font-family="sans-serif">水在打旋 Swirling Water</text>
+      <text x="380" y="335" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">碎片随水流旋转向中心汇聚</text>
+      <text x="380" y="355" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">↕ 物理画面：旋转 + 向心运动</text>
+
+      <!-- 小白框 -->
+      <rect x="100" y="370" width="560" height="26" rx="4" fill="#fff" stroke="#e8e0d0" stroke-width="1" opacity="0.9"/>
+      <text x="110" y="387" fill="#555" font-size="12" font-family="sans-serif"><tspan fill="#7b4ad9" font-weight="bold">💡 理解关键</tspan>：SWIRL = 旋转（rotate）+ 向心汇聚（converge），不是单纯的转圈</text>
+    </svg>
+    <div class="card-body">
+      <h3>SWIRL <span class="hl">/swɜːrl/</span></h3>
+      <div class="pos">verb · noun · 旋涡 / 打旋</div>
+      <div class="def">
+        <strong>本义</strong> 液体或气体沿螺旋路径运动，同时向中心汇聚<br>
+        <strong>引申</strong> 抽象概念的旋转缠绕——情绪、活动、思绪
+        <span class="eg">"The water swirled down the drain." 水打着旋流进下水道。</span>
+        <span class="eg">"A swirl of emotions swept over her." 一阵复杂的情绪涌上她心头。</span>
+      </div>
+      <div class="white-box"><strong>💡 核心逻辑</strong>：物理旋涡 = 旋转运动 + 向心汇聚 → 引申为"复杂的混合体"（情绪旋涡、活动旋涡）。关键是有多条线索缠绕在一起，不是单一方向的转动。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: 抽象旋涡 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="swirlBg2" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#f5f0ff"/>
+        </linearGradient>
+        <filter id="shadow2">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#swirlBg2)" rx="8"/>
+
+      <!-- 人物剪影 -->
+      <circle cx="380" cy="140" r="35" fill="#f5e6d0"/>
+      <circle cx="370" cy="135" r="3.5" fill="#333"/>
+      <circle cx="390" cy="135" r="3.5" fill="#333"/>
+      <path d="M380,148 Q385,143 390,148" fill="none" stroke="#333" stroke-width="2"/>
+      <!-- 身体 -->
+      <rect x="365" y="175" width="30" height="45" rx="8" fill="#7b4ad9" opacity="0.7"/>
+
+      <!-- 情绪旋涡：多条彩色丝带从身体飘出缠绕 -->
+      <!-- 丝带1: 红色（愤怒） -->
+      <path fill="none" stroke="#e63946" stroke-width="3" stroke-linecap="round" opacity="0.6">
+        <animate attributeName="d"
+          values="M380,200 Q350,160 320,180 Q290,200 310,230 Q330,260 360,240 Q390,220 380,200;
+                  M380,200 Q360,150 340,160 Q310,180 330,220 Q350,260 370,250 Q390,240 380,200;
+                  M380,200 Q350,160 320,180 Q290,200 310,230 Q330,260 360,240 Q390,220 380,200"
+          dur="6s" repeatCount="indefinite"/>
+      </path>
+
+      <!-- 丝带2: 蓝色（悲伤） -->
+      <path fill="none" stroke="#2b6cb0" stroke-width="3" stroke-linecap="round" opacity="0.6">
+        <animate attributeName="d"
+          values="M380,200 Q410,160 440,180 Q470,200 450,230 Q430,260 400,240 Q370,220 380,200;
+                  M380,200 Q400,150 420,160 Q450,180 430,220 Q410,260 390,250 Q370,240 380,200;
+                  M380,200 Q410,160 440,180 Q470,200 450,230 Q430,260 400,240 Q370,220 380,200"
+          dur="7s" repeatCount="indefinite"/>
+      </path>
+
+      <!-- 丝带3: 金色（喜悦） -->
+      <path fill="none" stroke="#f0c040" stroke-width="3" stroke-linecap="round" opacity="0.5">
+        <animate attributeName="d"
+          values="M380,200 Q340,170 300,200 C260,230 300,270 340,260 C380,250 400,230 380,200;
+                  M380,200 Q350,180 310,190 C270,200 290,250 330,260 C370,270 390,240 380,200;
+                  M380,200 Q340,170 300,200 C260,230 300,270 340,260 C380,250 400,230 380,200"
+          dur="5.5s" repeatCount="indefinite"/>
+      </path>
+
+      <!-- 丝带4: 紫色（困惑） -->
+      <path fill="none" stroke="#8b5cf6" stroke-width="3" stroke-linecap="round" opacity="0.5">
+        <animate attributeName="d"
+          values="M380,200 Q390,150 420,170 Q450,190 430,220 Q410,250 390,240 Q370,230 380,200;
+                  M380,200 Q370,160 410,180 Q440,200 420,230 Q400,260 385,245 Q370,230 380,200;
+                  M380,200 Q390,150 420,170 Q450,190 430,220 Q410,250 390,240 Q370,230 380,200"
+          dur="6.5s" repeatCount="indefinite"/>
+      </path>
+
+      <!-- 文字标注 -->
+      <text x="380" y="310" text-anchor="middle" fill="#7b4ad9" font-size="16" font-weight="bold" font-family="sans-serif">情绪的旋涡 A Swirl of Emotions</text>
+      <text x="380" y="335" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">多种情绪（愤怒/悲伤/喜悦/困惑）在内心缠绕</text>
+      <text x="380" y="355" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">↕ 抽象：多种元素混合缠绕，难分难解</text>
+
+      <!-- 小白框 -->
+      <rect x="100" y="370" width="560" height="26" rx="4" fill="#fff" stroke="#e8e0d0" stroke-width="1" opacity="0.9"/>
+      <text x="110" y="387" fill="#555" font-size="12" font-family="sans-serif"><tspan fill="#7b4ad9" font-weight="bold">🧠 如何演变的</tspan>：物理旋涡（多种物质混合卷入）→ 内心多种情绪混合（a swirl of emotions）</text>
+    </svg>
+    <div class="card-body">
+      <h3>抽象引申 <span class="hl">→ 情感 / 活动</span></h3>
+      <div class="pos">FIGURATIVE · 抽象用法</div>
+      <div class="def">
+        <strong>swirl of emotions</strong> 多种情绪混杂交织<br>
+        <strong>swirl of activity</strong> 繁忙活动的旋涡<br>
+        <strong>swirl of controversy</strong> 争议的漩涡
+        <span class="eg">"She was caught in a swirl of conflicting emotions." 她被卷入矛盾情绪的旋涡。</span>
+        <span class="eg">"The party was a swirl of music and laughter." 派对在音乐和笑声的热闹旋涡中。</span>
+      </div>
+      <div class="white-box"><strong>💡 引申逻辑</strong>：旋涡的视觉特征 = 多条线缠绕时 + 中心强烈 + 边缘弱化 → "a swirl of + 抽象名词"表示多种元素混合在一起的复杂状态。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 逻辑演化树 -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div class="logic-tree" style="background:#fffdf7; border:1px solid #e8e0d0; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+    <div class="tree-node" style="background:#f5f0ff; border:1px solid #d8cce8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ① 物理义<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">水/空气旋转运动</span>
+    </div>
+    <div style="font-size:18px; color:#7b4ad9; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#f5f0ff; border:1px solid #d8cce8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:100px;">
+      ② 混合搅拌<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">swirl paint/soup</span>
+    </div>
+    <div style="font-size:18px; color:#7b4ad9; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#f5f0ff; border:1px solid #d8cce8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:110px;">
+      ③ 旋涡图案<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">swirl pattern/design</span>
+    </div>
+    <div style="font-size:18px; color:#7b4ad9; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#f5f0ff; border:1px solid #d8cce8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:110px;">
+      ④ 抽象混合<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">swirl of emotions/activity</span>
+    </div>
+  </div>
+
+  <div class="white-box" style="margin-top:16px;"><strong>💡 逻辑链</strong>：物理旋转（water swirls）→ 搅拌混合（swirl the paint）→ 视觉上的螺旋图案（swirl pattern）→ 抽象集合体（a swirl of emotions，把多种情绪"搅拌"在一起）。每一步都保留了"旋转+混合"的核心意象。</div>
+</div>
+
+<!-- 易混对比区 -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="c1bg" x1="0" y1="0" x2="760" y2="340">
+          <stop offset="0%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#f5f0ff"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="340" fill="url(#c1bg)" rx="8"/>
+
+      <!-- SWIRL vs SPIN -->
+      <text x="380" y="30" text-anchor="middle" fill="#7b4ad9" font-size="16" font-weight="bold" font-family="sans-serif">SWIRL 旋涡 vs SPIN 旋转</text>
+
+      <!-- SWIRL 左 -->
+      <circle cx="190" cy="140" r="55" fill="none" stroke="#7b4ad9" stroke-width="2.5" stroke-dasharray="4,4" opacity="0.3"/>
+      <path d="M190,140 C190,100 230,90 250,115 C270,140 255,170 235,170" fill="none" stroke="#7b4ad9" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="190" cy="140" r="6" fill="#7b4ad9" opacity="0.6">
+        <animateTransform attributeName="transform" type="rotate" values="0,190,140;360,190,140" dur="6s" repeatCount="indefinite"/>
+      </circle>
+      <text x="190" y="230" text-anchor="middle" fill="#444" font-size="14" font-weight="600" font-family="sans-serif">SWIRL</text>
+      <text x="190" y="252" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">旋转 + 向心汇聚</text>
+      <text x="190" y="270" text-anchor="middle" fill="#777" font-size="11" font-family="sans-serif">多条线缠绕+中心吸入</text>
+
+      <!-- SPIN 右 -->
+      <circle cx="570" cy="140" r="55" fill="none" stroke="#e63946" stroke-width="2.5" stroke-dasharray="4,4" opacity="0.3"/>
+      <line x1="570" y1="140" x2="570" y2="90" stroke="#e63946" stroke-width="3">
+        <animateTransform attributeName="transform" type="rotate" values="0,570,140;360,570,140" dur="2s" repeatCount="indefinite"/>
+      </line>
+      <line x1="570" y1="140" x2="620" y2="140" stroke="#e63946" stroke-width="3">
+        <animateTransform attributeName="transform" type="rotate" values="0,570,140;360,570,140" dur="2s" repeatCount="indefinite"/>
+      </line>
+      <text x="570" y="230" text-anchor="middle" fill="#e63946" font-size="14" font-weight="600" font-family="sans-serif">SPIN</text>
+      <text x="570" y="252" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">单纯绕轴旋转</text>
+      <text x="570" y="270" text-anchor="middle" fill="#777" font-size="11" font-family="sans-serif">一个物体绕自身轴转</text>
+
+      <!-- 分割线 -->
+      <line x1="380" y1="80" x2="380" y2="190" stroke="#ccc" stroke-width="1" stroke-dasharray="3,3"/>
+
+      <rect x="30" y="295" width="700" height="40" rx="6" fill="#fff" stroke="#e8e0d0" stroke-width="1"/>
+      <text x="40" y="312" fill="#555" font-size="11.5" font-family="sans-serif"><tspan fill="#7b4ad9" font-weight="bold">💡 SWIRL vs SPIN</tspan>：SPIN = 物体自身旋转（陀螺、地球自转），无位移无汇聚；SWIRL = 旋转 + 向心运动 + 多线缠绕（水涡、思绪），有"卷入"感。</text>
+    </svg>
+    <div class="label">
+      <div class="p">SWIRL vs SPIN</div>
+      <div class="desc">SPIN是绕轴自转，SWIRL是螺旋向心运动</div>
+    </div>
+  </div>
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="c2bg" x1="0" y1="0" x2="760" y2="340">
+          <stop offset="0%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#f5f0ff"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="340" fill="url(#c2bg)" rx="8"/>
+
+      <!-- WHIRL vs EDDY -->
+      <text x="380" y="30" text-anchor="middle" fill="#7b4ad9" font-size="16" font-weight="bold" font-family="sans-serif">WHIRL 急旋 vs EDDY 涡流</text>
+
+      <!-- WHIRL 左 -->
+      <g>
+        <path d="M190,85 C240,85 260,120 240,150 C220,180 180,180 160,155 C140,130 160,105 185,105" fill="none" stroke="#e63946" stroke-width="3" stroke-linecap="round">
+          <animateTransform attributeName="transform" type="rotate" values="0,190,140;360,190,140" dur="1.5s" repeatCount="indefinite"/>
+        </path>
+        <circle cx="190" cy="140" r="5" fill="#e63946"/>
+      </g>
+      <text x="190" y="230" text-anchor="middle" fill="#e63946" font-size="14" font-weight="600" font-family="sans-serif">WHIRL</text>
+      <text x="190" y="252" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">急速旋转/眩晕</text>
+      <text x="190" y="270" text-anchor="middle" fill="#777" font-size="11" font-family="sans-serif">速度快、力度强、伴随混乱</text>
+
+      <!-- EDDY 右 -->
+      <g>
+        <path d="M540,115 C560,115 570,130 565,145 C560,160 540,165 530,155 C520,145 525,130 535,125" fill="none" stroke="#2b6cb0" stroke-width="3" stroke-linecap="round"/>
+        <!-- 主水流 -->
+        <line x1="620" y1="120" x2="680" y2="120" stroke="#2b6cb0" stroke-width="2"/>
+        <line x1="620" y1="140" x2="680" y2="140" stroke="#2b6cb0" stroke-width="2" opacity="0.5"/>
+        <line x1="620" y1="160" x2="680" y2="160" stroke="#2b6cb0" stroke-width="2"/>
+        <polygon points="680,118 688,140 680,162" fill="#2b6cb0" opacity="0.3"/>
+      </g>
+      <text x="570" y="230" text-anchor="middle" fill="#2b6cb0" font-size="14" font-weight="600" font-family="sans-serif">EDDY</text>
+      <text x="570" y="252" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">回流/涡流</text>
+      <text x="570" y="270" text-anchor="middle" fill="#777" font-size="11" font-family="sans-serif">主流中的局部反转小旋</text>
+
+      <line x1="380" y1="80" x2="380" y2="190" stroke="#ccc" stroke-width="1" stroke-dasharray="3,3"/>
+
+      <rect x="30" y="295" width="700" height="40" rx="6" fill="#fff" stroke="#e8e0d0" stroke-width="1"/>
+      <text x="40" y="312" fill="#555" font-size="11" font-family="sans-serif"><tspan fill="#7b4ad9" font-weight="bold">💡 WHIRL vs EDDY</tspan>：WHIRL = 速度快+混乱（dust whirls up），EDDY = 流体中局部反向流（eddy current），更学术/技术性，通常规模小。</text>
+    </svg>
+    <div class="label">
+      <div class="p">WHIRL vs EDDY</div>
+      <div class="desc">WHIRL强调速度与混乱，EDDY是流体中的局部回流</div>
+    </div>
+  </div>
+</div>
+
+<!-- 常见搭配区 -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+
+<div class="usage-section">
+  <h4>🌊 物理用法（水/空气/液体）</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>swirl</strong> around</span>
+      <span class="usage-cn">盘旋/打转 &nbsp;|&nbsp; 📖 液体或气体在某个区域内旋转运动</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>swirl</strong> down the drain</span>
+      <span class="usage-cn">打着旋流进下水道 &nbsp;|&nbsp; 📖 经典物理画面：浴缸放水时的旋涡</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>swirl</strong> the wine</span>
+      <span class="usage-cn">晃杯/摇杯 &nbsp;|&nbsp; 📖 品酒时旋转酒杯释放香气</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>swirl</strong> pattern</span>
+      <span class="usage-cn">旋涡图案/螺旋纹 &nbsp;|&nbsp; 📖 木纹、大理石纹、蛋糕纹路</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>🌀 抽象用法（情感/活动/事件）</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en">a <strong>swirl</strong> of emotions</span>
+      <span class="usage-cn">情绪翻涌/复杂情绪 &nbsp;|&nbsp; 📖 多种情感在内心缠绕</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">a <strong>swirl</strong> of activity</span>
+      <span class="usage-cn">繁忙的活动旋涡 &nbsp;|&nbsp; 📖 周围一片繁忙景象</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">a <strong>swirl</strong> of controversy</span>
+      <span class="usage-cn">争议的漩涡 &nbsp;|&nbsp; 📖 卷入舆论旋涡</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>swirl</strong> with rumors</span>
+      <span class="usage-cn">谣言四起 &nbsp;|&nbsp; 📖 谣言像旋涡一样四处扩散</span>
+    </div>
+  </div>
+</div>
+
+<div class="white-box" style="margin-bottom:24px;"><strong>💡 抽象用法演变</strong>：物理旋涡=多种物质混合卷入→"a swirl of + 名词"表示"多种成分混合的复杂状态"。比如 a swirl of emotions 就是"多种情绪像旋涡一样在内心缠绕"，a swirl of activity 是"各种活动像旋涡一样同时进行"。</div>
+
+<!-- 反义/相似词 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card purple-light">
+      <h5 style="color:#7b4ad9;">近义词</h5>
+      <p><strong>SPIN</strong> — 单纯绕轴旋转 <small>无向心汇聚</small></p>
+      <p><strong>WHIRL</strong> — 急速旋转 <small>速度快、有混乱感</small></p>
+      <p><strong>EDDY</strong> — 涡流 <small>流体中的局部反向流</small></p>
+    </div>
+    <div class="info-card" style="background:linear-gradient(135deg,#f0f5ff,#e0e8f5);">
+      <h5 style="color:#2b6cb0;">使用场景</h5>
+      <p><strong>swirl + liquid</strong> 液体旋涡</p>
+      <p><strong>swirl + emotions</strong> 情绪翻涌</p>
+      <p><strong>swirl + pattern</strong> 螺旋图案</p>
+    </div>
+    <div class="info-card" style="background:linear-gradient(135deg,#fff5f0,#fde8e0);">
+      <h5 style="color:#e63946;">易混提醒</h5>
+      <p><strong>SWIRL 不等于 SPIN</strong></p>
+      <p>SPIN：物体自身旋转（无位移）</p>
+      <p>SWIRL：螺旋运动+向心汇聚</p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

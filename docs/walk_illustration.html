@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WALK 图解 — 走 / 步行</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#38a169,#2d8659); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#38a169,#4caf50); border-radius:2px; flex-shrink:0; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#38a169; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#38a169; }
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#38a169; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+  .spectrum-wrap { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+  .walk-bg { background:linear-gradient(135deg,#e8f5e9,#d0e8d0); }
+  .stroll-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+  @media (max-width:720px) { .container { padding:24px 16px 32px; } .cards, .compare-row { grid-template-columns:1fr; } .usage-list { grid-template-columns:1fr; } .three-col { grid-template-columns:1fr; } h1 { font-size:26px; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🚶 WALK</h1>
+<p class="subtitle">走 / 步行 — 从"walk home"到"walk the talk"</p>
+
+<!-- 核心卡片区 -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+
+  <!-- Card 1: WALK 基础 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="walkBg" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#f0faf5"/>
+          <stop offset="100%" stop-color="#e8f5ec"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="400" fill="url(#walkBg)" rx="8"/>
+
+      <!-- 地面 -->
+      <rect x="0" y="300" width="760" height="100" fill="#e8e8e4" rx="0"/>
+      <rect x="0" y="300" width="760" height="4" fill="#ccc"/>
+
+      <!-- 步行人物 -->
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="-100,0; 860,0"
+          dur="6s" repeatCount="indefinite"/>
+        <!-- 头部 -->
+        <circle cx="100" cy="200" r="20" fill="#f5e6d0"/>
+        <circle cx="93" cy="196" r="2.5" fill="#333"/>
+        <circle cx="107" cy="196" r="2.5" fill="#333"/>
+        <path d="M100,205 Q104,202 108,205" fill="none" stroke="#333" stroke-width="1.5"/>
+        <!-- 身体 -->
+        <rect x="88" y="220" width="24" height="40" rx="6" fill="#4a90d9"/>
+        <!-- 左腿摆动 -->
+        <g>
+          <animateTransform attributeName="transform" type="rotate"
+            values="-20,100,260; 20,100,260; -20,100,260"
+            dur="0.8s" repeatCount="indefinite"/>
+          <line x1="100" y1="260" x2="85" y2="310" stroke="#f5e6d0" stroke-width="5" stroke-linecap="round"/>
+        </g>
+        <!-- 右腿摆动 -->
+        <g>
+          <animateTransform attributeName="transform" type="rotate"
+            values="20,100,260; -20,100,260; 20,100,260"
+            dur="0.8s" repeatCount="indefinite"/>
+          <line x1="100" y1="260" x2="115" y2="310" stroke="#f5e6d0" stroke-width="5" stroke-linecap="round"/>
+        </g>
+        <!-- 手臂摆动 -->
+        <g>
+          <animateTransform attributeName="transform" type="rotate"
+            values="15,88,240; -15,88,240; 15,88,240"
+            dur="0.8s" repeatCount="indefinite"/>
+          <line x1="88" y1="240" x2="72" y2="270" stroke="#f5e6d0" stroke-width="4" stroke-linecap="round"/>
+        </g>
+        <g>
+          <animateTransform attributeName="transform" type="rotate"
+            values="-15,112,240; 15,112,240; -15,112,240"
+            dur="0.8s" repeatCount="indefinite"/>
+          <line x1="112" y1="240" x2="128" y2="270" stroke="#f5e6d0" stroke-width="4" stroke-linecap="round"/>
+        </g>
+      </g>
+
+      <!-- 足迹标记 -->
+      <ellipse cx="200" cy="310" rx="10" ry="5" fill="#bbb" opacity="0.4">
+        <animate attributeName="opacity" values="0.4;0;0.4" dur="3s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="280" cy="310" rx="10" ry="5" fill="#bbb" opacity="0.3">
+        <animate attributeName="opacity" values="0.3;0;0.3" dur="3s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="350" cy="310" rx="10" ry="5" fill="#bbb" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0;0.2" dur="3s" repeatCount="indefinite"/>
+      </ellipse>
+
+      <!-- 文字标注 -->
+      <text x="380" y="360" text-anchor="middle" fill="#666" font-size="14" font-weight="600" font-family="sans-serif">🚶 一步一步往前走 — 最基本的移动方式</text>
+    </svg>
+    <div class="card-body">
+      <h3>WALK <span class="hl">/wɔːk/</span></h3>
+      <div class="pos">VERB / NOUN · 走 / 步行</div>
+      <div class="def">
+        <strong>本义</strong> 双脚交替行走的移动方式<br>
+        <strong>引申</strong> 散步、走过、陪伴、以行动证明
+        <span class="eg">"I walk to school every day." 我每天走路上学</span>
+        <span class="eg">"She walked the dog in the park." 她在公园遛狗</span>
+        <span class="eg">"You need to walk the talk." 你得说到做到</span>
+      </div>
+      <div class="white-box"><strong>💡 核心逻辑</strong>：WALK 是最基础的"用脚移动"，其核心画面是"一步一步前进"。所有短语用法都从这个基础画面出发：walk out = 走出去（离开），walk in on = 走进去撞见，walk away = 走开（不干了），walk over = 走过去（欺负人就是从别人身上"踩过去"）。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: WALK 短语对比 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="walkBg2" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#f0faf5"/>
+          <stop offset="100%" stop-color="#e8f5ec"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="400" fill="url(#walkBg2)" rx="8"/>
+
+      <!-- walk out — 走出去 -->
+      <rect x="40" y="30" width="220" height="140" rx="10" fill="#fff" stroke="#d0e8d0" stroke-width="1.5"/>
+      <text x="150" y="55" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">WALK OUT</text>
+      <rect x="40" y="65" width="50" height="80" fill="#ddd" stroke="#bbb" stroke-width="1"/>
+      <rect x="20" y="65" width="20" height="80" fill="#aaa"/>
+      <!-- 门 -->
+      <rect x="90" y="65" width="40" height="80" fill="#8B4513" rx="2">
+        <animateTransform attributeName="transform" type="rotate"
+          values="0,90,145; -60,90,145"
+          dur="3s" repeatCount="indefinite"/>
+      </rect>
+      <circle cx="122" cy="110" r="2.5" fill="#ffd700"/>
+      <!-- 人物走出去 -->
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="-30,0; 40,0"
+          dur="3s" repeatCount="indefinite"/>
+        <circle cx="160" cy="100" r="12" fill="#f5e6d0"/>
+        <rect x="152" y="112" width="16" height="25" rx="4" fill="#e63946"/>
+      </g>
+      <text x="150" y="160" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">走出去 / 退席抗议</text>
+
+      <!-- walk in on — 撞见 -->
+      <rect x="270" y="30" width="220" height="140" rx="10" fill="#fff" stroke="#d0e8d0" stroke-width="1.5"/>
+      <text x="380" y="55" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">WALK IN ON</text>
+      <!-- 房间 -->
+      <rect x="300" y="65" width="80" height="80" fill="#fff5f0" stroke="#e8d8c8" stroke-width="1.5"/>
+      <!-- 门半开 -->
+      <rect x="380" y="65" width="15" height="80" fill="#8B4513"/>
+      <!-- 里面两个人 -->
+      <circle cx="330" cy="105" r="12" fill="#f5e6d0"/>
+      <circle cx="360" cy="105" r="12" fill="#f5e6d0"/>
+      <text x="330" y="125" text-anchor="middle" fill="#e63946" font-size="14">😳</text>
+      <!-- 外面的人物 -->
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="80,0; 0,0"
+          dur="4s" repeatCount="indefinite"/>
+        <circle cx="425" cy="100" r="12" fill="#f5e6d0"/>
+        <rect x="417" y="112" width="16" height="25" rx="4" fill="#4a90d9"/>
+      </g>
+      <text x="380" y="160" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">走进去撞见（尴尬）</text>
+
+      <!-- walk away — 走开 -->
+      <rect x="500" y="30" width="220" height="140" rx="10" fill="#fff" stroke="#d0e8d0" stroke-width="1.5"/>
+      <text x="610" y="55" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">WALK AWAY</text>
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 80,0"
+          dur="3s" repeatCount="indefinite"/>
+        <circle cx="540" cy="100" r="12" fill="#f5e6d0"/>
+        <rect x="532" y="112" width="16" height="25" rx="4" fill="#e67e22"/>
+      </g>
+      <text x="610" y="125" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">← 背对走开</text>
+      <text x="610" y="160" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">走开 / 放弃 / 摆脱</text>
+
+      <!-- 下一行 -->
+      <!-- walk over — 走过去 -->
+      <rect x="40" y="200" width="220" height="140" rx="10" fill="#fff" stroke="#d0e8d0" stroke-width="1.5"/>
+      <text x="150" y="225" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">WALK OVER</text>
+      <circle cx="100" cy="275" r="12" fill="#f5e6d0"/>
+      <rect x="92" y="287" width="16" height="25" rx="4" fill="#4a90d9"/>
+      <line x1="116" y1="310" x2="150" y2="310" stroke="#e63946" stroke-width="1.5" stroke-dasharray="3,3"/>
+      <circle cx="160" cy="275" r="12" fill="#f5e6d0"/>
+      <rect x="152" y="287" width="16" height="25" rx="4" fill="#e63946"/>
+      <text x="150" y="330" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">走过去 / 欺负人（踩过去）</text>
+
+      <!-- walk off — 走掉 -->
+      <rect x="270" y="200" width="220" height="140" rx="10" fill="#fff" stroke="#d0e8d0" stroke-width="1.5"/>
+      <text x="380" y="225" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">WALK OFF</text>
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 60,0"
+          dur="3s" repeatCount="indefinite"/>
+        <circle cx="320" cy="275" r="12" fill="#f5e6d0"/>
+        <rect x="312" y="287" width="16" height="25" rx="4" fill="#e67e22"/>
+      </g>
+      <text x="380" y="310" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">走掉 / 用走路消除</text>
+      <text x="380" y="330" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">walk off a meal 散步消食</text>
+
+      <!-- walk the talk — 说到做到 -->
+      <rect x="500" y="200" width="220" height="140" rx="10" fill="#fff" stroke="#d0e8d0" stroke-width="1.5"/>
+      <text x="610" y="225" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">WALK THE TALK</text>
+      <!-- 嘴说话 -->
+      <ellipse cx="580" cy="270" rx="15" ry="8" fill="#f5e6d0"/>
+      <path d="M575,268 Q580,264 585,268" fill="none" stroke="#333" stroke-width="1.5"/>
+      <text x="580" y="280" text-anchor="middle" fill="#999" font-size="11" font-family="sans-serif">"I'll do it!"</text>
+      <!-- 脚步 -->
+      <line x1="595" y1="295" x2="630" y2="295" stroke="#38a169" stroke-width="2" stroke-dasharray="4,3"/>
+      <circle cx="640" cy="290" r="12" fill="#f5e6d0"/>
+      <rect x="632" y="302" width="16" height="25" rx="4" fill="#38a169"/>
+      <text x="610" y="330" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">言行一致，说到做到</text>
+    </svg>
+    <div class="card-body">
+      <h3>WALK 短语对比 <span class="hl">一目了然</span></h3>
+      <div class="pos">PHRASAL VERBS · 六个高频短语</div>
+      <div class="def">
+        <strong>walk out / walk in on / walk away / walk over / walk off / walk the talk</strong>
+      </div>
+      <div class="white-box"><strong>💡 六个短语的逻辑</strong>：walk out = 走出去（离开场景）；walk in on = 走进正在发生的场景（撞见）；walk away = 走开（放弃/远离）；walk over = 走过去（也指"欺负"，像从人身上踩过去）；walk off = 走掉（也指"用走路消除"）；walk the talk = 让行动"走"在说的前面（说到做到）。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 程度光谱：走路的节奏 -->
+<div class="section-title"><span class="bar"></span><span>程度光谱：从 STROLL 到 SPRINT</span></div>
+<div class="spectrum-wrap">
+  <svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="walkSpecGrad" x1="0" y1="0" x2="900" y2="0">
+        <stop offset="0%" stop-color="#38a169"/>
+        <stop offset="33%" stop-color="#8bc34a"/>
+        <stop offset="66%" stop-color="#e67e22"/>
+        <stop offset="100%" stop-color="#e63946"/>
+      </linearGradient>
+    </defs>
+    <rect width="900" height="260" fill="#fafaf8" rx="8"/>
+    <!-- 轨道 -->
+    <rect x="60" y="110" width="780" height="10" rx="5" fill="url(#walkSpecGrad)" opacity="0.5"/>
+    <!-- 阶段 -->
+    <text x="105" y="90" text-anchor="middle" fill="#38a169" font-size="13" font-weight="700" font-family="sans-serif">STROLL</text>
+    <text x="285" y="90" text-anchor="middle" fill="#8bc34a" font-size="13" font-weight="700" font-family="sans-serif">WALK</text>
+    <text x="465" y="90" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="700" font-family="sans-serif">MARCH</text>
+    <text x="645" y="90" text-anchor="middle" fill="#e63946" font-size="13" font-weight="700" font-family="sans-serif">STRUT</text>
+    <text x="825" y="90" text-anchor="middle" fill="#e63946" font-size="13" font-weight="700" font-family="sans-serif">SPRINT</text>
+    <!-- 游标 -->
+    <circle cx="105" cy="115" r="12" fill="#38a169">
+      <animate attributeName="cx" values="105;285;465;645;825;645;465;285;105" dur="15s" repeatCount="indefinite"/>
+    </circle>
+    <!-- 底部描述 -->
+    <text x="105" y="170" text-anchor="middle" fill="#38a169" font-size="12" font-weight="600" font-family="sans-serif">
+      悠闲漫步
+      <animate attributeName="opacity" values="1;0;0;0;0;0;0;0;1" dur="15s" repeatCount="indefinite"/>
+    </text>
+    <text x="285" y="170" text-anchor="middle" fill="#8bc34a" font-size="12" font-weight="600" font-family="sans-serif">
+      正常步行
+      <animate attributeName="opacity" values="0;1;0;0;0;0;0;0;0" dur="15s" repeatCount="indefinite"/>
+    </text>
+    <text x="465" y="170" text-anchor="middle" fill="#e67e22" font-size="12" font-weight="600" font-family="sans-serif">
+      正步/大步走
+      <animate attributeName="opacity" values="0;0;1;0;0;0;0;0;0" dur="15s" repeatCount="indefinite"/>
+    </text>
+    <text x="645" y="170" text-anchor="middle" fill="#e63946" font-size="12" font-weight="600" font-family="sans-serif">
+      昂首阔步
+      <animate attributeName="opacity" values="0;0;0;1;0;0;0;0;0" dur="15s" repeatCount="indefinite"/>
+    </text>
+    <text x="825" y="170" text-anchor="middle" fill="#e63946" font-size="12" font-weight="600" font-family="sans-serif">
+      全速冲刺
+      <animate attributeName="opacity" values="0;0;0;0;1;0;0;0;0" dur="15s" repeatCount="indefinite"/>
+    </text>
+  </svg>
+  <div class="white-box"><strong>💡 逐步加速</strong>：速度从慢到快：stroll（闲逛）→ walk（正常走）→ march（正步）→ strut（昂首阔步）→ sprint（冲刺跑）。WALK 处于速度光谱的正中间。</div>
+</div>
+
+<!-- 逻辑演化树 -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div style="background:#fffdf7; border:1px solid #e8e0d0; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ① 物理义<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">双脚交替移动</span>
+    </div>
+    <div style="font-size:18px; color:#38a169; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ② 陪伴遛狗<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">walk the dog</span>
+    </div>
+    <div style="font-size:18px; color:#38a169; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ③ 离开/退出<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">walk out / away</span>
+    </div>
+    <div style="font-size:18px; color:#38a169; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ④ 撞见/干预<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">walk in on</span>
+    </div>
+    <div style="font-size:18px; color:#38a169; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ⑤ 抽象·说到做到<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">walk the talk</span>
+    </div>
+  </div>
+  <div class="white-box" style="margin-top:16px;"><strong>🧠 如何演变的</strong>：WALK 是所有动作中最基础的"用脚步移动"→ 可以"带着某人/物走"（walk the dog）→ 走出去就是离开（walk out / walk away）→ 走进正在进行的场景就是"撞见"（walk in on）→ 最抽象的是"用行动走路"即"让语言行走"（walk the talk 说到做到）。</div>
+</div>
+
+<!-- 易混对比区 -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+  <div class="compare-card">
+    <svg viewBox="0 0 380 300" xmlns="http://www.w3.org/2000/svg">
+      <rect width="380" height="300" fill="#fafaf8" rx="8"/>
+      <rect x="20" y="40" width="160" height="130" rx="10" fill="#e8f5e9" stroke="#d0e8d0" stroke-width="1.5"/>
+      <text x="100" y="70" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">WALK</text>
+      <text x="100" y="95" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">正常走路</text>
+      <text x="100" y="120" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">双脚交替</text>
+      <text x="100" y="155" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">中性词</text>
+
+      <rect x="200" y="40" width="160" height="130" rx="10" fill="#fff5f0" stroke="#e8d8c8" stroke-width="1.5"/>
+      <text x="280" y="70" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="700" font-family="sans-serif">STOMP</text>
+      <text x="280" y="95" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">跺脚走</text>
+      <text x="280" y="120" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">用力踩地</text>
+      <text x="280" y="155" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">带愤怒情绪</text>
+
+      <text x="190" y="230" text-anchor="middle" fill="#e67e22" font-size="18" font-weight="800" font-family="sans-serif">VS</text>
+    </svg>
+    <div class="label">
+      <div class="p">WALK vs STOMP</div>
+      <div class="desc">WALK 是中性步态；STOMP 是用力踩地行走，通常生气或故意制造噪音</div>
+    </div>
+  </div>
+
+  <div class="compare-card">
+    <svg viewBox="0 0 380 300" xmlns="http://www.w3.org/2000/svg">
+      <rect width="380" height="300" fill="#fafaf8" rx="8"/>
+      <rect x="15" y="30" width="170" height="130" rx="10" fill="#e8f5e9" stroke="#d0e8d0" stroke-width="1.5"/>
+      <text x="100" y="60" text-anchor="middle" fill="#38a169" font-size="13" font-weight="700" font-family="sans-serif">STROLL</text>
+      <text x="100" y="85" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">悠闲漫步</text>
+      <text x="100" y="110" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">放松、无目的</text>
+
+      <rect x="15" y="170" width="170" height="130" rx="10" fill="#f5f0ff" stroke="#d8d0e8" stroke-width="1.5"/>
+      <text x="100" y="200" text-anchor="middle" fill="#7b2d8e" font-size="13" font-weight="700" font-family="sans-serif">MARCH</text>
+      <text x="100" y="225" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">列队正步</text>
+      <text x="100" y="250" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">整齐划一有目的</text>
+
+      <rect x="200" y="30" width="165" height="130" rx="10" fill="#fff5f0" stroke="#e8d8c8" stroke-width="1.5"/>
+      <text x="282" y="60" text-anchor="middle" fill="#e63946" font-size="13" font-weight="700" font-family="sans-serif">STRUT</text>
+      <text x="282" y="85" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">昂首阔步</text>
+      <text x="282" y="110" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">自信/炫耀</text>
+
+      <rect x="200" y="170" width="165" height="130" rx="10" fill="#f0f5ff" stroke="#d0dce8" stroke-width="1.5"/>
+      <text x="282" y="200" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="700" font-family="sans-serif">STOMP</text>
+      <text x="282" y="225" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">跺脚怒走</text>
+      <text x="282" y="250" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">发泄愤怒</text>
+    </svg>
+    <div class="label">
+      <div class="p">WALK vs STROLL vs MARCH vs STRUT vs STOMP</div>
+      <div class="desc">速度、姿态和情绪的差异：STROLL 慢而放松，MARCH 正步，STRUT 自信炫耀，STOMP 愤怒跺脚</div>
+    </div>
+  </div>
+</div>
+
+<!-- 常见搭配区 -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+
+<div class="usage-section">
+  <h4>🚶 基本用法</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>walk</strong> to school / work</span>
+      <span class="usage-cn">走路去上学/上班 &nbsp;|&nbsp; 📖 用步行方式到达</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>walk</strong> the dog</span>
+      <span class="usage-cn">遛狗 &nbsp;|&nbsp; 📖 带狗出去散步</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">go for a <strong>walk</strong></span>
+      <span class="usage-cn">去散步 &nbsp;|&nbsp; 📖 以放松为目的步行</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">take a <strong>walk</strong></span>
+      <span class="usage-cn">走一走 / 散步 &nbsp;|&nbsp; 📖 同 go for a walk</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>📍 短语动词</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>walk out</strong></span>
+      <span class="usage-cn">走出去 / 退席抗议 &nbsp;|&nbsp; 📖 从某处走出去，表"不干了/抗议"</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>walk in on</strong></span>
+      <span class="usage-cn">撞见（尴尬场面）&nbsp;|&nbsp; 📖 走进时正好撞上正在发生的事</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>walk away</strong> (from)</span>
+      <span class="usage-cn">走开 / 放弃 &nbsp;|&nbsp; 📖 从困境中走开=放弃/摆脱</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>walk over</strong> (someone)</span>
+      <span class="usage-cn">欺负某人 &nbsp;|&nbsp; 📖 从别人身上"踩过去"</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>walk off</strong></span>
+      <span class="usage-cn">走掉 / 散步消除 &nbsp;|&nbsp; 📖 walk off a meal 散步消食</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>💬 习语 / 抽象</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>walk the talk</strong></span>
+      <span class="usage-cn">言行一致 &nbsp;|&nbsp; 📖 让行动"走"在话语前面，说到做到</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>walk</strong> of shame</span>
+      <span class="usage-cn">羞愧的步行 &nbsp;|&nbsp; 📖 第二天早上穿着前晚的衣服走回家</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>walk</strong> a tightrope</span>
+      <span class="usage-cn">走钢丝 &nbsp;|&nbsp; 📖 在危险/困难的情况下谨慎行事</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>walk</strong> on eggshells</span>
+      <span class="usage-cn">如履薄冰 &nbsp;|&nbsp; 📖 在蛋壳上走路=小心翼翼的相处</span>
+    </div>
+  </div>
+</div>
+
+<!-- 小白框：抽象习语详解 -->
+<div class="white-box" style="margin-bottom:20px;"><strong>💡 walk the talk 的演变</strong>："talk" 是说的内容，"walk" 是实际行动。让说的话"走起来" → 让言论变成行动 → 说到做到。例句："A good leader must walk the talk."（好领导必须言行一致。）</div>
+<div class="white-box" style="margin-bottom:20px;"><strong>💡 walk of shame 的演变</strong>：特指"前一天晚上穿着派对/约会服装走回家"的窘境。shame（羞愧）+ walk（步行）= 充满羞愧的步行经历，这是现代口语高频用法。</div>
+
+<!-- 反义/相似词 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card walk-bg">
+      <h5 style="color:#38a169;">✅ 反义词</h5>
+      <p><strong>RUN</strong> — 跑 <small>速度比 walk 快</small></p>
+      <p><strong>STAND / STOP</strong> — 站/停 <small>完全不移动</small></p>
+      <p><strong>RIDE</strong> — 乘坐 <small>用交通工具替代步行</small></p>
+    </div>
+    <div class="info-card stroll-bg">
+      <h5 style="color:#7b2d8e;">🔀 近义辨析</h5>
+      <p><strong>WALK</strong> — 走 <small>常规步行</small></p>
+      <p><strong>STROLL</strong> — 漫步 <small>闲逛、放松</small></p>
+      <p><strong>MARCH</strong> — 正步 <small>整齐/有节奏</small></p>
+      <p><strong>STRUT</strong> — 昂首阔步 <small>自信炫耀</small></p>
+      <p><strong>STOMP</strong> — 跺脚 <small>愤怒/用力</small></p>
+    </div>
+    <div class="info-card purple-bg">
+      <h5 style="color:#7b2d8e;">⚠️ 易混提醒</h5>
+      <p><strong>WALK vs RACE</strong> — walk 无竞争含义</p>
+      <p><strong>walk out vs walk away</strong> — out 强调离开某场所，away 强调远离某事物</p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

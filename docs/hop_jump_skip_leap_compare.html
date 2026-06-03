@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOP vs JUMP vs SKIP vs LEAP vs BOUND 对比图解</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f0faf5 0%,#e8f5ec 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:1020px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#38a169,#2d7a52); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#38a169,#48bb78); border-radius:2px; flex-shrink:0; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#38a169; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#38a169; }
+  .five-grid { display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; gap:12px; margin-bottom:36px; }
+  .mini-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:12px; overflow:hidden; text-align:center; transition:transform 0.2s; }
+  .mini-card:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.08); }
+  .mini-card svg { width:100%; height:auto; display:block; background:#fafaf8; }
+  .mini-card .label { padding:8px 8px 12px; }
+  .mini-card .label .p { font-size:14px; font-weight:700; }
+  .mini-card .label .desc { font-size:10.5px; color:#666; margin-top:2px; }
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#38a169; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+  .spectrum-wrap { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+  .hop-bg { background:linear-gradient(135deg,#f0fff4,#d4f7e0); }
+  .jump-bg { background:linear-gradient(135deg,#f0faf5,#c8f0d8); }
+  .skip-bg { background:linear-gradient(135deg,#e8f5ec,#c0e8d0); }
+  .leap-bg { background:linear-gradient(135deg,#d0f0e0,#a8e0c0); }
+  .bound-bg { background:linear-gradient(135deg,#c0e8d0,#90d0b0); }
+  .green-bg { background:linear-gradient(135deg,#f0faf5,#e8f5ec); }
+  .red-bg { background:linear-gradient(135deg,#fef2f2,#fde8e8); }
+  @media (max-width:800px) {
+    .container { padding:24px 16px 32px; }
+    .five-grid { grid-template-columns:1fr 1fr 1fr; }
+    .cards, .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>HOP vs JUMP vs SKIP vs LEAP vs BOUND</h1>
+<p class="subtitle">五种"跳"—— 单脚跳 / 双脚跳 / 蹦跳 / 飞跃 / 弹跳 — 高度和方式的区别</p>
+
+<!-- 五个人物并排对比 -->
+<div class="section-title"><span class="bar"></span><span>五种跳跃 — 高度、距离、动量递增</span></div>
+<div class="five-grid">
+  <!-- HOP -->
+  <div class="mini-card">
+    <svg viewBox="0 0 150 260" xmlns="http://www.w3.org/2000/svg">
+      <rect width="150" height="260" fill="#f0fff4" rx="8"/>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-10; 0,0" dur="1.2s" repeatCount="indefinite"/>
+        <circle cx="75" cy="50" r="16" fill="#f5e6d0"/>
+        <circle cx="70" cy="47" r="2.5" fill="#333"/>
+        <circle cx="80" cy="47" r="2.5" fill="#333"/>
+        <path d="M73,57 Q77,61 81,57" fill="none" stroke="#333" stroke-width="1.5"/>
+        <rect x="68" y="66" width="14" height="28" rx="4" fill="#38a169"/>
+        <path d="M68,94 L55,110 L60,112" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M82,94 L88,118 L88,135" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="88" cy="138" r="4" fill="#333"/>
+      </g>
+      <text x="75" y="185" text-anchor="middle" fill="#38a169" font-size="14" font-weight="800" font-family="sans-serif">HOP</text>
+      <text x="75" y="202" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">单脚跳</text>
+      <text x="75" y="218" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">短距/快速</text>
+      <line x1="20" y1="240" x2="130" y2="240" stroke="#ccc" stroke-width="1.5"/>
+    </svg>
+    <div class="label"><div class="p" style="color:#38a169;">HOP</div><div class="desc">单脚跳，短距快速</div></div>
+  </div>
+  <!-- JUMP -->
+  <div class="mini-card">
+    <svg viewBox="0 0 150 260" xmlns="http://www.w3.org/2000/svg">
+      <rect width="150" height="260" fill="#f0faf5" rx="8"/>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-16; 0,0" dur="1.5s" repeatCount="indefinite"/>
+        <circle cx="75" cy="50" r="16" fill="#f5e6d0"/>
+        <circle cx="70" cy="47" r="2.5" fill="#333"/>
+        <circle cx="80" cy="47" r="2.5" fill="#333"/>
+        <path d="M72,58 Q77,63 82,58" fill="none" stroke="#333" stroke-width="1.5"/>
+        <rect x="68" y="66" width="14" height="28" rx="4" fill="#2d8659"/>
+        <path d="M66,94 L60,118 L58,135" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="58" cy="138" r="4" fill="#333"/>
+        <path d="M84,94 L90,118 L92,135" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="92" cy="138" r="4" fill="#333"/>
+      </g>
+      <text x="75" y="185" text-anchor="middle" fill="#2d8659" font-size="14" font-weight="800" font-family="sans-serif">JUMP</text>
+      <text x="75" y="202" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">双脚跳</text>
+      <text x="75" y="218" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">腾空/标准</text>
+      <line x1="20" y1="240" x2="130" y2="240" stroke="#ccc" stroke-width="1.5"/>
+    </svg>
+    <div class="label"><div class="p" style="color:#2d8659;">JUMP</div><div class="desc">双脚起跳，通用</div></div>
+  </div>
+  <!-- SKIP -->
+  <div class="mini-card">
+    <svg viewBox="0 0 150 260" xmlns="http://www.w3.org/2000/svg">
+      <rect width="150" height="260" fill="#e8f5ec" rx="8"/>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-8; 5,0; 0,-8; 0,0" dur="1.8s" repeatCount="indefinite"/>
+        <circle cx="75" cy="50" r="16" fill="#f5e6d0"/>
+        <circle cx="70" cy="47" r="2.5" fill="#333"/>
+        <circle cx="80" cy="47" r="2.5" fill="#333"/>
+        <path d="M73,59 Q77,63 81,59" fill="none" stroke="#333" stroke-width="1.5"/>
+        <rect x="68" y="66" width="14" height="26" rx="4" fill="#48bb78"/>
+        <path d="M66,92 L50,110 L45,112" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="45" cy="115" r="3.5" fill="#333"/>
+        <path d="M84,92 L98,108 L102,106" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="102" cy="109" r="3.5" fill="#333"/>
+      </g>
+      <text x="75" y="185" text-anchor="middle" fill="#48bb78" font-size="14" font-weight="800" font-family="sans-serif">SKIP</text>
+      <text x="75" y="202" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">蹦跳</text>
+      <text x="75" y="218" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">轻快/交替</text>
+      <line x1="20" y1="240" x2="130" y2="240" stroke="#ccc" stroke-width="1.5"/>
+    </svg>
+    <div class="label"><div class="p" style="color:#48bb78;">SKIP</div><div class="desc">蹦蹦跳跳</div></div>
+  </div>
+  <!-- LEAP -->
+  <div class="mini-card">
+    <svg viewBox="0 0 150 260" xmlns="http://www.w3.org/2000/svg">
+      <rect width="150" height="260" fill="#d0f0e0" rx="8"/>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-22; 0,0" dur="2s" repeatCount="indefinite"/>
+        <circle cx="75" cy="45" r="16" fill="#f5e6d0"/>
+        <circle cx="70" cy="42" r="2.5" fill="#333"/>
+        <circle cx="80" cy="42" r="2.5" fill="#333"/>
+        <path d="M72,52 Q77,57 82,52" fill="none" stroke="#333" stroke-width="1.5"/>
+        <rect x="68" y="61" width="14" height="28" rx="4" fill="#276749"/>
+        <path d="M66,89 L42,108 L38,110" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="36" cy="113" r="3.5" fill="#333"/>
+        <path d="M84,89 L108,106 L112,104" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="114" cy="107" r="3.5" fill="#333"/>
+      </g>
+      <text x="75" y="185" text-anchor="middle" fill="#276749" font-size="14" font-weight="800" font-family="sans-serif">LEAP</text>
+      <text x="75" y="202" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">飞跃</text>
+      <text x="75" y="218" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">大跨度</text>
+      <line x1="20" y1="240" x2="130" y2="240" stroke="#ccc" stroke-width="1.5"/>
+    </svg>
+    <div class="label"><div class="p" style="color:#276749;">LEAP</div><div class="desc">大跨度飞跃</div></div>
+  </div>
+  <!-- BOUND -->
+  <div class="mini-card">
+    <svg viewBox="0 0 150 260" xmlns="http://www.w3.org/2000/svg">
+      <rect width="150" height="260" fill="#c0e8d0" rx="8"/>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-26; 0,0" dur="2.2s" repeatCount="indefinite"/>
+        <circle cx="75" cy="42" r="16" fill="#f5e6d0"/>
+        <circle cx="70" cy="39" r="2.5" fill="#333"/>
+        <circle cx="80" cy="39" r="2.5" fill="#333"/>
+        <path d="M72,50 Q77,55 82,50" fill="none" stroke="#333" stroke-width="1.5"/>
+        <rect x="68" y="58" width="14" height="28" rx="4" fill="#1a643a"/>
+        <path d="M64,86 L34,110 L30,112" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="28" cy="115" r="3.5" fill="#333"/>
+        <path d="M86,86 L118,104 L122,102" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="124" cy="105" r="3.5" fill="#333"/>
+      </g>
+      <text x="75" y="185" text-anchor="middle" fill="#1a643a" font-size="14" font-weight="800" font-family="sans-serif">BOUND</text>
+      <text x="75" y="202" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">弹跳</text>
+      <text x="75" y="218" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">弹性/活力</text>
+      <line x1="20" y1="240" x2="130" y2="240" stroke="#ccc" stroke-width="1.5"/>
+    </svg>
+    <div class="label"><div class="p" style="color:#1a643a;">BOUND</div><div class="desc">弹性弹跳</div></div>
+  </div>
+</div>
+
+<!-- 核心对比卡片 -->
+<div class="section-title"><span class="bar"></span><span>关键区别对比</span></div>
+<div class="cards">
+  <div class="card">
+    <svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="hoptBg" x1="0" y1="0" x2="760" y2="380"><stop offset="0%" stop-color="#f0fff4"/><stop offset="100%" stop-color="#e8f5ec"/></linearGradient>
+      </defs>
+      <rect width="760" height="380" fill="url(#hoptBg)" rx="8"/>
+      <text x="380" y="35" text-anchor="middle" fill="#38a169" font-size="18" font-weight="700" font-family="sans-serif">HOP vs JUMP — 单脚 vs 双脚</text>
+      <!-- HOP -->
+      <g transform="translate(100,0)">
+        <g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-12; 0,0" dur="1.2s" repeatCount="indefinite"/>
+          <circle cx="75" cy="70" r="18" fill="#f5e6d0"/>
+          <circle cx="69" cy="66" r="3" fill="#333"/><circle cx="81" cy="66" r="3" fill="#333"/>
+          <path d="M72,78 Q77,83 82,78" fill="none" stroke="#333" stroke-width="2"/>
+          <rect x="67" y="88" width="16" height="30" rx="4" fill="#38a169"/>
+          <path d="M67,118 L55,140" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round"/>
+          <path d="M83,118 L92,140 L92,158" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="92" cy="162" r="4" fill="#333"/>
+        </g>
+        <text x="75" y="210" text-anchor="middle" fill="#38a169" font-size="16" font-weight="800" font-family="sans-serif">HOP</text>
+        <text x="75" y="228" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">单脚起跳+单脚落地</text>
+        <text x="75" y="245" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">例：hop on one foot</text>
+      </g>
+      <text x="330" y="120" text-anchor="middle" fill="#bbb" font-size="22" font-weight="700" font-family="sans-serif">VS</text>
+      <!-- JUMP -->
+      <g transform="translate(530,0)">
+        <g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-18; 0,0" dur="1.5s" repeatCount="indefinite"/>
+          <circle cx="75" cy="70" r="18" fill="#f5e6d0"/>
+          <circle cx="69" cy="66" r="3" fill="#333"/><circle cx="81" cy="66" r="3" fill="#333"/>
+          <path d="M72,79 Q77,84 82,79" fill="none" stroke="#333" stroke-width="2"/>
+          <rect x="67" y="88" width="16" height="30" rx="4" fill="#2d8659"/>
+          <path d="M65,118 L56,140 L54,158" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="54" cy="162" r="4" fill="#333"/>
+          <path d="M85,118 L94,140 L96,158" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="96" cy="162" r="4" fill="#333"/>
+        </g>
+        <text x="75" y="210" text-anchor="middle" fill="#2d8659" font-size="16" font-weight="800" font-family="sans-serif">JUMP</text>
+        <text x="75" y="228" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">双脚起跳+双脚落地</text>
+        <text x="75" y="245" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">例：jump up and down</text>
+      </g>
+      <rect x="80" y="275" width="600" height="85" rx="8" fill="#fff" stroke="#e8e0d0" stroke-width="1"/>
+      <text x="100" y="298" fill="#38a169" font-size="12" font-weight="600" font-family="sans-serif">💡 核心区别：</text>
+      <text x="100" y="318" fill="#555" font-size="11" font-family="sans-serif">HOP = 一只脚发力、一只脚落地（单脚）。常用于"小范围、短距移动"。</text>
+      <text x="100" y="336" fill="#555" font-size="11" font-family="sans-serif">JUMP = 双脚同时发力、双脚同时落地。通用"跳"。</text>
+      <text x="100" y="354" fill="#888" font-size="10" font-family="sans-serif">"hop in"跳上车(单脚跨入) vs "jump in"跳进去(双脚)</text>
+    </svg>
+    <div class="card-body">
+      <h3>HOP vs JUMP <span class="hl">单脚 / 双脚</span></h3>
+      <div class="pos">核心区别：起跳脚数量</div>
+      <div class="def"><strong>HOP</strong> = 单脚跳，同脚起落，距离短<br><strong>JUMP</strong> = 双脚跳，通用跳跃动作</div>
+      <div class="white-box"><strong>💡 记忆关键</strong>：HOP像麻雀蹦跶(单脚)，JUMP像青蛙腾空(双脚)。</div>
+    </div>
+  </div>
+  <div class="card">
+    <svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="skipBg" x1="0" y1="0" x2="760" y2="380"><stop offset="0%" stop-color="#e8f5ec"/><stop offset="100%" stop-color="#d0f0e0"/></linearGradient>
+      </defs>
+      <rect width="760" height="380" fill="url(#skipBg)" rx="8"/>
+      <text x="380" y="35" text-anchor="middle" fill="#38a169" font-size="18" font-weight="700" font-family="sans-serif">SKIP vs LEAP vs BOUND — 步态不同</text>
+      <!-- SKIP -->
+      <g transform="translate(50,10)">
+        <g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-8; 3,0; 0,-8; 0,0" dur="1.8s" repeatCount="indefinite"/>
+          <circle cx="70" cy="65" r="15" fill="#f5e6d0"/><circle cx="65" cy="62" r="2.5" fill="#333"/><circle cx="75" cy="62" r="2.5" fill="#333"/>
+          <path d="M68,73 Q72,76 76,73" fill="none" stroke="#333" stroke-width="1.5"/>
+          <rect x="63" y="80" width="14" height="24" rx="4" fill="#48bb78"/>
+          <path d="M63,104 L48,120 L44,122" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="44" cy="125" r="3" fill="#333"/>
+          <path d="M77,104 L90,118 L94,116" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="94" cy="119" r="3" fill="#333"/>
+        </g>
+        <text x="70" y="160" text-anchor="middle" fill="#48bb78" font-size="15" font-weight="800" font-family="sans-serif">SKIP</text>
+        <text x="70" y="176" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">轻快交替</text>
+      </g>
+      <!-- LEAP -->
+      <g transform="translate(280,10)">
+        <g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-22; 0,0" dur="2s" repeatCount="indefinite"/>
+          <circle cx="70" cy="60" r="15" fill="#f5e6d0"/><circle cx="65" cy="57" r="2.5" fill="#333"/><circle cx="75" cy="57" r="2.5" fill="#333"/>
+          <path d="M68,68 Q72,72 76,68" fill="none" stroke="#333" stroke-width="1.5"/>
+          <rect x="63" y="75" width="14" height="24" rx="4" fill="#276749"/>
+          <path d="M63,99 L40,118 L36,120" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="36" cy="123" r="3" fill="#333"/>
+          <path d="M77,99 L102,114 L106,112" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="106" cy="115" r="3" fill="#333"/>
+        </g>
+        <text x="70" y="160" text-anchor="middle" fill="#276749" font-size="15" font-weight="800" font-family="sans-serif">LEAP</text>
+        <text x="70" y="176" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">大跨度飞跃</text>
+      </g>
+      <!-- BOUND -->
+      <g transform="translate(520,10)">
+        <g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-26; 0,0" dur="2.2s" repeatCount="indefinite"/>
+          <circle cx="70" cy="55" r="15" fill="#f5e6d0"/><circle cx="65" cy="52" r="2.5" fill="#333"/><circle cx="75" cy="52" r="2.5" fill="#333"/>
+          <path d="M68,63 Q72,67 76,63" fill="none" stroke="#333" stroke-width="1.5"/>
+          <rect x="63" y="70" width="14" height="24" rx="4" fill="#1a643a"/>
+          <path d="M61,94 L34,116 L30,118" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="30" cy="121" r="3" fill="#333"/>
+          <path d="M79,94 L110,110 L114,108" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="114" cy="111" r="3" fill="#333"/>
+        </g>
+        <text x="70" y="160" text-anchor="middle" fill="#1a643a" font-size="15" font-weight="800" font-family="sans-serif">BOUND</text>
+        <text x="70" y="176" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">弹力弹跳</text>
+      </g>
+      <rect x="50" y="195" width="660" height="110" rx="8" fill="#fff" stroke="#e8e0d0" stroke-width="1"/>
+      <text x="70" y="218" fill="#38a169" font-size="12" font-weight="600" font-family="sans-serif">💡 三个"跳"的区别：</text>
+      <text x="70" y="238" fill="#555" font-size="11" font-family="sans-serif">SKIP = 交替轻跳（左右脚交替，轻快有节奏）→ "skip rope" 跳绳</text>
+      <text x="70" y="256" fill="#555" font-size="11" font-family="sans-serif">LEAP = 跨越大距离（从A到B点，强调跨越）→ "leap over a puddle" 跳过水坑</text>
+      <text x="70" y="274" fill="#555" font-size="11" font-family="sans-serif">BOUND = 充满弹力的弹跳（大动作有活力）→ "bound up the stairs" 蹦跳上楼</text>
+      <text x="70" y="295" fill="#888" font-size="10" font-family="sans-serif">SKIP最轻快，LEAP最跨越，BOUND最有弹性</text>
+    </svg>
+    <div class="card-body">
+      <h3>SKIP vs LEAP vs BOUND <span class="hl">轻快/跨越/弹跳</span></h3>
+      <div class="pos">步态节奏完全不同</div>
+      <div class="def"><strong>SKIP</strong> = 小碎步轻跳<br><strong>LEAP</strong> = 大幅度跨越<br><strong>BOUND</strong> = 弹力弹跳</div>
+      <div class="white-box"><strong>💡 画面联想</strong>：SKIP=小孩放学蹦跳；LEAP=跨栏运动员；BOUND=羚羊草原奔跑。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 对比区块 -->
+<div class="section-title"><span class="bar"></span><span>同场景对比</span></div>
+<div class="compare-row">
+  <div class="compare-card">
+    <svg viewBox="0 0 380 300" xmlns="http://www.w3.org/2000/svg">
+      <rect width="380" height="300" fill="#fafaf8" rx="8"/>
+      <text x="190" y="28" text-anchor="middle" fill="#38a169" font-size="15" font-weight="700" font-family="sans-serif">跨过水坑 — 跳跃等级</text>
+      <ellipse cx="190" cy="210" rx="80" ry="20" fill="#b3d9ff" opacity="0.6"/>
+      <!-- HOP -->
+      <g transform="translate(30,0)"><animateTransform attributeName="transform" type="translate" values="0,0; 0,-8; 15,-10; 20,-8; 20,0" dur="3s" repeatCount="indefinite"/>
+        <circle cx="70" cy="100" r="12" fill="#f5e6d0"/><rect x="64" y="112" width="12" height="20" rx="3" fill="#38a169"/>
+        <line x1="64" y1="132" x2="75" y2="155" stroke="#333" stroke-width="2"/><circle cx="75" cy="158" r="3" fill="#333"/>
+      </g>
+      <text x="90" y="80" text-anchor="middle" fill="#38a169" font-size="11" font-weight="700" font-family="sans-serif">HOP</text>
+      <!-- JUMP -->
+      <g transform="translate(150,0)"><animateTransform attributeName="transform" type="translate" values="0,0; 0,-14; 0,-16; 0,-14; 0,0" dur="3.2s" repeatCount="indefinite"/>
+        <circle cx="70" cy="100" r="12" fill="#f5e6d0"/><rect x="64" y="112" width="12" height="20" rx="3" fill="#2d8659"/>
+        <path d="M62,132 L56,155 L56,158" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"/><circle cx="56" cy="161" r="3" fill="#333"/>
+        <path d="M78,132 L84,155 L84,158" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"/><circle cx="84" cy="161" r="3" fill="#333"/>
+      </g>
+      <text x="220" y="80" text-anchor="middle" fill="#2d8659" font-size="11" font-weight="700" font-family="sans-serif">JUMP</text>
+      <!-- LEAP -->
+      <g transform="translate(285,0)"><animateTransform attributeName="transform" type="translate" values="0,0; 0,-20; -5,-22; -15,-18; -15,0" dur="3.8s" repeatCount="indefinite"/>
+        <circle cx="70" cy="100" r="12" fill="#f5e6d0"/><rect x="64" y="112" width="12" height="20" rx="3" fill="#276749"/>
+        <path d="M62,132 L40,150 L36,152" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"/><circle cx="36" cy="155" r="3" fill="#333"/>
+        <path d="M78,132 L100,148 L104,146" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"/><circle cx="104" cy="149" r="3" fill="#333"/>
+      </g>
+      <text x="350" y="80" text-anchor="middle" fill="#276749" font-size="11" font-weight="700" font-family="sans-serif">LEAP</text>
+      <text x="190" y="270" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">HOP(蹦跶) → JUMP(跳) → LEAP(大步跨)</text>
+    </svg>
+    <div class="label"><div class="p" style="color:#38a169;">同场景：跨水坑</div><div class="desc">HOP=单脚蹦(小水坑)；JUMP=双脚跳(中等)；LEAP=大步跨(大水坑)；BOUND=连续弹跳跨过多个。</div></div>
+  </div>
+  <div class="compare-card">
+    <svg viewBox="0 0 380 300" xmlns="http://www.w3.org/2000/svg">
+      <rect width="380" height="300" fill="#fafaf8" rx="8"/>
+      <text x="190" y="28" text-anchor="middle" fill="#38a169" font-size="15" font-weight="700" font-family="sans-serif">抽象用法对比</text>
+      <rect x="20" y="50" width="160" height="60" rx="8" fill="#f0fff4" stroke="#d4f7e0" stroke-width="1"/>
+      <text x="100" y="72" text-anchor="middle" fill="#38a169" font-size="13" font-weight="700" font-family="sans-serif">HOP</text>
+      <text x="100" y="92" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">hop in / hop out</text>
+      <rect x="200" y="50" width="160" height="60" rx="8" fill="#d0f0e0" stroke="#a8e0c0" stroke-width="1"/>
+      <text x="280" y="72" text-anchor="middle" fill="#276749" font-size="13" font-weight="700" font-family="sans-serif">LEAP</text>
+      <text x="280" y="92" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">leap of faith</text>
+      <rect x="20" y="130" width="160" height="60" rx="8" fill="#f0faf5" stroke="#c8f0d8" stroke-width="1"/>
+      <text x="100" y="152" text-anchor="middle" fill="#2d8659" font-size="13" font-weight="700" font-family="sans-serif">JUMP</text>
+      <text x="100" y="172" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">jump the queue</text>
+      <rect x="200" y="130" width="160" height="60" rx="8" fill="#c0e8d0" stroke="#90d0b0" stroke-width="1"/>
+      <text x="280" y="152" text-anchor="middle" fill="#1a643a" font-size="13" font-weight="700" font-family="sans-serif">BOUND</text>
+      <text x="280" y="172" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">bound for</text>
+      <rect x="110" y="210" width="160" height="45" rx="8" fill="#e8f5ec" stroke="#c0e8d0" stroke-width="1"/>
+      <text x="190" y="230" text-anchor="middle" fill="#48bb78" font-size="13" font-weight="700" font-family="sans-serif">SKIP</text>
+      <text x="190" y="247" text-anchor="middle" fill="#555" font-size="11" font-family="sans-serif">skip class / skip town</text>
+    </svg>
+    <div class="label"><div class="p" style="color:#38a169;">抽象用法</div><div class="desc">HOP=快速进出；JUMP=跳过顺序；SKIP=逃避；LEAP=大胆跨越；BOUND=朝向目标。</div></div>
+  </div>
+</div>
+
+<!-- 常见搭配 -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+<div class="usage-section">
+  <h4>HOP / JUMP 搭配</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>hop</strong> on one foot</span><span class="usage-cn">单脚跳 &nbsp;|&nbsp; 📖 一只脚离地，同脚落地</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>hop</strong> in / hop out</span><span class="usage-cn">跳进/跳出（车）&nbsp;|&nbsp; 📖 快速上下车</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>jump</strong> up and down</span><span class="usage-cn">上下跳 &nbsp;|&nbsp; 📖 原地反复跳跃</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>jump</strong> the queue</span><span class="usage-cn">插队 &nbsp;|&nbsp; 📖 跳到队伍前面</span></div>
+  </div>
+</div>
+<div class="usage-section">
+  <h4>SKIP / LEAP / BOUND 搭配</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>skip</strong> class / school</span><span class="usage-cn">逃课 &nbsp;|&nbsp; 📖 跳过当日课程</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>skip</strong> rope</span><span class="usage-cn">跳绳 &nbsp;|&nbsp; 📖 轻快地跳过绳子</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>leap</strong> of faith</span><span class="usage-cn">信仰之跃 &nbsp;|&nbsp; 📖 大胆冒险的信任</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>leap</strong> forward</span><span class="usage-cn">飞跃进步 &nbsp;|&nbsp; 📖 跨越式进步</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>bound</strong> for</span><span class="usage-cn">前往 &nbsp;|&nbsp; 📖 朝着目标前行</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>bound</strong> up the stairs</span><span class="usage-cn">蹦跳上楼 &nbsp;|&nbsp; 📖 充满活力弹跳上楼</span></div>
+  </div>
+</div>
+
+<div class="white-box" style="margin-bottom:24px;"><strong>🧠 五词核心区别</strong>：起跳方式决定一切。HOP=单脚(同脚起落)，JUMP=双脚(通用)，SKIP=交替(轻快节奏)，LEAP=跨越(远距离)，BOUND=弹跳(大弹力幅度)。从HOP到BOUND，幅度、力量、腾空高度依次递增。</div>
+
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词扩展</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card hop-bg">
+      <h5 style="color:#38a169;">更小的跳</h5>
+      <p><strong>BOUNCE</strong> — 原地弹跳 <small>上下反复</small></p>
+      <p><strong>BOB</strong> — 上下浮动 <small>幅度极小</small></p>
+    </div>
+    <div class="info-card leap-bg">
+      <h5 style="color:#276749;">更大的跳</h5>
+      <p><strong>VAULT</strong> — 撑跳 <small>借力翻越</small></p>
+      <p><strong>HURDLE</strong> — 跨栏 <small>比赛跨越</small></p>
+    </div>
+    <div class="info-card bound-bg">
+      <h5 style="color:#1a643a;">特殊跳跃</h5>
+      <p><strong>DIVE</strong> — 跳水/俯冲 <small>向下跳入</small></p>
+      <p><strong>SPRING</strong> — 弹起 <small>像弹簧弹起</small></p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
