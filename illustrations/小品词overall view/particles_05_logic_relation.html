@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>逻辑关系小品词空间对比：FOR / AGAINST / WITH / WITHOUT / ABOUT / LIKE / AS</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#f5f5f0; display:flex; justify-content:center; padding:40px 20px; }
+  .container { max-width:960px; width:100%; background:#fff; border-radius:16px; padding:40px 36px 48px; box-shadow:0 2px 20px rgba(0,0,0,0.06); }
+  h1 { font-size:22px; font-weight:700; text-align:center; margin-bottom:4px; }
+  .subtitle { text-align:center; color:#888; font-size:13px; margin-bottom:6px; }
+  .note { text-align:center; color:#999; font-size:12px; margin-bottom:28px; }
+
+  .scene-box { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:18px; margin-bottom:30px; }
+  .scene-box canvas { width:100%; height:auto; aspect-ratio:880/300; display:block; border-radius:8px; background:#fafaf8; }
+
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:10px; overflow:hidden; }
+  .card canvas { width:100%; height:auto; aspect-ratio:420/170; display:block; background:#fafaf8; }
+  .card .label { padding:6px 10px 10px; }
+  .card .label .p { font-size:16px; font-weight:700; }
+  .card .label .desc { font-size:11.5px; color:#666; margin-top:1px; line-height:1.5; }
+  .card .label .eg { font-size:11px; color:#999; margin-top:2px; }
+
+  .section-title { font-size:15px; font-weight:600; margin:16px 0 8px; color:#333; }
+
+  @media (max-width:720px) { .container { padding:24px 12px 28px; } .grid-2 { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🧠 逻辑关系：第五类小品词空间对比</h1>
+<p class="subtitle">FOR / AGAINST / WITH / WITHOUT / ABOUT / LIKE / AS</p>
+<p class="note">这些词的逻辑含义全部来自空间关系——先想空间画面，逻辑自然就懂了。</p>
+
+<div class="scene-box">
+  <div class="section-title">🎯 逻辑关系的空间基础</div>
+  <canvas id="sceneAll" width="880" height="300"></canvas>
+</div>
+
+<div class="section-title">🤝 立场：支持 / 反对</div>
+<div class="grid-2">
+  <div class="card">
+    <canvas id="cFor" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#c0392b;">FOR</div>
+      <div class="desc"><strong>为了 / 支持</strong>。空间上"朝某物方向走"→逻辑上"支持/赞成/为了目标的"。FOR的核心是"面向某物"。</div>
+      <div class="eg">Go for it / Look for / for example / for free / care for</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cAgainst" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#c0392b;">AGAINST</div>
+      <div class="desc"><strong>反对 / 靠着 / 对比</strong>。空间上"两个人背对背顶撞"→逻辑上"反对/对抗"。也表"靠着某物"。</div>
+      <div class="eg">Go against / against the wall / fight against / against the law</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">🤲 伴随：和……一起 / 没有</div>
+<div class="grid-2">
+  <div class="card">
+    <canvas id="cWith" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#c0392b;">WITH</div>
+      <div class="desc"><strong>和……一起 / 带着</strong>。空间上"两个人并肩走"→逻辑上"伴随/使用/赞同"。WITH = 在一起。</div>
+      <div class="eg">Come with / Go with / Deal with / with ease / with pleasure</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cWithout" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#c0392b;">WITHOUT</div>
+      <div class="desc"><strong>没有 / 缺乏</strong>。WITH的否定。空间上"一个人独自走，没有同伴"→逻辑上"缺乏/没有"。</div>
+      <div class="eg">Go without / without a doubt / without me / without fail</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">🔄 关于 / 在周围</div>
+<div class="grid-2">
+  <div class="card">
+    <canvas id="cAbout" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#c0392b;">ABOUT</div>
+      <div class="desc"><strong>在周围 / 关于</strong>。空间上"在目标周围绕来绕去"→"关于这个主题"。和AROUND区别：ABOUT更强调"大概/附近"。</div>
+      <div class="eg">Talk about / How about / about to / come about / wander about</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cLike" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#c0392b;">LIKE</div>
+      <div class="desc"><strong>像 / 如同</strong>。空间上"两个物体看起来一样"→逻辑上"相似"。不是"喜欢"的like，是"像……一样"。</div>
+      <div class="eg">like this / feel like / look like / something like</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">⚖️ AS — 作为 / 如同</div>
+<div class="grid-2">
+  <div class="card">
+    <canvas id="cAs" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#c0392b;">AS</div>
+      <div class="desc"><strong>作为 / 如同</strong>。和LIKE的区别：LIKE = "像但实际不是"；AS = "就是那个身份/角色"。AS强调实际身份。</div>
+      <div class="eg">Work as / as well / as for / as soon as / as if / as a result</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cLikeVsAs" width="420" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#c0392b;">LIKE vs AS</div>
+      <div class="desc"><strong>核心区别</strong>：LIKE = 像（但不是）/ AS = 作为（就是）。He works <strong>as</strong> a teacher（他就是老师）/ He talks <strong>like</strong> a teacher（他说话像老师，但不一定是）。</div>
+      <div class="eg">LIKE: like a friend (像朋友) / AS: as a friend (作为朋友)</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+(function() {
+function df(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ========== 总场景 ==========
+const s = document.getElementById('sceneAll');
+const ctx = s.getContext('2d');
+df(ctx,880,300);
+
+// 中心的人
+ctx.fillStyle = '#333';
+ctx.beginPath(); ctx.arc(440,140,14,0,Math.PI*2); ctx.fill();
+ctx.fillRect(436,154,8,25);
+ctx.fillStyle = '#fff'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+ctx.fillText('人',440,145);
+
+// FOR 方向
+ctx.fillStyle = '#c0392b';
+ctx.beginPath(); ctx.arc(600,100,10,0,Math.PI*2); ctx.fill();
+ctx.fillStyle = '#fff'; ctx.font = '9px sans-serif';
+ctx.fillText('目标',600,104);
+ctx.strokeStyle = '#c0392b'; ctx.lineWidth = 2;
+ctx.beginPath(); ctx.moveTo(455,145); ctx.lineTo(585,105); ctx.stroke();
+ctx.fillStyle = '#c0392b'; ctx.font = '11px sans-serif';
+ctx.fillText('FOR = 面向目标',530,80);
+
+// AGAINST
+ctx.fillStyle = '#2b6cb0';
+ctx.beginPath(); ctx.arc(260,100,10,0,Math.PI*2); ctx.fill();
+ctx.fillStyle = '#fff'; ctx.font = '9px sans-serif';
+ctx.fillText('反对',260,104);
+ctx.strokeStyle = '#2b6cb0'; ctx.lineWidth = 2;
+ctx.beginPath(); ctx.moveTo(425,145); ctx.lineTo(275,105); ctx.stroke();
+ctx.fillStyle = '#2b6cb0'; ctx.font = '11px sans-serif';
+ctx.fillText('AGAINST = 顶着/对抗',350,80);
+
+// WITH
+ctx.fillStyle = '#38a169';
+ctx.beginPath(); ctx.arc(520,180,10,0,Math.PI*2); ctx.fill();
+ctx.fillStyle = '#fff'; ctx.font = '9px sans-serif';
+ctx.fillText('同伴',520,184);
+ctx.fillStyle = '#38a169'; ctx.font = '11px sans-serif';
+ctx.fillText('WITH = 一起走',520,215);
+
+// WITHOUT
+ctx.fillStyle = '#7b4ad9';
+ctx.beginPath(); ctx.arc(80,160,10,0,Math.PI*2); ctx.fill();
+ctx.fillStyle = '#fff'; ctx.font = '9px sans-serif';
+ctx.fillText('独自',80,164);
+ctx.fillStyle = '#7b4ad9'; ctx.font = '11px sans-serif';
+ctx.fillText('WITHOUT = 没有同伴',200,200);
+
+// ABOUT
+ctx.strokeStyle = '#b7791f'; ctx.lineWidth = 2; ctx.setLineDash([4,3]);
+ctx.beginPath(); ctx.arc(440,140,50,0,Math.PI*2); ctx.stroke();
+ctx.setLineDash([]);
+ctx.fillStyle = '#b7791f'; ctx.font = '11px sans-serif';
+ctx.fillText('ABOUT = 在周围绕 = 关于这个主题',440,75);
+
+// LIKE
+ctx.fillStyle = '#d97706';
+ctx.beginPath(); ctx.arc(700,180,10,0,Math.PI*2); ctx.fill();
+ctx.fillStyle = '#fff'; ctx.font = '9px sans-serif';
+ctx.fillText('镜像',700,184);
+ctx.fillStyle = '#d97706'; ctx.font = '11px sans-serif';
+ctx.fillText('LIKE = 像（相似但不等于）',700,215);
+
+// AS
+ctx.fillStyle = '#c0392b';
+ctx.beginPath(); ctx.arc(700,70,10,0,Math.PI*2); ctx.fill();
+ctx.fillStyle = '#fff'; ctx.font = '9px sans-serif';
+ctx.fillText('身份',700,74);
+ctx.fillStyle = '#c0392b'; ctx.font = '11px sans-serif';
+ctx.fillText('AS = 就是那个身份',700,55);
+
+// ========== 各卡片 ==========
+
+// FOR
+const c1 = document.getElementById('cFor');
+const ctx1 = c1.getContext('2d');
+df(ctx1,420,170);
+ctx1.fillStyle = '#c0392b';
+ctx1.beginPath(); ctx1.arc(80,85,10,0,Math.PI*2); ctx1.fill();
+ctx1.fillRect(77,95,6,20);
+ctx1.fillStyle = '#fff'; ctx1.font = '10px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('人',80,88);
+ctx1.strokeStyle = '#c0392b'; ctx1.lineWidth = 2;
+ctx1.beginPath(); ctx1.moveTo(95,85); ctx1.lineTo(260,85); ctx1.stroke();
+ctx1.fillStyle = '#c0392b';
+ctx1.beginPath(); ctx1.moveTo(256,81); ctx1.lineTo(268,85); ctx1.lineTo(256,89); ctx1.closePath(); ctx1.fill();
+ctx1.fillStyle = '#d97706';
+ctx1.beginPath(); ctx1.arc(310,85,12,0,Math.PI*2); ctx1.fill();
+ctx1.fillStyle = '#fff'; ctx1.font = '9px sans-serif';
+ctx1.fillText('目标',310,90);
+ctx1.fillStyle = '#c0392b'; ctx1.font = 'bold 16px sans-serif';
+ctx1.fillText('FOR →',200,50);
+ctx1.fillStyle = '#888'; ctx1.font = '10px sans-serif';
+ctx1.fillText('人朝目标走 = 支持/为了',200,145);
+
+// AGAINST
+const c2 = document.getElementById('cAgainst');
+const ctx2 = c2.getContext('2d');
+df(ctx2,420,170);
+// 两个人对着顶
+ctx2.fillStyle = '#2b6cb0';
+ctx2.beginPath(); ctx2.arc(100,85,10,0,Math.PI*2); ctx2.fill();
+ctx2.fillRect(97,95,6,20);
+ctx2.fillStyle = '#fff'; ctx2.font = '9px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('A',100,88);
+ctx2.fillStyle = '#c0392b';
+ctx2.beginPath(); ctx2.arc(260,85,10,0,Math.PI*2); ctx2.fill();
+ctx2.fillRect(257,95,6,20);
+ctx2.fillStyle = '#fff'; ctx2.font = '9px sans-serif';
+ctx2.fillText('B',260,88);
+// 中间碰撞
+ctx2.fillStyle = '#c0392b'; ctx2.font = 'bold 14px sans-serif';
+ctx2.fillText('💥',180,80);
+ctx2.fillStyle = '#c0392b'; ctx2.font = 'bold 16px sans-serif';
+ctx2.fillText('AGAINST',180,45);
+ctx2.fillStyle = '#888'; ctx2.font = '10px sans-serif';
+ctx2.fillText('A和B顶着=反对/对抗',180,145);
+
+// WITH
+const c3 = document.getElementById('cWith');
+const ctx3 = c3.getContext('2d');
+df(ctx3,420,170);
+ctx3.fillStyle = '#38a169';
+ctx3.beginPath(); ctx3.arc(120,80,10,0,Math.PI*2); ctx3.fill();
+ctx3.fillRect(117,90,6,20);
+ctx3.fillStyle = '#fff'; ctx3.font = '9px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('人',120,83);
+ctx3.fillStyle = '#38a169';
+ctx3.beginPath(); ctx3.arc(180,80,10,0,Math.PI*2); ctx3.fill();
+ctx3.fillRect(177,90,6,20);
+ctx3.fillStyle = '#fff'; ctx3.font = '9px sans-serif';
+ctx3.fillText('同伴',180,83);
+ctx3.fillStyle = '#38a169'; ctx3.font = 'bold 16px sans-serif';
+ctx3.fillText('WITH',150,50);
+ctx3.fillStyle = '#888'; ctx3.font = '10px sans-serif';
+ctx3.fillText('两人一起走 = 伴随/带着',150,145);
+
+// WITHOUT
+const c4 = document.getElementById('cWithout');
+const ctx4 = c4.getContext('2d');
+df(ctx4,420,170);
+ctx4.fillStyle = '#7b4ad9';
+ctx4.beginPath(); ctx4.arc(130,85,10,0,Math.PI*2); ctx4.fill();
+ctx4.fillRect(127,95,6,20);
+ctx4.fillStyle = '#fff'; ctx4.font = '10px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('人',130,88);
+// 一个人形虚线（缺了）
+ctx4.strokeStyle = '#999'; ctx4.lineWidth = 1.5; ctx4.setLineDash([3,3]);
+ctx4.beginPath(); ctx4.arc(240,85,10,0,Math.PI*2); ctx4.stroke();
+ctx4.strokeRect(237,95,6,20);
+ctx4.setLineDash([]);
+ctx4.fillStyle = '#999'; ctx4.font = '9px sans-serif';
+ctx4.fillText('（同伴缺了）',240,68);
+ctx4.fillStyle = '#7b4ad9'; ctx4.font = 'bold 16px sans-serif';
+ctx4.fillText('WITHOUT',180,45);
+ctx4.fillStyle = '#888'; ctx4.font = '10px sans-serif';
+ctx4.fillText('没有同伴 = 缺乏/没有',180,145);
+
+// ABOUT
+const c5 = document.getElementById('cAbout');
+const ctx5 = c5.getContext('2d');
+df(ctx5,420,170);
+// 中心话题
+ctx5.fillStyle = '#b7791f';
+ctx5.beginPath(); ctx5.arc(210,85,12,0,Math.PI*2); ctx5.fill();
+ctx5.fillStyle = '#fff'; ctx5.font = '9px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('话题',210,89);
+// 绕圈
+ctx5.strokeStyle = '#b7791f'; ctx5.lineWidth = 2; ctx5.setLineDash([4,3]);
+ctx5.beginPath(); ctx5.arc(210,85,35,0,Math.PI*2); ctx5.stroke();
+ctx5.setLineDash([]);
+// 箭头绕圈
+ctx5.fillStyle = '#b7791f'; ctx5.font = '13px sans-serif';
+ctx5.fillText('↺',175,55);
+ctx5.fillStyle = '#b7791f'; ctx5.font = 'bold 16px sans-serif';
+ctx5.fillText('ABOUT',210,155);
+ctx5.fillStyle = '#888'; ctx5.font = '10px sans-serif';
+ctx5.fillText('在话题周围绕 = "关于"这个主题',210,140);
+
+// LIKE
+const c6 = document.getElementById('cLike');
+const ctx6 = c6.getContext('2d');
+df(ctx6,420,170);
+// 两个人
+ctx6.fillStyle = '#d97706';
+ctx6.beginPath(); ctx6.arc(90,85,10,0,Math.PI*2); ctx6.fill();
+ctx6.fillRect(87,95,6,20);
+ctx6.fillStyle = '#fff'; ctx6.font = '9px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('A',90,88);
+ctx6.fillStyle = '#d97706';
+ctx6.beginPath(); ctx6.arc(300,85,10,0,Math.PI*2); ctx6.fill();
+ctx6.fillRect(297,95,6,20);
+ctx6.fillStyle = '#fff'; ctx6.font = '9px sans-serif';
+ctx6.fillText('B',300,88);
+// 等号
+ctx6.fillStyle = '#d97706'; ctx6.font = 'bold 18px sans-serif';
+ctx6.fillText('≈',195,90);
+ctx6.fillStyle = '#d97706'; ctx6.font = 'bold 16px sans-serif';
+ctx6.fillText('LIKE',195,50);
+ctx6.fillStyle = '#888'; ctx6.font = '10px sans-serif';
+ctx6.fillText('A ≈ B = A像B（但不等于）',195,145);
+
+// AS
+const c7 = document.getElementById('cAs');
+const ctx7 = c7.getContext('2d');
+df(ctx7,420,170);
+// 同一个人，两种角色
+ctx7.fillStyle = '#c0392b';
+ctx7.beginPath(); ctx7.arc(120,85,10,0,Math.PI*2); ctx7.fill();
+ctx7.fillRect(117,95,6,20);
+ctx7.fillStyle = '#fff'; ctx7.font = '9px sans-serif'; ctx7.textAlign = 'center';
+ctx7.fillText('他',120,88);
+// 等号
+ctx7.fillStyle = '#c0392b'; ctx7.font = 'bold 18px sans-serif';
+ctx7.fillText('=',195,85);
+// 职业
+ctx7.fillStyle = '#c0392b';
+ctx7.strokeRect(260,60,60,40);
+ctx7.fillStyle = '#c0392b'; ctx7.font = '10px sans-serif'; ctx7.textAlign = 'center';
+ctx7.fillText('👨‍🏫 老师',290,88);
+ctx7.fillStyle = '#c0392b'; ctx7.font = 'bold 16px sans-serif';
+ctx7.fillText('AS',195,50);
+ctx7.fillStyle = '#888'; ctx7.font = '10px sans-serif';
+ctx7.fillText('他=老师 = 他就是那个身份',195,145);
+
+// LIKE vs AS
+const c8 = document.getElementById('cLikeVsAs');
+const ctx8 = c8.getContext('2d');
+df(ctx8,420,170);
+// LIKE侧
+ctx8.fillStyle = '#d97706';
+ctx8.fillText('LIKE',70,50);
+ctx8.fillStyle = '#888'; ctx8.font = '10px sans-serif'; ctx8.textAlign = 'center';
+ctx8.fillText('He talks',70,80);
+ctx8.fillText('like a teacher',70,95);
+ctx8.fillText('他说话像老师',70,110);
+ctx8.fillStyle = '#999'; ctx8.font = '9px sans-serif';
+ctx8.fillText('（但他不是老师）',70,130);
+
+// 分隔
+ctx8.strokeStyle = '#ddd'; ctx8.lineWidth = 2;
+ctx8.beginPath(); ctx8.moveTo(210,30); ctx8.lineTo(210,160); ctx8.stroke();
+
+// AS侧
+ctx8.fillStyle = '#c0392b'; ctx8.font = 'bold 13px sans-serif';
+ctx8.fillText('AS',320,50);
+ctx8.fillStyle = '#888'; ctx8.font = '10px sans-serif';
+ctx8.fillText('He works',320,80);
+ctx8.fillText('as a teacher',320,95);
+ctx8.fillText('他当老师',320,110);
+ctx8.fillStyle = '#999'; ctx8.font = '9px sans-serif';
+ctx8.fillText('（他就是老师）',320,130);
+
+})();
+</script>
+</body>
+</html>

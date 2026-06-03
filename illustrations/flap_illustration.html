@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLAP 图解 — 拍打 / 飘动 / 紧张</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#e67e22,#d35400); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#e67e22,#f39c12); border-radius:2px; flex-shrink:0; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#e67e22; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#e67e22; }
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#e67e22; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+  .flap-bg { background:linear-gradient(135deg,#fdf6ee,#f5e8d0); }
+  .flip-bg { background:linear-gradient(135deg,#fdf6ee,#f5e8d0); }
+  .flop-bg { background:linear-gradient(135deg,#f0f5ff,#e0e8f5); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+  .green-bg { background:linear-gradient(135deg,#e0f5e0,#d0e8d0); }
+  .spectrum-wrap { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+  @media (max-width:720px) { .container { padding:24px 16px 32px; } .cards, .compare-row { grid-template-columns:1fr; } .usage-list { grid-template-columns:1fr; } .three-col { grid-template-columns:1fr; } h1 { font-size:26px; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🪽 FLAP</h1>
+<p class="subtitle">拍打 / 飘动 / 紧张 — 从"bird flaps wings"到"in a flap"</p>
+
+<!-- ===== 核心卡片 ===== -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+
+  <!-- CARD 1: FLAP 核心 — 拍打/飘动 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="fBg" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#fdf6ee"/>
+          <stop offset="100%" stop-color="#f5eee0"/>
+        </linearGradient>
+        <filter id="shadow">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#fBg)" rx="8"/>
+
+      <!-- 鸟身体 -->
+      <ellipse cx="280" cy="220" rx="30" ry="18" fill="#d4a574" stroke="#b88860" stroke-width="2"/>
+      <!-- 鸟头 -->
+      <circle cx="260" cy="200" r="14" fill="#d4a574" stroke="#b88860" stroke-width="2"/>
+      <!-- 嘴 -->
+      <polygon points="248,200 235,204 248,206" fill="#e6a020"/>
+      <!-- 眼睛 -->
+      <circle cx="257" cy="198" r="3" fill="#333"/>
+
+      <!-- 左翅膀 — 上下拍打 -->
+      <g>
+        <path d="M280,210 Q240,160 200,140 Q160,130 150,160 Q160,180 190,190 Q220,200 280,215" fill="#c89060" stroke="#b08050" stroke-width="1.5" stroke-linejoin="round">
+          <animateTransform attributeName="transform" type="rotate"
+            values="-10,280,210; 20,280,210; -10,280,210"
+            dur="0.8s" repeatCount="indefinite"/>
+        </path>
+      </g>
+
+      <!-- 右翅膀 — 上下拍打 -->
+      <g>
+        <path d="M280,215 Q310,180 340,165 Q370,155 365,175 Q360,195 340,200 Q320,208 280,218" fill="#b88050" stroke="#a07040" stroke-width="1.5" stroke-linejoin="round">
+          <animateTransform attributeName="transform" type="rotate"
+            values="10,280,215; -20,280,215; 10,280,215"
+            dur="0.8s" repeatCount="indefinite"/>
+        </path>
+      </g>
+
+      <!-- 向上飞的轨迹 -->
+      <path d="M280,350 Q300,300 280,270" fill="none" stroke="#e67e22" stroke-width="2" stroke-dasharray="5,4" opacity="0.4">
+        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="1.5s" repeatCount="indefinite"/>
+      </path>
+
+      <text x="380" y="345" text-anchor="middle" fill="#444" font-size="15" font-weight="600" font-family="sans-serif">本义：翅膀上下运动产生拍打动作 — "bird flaps its wings"</text>
+      <text x="380" y="370" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">flap wings（扇翅膀）、flag in the wind（旗子飘动）、tent flap（帐篷门帘）</text>
+    </svg>
+    <div class="card-body">
+      <h3>FLAP <span class="hl">/flæp/</span></h3>
+      <div class="pos">verb / noun · 拍打 / 飘动 / 紧张</div>
+      <div class="def">
+        <strong>本义</strong> 扁平物在空中上下或左右快速摆动（鸟翅膀、旗子、帘子）<br>
+        <strong>引申义 1</strong> 人像翅膀一样扇动手臂（flap your arms）<br>
+        <strong>引申义 2</strong> 紧张/慌乱（in a flap / get in a flap）
+        <span class="eg">"The bird flapped its wings." 鸟扇动翅膀<br>"The flag flapped in the wind." 旗子在风中飘动<br>"She got in a flap about the exam." 她因为考试慌了神</span>
+      </div>
+      <div class="white-box"><strong>核心逻辑</strong>：FLAP 的本质是"一个扁平物的一端固定、另一端自由摆动"——鸟翅膀根部固定在身体上、翅膀尖上下摆动；旗子一端固定在旗杆上、另一端随风飘动；帐篷门帘上端固定、下端荡来荡去。所有 FLAP 都包含"来回摆动"的画面。</div>
+    </div>
+  </div>
+
+  <!-- CARD 2: FLAP vs FLIP vs FLOP — 三种"手部动作"对比 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="c2L" x1="0" y1="0" x2="370" y2="400">
+          <stop offset="0%" stop-color="#fdf6ee"/>
+          <stop offset="100%" stop-color="#f5eee0"/>
+        </linearGradient>
+        <linearGradient id="c2R" x1="390" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#f5f0f5"/>
+          <stop offset="100%" stop-color="#ede0ed"/>
+        </linearGradient>
+      </defs>
+      <rect width="370" height="400" fill="url(#c2L)" rx="8"/>
+      <rect x="390" width="370" height="400" fill="url(#c2R)"/>
+      <line x1="380" y1="20" x2="380" y2="380" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- LEFT: FLAP — 上下摆动 -->
+      <ellipse cx="185" cy="290" rx="40" ry="18" fill="#f5e6d0"/>
+      <!-- 手臂扇动 -->
+      <line x1="185" y1="290" x2="220" y2="240" stroke="#f5e6d0" stroke-width="12" stroke-linecap="round">
+        <animateTransform attributeName="transform" type="rotate"
+          values="-30,185,290; 10,185,290; -30,185,290"
+          dur="0.8s" repeatCount="indefinite"/>
+      </line>
+      <line x1="185" y1="290" x2="150" y2="240" stroke="#f5e6d0" stroke-width="12" stroke-linecap="round">
+        <animateTransform attributeName="transform" type="rotate"
+          values="30,185,290; -10,185,290; 30,185,290"
+          dur="0.8s" repeatCount="indefinite"/>
+      </line>
+      <text x="185" y="370" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">FLAP</text>
+      <text x="185" y="388" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">上下/来回摆动</text>
+
+      <!-- RIGHT: FLUTTER — 轻微颤动 -->
+      <ellipse cx="575" cy="290" rx="40" ry="18" fill="#f5e6d0"/>
+      <!-- 蝴蝶翅膀轻颤 -->
+      <ellipse cx="555" cy="220" rx="25" ry="12" fill="#e8a0c0" stroke="#d080a0" stroke-width="1.5">
+        <animateTransform attributeName="transform" type="rotate"
+          values="-15,575,230; 15,575,230; -15,575,230"
+          dur="0.3s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="595" cy="220" rx="25" ry="12" fill="#d090b0" stroke="#c080a0" stroke-width="1.5">
+        <animateTransform attributeName="transform" type="rotate"
+          values="15,575,230; -15,575,230; 15,575,230"
+          dur="0.3s" repeatCount="indefinite"/>
+      </ellipse>
+      <text x="575" y="370" text-anchor="middle" fill="#c080a0" font-size="14" font-weight="bold" font-family="sans-serif">FLUTTER</text>
+      <text x="575" y="388" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">快速轻颤</text>
+    </svg>
+    <div class="card-body">
+      <h3>FLAP vs FLUTTER — 动作幅度不同</h3>
+      <div class="pos">同一个画面，幅度决定含义</div>
+      <div class="def">
+        <strong>FLAP</strong> = 大幅度上下摆动（鸟飞、旗飘）<br>
+        <strong>FLUTTER</strong> = 小幅度快速颤振（蝴蝶、睫毛、心跳）
+        <span class="eg">"Eagle flaps wings." 鹰扇翅膀（大力拍打）<br>"Butterfly flutters." 蝴蝶扑翅（轻快颤抖）<br>"Her heart fluttered." 她心跳了一下（小激动）</span>
+      </div>
+      <div class="white-box"><strong>FLAP vs FLIP</strong>：FLAP 是"一端固定、一端摆动"；FLIP 是"整体翻转/翻面"。FLAP 不改变朝向，只是摆动；FLIP 把正面变反面。你 FLIP 煎饼（整体翻面），但煎饼在锅里时只能 FLAP（边缘翘起摆动）。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 意象演变 ===== -->
+<div class="section-title"><span class="bar"></span><span>意象演变：从物理拍打到情绪紧张</span></div>
+<div style="background:#fffdf7; border:1px solid #e8e0d0; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div style="font-size:16px; font-weight:700; margin-bottom:16px;">意象演变链</div>
+  <div style="display:flex; flex-wrap:wrap; align-items:center; gap:6px;">
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ① 翅膀拍打<br><span style="font-weight:400; font-size:12px; color:#888;">bird flaps wings</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ② 旗子飘动<br><span style="font-weight:400; font-size:12px; color:#888;">flag flaps in wind</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ③ 帐篷门帘<br><span style="font-weight:400; font-size:12px; color:#888;">tent flap / cat flap</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ④ 扇动手臂<br><span style="font-weight:400; font-size:12px; color:#888;">flap your arms</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ⑤ 慌乱不安<br><span style="font-weight:400; font-size:12px; color:#888;">get in a flap</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ⑥ 闲扯/煽动<br><span style="font-weight:400; font-size:12px; color:#888;">flap your gums / mouth</span>
+    </div>
+  </div>
+  <div style="margin-top:16px; padding-top:16px; border-top:1px dashed #e0d8c8; font-size:14px; color:#555; line-height:1.65;">
+    <strong>核心逻辑链</strong>：鸟扇翅膀（最原始画面 — 一端固定一端摆动）-> 旗子在风中飘动（像翅膀一样摆来摆去）-> 帐篷门帘（一块垂下的布 = flap）-> 人扇动手臂（模仿鸟翅膀的动作）-> 人紧张时"心像翅膀一样扑腾"（in a flap）-> 嘴皮子不停"扑腾"（flap your gums = 喋喋不休）。<br>
+    所有用法共享一个画面：<strong>扁平物的一端固定、另一端来回摆动</strong>。
+  </div>
+</div>
+
+<!-- ===== 程度光谱 ===== -->
+<div class="section-title"><span class="bar"></span><span>FLAP 紧张光谱 — 从平静到慌</span></div>
+<div class="spectrum-wrap">
+  <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="specBg" x1="0" y1="0" x2="760" y2="340">
+        <stop offset="0%" stop-color="#fdf6ee"/>
+        <stop offset="100%" stop-color="#f5eee0"/>
+      </linearGradient>
+    </defs>
+    <rect width="760" height="340" fill="url(#specBg)" rx="8"/>
+
+    <line x1="60" y1="175" x2="700" y2="175" stroke="#ccc" stroke-width="1.5"/>
+    <line x1="60" y1="185" x2="700" y2="185" stroke="#ccc" stroke-width="1.5"/>
+    <text x="60" y="165" text-anchor="middle" fill="#38a169" font-size="12" font-family="sans-serif">平静</text>
+    <text x="700" y="165" text-anchor="middle" fill="#e63946" font-size="12" font-family="sans-serif">慌乱</text>
+
+    <rect x="60" y="175" width="128" height="10" rx="5" fill="#38a169" opacity="0.2"/>
+    <rect x="188" y="175" width="128" height="10" fill="#f0b429" opacity="0.25"/>
+    <rect x="316" y="175" width="128" height="10" fill="#e67e22" opacity="0.3"/>
+    <rect x="444" y="175" width="128" height="10" fill="#e63946" opacity="0.3"/>
+    <rect x="572" y="175" width="128" height="10" rx="0 5 5 0" fill="#c0392b" opacity="0.4"/>
+
+    <circle r="10" fill="#e67e22">
+      <animate attributeName="cx" values="60;188;316;444;572;700;572;444;316;188;60" dur="18s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="180;180;180;180;180;180;180;180;180;180;180" dur="18s" repeatCount="indefinite"/>
+    </circle>
+
+    <text x="128" y="145" text-anchor="middle" fill="#38a169" font-size="16" font-weight="bold" font-family="sans-serif">
+      calm
+      <animate attributeName="opacity" values="1;0.2;0.2;0.2;0.2;0.2;0.2;0.2;0.2;0.2;1" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="256" y="145" text-anchor="middle" fill="#f0b429" font-size="16" font-weight="bold" font-family="sans-serif">
+      flap about
+      <animate attributeName="opacity" values="0.2;1;0.2;0.2;0.2;0.2;0.2;0.2;0.2;1;0.2" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="384" y="145" text-anchor="middle" fill="#e67e22" font-size="16" font-weight="bold" font-family="sans-serif">
+      in a flap
+      <animate attributeName="opacity" values="0.2;0.2;1;0.2;0.2;0.2;0.2;0.2;1;0.2;0.2" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="512" y="145" text-anchor="middle" fill="#e63946" font-size="16" font-weight="bold" font-family="sans-serif">
+      get in a flap
+      <animate attributeName="opacity" values="0.2;0.2;0.2;1;0.2;0.2;0.2;1;0.2;0.2;0.2" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="640" y="145" text-anchor="middle" fill="#c0392b" font-size="16" font-weight="bold" font-family="sans-serif">
+      panic
+      <animate attributeName="opacity" values="0.2;0.2;0.2;0.2;1;0.2;1;0.2;0.2;0.2;0.2" dur="18s" repeatCount="indefinite"/>
+    </text>
+
+    <text x="380" y="230" text-anchor="middle" fill="#38a169" font-size="13" font-family="sans-serif">
+      calm：旗子安静垂下
+      <animate attributeName="opacity" values="1;0;0;0;0;0;0;0;0;0;1" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="380" y="230" text-anchor="middle" fill="#f0b429" font-size="13" font-family="sans-serif">
+      flap about：散乱/拖沓地来回动
+      <animate attributeName="opacity" values="0;1;0;0;0;0;0;0;0;1;0" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="380" y="230" text-anchor="middle" fill="#e67e22" font-size="13" font-family="sans-serif">
+      in a flap：轻度慌乱
+      <animate attributeName="opacity" values="0;0;1;0;0;0;0;0;1;0;0" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="380" y="230" text-anchor="middle" fill="#e63946" font-size="13" font-family="sans-serif">
+      get in a flap：明显紧张/不知所措
+      <animate attributeName="opacity" values="0;0;0;1;0;0;0;1;0;0;0" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="380" y="230" text-anchor="middle" fill="#c0392b" font-size="13" font-family="sans-serif">
+      panic：完全慌乱/惊恐
+      <animate attributeName="opacity" values="0;0;0;0;1;0;1;0;0;0;0" dur="18s" repeatCount="indefinite"/>
+    </text>
+
+    <g><animate attributeName="opacity" values="1;0;0;0;0;0;0;0;0;0;1" dur="18s" repeatCount="indefinite"/>
+      <circle cx="128" cy="270" r="14" fill="#f5e6d0"/>
+      <path d="M124,267 L132,267" stroke="#333" stroke-width="1.5"/>
+      <path d="M124,277 Q128,280 132,277" fill="none" stroke="#333" stroke-width="1.5"/>
+      <text x="128" y="305" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">平静</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;1;0;0;0;0;0;0;0;1;0" dur="18s" repeatCount="indefinite"/>
+      <circle cx="256" cy="270" r="14" fill="#f5e6d0"/>
+      <path d="M252,267 L260,267" stroke="#333" stroke-width="1.5"/>
+      <path d="M252,277 Q256,275 260,277" fill="none" stroke="#f0b429" stroke-width="1.5"/>
+      <text x="256" y="305" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">散乱</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;0;1;0;0;0;0;0;1;0;0" dur="18s" repeatCount="indefinite"/>
+      <circle cx="384" cy="270" r="14" fill="#f5e6d0"/>
+      <line x1="379" y1="266" x2="383" y2="268" stroke="#333" stroke-width="1.5"/>
+      <line x1="389" y1="266" x2="385" y2="268" stroke="#333" stroke-width="1.5"/>
+      <path d="M380,276 Q384,280 388,276" fill="none" stroke="#e67e22" stroke-width="1.5"/>
+      <text x="384" y="305" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">微慌</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;0;0;1;0;0;0;1;0;0;0" dur="18s" repeatCount="indefinite"/>
+      <circle cx="512" cy="270" r="14" fill="#f5e6d0"/>
+      <line x1="507" y1="265" x2="512" y2="268" stroke="#e63946" stroke-width="2"/>
+      <line x1="517" y1="265" x2="512" y2="268" stroke="#e63946" stroke-width="2"/>
+      <path d="M508,278 L516,278" stroke="#e63946" stroke-width="2"/>
+      <text x="512" y="305" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">慌乱</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;0;0;0;1;0;1;0;0;0;0" dur="18s" repeatCount="indefinite"/>
+      <circle cx="640" cy="270" r="14" fill="#f5e6d0"/>
+      <line x1="635" y1="264" x2="640" y2="268" stroke="#c0392b" stroke-width="2"/>
+      <line x1="645" y1="264" x2="640" y2="268" stroke="#c0392b" stroke-width="2"/>
+      <path d="M636,280 L644,280" stroke="#c0392b" stroke-width="2"/>
+      <circle cx="640" cy="270" r="18" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="3,2" opacity="0.5">
+        <animate attributeName="r" values="14;20;14" dur="1s" repeatCount="indefinite"/>
+      </circle>
+      <text x="640" y="305" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">惊恐</text>
+    </g>
+  </svg>
+  <div class="white-box"><strong>人为什么"in a flap"？</strong> 想象一下：当你紧张或焦虑时，心跳加速、手忙脚乱、呼吸急促——整个状态就像鸟快速扇动翅膀一样"扑腾扑腾"。英语用 flap 来形容这种慌乱状态，因为慌乱的人就像一只被困住的小鸟，翅膀乱扑腾。<em>"She's in a flap about the wedding arrangements."</em>（她为婚礼安排慌了神）</div>
+</div>
+
+<!-- ===== 易混对比 ===== -->
+<div class="section-title"><span class="bar"></span><span>易混对比：FLAP vs FLIP vs FLOP vs FLUTTER</span></div>
+<div class="compare-row">
+
+  <!-- FLAP vs FLIP vs FLOP -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="190" height="340" fill="#fdf6ee"/>
+      <rect x="191" width="190" height="340" fill="#f0f5ff"/>
+      <rect x="382" width="189" height="340" fill="#f5f0ff"/>
+      <rect x="572" width="188" height="340" fill="#f0f5f0"/>
+      <line x1="190" y1="20" x2="190" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+      <line x1="381" y1="20" x2="381" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+      <line x1="571" y1="20" x2="571" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- FLAP 扇动 -->
+      <line x1="95" y1="240" x2="60" y2="180" stroke="#e67e22" stroke-width="4" stroke-linecap="round">
+        <animateTransform attributeName="transform" type="rotate"
+          values="-15,95,240; 15,95,240; -15,95,240"
+          dur="0.8s" repeatCount="indefinite"/>
+      </line>
+      <line x1="95" y1="240" x2="130" y2="180" stroke="#e67e22" stroke-width="4" stroke-linecap="round">
+        <animateTransform attributeName="transform" type="rotate"
+          values="15,95,240; -15,95,240; 15,95,240"
+          dur="0.8s" repeatCount="indefinite"/>
+      </line>
+      <circle cx="95" cy="245" r="10" fill="#f5e6d0"/>
+      <text x="95" y="310" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">FLAP</text>
+      <text x="95" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">上下摆动</text>
+
+      <!-- FLIP 翻转 -->
+      <ellipse cx="286" cy="260" rx="25" ry="12" fill="#f5e6d0"/>
+      <rect x="270" y="150" width="32" height="32" rx="4" fill="#f7c948" stroke="#d4a520" stroke-width="1.5">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 0,-30; 0,0"
+          dur="1.5s" repeatCount="indefinite"/>
+      </rect>
+      <text x="286" y="310" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">FLIP</text>
+      <text x="286" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">整体翻面</text>
+
+      <!-- FLOP 落下 -->
+      <ellipse cx="477" cy="260" rx="25" ry="12" fill="#f5e6d0"/>
+      <rect x="465" y="150" width="24" height="24" rx="3" fill="#999" stroke="#777" stroke-width="1.5">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 0,50; 0,100"
+          dur="2.5s" repeatCount="indefinite"/>
+      </rect>
+      <text x="477" y="310" text-anchor="middle" fill="#888" font-size="14" font-weight="bold" font-family="sans-serif">FLOP</text>
+      <text x="477" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">沉重落下</text>
+
+      <!-- FLUTTER 颤动 -->
+      <ellipse cx="666" cy="230" rx="20" ry="10" fill="#e8a0c0" stroke="#d080a0" stroke-width="1.5">
+        <animateTransform attributeName="transform" type="rotate"
+          values="-10,666,230; 10,666,230; -10,666,230"
+          dur="0.3s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="686" cy="230" rx="20" ry="10" fill="#d090b0" stroke="#c080a0" stroke-width="1.5">
+        <animateTransform attributeName="transform" type="rotate"
+          values="10,686,230; -10,686,230; 10,686,230"
+          dur="0.3s" repeatCount="indefinite"/>
+      </ellipse>
+      <text x="666" y="310" text-anchor="middle" fill="#c080a0" font-size="14" font-weight="bold" font-family="sans-serif">FLUTTER</text>
+      <text x="666" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">快速轻颤</text>
+    </svg>
+    <div class="label">
+      <div class="p" style="color:#e67e22;">FLAP vs FLIP vs FLOP vs FLUTTER — fl-大家族</div>
+      <div class="desc">这四个词共享 fl- 前缀，都暗示"手部/身体的快速动作"，但方式和结果不同：FLAP = 一端固定、另一端摆动（鸟翅膀/旗子）；FLIP = 整体快速翻面（硬币/煎饼）；FLOP = 沉重落下/失败（煎饼掉地）；FLUTTER = 小幅度高频颤振（蝴蝶/心跳）。</div>
+    </div>
+    <div style="padding:0 16px 16px;">
+      <div class="white-box"><strong>如何区分</strong>：想象一只鸟站在树枝上——它 FLAP 翅膀（大幅扇动准备飞）、FLIP 身体（翻转方向）、FLOP 掉地上（没飞起来掉下去了）、翅膀 FLUTTER（小幅度颤抖因为紧张）。同一个画面，四个不同的词描述四个不同的细节。</div>
+    </div>
+  </div>
+
+  <!-- FLAP 名词用法 -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="253" height="340" fill="#fdf6ee"/>
+      <rect x="254" width="253" height="340" fill="#f0f5f0"/>
+      <rect x="508" width="252" height="340" fill="#f5f0f5"/>
+      <line x1="253" y1="20" x2="253" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+      <line x1="507" y1="20" x2="507" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- tent flap -->
+      <path d="M50,130 L50,250" stroke="#888" stroke-width="3"/>
+      <path d="M50,130 L130,160 L130,280 L50,260" fill="#d4c8a0" stroke="#b8a878" stroke-width="1.5">
+        <animateTransform attributeName="transform" type="rotate"
+          values="0,50,130; 5,50,130; 0,50,130"
+          dur="3s" repeatCount="indefinite"/>
+      </path>
+      <text x="130" y="310" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="bold" font-family="sans-serif">TENT FLAP</text>
+      <text x="130" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">帐篷门帘</text>
+
+      <!-- cat flap -->
+      <rect x="310" y="160" width="80" height="100" rx="4" fill="#ddd" stroke="#aaa" stroke-width="2"/>
+      <rect x="340" y="180" width="40" height="50" rx="3" fill="#ccc" stroke="#999" stroke-width="1.5"/>
+      <line x1="340" y1="205" x2="380" y2="205" stroke="#999" stroke-width="1"/>
+      <circle cx="360" cy="200" r="6" fill="#d4a574">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 0,-8; 0,0"
+          dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <text x="380" y="310" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="bold" font-family="sans-serif">CAT FLAP</text>
+      <text x="380" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">猫洞门</text>
+
+      <!-- ear flap -->
+      <circle cx="610" cy="200" r="25" fill="#f5e6d0" stroke="#ddd" stroke-width="1.5"/>
+      <circle cx="630" cy="190" r="12" fill="#f5e6d0" stroke="#ddd" stroke-width="1.5"/>
+      <!-- 耳罩 flap -->
+      <path d="M610,200 Q590,210 585,230" fill="#c08050" stroke="#a06840" stroke-width="1.5">
+        <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+      </path>
+      <text x="630" y="310" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="bold" font-family="sans-serif">EAR FLAP</text>
+      <text x="630" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">（帽子的）护耳</text>
+    </svg>
+    <div class="label">
+      <div class="p" style="color:#e67e22;">FLAP 作名词 — 各种"下垂的片状物"</div>
+      <div class="desc">FLAP 作名词时指"一端固定、另一端自由下垂的扁平片状物"：tent flap（帐篷门帘，可以掀开垂下）、cat flap（猫洞活板门，猫可以推开钻进钻出）、ear flap（帽子上的护耳，可以放下保暖也可以翻上去）。所有名词用法都来自"扁平物一端固定、一端可以摆动"的本义。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 常见搭配 ===== -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+<div class="usage-section">
+  <h4>动词 FLAP — 物理摆动</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>flap</strong> wings / arms</span><span class="usage-cn">扇动翅膀/手臂</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flap</strong> in the wind</span><span class="usage-cn">在风中飘动</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flap</strong> about / around</span><span class="usage-cn">来回摆动/散乱飘动</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flap</strong> your gums / mouth</span><span class="usage-cn">喋喋不休/乱说</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flap</strong> a fly away</span><span class="usage-cn">挥手赶走苍蝇</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flap</strong> a towel / cloth</span><span class="usage-cn">抖毛巾/布</span></div>
+  </div>
+</div>
+<div class="usage-section">
+  <h4>名词 FLAP / 抽象用法</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en">tent <strong>flap</strong></span><span class="usage-cn">帐篷门帘</span></div>
+    <div class="usage-item"><span class="usage-en">cat <strong>flap</strong></span><span class="usage-cn">猫洞活板门</span></div>
+    <div class="usage-item"><span class="usage-en">ear <strong>flap</strong></span><span class="usage-cn">（帽子）护耳</span></div>
+    <div class="usage-item"><span class="usage-en">envelope <strong>flap</strong></span><span class="usage-cn">信封盖口</span></div>
+    <div class="usage-item"><span class="usage-en">get in a <strong>flap</strong></span><span class="usage-cn">陷入慌乱</span></div>
+    <div class="usage-item"><span class="usage-en">in a <strong>flap</strong> about sth</span><span class="usage-cn">因某事紧张不安</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flap</strong> / flapdoodle</span><span class="usage-cn">胡说/废话</span></div>
+  </div>
+  <div class="white-box" style="margin-top:12px;"><strong>in a flap</strong> = 紧张/慌乱。物理画面：人一紧张，心跳像鸟翅膀一样扑腾扑腾。<em>"Don't get in a flap — everything will be fine."</em>（别慌——一切都会好的。）</div>
+  <div class="white-box" style="margin-top:8px;"><strong>flap your gums</strong> = 喋喋不休。物理画面：嘴皮子像鸟翅膀一样不停"扑腾"（上下翻飞）。<em>"He's just flapping his gums as usual."</em>（他又在像往常一样胡说八道了。）</div>
+  <div class="white-box" style="margin-top:8px;"><strong>envelope flap</strong> = 信封封口。物理画面：信封的封口是一片可以翻起来（涂胶水）、放下去（封住）的"小 flap"。<em>"Lick the flap and seal the envelope."</em>（舔一下封口把信封粘上。）</div>
+</div>
+
+<!-- ===== 反义/相似 ===== -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card flap-bg">
+      <h5 style="color:#e67e22;">反义词</h5>
+      <p><strong>STILL</strong> — 静止不动</p>
+      <p><strong>HANG</strong> — 垂下不动</p>
+      <p><strong>REST</strong> — 歇着不摆动</p>
+    </div>
+    <div class="info-card flop-bg">
+      <h5 style="color:#2b6cb0;">近义辨析</h5>
+      <p><strong>FLAP vs FLIP</strong>：摆动 vs 翻面</p>
+      <p><strong>FLAP vs FLOP</strong>：摆动 vs 落下</p>
+      <p><strong>FLAP vs FLUTTER</strong>：大幅 vs 小幅</p>
+      <p><strong>FLAP vs WAVE</strong>：不规则 vs 有节奏</p>
+    </div>
+    <div class="info-card purple-bg">
+      <h5 style="color:#7b4ad9;">fl- 家族词</h5>
+      <p><strong>FLIP</strong> = 轻快翻转</p>
+      <p><strong>FLOP</strong> = 沉重落下</p>
+      <p><strong>FLAP</strong> = 来回摆动</p>
+      <p><strong>FLICK</strong> = 快速弹击</p>
+      <p><strong>FLUTTER</strong> = 轻快颤动</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIT 图解 — 适合 / 匹配</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#7b4ad9,#9b6ae0); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#7b4ad9,#9b6ae0); border-radius:2px; flex-shrink:0; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#7b4ad9; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #d0c0e8; padding-left:10px; }
+  .white-box { background:#fff; border:1px solid #d0c0e8; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #d0c0e8; border-top:1px solid #d0c0e8; transform:rotate(45deg); }
+  .white-box strong { color:#7b4ad9; }
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:13px; color:#666; margin-top:3px; line-height:1.55; }
+  .usage-section { background:linear-gradient(135deg,#f5f0fa,#e8e0f5); border:1px solid #d0c0e8; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #d8d0e8; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#7b4ad9; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+  .fit-bg { background:linear-gradient(135deg,#f0e8f5,#e0d0f0); }
+  .suit-bg { background:linear-gradient(135deg,#fdf6ee,#f5e8d0); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+  .spectrum-wrap { background:linear-gradient(135deg,#f5f0fa,#e8e0f5); border:1px solid #d0c0e8; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+  @media (max-width:720px) { .container { padding:24px 16px 32px; } .cards, .compare-row { grid-template-columns:1fr; } .usage-list { grid-template-columns:1fr; } .three-col { grid-template-columns:1fr; } h1 { font-size:26px; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🔑 FIT</h1>
+<p class="subtitle">适合 / 匹配 — 从钥匙开锁到 fit in with the crowd</p>
+
+<!-- ===== 核心卡片 ===== -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+
+  <!-- CARD 1: FIT 核心意象 — 钥匙和锁 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="fBg" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#f5f0fa"/>
+          <stop offset="100%" stop-color="#e8e0f5"/>
+        </linearGradient>
+        <filter id="shadow">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#fBg)" rx="8"/>
+
+      <!-- 锁 -->
+      <rect x="480" y="160" width="80" height="100" rx="8" fill="#888" stroke="#666" stroke-width="2"/>
+      <circle cx="520" cy="210" r="15" fill="#444"/>
+      <circle cx="520" cy="210" r="6" fill="#888"/>
+      <!-- 钥匙孔 -->
+      <circle cx="520" cy="210" r="4" fill="#222"/>
+
+      <!-- 钥匙 -->
+      <g filter="url(#shadow)">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 180,0"
+          keyTimes="0; 1"
+          dur="3s" repeatCount="indefinite"/>
+        <rect x="140" y="200" width="130" height="20" rx="3" fill="#d4a520" stroke="#b8840a" stroke-width="2"/>
+        <circle cx="160" cy="210" r="16" fill="#d4a520" stroke="#b8840a" stroke-width="2"/>
+        <circle cx="160" cy="210" r="8" fill="#f7c948"/>
+        <!-- 钥匙齿 -->
+        <rect x="250" y="210" width="8" height="12" rx="1" fill="#d4a520" stroke="#b8840a" stroke-width="1"/>
+        <rect x="262" y="210" width="8" height="8" rx="1" fill="#d4a520" stroke="#b8840a" stroke-width="1"/>
+        <rect x="274" y="210" width="8" height="14" rx="1" fill="#d4a520" stroke="#b8840a" stroke-width="1"/>
+      </g>
+
+      <!-- FIT 标记（钥匙插入锁的瞬间） -->
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;0;1;0" dur="3s" repeatCount="indefinite"/>
+        <text x="520" y="140" text-anchor="middle" fill="#38a169" font-size="22" font-weight="bold" font-family="sans-serif">✔️ FIT!</text>
+      </g>
+
+      <text x="380" y="350" text-anchor="middle" fill="#444" font-size="14" font-weight="600" font-family="sans-serif">本义：钥匙的形状和锁的孔洞完全吻合 → 尺寸/形状匹配</text>
+      <text x="380" y="375" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">"This key fits the lock." 这把钥匙刚好能开这把锁</text>
+    </svg>
+    <div class="card-body">
+      <h3>FIT <span class="hl">/fɪt/</span></h3>
+      <div class="pos">verb / adj / noun · 适合 / 匹配 / 合身</div>
+      <div class="def">
+        <strong>本义</strong> 物体的形状/尺寸与另一个物体的空间完全吻合<br>
+        <strong>引申义 1</strong> 衣服合身（These shoes fit me.）<br>
+        <strong>引申义 2</strong> 符合/适合（fit the description — 符合描述）
+        <span class="eg">"The key fits the lock." 钥匙能开锁<br>"These jeans don't fit me anymore." 这条牛仔裤我穿不下了<br>"His story doesn't fit the facts." 他说的和事实不符</span>
+      </div>
+      <div class="white-box"><strong>💡 核心逻辑</strong>：FIT 的本质是"A的形状/尺寸和B的容腔完全吻合，没有多余空间也没有不够"。钥匙→锁、脚→鞋、人→衣服、描述→事实、人→群体（fit in），都是同一个"吻合/匹配"概念。</div>
+    </div>
+  </div>
+
+  <!-- CARD 2: FIT vs SUIT vs MATCH -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="c2L" x1="0" y1="0" x2="250" y2="400">
+          <stop offset="0%" stop-color="#f5f0fa"/>
+          <stop offset="100%" stop-color="#e8e0f5"/>
+        </linearGradient>
+        <linearGradient id="c2C" x1="260" y1="0" x2="510" y2="400">
+          <stop offset="0%" stop-color="#fdf6ee"/>
+          <stop offset="100%" stop-color="#f5eee0"/>
+        </linearGradient>
+        <linearGradient id="c2R" x1="520" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#f0f5ff"/>
+          <stop offset="100%" stop-color="#e0eaf5"/>
+        </linearGradient>
+      </defs>
+      <rect width="250" height="400" fill="url(#c2L)" rx="8"/>
+      <rect x="260" width="250" height="400" fill="url(#c2C)"/>
+      <rect x="520" width="240" height="400" fill="url(#c2R)"/>
+      <line x1="254" y1="20" x2="254" y2="380" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+      <line x1="514" y1="20" x2="514" y2="380" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- FIT: 鞋合脚 -->
+      <path d="M60,270 L130,270 L140,280 L50,280 Z" fill="#888" stroke="#666" stroke-width="2"/>
+      <ellipse cx="95" cy="255" rx="12" ry="6" fill="#f5e6d0"/>
+      <!-- 放进去了 -->
+      <animateTransform attributeName="transform" type="translate" values="0,0; 0,-5; 0,0" dur="2s" repeatCount="indefinite"/>
+      <text x="125" y="370" text-anchor="middle" fill="#7b4ad9" font-size="14" font-weight="bold" font-family="sans-serif">FIT</text>
+      <text x="125" y="388" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">尺寸吻合</text>
+
+      <!-- SUIT: 颜色适合 -->
+      <rect x="310" y="220" width="60" height="60" rx="6" fill="#c0392b" opacity="0.8"/>
+      <text x="340" y="255" text-anchor="middle" fill="#fff" font-size="13" font-family="sans-serif">红</text>
+      <circle cx="340" cy="170" r="18" fill="#f5e6d0"/>
+      <path d="M330,235 Q340,190 350,235" fill="none" stroke="#f5e6d0" stroke-width="3"/>
+      <text x="385" y="370" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">SUIT</text>
+      <text x="385" y="388" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">视觉/风格合适</text>
+
+      <!-- MATCH: 配对 -->
+      <rect x="560" y="190" width="40" height="60" rx="4" fill="#7b4ad9"/>
+      <rect x="610" y="190" width="40" height="60" rx="4" fill="#7b4ad9"/>
+      <text x="625" y="370" text-anchor="middle" fill="#2b6cb0" font-size="14" font-weight="bold" font-family="sans-serif">MATCH</text>
+      <text x="625" y="388" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">两者相同/配对</text>
+    </svg>
+    <div class="card-body">
+      <h3>FIT vs SUIT vs MATCH — 三种"适合"</h3>
+      <div class="pos">尺寸吻合 / 风格适合 / 两者配</div>
+      <div class="def">
+        <strong>FIT</strong> = 尺寸/形状吻合（鞋合脚、钥匙开锁）<br>
+        <strong>SUIT</strong> = 视觉/风格适合（颜色适合某人、风格适合场合）<br>
+        <strong>MATCH</strong> = 两者一致/配对（颜色一样、信息符合）
+        <span class="eg">"These shoes fit me." 鞋尺码合脚<br>"Red suits you." 红色适合你<br>"These socks match." 这两只袜子是一对</span>
+      </div>
+      <div class="white-box"><strong>🧠 区分要点</strong>：FIT 是"能不能塞进去"（功能），SUIT 是"好不好看"（审美），MATCH 是"是不是一对"（一致性）。一件衣服可以 fit your body（合身）但不 suit you（不适合你的风格）。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 逻辑演化树 ===== -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div style="background:#f5f0fa; border:1px solid #d0c0e8; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div style="font-size:16px; font-weight:700; margin-bottom:16px;">🧠 逻辑演化树：吻合 → 适合/安装/健康</div>
+  <div style="display:flex; flex-wrap:wrap; align-items:center; gap:6px;">
+    <div style="background:#fafaf8; border:1px solid #d0c0e0; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ① 吻合<br><span style="font-weight:400; font-size:12px; color:#888;">钥匙和锁吻合</span>
+    </div>
+    <div style="font-size:18px; color:#7b4ad9; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #d0c0e0; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ② 合身<br><span style="font-weight:400; font-size:12px; color:#888;">shoes / clothes fit</span>
+    </div>
+    <div style="font-size:18px; color:#7b4ad9; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #d0c0e0; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ③ 符合<br><span style="font-weight:400; font-size:12px; color:#888;">fit the description</span>
+    </div>
+    <div style="font-size:18px; color:#7b4ad9; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #d0c0e0; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ④ 融入<br><span style="font-weight:400; font-size:12px; color:#888;">fit in / fit into a group</span>
+    </div>
+    <div style="font-size:18px; color:#7b4ad9; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #d0c0e0; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ⑤ 安装/配备<br><span style="font-weight:400; font-size:12px; color:#888;">fit a lock / fit with</span>
+    </div>
+    <div style="font-size:18px; color:#7b4ad9; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #d0c0e0; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ⑥ 健康状态<br><span style="font-weight:400; font-size:12px; color:#888;">keep fit / fitness</span>
+    </div>
+  </div>
+  <div style="margin-top:16px; padding-top:16px; border-top:1px dashed #d0c0e0; font-size:14px; color:#555; line-height:1.65;">
+    <strong>🧠 核心逻辑链</strong>：钥匙和锁的齿吻合（物理吻合）→ 鞋和脚尺寸吻合（合身）→ 描述和事实吻合（符合/匹配）→ 人和群体吻合（融入/合群）→ 把锁装到门上（让新锁和门吻合）→ 身体健康（身体各部件"吻合"运转良好）。<br>
+    所有用法共享：<strong>两个独立的事物之间的吻合/匹配关系</strong>。
+  </div>
+</div>
+
+<!-- ===== 程度光谱（FIT 的吻合程度） ===== -->
+<div class="section-title"><span class="bar"></span><span>📊 FIT 程度光谱 — 从大到小到刚刚好</span></div>
+<div class="spectrum-wrap">
+  <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="specBg" x1="0" y1="0" x2="760" y2="340">
+        <stop offset="0%" stop-color="#f5f0fa"/>
+        <stop offset="100%" stop-color="#e8e0f5"/>
+      </linearGradient>
+    </defs>
+    <rect width="760" height="340" fill="url(#specBg)" rx="8"/>
+
+    <!-- 轨道 -->
+    <line x1="60" y1="175" x2="700" y2="175" stroke="#ccc" stroke-width="1.5"/>
+    <line x1="60" y1="185" x2="700" y2="185" stroke="#ccc" stroke-width="1.5"/>
+    <text x="60" y="165" text-anchor="middle" fill="#e63946" font-size="12" font-family="sans-serif">太大</text>
+    <text x="700" y="165" text-anchor="middle" fill="#e63946" font-size="12" font-family="sans-serif">太小</text>
+    <text x="380" y="165" text-anchor="middle" fill="#38a169" font-size="13" font-weight="bold" font-family="sans-serif">刚刚好 👈 完美吻合</text>
+
+    <!-- 渐变 -->
+    <rect x="60" y="175" width="128" height="10" rx="5" fill="#e63946" opacity="0.2"/>
+    <rect x="188" y="175" width="64" height="10" fill="#e67e22" opacity="0.25"/>
+    <rect x="252" y="175" width="128" height="10" fill="#38a169" opacity="0.3"/>
+    <rect x="380" y="175" width="128" height="10" fill="#e67e22" opacity="0.25"/>
+    <rect x="508" y="175" width="64" height="10" fill="#e63946" opacity="0.2"/>
+    <rect x="572" y="175" width="128" height="10" rx="0 5 5 0" fill="#e63946" opacity="0.25"/>
+
+    <!-- 游标 -->
+    <circle r="10" fill="#7b4ad9">
+      <animate attributeName="cx" values="60;188;252;380;508;572;700;572;508;380;252;188;60" dur="20s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="180;180;180;180;180;180;180;180;180;180;180;180;180" dur="20s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- 6个阶段标签 -->
+    <text x="128" y="150" text-anchor="middle" fill="#e63946" font-size="14" font-weight="bold" font-family="sans-serif">
+      way too big
+      <animate attributeName="opacity" values="1;0.2;0.2;0.2;0.2;0.2;0.2;0.2;0.2;0.2;0.2;0.2;1" dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="220" y="150" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">
+      loose
+      <animate attributeName="opacity" values="0.2;1;0.2;0.2;0.2;0.2;0.2;0.2;0.2;0.2;1;0.2;0.2" dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="310" y="150" text-anchor="middle" fill="#38a169" font-size="14" font-weight="bold" font-family="sans-serif">
+      fits
+      <animate attributeName="opacity" values="0.2;0.2;1;0.2;0.2;0.2;0.2;0.2;0.2;1;0.2;0.2;0.2" dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="380" y="135" text-anchor="middle" fill="#7b4ad9" font-size="18" font-weight="bold" font-family="sans-serif">
+      ✅ PERFECT FIT
+      <animate attributeName="opacity" values="0.2;0.2;0.2;1;0.2;0.2;0.2;0.2;1;0.2;0.2;0.2;0.2" dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="450" y="150" text-anchor="middle" fill="#38a169" font-size="14" font-weight="bold" font-family="sans-serif">
+      snug
+      <animate attributeName="opacity" values="0.2;0.2;0.2;0.2;1;0.2;0.2;1;0.2;0.2;0.2;0.2;0.2" dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="540" y="150" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">
+      tight
+      <animate attributeName="opacity" values="0.2;0.2;0.2;0.2;0.2;1;0.2;1;0.2;0.2;0.2;0.2;0.2" dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="640" y="150" text-anchor="middle" fill="#e63946" font-size="14" font-weight="bold" font-family="sans-serif">
+      too small
+      <animate attributeName="opacity" values="0.2;0.2;0.2;0.2;0.2;0.2;1;0.2;0.2;0.2;0.2;0.2;0.2" dur="20s" repeatCount="indefinite"/>
+    </text>
+
+    <!-- 鞋的视觉 -->
+    <g><animate attributeName="opacity" values="1;0;0;0;0;0;0;0;0;0;0;0;1" dur="20s" repeatCount="indefinite"/>
+      <path d="M100,260 L170,260 L180,275 L90,275 Z" fill="#d4a574" stroke="#b8845a" stroke-width="2"/>
+      <ellipse cx="135" cy="250" rx="15" ry="8" fill="#f5e6d0" opacity="0.5"/>
+      <text x="135" y="295" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">鞋太大，脚在里面晃</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;1;0;0;0;0;0;0;0;0;0;1;0" dur="20s" repeatCount="indefinite"/>
+      <path d="M192,265 L248,265 L255,275 L185,275 Z" fill="#d4a574" stroke="#b8845a" stroke-width="2"/>
+      <ellipse cx="220" cy="255" rx="12" ry="6" fill="#f5e6d0"/>
+      <text x="220" y="295" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">稍微偏大，有点松</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;0;1;0;0;0;0;0;0;0;1;0;0" dur="20s" repeatCount="indefinite"/>
+      <path d="M285,268 L335,268 L340,275 L280,275 Z" fill="#7b4ad9" stroke="#5a2ab9" stroke-width="2"/>
+      <ellipse cx="310" cy="258" rx="10" ry="5" fill="#f5e6d0"/>
+      <text x="310" y="295" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">刚好合适</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;0;0;1;0;0;0;0;1;0;0;0;0" dur="20s" repeatCount="indefinite"/>
+      <path d="M354,268 L406,268 L411,275 L349,275 Z" fill="#38a169" stroke="#1a8a4a" stroke-width="2"/>
+      <ellipse cx="380" cy="258" rx="10" ry="5" fill="#f5e6d0"/>
+      <text x="380" y="295" text-anchor="middle" fill="#38a169" font-size="11" font-family="sans-serif">👍 完美！</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;0;0;0;1;0;0;1;0;0;0;0;0" dur="20s" repeatCount="indefinite"/>
+      <path d="M425,270 L475,270 L479,275 L420,275 Z" fill="#d4a574" stroke="#b8845a" stroke-width="2"/>
+      <ellipse cx="450" cy="260" rx="8" ry="5" fill="#f5e6d0" opacity="0.8"/>
+      <text x="450" y="295" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">有点紧，但能穿</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;0;0;0;0;1;0;1;0;0;0;0;0" dur="20s" repeatCount="indefinite"/>
+      <path d="M510,268 L555,268 L560,275 L505,275 Z" fill="#e63946" stroke="#b02020" stroke-width="2"/>
+      <ellipse cx="533" cy="258" rx="8" ry="5" fill="#f5e6d0" opacity="0.6"/>
+      <text x="533" y="295" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">太紧，脚痛</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;0;0;0;0;0;1;0;0;0;0;0;0" dur="20s" repeatCount="indefinite"/>
+      <path d="M600,265 L670,265 L678,275 L595,275 Z" fill="#ccc" stroke="#999" stroke-width="2"/>
+      <ellipse cx="635" cy="258" rx="6" ry="4" fill="#f5e6d0" opacity="0.4"/>
+      <text x="635" y="295" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">根本穿不进去！</text>
+    </g>
+  </svg>
+  <div class="white-box"><strong>🧠 FIT 的"恰到好处"</strong>：FIT 描述的是一种吻合关系——太大不 fit、太小不 fit、刚刚好才 fit。这个"刚刚好"的概念延伸到了所有搭配中："fit the job"（适合这份工作）、"fit the description"（符合描述）、"fit in"（融入群体），都是"刚好匹配"。</div>
+</div>
+
+<!-- ===== 易混对比 ===== -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+
+  <!-- FIT IN vs FIT INTO vs FIT WITH -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="253" height="340" fill="#f5f0fa"/>
+      <rect x="254" width="253" height="340" fill="#f0f5ff"/>
+      <rect x="508" width="252" height="340" fill="#f0faf5"/>
+      <line x1="253" y1="20" x2="253" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+      <line x1="507" y1="20" x2="507" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- FIT IN 融入群体 -->
+      <circle cx="70" cy="210" r="12" fill="#7b4ad9"/>
+      <circle cx="100" cy="200" r="12" fill="#38a169"/>
+      <circle cx="130" cy="210" r="12" fill="#e67e22"/>
+      <circle cx="160" cy="190" r="12" fill="#2b6cb0"/>
+      <!-- 外来者 -->
+      <circle cx="100" cy="260" r="14" fill="#f5e6d0" stroke="#7b4ad9" stroke-width="2" stroke-dasharray="3,2">
+        <animate attributeName="cy" values="260;255;260" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <line x1="110" y1="245" x2="120" y2="215" stroke="#7b4ad9" stroke-width="1.5" stroke-dasharray="3,2">
+        <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite"/>
+      </line>
+      <text x="130" y="310" text-anchor="middle" fill="#7b4ad9" font-size="12" font-weight="bold" font-family="sans-serif">FIT IN</text>
+      <text x="130" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">融入群体</text>
+
+      <!-- FIT INTO 放得进 -->
+      <rect x="280" y="180" width="100" height="80" rx="4" fill="#e8e0f0" stroke="#d0c0e0" stroke-width="1.5"/>
+      <text x="330" y="225" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">📦 箱子</text>
+      <rect x="320" y="140" width="30" height="30" rx="3" fill="#f7c948" stroke="#d4a520" stroke-width="1.5">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 0,30"
+          keyTimes="0; 1"
+          dur="2.5s" repeatCount="indefinite"/>
+      </rect>
+      <text x="380" y="310" text-anchor="middle" fill="#2b6cb0" font-size="12" font-weight="bold" font-family="sans-serif">FIT INTO</text>
+      <text x="380" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">放得进某空间</text>
+
+      <!-- FIT WITH 符合 -->
+      <rect x="540" y="180" width="80" height="50" rx="4" fill="#f5f0d0" stroke="#d0c8a0" stroke-width="1"/>
+      <text x="580" y="210" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">📋 描述</text>
+      <circle cx="580" cy="150" r="14" fill="#f5e6d0"/>
+      <line x1="580" y1="150" x2="580" y2="180" stroke="#f5e6d0" stroke-width="3"/>
+      <text x="630" y="310" text-anchor="middle" fill="#38a169" font-size="12" font-weight="bold" font-family="sans-serif">FIT WITH</text>
+      <text x="630" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">与...一致/符合</text>
+    </svg>
+    <div class="label">
+      <div class="p" style="color:#7b4ad9;">FIT IN / FIT INTO / FIT WITH — 三种"吻合"对象</div>
+      <div class="desc">FIT IN = 融入群体（人+社会关系）；FIT INTO = 放得进某空间（物体+容器）；FIT WITH = 与某标准/描述一致（抽象匹配）。</div>
+    </div>
+  </div>
+
+  <!-- FIT vs SUIT vs MATCH 详细 -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="253" height="340" fill="#f5f0fa"/>
+      <rect x="254" width="253" height="340" fill="#fdf6ee"/>
+      <rect x="508" width="252" height="340" fill="#f0f5ff"/>
+      <line x1="253" y1="20" x2="253" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+      <line x1="507" y1="20" x2="507" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- FIT 功能吻合 -->
+      <rect x="65" y="220" width="50" height="40" rx="4" fill="#c0392b"/>
+      <ellipse cx="75" cy="195" rx="18" ry="12" fill="#f5e6d0"/>
+      <text x="130" y="310" text-anchor="middle" fill="#7b4ad9" font-size="13" font-weight="bold" font-family="sans-serif">FIT</text>
+      <text x="130" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">"这件外套合身吗？"<br>（尺寸问题）</text>
+
+      <!-- SUIT 风格适合 -->
+      <rect x="340" y="210" width="60" height="50" rx="4" fill="#e67e22"/>
+      <circle cx="370" cy="195" r="16" fill="#f5e6d0"/>
+      <text x="380" y="310" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="bold" font-family="sans-serif">SUIT</text>
+      <text x="380" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">"橙色适合你吗？"<br>（风格问题）</text>
+
+      <!-- MATCH 配对 -->
+      <rect x="560" y="210" width="30" height="50" rx="4" fill="#2b6cb0"/>
+      <rect x="610" y="210" width="30" height="50" rx="4" fill="#2b6cb0"/>
+      <text x="630" y="310" text-anchor="middle" fill="#2b6cb0" font-size="13" font-weight="bold" font-family="sans-serif">MATCH</text>
+      <text x="630" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">"这两只袜子是一对吗？"<br>（配对问题）</text>
+    </svg>
+    <div class="label">
+      <div class="p" style="color:#7b4ad9;">FIT vs SUIT vs MATCH — 一句话区分</div>
+      <div class="desc">问"合不合身" → FIT。问"好不好看/适不适合" → SUIT。问"是不是一对/一不一致" → MATCH。<em>"The jacket fits perfectly but the color doesn't suit you."</em>（外套很合身但颜色不适合你）</div>
+    </div>
+    <div style="padding:0 16px 16px;">
+      <div class="white-box"><strong>🧠 更多例子</strong>：<em>"This job fits my skills."</em>（这份工作匹配我的技能—功能吻合） vs <em>"This job suits me."</em>（这份工作适合我—我喜欢它） vs <em>"Your skills match the job requirements."</em>（你的技能符合工作要求—两者一致）。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 常见搭配 ===== -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+<div class="usage-section">
+  <h4>✋ 物理 FIT — 尺寸/空间吻合</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>fit</strong> shoes / clothes</span><span class="usage-cn">鞋/衣服合身 &nbsp;|&nbsp; 📖 尺寸刚好</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>fit</strong> the lock / key</span><span class="usage-cn">钥匙能开锁 &nbsp;|&nbsp; 📖 齿吻合</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>fit</strong> into a box / bag / car</span><span class="usage-cn">放得进箱子/包/车 &nbsp;|&nbsp; 📖 空间足够</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>fit</strong> through the door</span><span class="usage-cn">能通过门 &nbsp;|&nbsp; 📖 宽度刚好</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>fit</strong> a lock / window / part</span><span class="usage-cn">安装锁/窗户/零件 &nbsp;|&nbsp; 📖 把某物装进去</span></div>
+    <div class="usage-item"><span class="usage-en">a <strong>fit</strong> (noun)</span><span class="usage-cn">合身的衣服 &nbsp;|&nbsp; 📖 "This is a perfect fit."</span></div>
+  </div>
+</div>
+<div class="usage-section">
+  <h4>🔄 抽象 FIT — 适合/符合</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>fit</strong> the description / profile</span><span class="usage-cn">符合描述/侧写 &nbsp;|&nbsp; 📖 和描述吻合</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>fit</strong> the job / position</span><span class="usage-cn">适合这份工作 &nbsp;|&nbsp; 📖 能力和岗位匹配</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>fit</strong> sb.'s schedule / needs</span><span class="usage-cn">适合某人的时间/需求 &nbsp;|&nbsp; 📖 和需求吻合</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>fit in</strong> (with)</span><span class="usage-cn">融入/合群 &nbsp;|&nbsp; 📖 和群体吻合</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>fit</strong> the bill</span><span class="usage-cn">符合要求/正合适 &nbsp;|&nbsp; 📖 和"账单"吻合=满足条件</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>fit</strong> like a glove</span><span class="usage-cn">非常合身/完美匹配 &nbsp;|&nbsp; 📖 像手套一样吻合</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>fit</strong> the mold / pattern</span><span class="usage-cn">符合模式/惯例 &nbsp;|&nbsp; 📖 和模具吻合</span></div>
+    <div class="usage-item"><span class="usage-en">keep <strong>fit</strong> / physical <strong>fitness</strong></span><span class="usage-cn">保持健康/体能 &nbsp;|&nbsp; 📖 身体各部件"吻合"良好</span></div>
+  </div>
+  <div class="white-box" style="margin-top:12px;"><strong>🔄 fit the bill</strong> = 符合要求/正合适。来源：剧院演出——演员如果"符合海报上描述的样子"（fit the bill = 和海报描述吻合），就被选中。<em>"We need someone bilingual — you fit the bill."</em>（我们需要双语人才——你正合适）</div>
+  <div class="white-box" style="margin-top:8px;"><strong>🔄 fit in</strong> = 融入/合群。物理画面：把拼图块塞进拼图里——它的大小和形状刚好和周围匹配，不突兀。<em>"He struggled to fit in at his new school."</em>（他努力想融入新学校）</div>
+  <div class="white-box" style="margin-top:8px;"><strong>🔄 keep fit</strong> = 保持健康。来源：你的身体各系统"吻合"运转良好=健康 → 引申为"健身/锻炼"。<em>"She keeps fit by running every day."</em>（她每天跑步保持健康）</div>
+</div>
+
+<!-- ===== 反义/相似 ===== -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card fit-bg">
+      <h5 style="color:#7b4ad9;">🚫 反义词</h5>
+      <p><strong>MISFIT</strong> — 不合身 <small>不吻合</small></p>
+      <p><strong>LOOSE</strong> — 松的 <small>太大不吻合</small></p>
+      <p><strong>TIGHT</strong> — 紧的 <small>太小不吻合</small></p>
+    </div>
+    <div class="info-card suit-bg">
+      <h5 style="color:#e67e22;">🔗 近义辨析</h5>
+      <p><strong>FIT vs SUIT</strong>：尺寸吻合 vs 风格合适</p>
+      <p><strong>FIT vs MATCH</strong>：吻合 vs 一致/配对</p>
+      <p><strong>FIT vs BELONG</strong>：吻合 vs 属于</p>
+      <p><strong>FIT vs QUALIFY</strong>：符合条件 vs 有资格</p>
+    </div>
+    <div class="info-card purple-bg">
+      <h5 style="color:#7b4ad9;">💡 相关短语</h5>
+      <p><strong>fit as a fiddle</strong> = 非常健康</p>
+      <p><strong>fit of anger</strong> = 一阵暴怒</p>
+      <p><strong>survival of the fittest</strong> = 适者生存</p>
+      <p><strong>fit to burst</strong> = 快要撑爆</p>
+      <p><strong>fit and proper</strong> = 合适的（正式）</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

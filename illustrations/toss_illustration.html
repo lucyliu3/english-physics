@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOSS 空间意象图解</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f0;
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+    color: #1a1a1a;
+  }
+  .container {
+    max-width: 960px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px 56px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  h1 { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #666; font-size: 15px; margin-bottom: 36px; }
+  .section-title { font-size: 18px; font-weight: 600; margin: 36px 0 20px; color: #333; }
+  .section-title .bar { display: inline-block; width: 4px; height: 18px; margin-right: 12px; vertical-align: middle; border-radius: 2px; }
+  .bar1 { background: #d97706; }
+
+  .core-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+  .core-card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 14px 14px 18px;
+    text-align: center;
+  }
+  .core-card canvas {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    aspect-ratio: 380 / 220;
+    display: block; margin: 0 auto 10px; border-radius: 6px; background: #fafaf8;
+  }
+  .core-card .card-label { font-size: 18px; font-weight: 700; }
+  .core-card .card-desc { font-size: 14px; color: #555; line-height: 1.5; margin-top: 4px; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .card canvas { width: 100%; height: auto; aspect-ratio: 360 / 150; display: block; background: #fafaf8; }
+  .card-body { padding: 12px 16px 16px; }
+  .card-body h3 { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+  .card-body .hl { font-weight: 700; }
+  .card-body .def { font-size: 13px; color: #444; line-height: 1.6; }
+  .card-body .def .eg { color: #777; font-style: italic; display: block; margin-top: 1px; }
+
+  .cat-block {
+    margin-bottom: 22px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e8e8e4;
+  }
+  .cat-block .cat-header {
+    padding: 11px 18px;
+    font-size: 16px; font-weight: 700;
+  }
+  .cat-block .cat-body { padding: 12px 18px 16px; background: #fafaf8; }
+  .cat-block .sub-label { font-size: 14px; font-weight: 600; margin: 10px 0 6px; color: #555; }
+  .cat-block .sub-label:first-child { margin-top: 0; }
+
+  .usage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 36px; }
+  .usage-item { padding: 4px 0; border-bottom: 1px dashed #eee; }
+  .usage-item:last-child, .usage-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .usage-en { font-size: 13.5px; font-weight: 600; color: #333; }
+  .usage-en .kw { font-weight: 700; }
+  .usage-cn { font-size: 12.5px; color: #777; margin-top: 1px; }
+
+  .spatial-note {
+    margin-top: 36px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #fef9e7, #fafaf8);
+    border: 1px solid #fce8c8;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px; color: #444; line-height: 1.7;
+  }
+  .spatial-note .big { font-size: 18px; font-weight: 700; color: #d97706; }
+
+  @media (max-width: 720px) {
+    .container { padding: 24px 14px 32px; }
+    .core-row, .cards { grid-template-columns: 1fr; }
+    .usage-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>TOSS 的空间意象</h1>
+  <p class="subtitle">核心意象 = <strong>"随手轻轻一抛"</strong> —— 轻快、随意、不费力</p>
+
+  <!-- 核心意象 -->
+  <div class="section-title"><span class="bar bar1"></span><span>核心意象：随手抛 vs 用力扔</span></div>
+  <div class="core-row">
+    <div class="core-card">
+      <canvas id="coreToss" width="380" height="220"></canvas>
+      <div class="card-label" style="color:#d97706;">TOSS = 随手一抛</div>
+      <div class="card-desc">
+        <strong>轻快地、不费力地抛出去</strong>。<br>
+        强调动作的<em>随意性</em>——不是在用力扔，而是"随手一甩"。<br>
+        <span style="color:#888;font-size:12px;">"Toss me the keys." — 把钥匙丢给我。</span>
+      </div>
+    </div>
+    <div class="core-card">
+      <canvas id="coreThrow" width="380" height="220"></canvas>
+      <div class="card-label" style="color:#c0392b;">THROW = 用力扔</div>
+      <div class="card-desc">
+        <strong>用力地、有目标地投掷</strong>。<br>
+        强调力量和距离——手臂向后蓄力再扔出去。<br>
+        <span style="color:#888;font-size:12px;">"Throw the ball." — 扔球。（棒球/篮球）</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 三层展开 -->
+  <div class="section-title"><span class="bar bar1"></span><span>三层展开</span></div>
+  <div class="cards">
+
+    <div class="card">
+      <canvas id="tier1" width="360" height="150"></canvas>
+      <div class="card-body">
+        <h3>① 物 <span class="hl" style="color:#d97706;">随手抛出物体</span></h3>
+        <div class="def">
+          最本源——轻轻把某物抛出去。<br>
+          对象通常是小件、不珍贵的东西。
+          <span class="eg">"Toss me the remote." — 把遥控器丢给我。<br>"Toss the ball." — 抛球（轻抛，不是用力投）<br>"Toss a coin." — 抛硬币。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="tier2" width="360" height="150"></canvas>
+      <div class="card-body">
+        <h3>② 人 <span class="hl" style="color:#d97706;">人际关系</span></h3>
+        <div class="def">
+          把某人/某物"丢到"一边——<br>
+          抛弃、放弃、不再理会。<br>
+          因为 toss 本身有"随意"的意味，所以比 throw away 更轻蔑。
+          <span class="eg">"Toss someone aside." — 把某人甩了。<br>"Get tossed out." — 被赶出去。<br>"Toss a job." — 辞职/丢掉工作。</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <canvas id="tier3a" width="360" height="150"></canvas>
+      <div class="card-body">
+        <h3>③a 事 <span class="hl" style="color:#d97706;">快速做完 / 随便搞搞</span></h3>
+        <div class="def">
+          "随手做完某事"——不认真、不花心思。<br>
+          从"随手一抛"到"随手一做"。
+          <span class="eg">"Toss a salad." — 拌沙拉（"抛"拌）。<br>"Toss together a meal." — 随便做顿饭。<br>"Toss off a letter." — 随手写封信。</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <canvas id="tier3b" width="360" height="150"></canvas>
+      <div class="card-body">
+        <h3>③b 事/状态 <span class="hl" style="color:#d97706;">掷硬币 / 决定</span></h3>
+        <div class="def">
+          Toss a coin（抛硬币）是西方文化极常见的决策方式。<br>
+          由此衍生出"凭运气决定"。
+          <span class="eg">"Toss for it." — 抛硬币决定吧。<br>"Win the toss." — 猜赢了。<br>"It's a toss-up." — 胜负难料 / 五五开。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 完整分类 ========== -->
+  <div class="section-title"><span class="bar bar1"></span><span>完整用法分类</span></div>
+
+  <!-- 1. 物理抛投 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#fef3c7; color:#d97706;">🤲 第一类：物理抛投（空间原型）</div>
+    <div class="cat-body">
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#d97706;">Toss</span> me the keys.</span><span class="usage-cn">把钥匙丢给我。（随手抛过来）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#d97706;">Toss</span> a coin.</span><span class="usage-cn">抛硬币。（经典动作）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#d97706;">Toss</span> the ball.</span><span class="usage-cn">抛球。（不是用力扔）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#d97706;">Toss</span> it over here.</span><span class="usage-cn">丢过来。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#d97706;">Toss</span> the paper in the bin.</span><span class="usage-cn">把纸丢进垃圾桶。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#d97706;">Toss</span> your bag on the chair.</span><span class="usage-cn">把包随手扔在椅子上。（随口語）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#d97706;">Toss</span> and turn.</span><span class="usage-cn">辗转反侧（睡觉"翻来覆去"——身体被"抛"来"抛"去）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#d97706;">Toss</span> a frisbee.</span><span class="usage-cn">扔飞盘。（轻抛）</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 丢弃/抛弃 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#f0eef8; color:#7b4ad9;">🗑️ 第二类：丢弃 / 抛弃（Toss out / Toss away）</div>
+    <div class="cat-body">
+      <p style="font-size:13px; color:#555; margin-bottom:8px;"><strong>核心逻辑</strong>：随手一抛 → "不要了，扔掉"。比 throw away 更口语、更随意。</p>
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#7b4ad9;">Toss</span> it out.</span><span class="usage-cn">扔掉。（口语超高頻）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#7b4ad9;">Toss</span> the leftovers.</span><span class="usage-cn">把剩菜倒了。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#7b4ad9;">Toss</span> away the receipt.</span><span class="usage-cn">把小票扔了。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#7b4ad9;">Toss</span> aside.</span><span class="usage-cn">丢到一边 / 抛弃（人/物）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#7b4ad9;">Toss</span> someone out.</span><span class="usage-cn">把某人赶出去。（"扔出去"）</span></div>
+        <div class="usage-item"><span class="usage-en">Get <span class="kw" style="color:#7b4ad9;">tossed</span> from the bar.</span><span class="usage-cn">被从酒吧赶出来。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#7b4ad9;">Toss</span> your cookies.</span><span class="usage-cn">吐了。（俚语——"把饼干扔了"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#7b4ad9;">Toss</span> aside old friends.</span><span class="usage-cn">抛弃老朋友。（把人"丢一边"）</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 随手做 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#e8f5e8; color:#38a169;">🍳 第三类：随手做（Toss together / Toss off）</div>
+    <div class="cat-body">
+      <p style="font-size:13px; color:#555; margin-bottom:8px;"><strong style="color:#38a169;">🔍 Toss OFF 为什么是"随手写"？</strong><br>
+      OFF = <strong>从表面脱离</strong>。Toss off = 把东西"抛离"自己 → 不花心思弄完就让它走人。<br>
+      "Toss off a letter" = 把信写完"抛出去"，不修改不纠结。同样逻辑："Toss off a speech" = 即兴发言（话从嘴里"抛离"出去）。</p>
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Toss</span> a salad.</span><span class="usage-cn">拌沙拉。（用"抛"的方式拌——厨师经典动作）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Toss</span> together a meal.</span><span class="usage-cn">随手做顿饭。（不精心）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Toss off</span> a speech.</span><span class="usage-cn">随口说一段演讲 / 即兴发言。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Toss off</span> a comment.</span><span class="usage-cn">随口说了一句评论。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Toss off</span> a letter.</span><span class="usage-cn">随手写了封信。（不花时间）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Toss</span> together a plan.</span><span class="usage-cn">临时拼凑一个计划。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 抛硬币/决定 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#e8f0f8; color:#2b6cb0;">🪙 第四类：抛硬币 / 运气决定（美国文化高频！）</div>
+    <div class="cat-body">
+      <p style="font-size:13px; color:#555; margin-bottom:8px;"><strong style="color:#2b6cb0;">🔍 Toss-UP 为什么是"五五开"？</strong><br>
+      UP = <strong>从低到高</strong>。Toss up a coin = 把硬币往上抛。<br>
+      硬币被抛<strong>上去</strong>（up）后悬在空中没落地，你不知道正反面 → 任何事情只要结果"悬着" = a toss-up。<br>
+      和 "up in the air"（悬而未决）是同一个空间逻辑。</p>
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#2b6cb0;">Toss</span> a coin.</span><span class="usage-cn">抛硬币。（决策方式）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#2b6cb0;">Toss</span> for it.</span><span class="usage-cn">抛硬币决定吧。（Let's toss for it.）</span></div>
+        <div class="usage-item"><span class="usage-en">Win the <span class="kw" style="color:#2b6cb0;">toss</span>.</span><span class="usage-cn">抛硬币猜赢了。</span></div>
+        <div class="usage-item"><span class="usage-en">Lose the <span class="kw" style="color:#2b6cb0;">toss</span>.</span><span class="usage-cn">抛硬币猜输了。</span></div>
+        <div class="usage-item"><span class="usage-en">It's a <span class="kw" style="color:#2b6cb0;">toss-up</span>.</span><span class="usage-cn">五五开 / 很难说。（超高頻！任何事情不确定时用）</span></div>
+        <div class="usage-item"><span class="usage-en">It's a <span class="kw" style="color:#2b6cb0;">toss-up</span> between the two.</span><span class="usage-cn">两个差不多 / 难以抉择。</span></div>
+        <div class="usage-item"><span class="usage-en">The election is a <span class="kw" style="color:#2b6cb0;">toss-up</span>.</span><span class="usage-cn">选举胜负难料。</span></div>
+        <div class="usage-item"><span class="usage-en">It could go either way — <span class="kw" style="color:#2b6cb0;">toss-up</span>.</span><span class="usage-cn">可能往哪边走——不好说。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 翻煎饼/抛物体动作 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#fff4e0; color:#b7791f;">🥞 第五类：翻转 / 抛接（烹饪+特技）</div>
+    <div class="cat-body">
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Toss</span> a pancake.</span><span class="usage-cn">抛煎饼。（翻面的动作）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Toss</span> pizza dough.</span><span class="usage-cn">抛披萨面团。（做披萨的经典动作）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Toss</span> a salad.</span><span class="usage-cn">拌沙拉。（再次强调——核心是"抛拌"动作）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Toss</span> a caber.</span><span class="usage-cn">掷长木桩。（苏格兰运动）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Toss</span> rings.</span><span class="usage-cn">抛圈。（游戏）</span></div>
+        <div class="usage-item"><span class="usage-en">Juggle / <span class="kw" style="color:#b7791f;">Toss</span> in the air.</span><span class="usage-cn">抛接杂技。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. TOSS 口语短语 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#fde8e4; color:#c0392b;">💬 第六类：Toss 特殊口语 / 习语</div>
+    <div class="cat-body">
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Toss</span> your hat in the ring.</span><span class="usage-cn">宣布参选 / 加入竞争。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Toss</span> a party.</span><span class="usage-cn">办派对。（口语，随意的感觉）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Toss</span> back a drink.</span><span class="usage-cn">一饮而尽。（头后仰"抛"酒到喉咙里）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Toss</span> down a beer.</span><span class="usage-cn">灌下一杯啤酒。（往下"抛"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Toss</span> in the towel.</span><span class="usage-cn">认输 / 放弃。（拳击教练抛毛巾进场）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Toss</span> an idea around.</span><span class="usage-cn">讨论 / 交换想法。（想法"抛"来"抛"去）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Toss</span> a question at someone.</span><span class="usage-cn">突然向某人提问（冷不防"抛"过去）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Toss</span> a compliment.</span><span class="usage-cn">随口夸一句。（随意"抛"出去）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Toss</span> a game.</span><span class="usage-cn">故意输掉比赛（把比赛"扔掉"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Toss</span> and turn.</span><span class="usage-cn">辗转反侧。（身体被"抛"来"抛"去）</span></div>
+        <div class="usage-item"><span class="usage-en">I don't give a <span class="kw" style="color:#c0392b;">toss</span>.</span><span class="usage-cn">我一点也不在乎。（英式——连抛一下都懒得）</span></div>
+        <div class="usage-item"><span class="usage-en">Argue the <span class="kw" style="color:#c0392b;">toss</span>.</span><span class="usage-cn">争论已定的事实。（硬币抛完了还争）</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6b. 衍生逻辑拆解 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#fff4e0; color:#b7791f;">🧠 TOSS 口语习语的衍生规律</div>
+    <div class="cat-body">
+      <p style="font-size:13px; color:#555; line-height:1.7; margin-bottom:10px;">
+        每个"toss"习语都只取了核心动作的<strong>某一个特征</strong>来用。记住四个特征，就能自己推出来：
+      </p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div style="background:#fef9e7; border-radius:8px; padding:12px;">
+          <strong style="color:#d97706;">① 传送（从A到B）</strong>
+          <div style="font-size:12px; color:#555; line-height:1.6; margin-top:4px;">
+            <strong>Toss your hat in the ring</strong> — 把帽子扔进拳击场 = 参选<br>
+            <strong>Toss a question at</strong> — 把问题抛过去<br>
+            <strong>Toss an idea around</strong> — 来回抛 = 讨论
+          </div>
+        </div>
+        <div style="background:#fef9e7; border-radius:8px; padding:12px;">
+          <strong style="color:#d97706;">② 随意性（轻/不郑重）</strong>
+          <div style="font-size:12px; color:#555; line-height:1.6; margin-top:4px;">
+            <strong>Toss a party</strong> — 随手搞个派对<br>
+            <strong>Toss a compliment</strong> — 随口夸一句<br>
+            <strong>I don't give a toss</strong> — 连随手应付都懒得 = 不在乎
+          </div>
+        </div>
+        <div style="background:#fef9e7; border-radius:8px; padding:12px;">
+          <strong style="color:#d97706;">③ 放弃（东西离开手）</strong>
+          <div style="font-size:12px; color:#555; line-height:1.6; margin-top:4px;">
+            <strong>Toss in the towel</strong> — 教练抛毛巾 = 认输放弃<br>
+            <strong>Toss a game</strong> — 故意输掉比赛 = 把胜利扔了<br>
+            <strong>Toss back/down</strong> — 把酒"扔"进喉咙 = 喝掉
+          </div>
+        </div>
+        <div style="background:#fef9e7; border-radius:8px; padding:12px;">
+          <strong style="color:#d97706;">④ 弧线轨迹（抛物线/翻转）</strong>
+          <div style="font-size:12px; color:#555; line-height:1.6; margin-top:4px;">
+            <strong>Toss and turn</strong> — 身体翻来覆去像被抛<br>
+            <strong>Toss back a drink</strong> — 头后仰的弧线动作<br>
+            <strong>Argue the toss</strong> — 硬币还在空中时就争结果
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. TOSS vs THROW vs FLING -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#f0f0f0; color:#444;">⚖️ 对比：TOSS vs THROW vs FLING</div>
+    <div class="cat-body">
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#d97706;">Toss</span></span><span class="usage-cn">随手轻抛——Toss me the keys. Toss a coin.</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Throw</span></span><span class="usage-cn">用力投掷——Throw the ball. Throw a punch.</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#7b4ad9;">Fling</span></span><span class="usage-cn">用力猛甩（感情色彩强）——Fling the door open. Fling yourself.</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#d97706;">Toss</span> → 随意、不费力、短距离</span><span class="usage-cn"></span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Throw</span> → 用力、有目标、远距离</span><span class="usage-cn"></span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#7b4ad9;">Fling</span> → 猛力、情绪化、失控感</span><span class="usage-cn"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 总结 -->
+  <div class="spatial-note">
+    <div class="big">TOSS 一句话总结</div>
+    <div style="margin:12px 0; display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; text-align:center;">
+      <div style="background:#fff; border-radius:8px; padding:10px;">
+        <strong style="color:#d97706;">🤲 随手抛</strong><br>
+        <span style="font-size:12px;">Toss me the keys<br>→ 轻轻丢过来</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:10px;">
+        <strong style="color:#7b4ad9;">🗑️ 随手扔</strong><br>
+        <span style="font-size:12px;">Toss it out<br>→ 扔掉 / 抛弃</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:10px;">
+        <strong style="color:#38a169;">🍳 随手做</strong><br>
+        <span style="font-size:12px;">Toss a salad / Toss off<br>→ 不费心快速做</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:10px;">
+        <strong style="color:#2b6cb0;">🪙 抛硬币</strong><br>
+        <span style="font-size:12px;">It's a toss-up<br>→ 五五开 / 難说</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:10px;">
+        <strong style="color:#c0392b;">💬 口语习语</strong><br>
+        <span style="font-size:12px;">Toss in the towel / Toss and turn<br>→ 认输 / 翻来覆去</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:10px;">
+        <strong style="color:#b7791f;">🥞 烹饪翻转</strong><br>
+        <span style="font-size:12px;">Toss a pancake<br>→ 抛翻煎饼</span>
+      </div>
+    </div>
+    <strong style="color:#d97706;">TOSS = 随手轻轻一抛</strong> —— 身体抛物体，也"抛"掉垃圾、"抛"掉人、"抛"出一个主意、"抛"硬币决定一切。<br><br>
+    <span style="font-size:13px; color:#888;">
+    💡 记住四个特征：<strong style="color:#d97706;">① 传送</strong>（A到B） · <strong style="color:#d97706;">② 随意</strong>（不郑重） · <strong style="color:#d97706;">③ 放弃</strong>（手放开） · <strong style="color:#d97706;">④ 弧线</strong>（抛物线/翻转）<br>
+    每个习语只取其中一个——猜猜"Toss in the towel"用了哪个？③放弃。 "Toss an idea around"呢？①传送。
+    </span>
+  </div>
+
+</div>
+
+<script>
+(function() {
+function df(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ===== 核心 TOSS =====
+const c1 = document.getElementById('coreToss');
+const ctx1 = c1.getContext('2d');
+df(ctx1,380,220);
+
+// 手（左边）
+ctx1.fillStyle = '#d97706';
+// 手臂
+ctx1.beginPath(); ctx1.moveTo(20,100); ctx1.lineTo(60,90); ctx1.strokeStyle = '#d97706'; ctx1.lineWidth = 6;
+ctx1.stroke();
+// 手掌
+ctx1.fillRect(55,75,25,20);
+ctx1.fillRect(70,70,10,28);
+
+// 物体（正在飞）
+ctx1.fillStyle = '#d97706';
+ctx1.beginPath(); ctx1.arc(130,75,10,0,Math.PI*2); ctx1.fill();
+ctx1.fillStyle = '#fff'; ctx1.font = '10px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('🔑',130,80);
+
+// 抛物线
+ctx1.strokeStyle = '#d97706'; ctx1.lineWidth = 2; ctx1.setLineDash([4,4]);
+ctx1.beginPath(); ctx1.moveTo(80,85);
+ctx1.quadraticCurveTo(130,10,200,80);
+ctx1.stroke(); ctx1.setLineDash([]);
+
+// 接的手（右边）
+ctx1.fillStyle = '#d97706';
+ctx1.fillRect(205,65,25,20);
+ctx1.fillRect(215,60,10,28);
+
+ctx1.fillStyle = '#d97706'; ctx1.font = 'bold 14px sans-serif';
+ctx1.fillText('TOSS',200,50);
+
+ctx1.fillStyle = '#888'; ctx1.font = '11px sans-serif';
+ctx1.fillText('随手轻轻一抛',130,195);
+ctx1.fillText('轻快 · 随意 · 不费力',130,210);
+
+// ===== 核心 THROW =====
+const c2 = document.getElementById('coreThrow');
+const ctx2 = c2.getContext('2d');
+df(ctx2,380,220);
+
+// 身体（蓄力姿势）
+ctx2.fillStyle = '#c0392b';
+ctx2.beginPath(); ctx2.arc(50,80,15,0,Math.PI*2); ctx2.fill();
+ctx2.fillRect(46,95,8,25);
+ctx2.fillRect(40,118,5,20);
+ctx2.fillRect(55,118,5,20);
+// 手臂蓄力
+ctx2.strokeStyle = '#c0392b'; ctx2.lineWidth = 5;
+ctx2.beginPath(); ctx2.moveTo(58,90); ctx2.lineTo(30,60); ctx2.lineTo(45,50); ctx2.stroke();
+
+// 箭头
+ctx2.strokeStyle = '#c0392b'; ctx2.lineWidth = 3;
+ctx2.beginPath(); ctx2.moveTo(80,65); ctx2.lineTo(200,65); ctx2.stroke();
+ctx2.fillStyle = '#c0392b';
+ctx2.beginPath(); ctx2.moveTo(195,60); ctx2.lineTo(208,65); ctx2.lineTo(195,70); ctx2.closePath(); ctx2.fill();
+
+// 球（飞得远）
+ctx2.fillStyle = '#c0392b';
+ctx2.beginPath(); ctx2.arc(280,55,14,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#fff'; ctx2.font = '10px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('⚾',280,60);
+
+ctx2.fillStyle = '#c0392b'; ctx2.font = 'bold 14px sans-serif';
+ctx2.fillText('THROW',200,45);
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif';
+ctx2.fillText('用力投掷',200,190);
+ctx2.fillText('用力 · 有目标 · 远距离',200,205);
+
+// ===== 三层卡片 =====
+// Tier 1: 随手抛
+const e1 = document.getElementById('tier1');
+const ctx3 = e1.getContext('2d');
+df(ctx3,360,150);
+// 人
+ctx3.fillStyle = '#d97706';
+ctx3.beginPath(); ctx3.arc(50,75,10,0,Math.PI*2); ctx3.fill();
+ctx3.fillRect(47,85,6,20);
+// 物体
+ctx3.fillStyle = '#888';
+ctx3.beginPath(); ctx3.arc(160,70,8,0,Math.PI*2); ctx3.fill();
+ctx3.fillStyle = '#fff'; ctx3.font = '9px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('🔑',160,74);
+// 抛物线
+ctx3.strokeStyle = '#d97706'; ctx3.lineWidth = 1.5; ctx3.setLineDash([3,3]);
+ctx3.beginPath(); ctx3.moveTo(65,80);
+ctx3.quadraticCurveTo(110,30,150,70);
+ctx3.stroke(); ctx3.setLineDash([]);
+// 手接
+ctx3.fillStyle = '#d97706';
+ctx3.fillRect(230,60,18,14);
+ctx3.fillRect(238,55,8,20);
+ctx3.fillStyle = '#888'; ctx3.font = '10px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('🙌',270,78);
+
+ctx3.fillStyle = '#888'; ctx3.font = '11px sans-serif';
+ctx3.fillText('Toss me the keys',180,140);
+
+// Tier 2: 人际关系
+const e2 = document.getElementById('tier2');
+const ctx4 = e2.getContext('2d');
+df(ctx4,360,150);
+// 手把东西扔出去
+ctx4.fillStyle = '#7b4ad9';
+ctx4.fillRect(30,65,25,18);
+ctx4.fillRect(42,55,8,28);
+// 物体被抛走
+ctx4.fillStyle = '#888';
+ctx4.beginPath(); ctx4.arc(130,55,10,0,Math.PI*2); ctx4.fill();
+ctx4.fillStyle = '#999'; ctx4.font = '9px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('👤',130,59);
+// 弧线
+ctx4.strokeStyle = '#7b4ad9'; ctx4.lineWidth = 1.5; ctx4.setLineDash([3,3]);
+ctx4.beginPath(); ctx4.moveTo(55,70);
+ctx4.quadraticCurveTo(90,20,120,55);
+ctx4.stroke(); ctx4.setLineDash([]);
+// 垃圾桶
+ctx4.fillStyle = '#888';
+ctx4.fillRect(200,60,60,40);
+ctx4.strokeStyle = '#888'; ctx4.lineWidth = 2;
+ctx4.beginPath(); ctx4.moveTo(195,60); ctx4.lineTo(265,60); ctx4.stroke();
+ctx4.fillStyle = '#999'; ctx4.font = '16px sans-serif';
+ctx4.fillText('🗑️',230,85);
+ctx4.fillStyle = '#888'; ctx4.font = '11px sans-serif';
+ctx4.fillText('Toss someone aside',180,140);
+
+// Tier 3a: 随手做
+const e3 = document.getElementById('tier3a');
+const ctx5 = e3.getContext('2d');
+df(ctx5,360,150);
+ctx5.fillStyle = '#38a169'; ctx5.font = '20px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('🥗',50,75);
+// 箭头
+ctx5.strokeStyle = '#38a169'; ctx5.lineWidth = 2;
+ctx5.beginPath(); ctx5.moveTo(75,72); ctx5.lineTo(140,72); ctx5.stroke();
+ctx5.fillStyle = '#38a169';
+ctx5.beginPath(); ctx5.moveTo(135,68); ctx5.lineTo(148,72); ctx5.lineTo(135,76); ctx5.closePath(); ctx5.fill();
+// 沙拉碗
+ctx5.strokeStyle = '#38a169'; ctx5.lineWidth = 2;
+ctx5.beginPath(); ctx5.ellipse(230,72,35,20,0,Math.PI,0); ctx5.stroke();
+ctx5.beginPath(); ctx5.ellipse(230,72,35,15,0,0,Math.PI); ctx5.stroke();
+ctx5.fillStyle = '#38a169'; ctx5.font = '12px sans-serif';
+ctx5.fillText('🥬',230,75);
+ctx5.fillStyle = '#888'; ctx5.font = '11px sans-serif';
+ctx5.fillText('Toss a salad / Toss together a meal',180,140);
+
+// Tier 3b: toss-up
+const e4 = document.getElementById('tier3b');
+const ctx6 = e4.getContext('2d');
+df(ctx6,360,150);
+// 硬币
+ctx6.fillStyle = '#d97706';
+ctx6.beginPath(); ctx6.arc(110,70,16,0,Math.PI*2); ctx6.fill();
+ctx6.fillStyle = '#fff'; ctx6.font = '16px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('🪙',110,76);
+// 上升箭头
+ctx6.strokeStyle = '#d97706'; ctx6.lineWidth = 2;
+ctx6.beginPath(); ctx6.moveTo(110,86); ctx6.lineTo(110,30); ctx6.stroke();
+ctx6.fillStyle = '#d97706';
+ctx6.beginPath(); ctx6.moveTo(106,34); ctx6.lineTo(110,24); ctx6.lineTo(114,34); ctx6.closePath(); ctx6.fill();
+// 两个问号
+ctx6.fillStyle = '#d97706'; ctx6.font = 'bold 20px sans-serif';
+ctx6.fillText('❓',220,60);
+ctx6.fillText('❓',260,90);
+ctx6.fillStyle = '#888'; ctx6.font = '11px sans-serif';
+ctx6.fillText("It's a toss-up",200,140);
+
+})();
+</script>
+
+</body>
+</html>

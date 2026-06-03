@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COME 空间意象图解</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f0;
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+    color: #1a1a1a;
+  }
+  .container {
+    max-width: 960px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px 56px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  h1 { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #666; font-size: 15px; margin-bottom: 40px; }
+  .section-title { font-size: 18px; font-weight: 600; margin: 36px 0 20px; color: #333; }
+  .section-title .bar { display: inline-block; width: 4px; height: 18px; margin-right: 12px; vertical-align: middle; border-radius: 2px; }
+  .bar1 { background: #c05621; }
+  .bar2 { background: #2b6cb0; }
+  .bar3 { background: #38a169; }
+
+  /* 核心 */
+  .core-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+  .core-card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 14px 14px 18px;
+    text-align: center;
+  }
+  .core-card canvas {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    aspect-ratio: 380 / 220;
+    display: block; margin: 0 auto 10px; border-radius: 6px; background: #fafaf8;
+  }
+  .core-card .card-label { font-size: 18px; font-weight: 700; }
+  .core-card .card-desc { font-size: 14px; color: #555; line-height: 1.5; margin-top: 4px; }
+
+  /* 衍生产生图 */
+  .derive-section {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 36px;
+  }
+  .derive-section canvas {
+    width:100%; max-width:760px; height:auto; aspect-ratio:760/240;
+    display:block; margin:0 auto 12px; border-radius:6px; background:#fafaf8;
+  }
+
+  /* 卡片 */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .card canvas { width: 100%; height: auto; aspect-ratio: 360 / 160; display: block; background: #fafaf8; }
+  .card-body { padding: 12px 16px 16px; }
+  .card-body h3 { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+  .card-body .hl { font-weight: 700; }
+  .card-body .c1 { color: #c05621; }
+  .card-body .c2 { color: #2b6cb0; }
+  .card-body .c3 { color: #38a169; }
+  .card-body .def { font-size: 13.5px; color: #444; line-height: 1.6; }
+  .card-body .def .eg { color: #777; font-style: italic; display: block; margin-top: 1px; }
+  .card-body .def strong { font-weight: 600; }
+
+  /* 分类区块 */
+  .cat-block {
+    margin-bottom: 24px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e8e8e4;
+  }
+  .cat-block .cat-header {
+    padding: 12px 18px;
+    font-size: 16px; font-weight: 700;
+    cursor: default;
+  }
+  .cat-block .cat-body { padding: 14px 18px 18px; background: #fafaf8; }
+  .cat-block .cat-body .sub-label {
+    font-size: 14px; font-weight: 600; margin: 10px 0 6px; color: #555;
+  }
+  .cat-block .cat-body .sub-label:first-child { margin-top: 0; }
+
+  .usage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px 36px; }
+  .usage-item { padding: 4px 0; border-bottom: 1px dashed #eee; }
+  .usage-item:last-child, .usage-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .usage-en { font-size: 13.5px; font-weight: 600; color: #333; }
+  .usage-en .kw { font-weight: 700; }
+  .usage-cn { font-size: 12.5px; color: #777; margin-top: 1px; }
+
+  .spatial-note {
+    margin-top: 36px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #fdf6ef, #fafaf8);
+    border: 1px solid #f0e4d8;
+    border-radius: 10px;
+    font-size: 14px; color: #444; line-height: 1.7;
+    text-align: center;
+  }
+  .spatial-note .big { font-size: 18px; font-weight: 700; color: #c05621; }
+
+  @media (max-width: 720px) {
+    .container { padding: 24px 14px 32px; }
+    .core-row, .cards { grid-template-columns: 1fr; }
+    .usage-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>COME 的空间意象</h1>
+  <p class="subtitle">核心意象 = <strong>"朝参照点移动"</strong> —— 从远处"来"到说话者/目标处</p>
+
+  <!-- 核心意象 -->
+  <div class="section-title"><span class="bar bar1"></span><span>核心意象：COME vs GO</span></div>
+  <div class="core-row">
+    <div class="core-card">
+      <canvas id="coreCome" width="380" height="220"></canvas>
+      <div class="card-label" style="color:#c05621;">COME = 过来</div>
+      <div class="card-desc">
+        <strong>向参照点移动</strong> —— 从远处来到说话者/目标所在位置。<br>
+        核心方向：<strong style="color:#c05621;">→ 朝这里 →</strong>
+      </div>
+    </div>
+    <div class="core-card">
+      <canvas id="coreGo" width="380" height="220"></canvas>
+      <div class="card-label" style="color:#2b6cb0;">GO = 过去</div>
+      <div class="card-desc">
+        <strong>离参照点移动</strong> —— 从说话者/目标位置离开去别处。<br>
+        核心方向：<strong style="color:#2b6cb0;">← 朝那里 ←</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- 衍生图 -->
+  <div class="section-title"><span class="bar bar2"></span><span>COME 的衍生逻辑总图</span></div>
+  <div class="derive-section">
+    <canvas id="deriveMap" width="760" height="240"></canvas>
+    <div style="font-size:14px; color:#555; line-height:1.7; text-align:center;">
+      COME 的所有用法都来自同一个空间逻辑：<strong style="color:#c05621;">"某物/某人从别处移动到参照点"</strong>。
+      物理移动 → 出现/到达 → 发生/产生 → 变成某种状态 → 随商品附送。
+    </div>
+  </div>
+
+  <!-- ===== 三层卡片 ===== -->
+  <div class="section-title"><span class="bar bar3"></span><span>三层展开：物 · 人 · 事/状态</span></div>
+  <div class="cards">
+
+    <div class="card">
+      <canvas id="tier1" width="360" height="160"></canvas>
+      <div class="card-body">
+        <h3>① 物 <span class="hl c1">物理移动</span></h3>
+        <div class="def">
+          物体/人向参照点移动（最本源）。<br>
+          可以是说话者、听者、或故事中的焦点位置。
+          <span class="eg">"Come here." — 过来。<br>"Come to the party." — 来派对。<br>"Come to me." — 到我这里来。<br>"Come to Boston." — 来波士顿。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="tier2" width="360" height="160"></canvas>
+      <div class="card-body">
+        <h3>② 人 <span class="hl c1">人际/社会</span></h3>
+        <div class="def">
+          人"来到"某个群体/关系/状态中。<br>
+          抽象意义上的"往来、参与、达成"。
+          <span class="eg">"Come together." — 团结起来（人们"来到一起"）。<br>"Come to terms." — 达成协议。<br>"Come to power." — 掌权。<br>"Come to the table." — 坐下来谈判。</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <canvas id="tier3a" width="360" height="160"></canvas>
+      <div class="card-body">
+        <h3>③a 事/状态 <span class="hl c2">发生 / 出现</span></h3>
+        <div class="def">
+          事物"来到"现实/意识中 = 发生、产生、被想到。<br>
+          不是主动做，而是<strong>"它过来了"</strong>。
+          <span class="eg">"How did this come about?" — 这事怎么发生的？<br>"An idea came to me." — 我想到一个主意（主意"来到"我脑子里）。<br>"Winter comes." — 冬天来了。</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <canvas id="tier3b" width="360" height="160"></canvas>
+      <div class="card-body">
+        <h3>③b 事/状态 <span class="hl c2">变成 / 达到</span></h3>
+        <div class="def">
+          某物"来到"某个状态 = 变成 / 达到。<br>
+          <strong>"Come to + 状态"</strong> 是英语极高频的结构。
+          <span class="eg">"Come true." — 成真（梦想变为现实）。<br>"Come to life." — 苏醒/活跃起来。<br>"It comes in different colors." — 有不同颜色。<br>"Come undone." — 松开/崩了。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 高频用法大分类 ========== -->
+  <div class="section-title"><span class="bar bar1"></span><span>完整用法分类</span></div>
+
+  <!-- 1. 物理移动 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#fdf0e6; color:#c05621;">📍 第一类：物理移动（空间原型）</div>
+    <div class="cat-body">
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c05621;">Come</span> here.</span><span class="usage-cn">过来。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c05621;">Come</span> to my office.</span><span class="usage-cn">来我办公室。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c05621;">Come</span> to the party.</span><span class="usage-cn">来派对。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c05621;">Come</span> home.</span><span class="usage-cn">回家。（家是参照点）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c05621;">Come</span> along.</span><span class="usage-cn">跟着来 / 一起来。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c05621;">Come</span> closer.</span><span class="usage-cn">靠近一点。</span></div>
+        <div class="usage-item"><span class="usage-en">Here he <span class="kw" style="color:#c05621;">comes</span>.</span><span class="usage-cn">他过来了。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c05621;">Come</span> this way.</span><span class="usage-cn">走这边。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 到达/出现 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#eef4f8; color:#2b6cb0;">🌟 第二类：到达 / 出现（核心衍生）</div>
+    <div class="cat-body">
+      <div class="sub-label">📌 来到现实 = "出现 / 发生"</div>
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en">Winter <span class="kw" style="color:#2b6cb0;">comes</span>.</span><span class="usage-cn">冬天来了。</span></div>
+        <div class="usage-item"><span class="usage-en">The news <span class="kw" style="color:#2b6cb0;">came</span> yesterday.</span><span class="usage-cn">消息昨天传来的。</span></div>
+        <div class="usage-item"><span class="usage-en">An idea <span class="kw" style="color:#2b6cb0;">came</span> to me.</span><span class="usage-cn">我想到一个主意。（它"来到"我脑子里）</span></div>
+        <div class="usage-item"><span class="usage-en">It <span class="kw" style="color:#2b6cb0;">comes</span> with the territory.</span><span class="usage-cn">这是难免的 / 这行就这样。（跟这个领域"一起来的"）</span></div>
+        <div class="usage-item"><span class="usage-en">His name <span class="kw" style="color:#2b6cb0;">came</span> up.</span><span class="usage-cn">有人提到了他的名字。（他的名字"到桌面上来了"）</span></div>
+        <div class="usage-item"><span class="usage-en">The opportunity <span class="kw" style="color:#2b6cb0;">came</span> out of nowhere.</span><span class="usage-cn">机会突然出现（不知从哪"来"的）</span></div>
+        <div class="usage-item"><span class="usage-en">How did it <span class="kw" style="color:#2b6cb0;">come</span> about?</span><span class="usage-cn">这事怎么发生的？</span></div>
+        <div class="usage-item"><span class="usage-en">It <span class="kw" style="color:#2b6cb0;">comes</span> down to this.</span><span class="usage-cn">归根结底是这样。（"落到"这个点上）</span></div>
+      </div>
+
+      <div class="sub-label">📌 来到意识 = "被理解 / 想起"</div>
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en">It <span class="kw" style="color:#2b6cb0;">came</span> to me.</span><span class="usage-cn">我突然想起来了。（记忆"来到"我这儿）</span></div>
+        <div class="usage-item"><span class="usage-en">It <span class="kw" style="color:#2b6cb0;">came</span> to mind.</span><span class="usage-cn">浮现在脑海。</span></div>
+        <div class="usage-item"><span class="usage-en">The answer <span class="kw" style="color:#2b6cb0;">came</span> to him.</span><span class="usage-cn">他想到答案了。</span></div>
+        <div class="usage-item"><span class="usage-en">Does it <span class="kw" style="color:#2b6cb0;">come</span> to you now?</span><span class="usage-cn">你现在想起来了吗？</span></div>
+        <div class="usage-item"><span class="usage-en">The truth finally <span class="kw" style="color:#2b6cb0;">came</span> out.</span><span class="usage-cn">真相终于大白。（"出来"了）</span></div>
+        <div class="usage-item"><span class="usage-en">It <span class="kw" style="color:#2b6cb0;">came</span> to my attention.</span><span class="usage-cn">我注意到这件事。（它"来到"我的注意力中）</span></div>
+      </div>
+
+      <div class="sub-label">📌 来到社会上架 = "商品/产品出现"</div>
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en">The new iPhone <span class="kw" style="color:#2b6cb0;">comes</span> out next week.</span><span class="usage-cn">新款iPhone下周上市。</span></div>
+        <div class="usage-item"><span class="usage-en">The movie <span class="kw" style="color:#2b6cb0;">came</span> out last year.</span><span class="usage-cn">这部电影去年上映的。</span></div>
+        <div class="usage-item"><span class="usage-en">A new model just <span class="kw" style="color:#2b6cb0;">came</span> in.</span><span class="usage-cn">新款式刚到货（"进来"了）</span></div>
+        <div class="usage-item"><span class="usage-en">The album <span class="kw" style="color:#2b6cb0;">came</span> out in 2023.</span><span class="usage-cn">这张专辑2023年发行。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 变成某种状态 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#eaf5ea; color:#38a169;">🔄 第三类：变成某种状态（Come + 形容词/介词）</div>
+    <div class="cat-body">
+      <p style="font-size:13px; color:#555; margin-bottom:8px;"><strong style="color:#38a169;">核心逻辑</strong>：某物/人"来到"一个新的状态 = "变成了"那个状态。这里的"come"不是"走"的动作，而是<strong>一种转变</strong>。</p>
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Come</span> true.</span><span class="usage-cn">成真。（梦想"来到"真实状态）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Come</span> to life.</span><span class="usage-cn">苏醒 / 活跃起来。（来到"活着的状态"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Come</span> undone / loose.</span><span class="usage-cn">松开 / 解开。（来到"散开的状态"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Come</span> together.</span><span class="usage-cn">团结 / 汇集到一起。（来到"一起"这个状态）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Come</span> to an end.</span><span class="usage-cn">结束。（来到"结束"这个点）</span></div>
+        <div class="usage-item"><span class="usage-en">It <span class="kw" style="color:#38a169;">comes</span> in many colors.</span><span class="usage-cn">它有很多种颜色。（"以……形态出现"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Come</span> to a stop.</span><span class="usage-cn">停下来。（来到"停止"的状态）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Come</span> to a decision.</span><span class="usage-cn">做出决定。（来到"决定"这个点）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Come</span> to terms with.</span><span class="usage-cn">接受 / 妥协。（与某事"达成一致"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Come</span> into focus.</span><span class="usage-cn">变得清晰。（进入"焦点"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Come</span> in handy.</span><span class="usage-cn">派上用场。（变得"有用"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#38a169;">Come</span> as a surprise.</span><span class="usage-cn">出乎意料。（"以惊喜的形式到来"）</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Come down with / 疾病 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#fdf0f2; color:#d94a5c;">🤒 第四类：Come Down With / 疾病相关（超高頻口语）</div>
+    <div class="cat-body">
+      <p style="font-size:13px; color:#555; margin-bottom:8px;"><strong style="color:#d94a5c;">核心逻辑</strong>：疾病就像一个"从高处落下来砸到你"的东西——你被病"击倒"了（come down = 下来，with = 伴随着）。非常形象的空间隐喻：<strong>病魔从上方降临到你身上</strong>。</p>
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#d94a5c;">Come down with</span> the flu.</span><span class="usage-cn">得了流感。（❌不是"下来"，是"病倒了"）</span></div>
+        <div class="usage-item"><span class="usage-en">I think I'm <span class="kw" style="color:#d94a5c;">coming down with</span> something.</span><span class="usage-cn">我好像有点不舒服 / 要生病了。（超高頻！）</span></div>
+        <div class="usage-item"><span class="usage-en">She <span class="kw" style="color:#d94a5c;">came down with</span> a cold.</span><span class="usage-cn">她感冒了。</span></div>
+        <div class="usage-item"><span class="usage-en">The whole office <span class="kw" style="color:#d94a5c;">came down with</span> it.</span><span class="usage-cn">整个办公室的人都病倒了。</span></div>
+        <div class="usage-item"><span class="usage-en">When <span class="kw" style="color:#d94a5c;">did it come on</span>?</span><span class="usage-cn">（症状）什么时候开始的？（come on = 疾病"上来"）</span></div>
+        <div class="usage-item"><span class="usage-en">The symptoms <span class="kw" style="color:#d94a5c;">came on</span> suddenly.</span><span class="usage-cn">症状突然出现了。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Come with / 随附 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#f4f0fa; color:#7b4ad9;">📦 第五类：Come With — "随附"（你提到的"随物赠送"！）</div>
+    <div class="cat-body">
+      <p style="font-size:13px; color:#555; margin-bottom:8px;"><strong style="color:#7b4ad9;">核心逻辑</strong>：东西B"跟着"东西A一起来到买家手里 = "随附"、"附带"。<strong>A comes with B</strong> = 你买A，B也跟着一起来。这不是"来去"的来，而是"附加/配套/自带"的来。</p>
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en">The phone <span class="kw" style="color:#7b4ad9;">comes with</span> a charger.</span><span class="usage-cn">手机自带充电器。（充电器"跟着"手机一起来）</span></div>
+        <div class="usage-item"><span class="usage-en">Does it <span class="kw" style="color:#7b4ad9;">come with</span> a warranty?</span><span class="usage-cn">有保修吗？（保修"跟着"产品一起来？）</span></div>
+        <div class="usage-item"><span class="usage-en">The meal <span class="kw" style="color:#7b4ad9;">comes with</span> a drink.</span><span class="usage-cn">套餐附带一杯饮料。</span></div>
+        <div class="usage-item"><span class="usage-en">It <span class="kw" style="color:#7b4ad9;">comes with</span> a price.</span><span class="usage-cn">这是有代价的。（后果"跟着"一起来）</span></div>
+        <div class="usage-item"><span class="usage-en">Success <span class="kw" style="color:#7b4ad9;">comes with</span> hard work.</span><span class="usage-cn">成功伴随着努力。（努力"带来"成功）</span></div>
+        <div class="usage-item"><span class="usage-en">It <span class="kw" style="color:#7b4ad9;">comes with</span> the territory.</span><span class="usage-cn">这是难免的。（这行就这样——"跟着行业一起来"）</span></div>
+        <div class="usage-item"><span class="usage-en">The job <span class="kw" style="color:#7b4ad9;">comes with</span> benefits.</span><span class="usage-cn">这份工作附带福利。</span></div>
+        <div class="usage-item"><span class="usage-en">It <span class="kw" style="color:#7b4ad9;">comes</span> in a wooden box.</span><span class="usage-cn">它用一个木盒子装着来的（包装形式）</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. COME 高频短语动词 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#fff4e0; color:#b7791f;">🔑 第六类：COME 高频短语动词（Phrasal Verbs）大全</div>
+    <div class="cat-body">
+
+      <div class="sub-label">⭐ 极高频（日常口语每天用）</div>
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come on</span>!</span><span class="usage-cn">快点儿！/ 拜托！/ 得了吧！（万能高频）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come in</span>.</span><span class="usage-cn">请进。（别人敲门时说的）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come back</span>.</span><span class="usage-cn">回来。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come out</span>.</span><span class="usage-cn">出来 / 出版 / 出柜 / 结果</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come up</span>.</span><span class="usage-cn">上来 / 出现 / 即将发生 / 被提起</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come over</span>.</span><span class="usage-cn">过来（到说话者家/位置）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come on in</span>.</span><span class="usage-cn">快进来吧。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come again</span>?</span><span class="usage-cn">再说一遍？（没听清时用）</span></div>
+      </div>
+
+      <div class="sub-label">⭐ 高频</div>
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come off</span>.</span><span class="usage-cn">脱落 / 成功/实现（计划"成了"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come across</span>.</span><span class="usage-cn">偶遇 / 给人某种印象（"横穿过来碰到"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come through</span>.</span><span class="usage-cn">成功挺过 / 兑现（"穿过来"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come up with</span>.</span><span class="usage-cn">想出（主意） / 拿出（钱）——把东西从脑子里"拿上来"</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come down to</span>.</span><span class="usage-cn">归根结底是（"一直降到"某个核心点）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come down with</span>.</span><span class="usage-cn">得病（"被病魔击倒"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come out with</span>.</span><span class="usage-cn">发表 / 说出 / 推出产品</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come forward</span>.</span><span class="usage-cn">站出来（提供信息/作证）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come around</span>.</span><span class="usage-cn">回心转意 / 顺便来访（"绕过来"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come through for</span>.</span><span class="usage-cn">成功帮到某人/挺过来</span></div>
+      </div>
+
+      <div class="sub-label">⭐ 中频但重要</div>
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come apart</span>.</span><span class="usage-cn">散架 / 崩溃（"分开而来"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come between</span>.</span><span class="usage-cn">挑拨离间 / 妨碍（"来到两人之间"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come before</span>.</span><span class="usage-cn">提交给……审议 / 出现在……之前</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come under</span>.</span><span class="usage-cn">遭受 / 归入（"来到……之下"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come to</span> (phrasal verb).</span><span class="usage-cn">恢复知觉 / 总计 / 涉及到（"来到"清醒状态）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come into</span>.</span><span class="usage-cn">继承 / 进入某种状态</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come off it</span>!</span><span class="usage-cn">别胡说了！（口语）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#b7791f;">Come what may</span>.</span><span class="usage-cn">无论发生什么。（固定表达）</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Come in 化学 / 日常场景 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#e0f0ff; color:#1a5c9e;">🧪 第七类：Come In — 专业/场景用法（你提到的化学）</div>
+    <div class="cat-body">
+      <p style="font-size:13px; color:#555; margin-bottom:8px;"><strong style="color:#1a5c9e;">核心逻辑</strong>：come in = "进入"某个角色/场景。在化学里就是"进入反应"；在日常生活里还有各种"加入/介入"的意思。</p>
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en">Hydrogen <span class="kw" style="color:#1a5c9e;">comes in</span> at this step.</span><span class="usage-cn">氢在这个步骤"进入"反应。</span></div>
+        <div class="usage-item"><span class="usage-en">This is where the acid <span class="kw" style="color:#1a5c9e;">comes in</span>.</span><span class="usage-cn">这就是酸"加入"反应的地方。</span></div>
+        <div class="usage-item"><span class="usage-en">That's where you <span class="kw" style="color:#1a5c9e;">come in</span>.</span><span class="usage-cn">这就是你"上场"/参与的地方。（超高頻口语！）</span></div>
+        <div class="usage-item"><span class="usage-en">The new law <span class="kw" style="color:#1a5c9e;">came in</span> last year.</span><span class="usage-cn">新法律去年生效了。（"进入"执行阶段）</span></div>
+        <div class="usage-item"><span class="usage-en">The dress <span class="kw" style="color:#1a5c9e;">comes in</span> three sizes.</span><span class="usage-cn">这条裙子有三种尺寸。（"以……形式出现/供应"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#1a5c9e;">Come in</span> first place.</span><span class="usage-cn">获得第一名。（"进入"第一名位置）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#1a5c9e;">Come in</span> handy.</span><span class="usage-cn">派上用场。（"进入"有用状态）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#1a5c9e;">Come in</span> useful.</span><span class="usage-cn">派上用场。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Come 特殊口语 -->
+  <div class="cat-block">
+    <div class="cat-header" style="background:#fff0f0; color:#c0392b;">💬 第八类：Come 特殊口语/习语（很多中国人不知道的高频用法）</div>
+    <div class="cat-body">
+      <div class="usage-grid">
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">How come</span>?</span><span class="usage-cn">为什么？/ 怎么会？"How did it come about?" 的简写</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Come to think of it</span>...</span><span class="usage-cn">说起来…… / 这么一想……（"来到"想这件事的状态）</span></div>
+        <div class="usage-item"><span class="usage-en">When it <span class="kw" style="color:#c0392b;">comes to</span>...</span><span class="usage-cn">说到…… / 涉及到……（"来到"这个话题时）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Come to think</span>, I saw him yesterday.</span><span class="usage-cn">这么一想，我昨天见过他。</span></div>
+        <div class="usage-item"><span class="usage-en">The bill <span class="kw" style="color:#c0392b;">comes to</span> $50.</span><span class="usage-cn">账单共计50美元。（"来到"50这个数字）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Come again</span>?</span><span class="usage-cn">你说啥？（没听清——"再来一次"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Come</span> to a head.</span><span class="usage-cn">达到关键时刻 / 爆发。（脓包"来到"头——要破了）</span></div>
+        <div class="usage-item"><span class="usage-en">Don't <span class="kw" style="color:#c0392b;">come</span> at me.</span><span class="usage-cn">别冲我来 / 别骂我 / 别找我麻烦。</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Come</span> hell or high water.</span><span class="usage-cn">无论如何 / 不管天塌下来。（固定习语）</span></div>
+        <div class="usage-item"><span class="usage-en">Easy <span class="kw" style="color:#c0392b;">come</span>, easy go.</span><span class="usage-cn">来得容易去得快。（钱/机会）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Come</span> full circle.</span><span class="usage-cn">兜了一圈回到原点。（"来了个完整的圆"）</span></div>
+        <div class="usage-item"><span class="usage-en"><span class="kw" style="color:#c0392b;">Come</span> to a close.</span><span class="usage-cn">接近尾声。（"来到"结束点）</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 最终总结 -->
+  <div class="spatial-note">
+    <div class="big">COME 一句话总结</div>
+    <div style="margin:12px 0; display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; text-align:center;">
+      <div style="background:#fff; border-radius:8px; padding:10px;">
+        <strong style="color:#c05621;">📍 物理移动</strong><br>
+        <span style="font-size:12px;">Come here / Come to my house<br>→ "朝我这里移动"</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:10px;">
+        <strong style="color:#2b6cb0;">🌟 出现/发生</strong><br>
+        <span style="font-size:12px;">An idea came to me / Winter comes<br>→ "来到现实/意识中"</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:10px;">
+        <strong style="color:#38a169;">🔄 变成/达到</strong><br>
+        <span style="font-size:12px;">Come true / Come to life<br>→ "来到新状态"</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:10px;">
+        <strong style="color:#7b4ad9;">📦 伴随/随附</strong><br>
+        <span style="font-size:12px;">Comes with a charger<br>→ "跟着一起来"</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:10px;">
+        <strong style="color:#b7791f;">🔑 短语动词</strong><br>
+        <span style="font-size:12px;">Come up / Come across / Come down with<br>→ "方向+空间"</span>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:10px;">
+        <strong style="color:#c0392b;">💬 固定习语</strong><br>
+        <span style="font-size:12px;">How come? / When it comes to<br>→ "已经看不出空间了"</span>
+      </div>
+    </div>
+    <strong style="color:#c05621;">所有用法 = 某物/某人"朝参照点移动"</strong> —— 物理上的"来"也好，抽象上的"出现/变成/伴随"也好，都是这个核心的空间意象。
+  </div>
+
+</div>
+
+<script>
+(function() {
+function df(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ===== 核心 COME =====
+const c1 = document.getElementById('coreCome');
+const ctx1 = c1.getContext('2d');
+df(ctx1,380,220);
+
+// 参照点（你）
+ctx1.fillStyle = '#c05621';
+ctx1.beginPath(); ctx1.arc(290,110,18,0,Math.PI*2); ctx1.fill();
+ctx1.fillRect(285,128,10,25);
+ctx1.fillStyle = '#fff'; ctx1.font = 'bold 13px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('你',290,115);
+
+// 物体/人从远处来
+ctx1.fillStyle = '#888';
+ctx1.beginPath(); ctx1.arc(80,110,12,0,Math.PI*2); ctx1.fill();
+ctx1.fillRect(77,122,6,18);
+ctx1.fillStyle = '#888'; ctx1.font = '11px sans-serif';
+ctx1.fillText('某人',80,90);
+
+// 移动箭头
+ctx1.strokeStyle = '#c05621'; ctx1.lineWidth = 3;
+ctx1.beginPath(); ctx1.moveTo(95,110); ctx1.lineTo(260,110); ctx1.stroke();
+ctx1.fillStyle = '#c05621';
+ctx1.beginPath(); ctx1.moveTo(255,105); ctx1.lineTo(268,110); ctx1.lineTo(255,115); ctx1.closePath(); ctx1.fill();
+
+ctx1.fillStyle = '#c05621'; ctx1.font = 'bold 20px sans-serif';
+ctx1.fillText('→ COME →',185,85);
+ctx1.fillStyle = '#888'; ctx1.font = '11px sans-serif';
+ctx1.fillText('朝参照点移动',185,185);
+
+// ===== 核心 GO =====
+const c2 = document.getElementById('coreGo');
+const ctx2 = c2.getContext('2d');
+df(ctx2,380,220);
+
+// 参照点（你）
+ctx2.fillStyle = '#2b6cb0';
+ctx2.beginPath(); ctx2.arc(120,110,18,0,Math.PI*2); ctx2.fill();
+ctx2.fillRect(115,128,10,25);
+ctx2.fillStyle = '#fff'; ctx2.font = 'bold 13px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('你',120,115);
+
+// 物体/人离开
+ctx2.fillStyle = '#888';
+ctx2.beginPath(); ctx2.arc(300,110,12,0,Math.PI*2); ctx2.fill();
+ctx2.fillRect(297,122,6,18);
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif';
+ctx2.fillText('某处',300,90);
+
+// 箭头
+ctx2.strokeStyle = '#2b6cb0'; ctx2.lineWidth = 3;
+ctx2.beginPath(); ctx2.moveTo(145,110); ctx2.lineTo(275,110); ctx2.stroke();
+ctx2.fillStyle = '#2b6cb0';
+ctx2.beginPath(); ctx2.moveTo(270,106); ctx2.lineTo(283,110); ctx2.lineTo(270,114); ctx2.closePath(); ctx2.fill();
+
+ctx2.fillStyle = '#2b6cb0'; ctx2.font = 'bold 20px sans-serif';
+ctx2.fillText('→ GO →',200,85);
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif';
+ctx2.fillText('离参照点移动',200,185);
+
+// ===== 衍生总图 =====
+const d = document.getElementById('deriveMap');
+const ctx3 = d.getContext('2d');
+df(ctx3,760,240);
+
+// 中心：COME 核心
+ctx3.fillStyle = '#c05621';
+ctx3.beginPath(); ctx3.arc(120,140,38,0,Math.PI*2); ctx3.fill();
+ctx3.fillStyle = '#fff'; ctx3.font = 'bold 16px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('COME',120,138);
+ctx3.fillStyle = '#fff'; ctx3.font = '12px sans-serif';
+ctx3.fillText('核心',120,155);
+
+// 从核心出发的箭头
+const branches = [
+  { angle: -1.8, label: '物理移动', color:'#c05621', sub:'Come here', x:280, y:50 },
+  { angle: -1.0, label: '出现/发生', color:'#2b6cb0', sub:'Come about', x:280, y:100 },
+  { angle: -0.2, label: '变成状态', color:'#38a169', sub:'Come true', x:280, y:150 },
+  { angle: 0.6, label: '随附/附加', color:'#7b4ad9', sub:'Comes with', x:280, y:200 },
+  { angle: -1.4, label: '到达意识', color:'#b7791f', sub:'Come to mind', x:400, y:30 },
+  { angle: 0.3, label: '疾病降临', color:'#d94a5c', sub:'Come down with', x:400, y:220 },
+];
+
+branches.forEach(b => {
+  // 线
+  ctx3.strokeStyle = b.color; ctx3.lineWidth = 2;
+  ctx3.beginPath();
+  ctx3.moveTo(158,140);
+  ctx3.lineTo(b.x - 35, b.y);
+  ctx3.stroke();
+  // 点
+  ctx3.fillStyle = b.color;
+  ctx3.beginPath(); ctx3.arc(b.x - 35, b.y, 4, 0, Math.PI*2); ctx3.fill();
+});
+
+// 分支卡片
+branches.forEach(b => {
+  ctx3.fillStyle = b.color + '18';
+  const r = 12;
+  ctx3.beginPath(); ctx3.roundRect(b.x, b.y-18, 120, 36, r); ctx3.fill();
+  ctx3.fillStyle = b.color;
+  ctx3.font = 'bold 13px sans-serif';
+  ctx3.fillText(b.label, b.x + 60, b.y - 2);
+  ctx3.fillStyle = '#888'; ctx3.font = '11px sans-serif';
+  ctx3.fillText(b.sub, b.x + 60, b.y + 14);
+});
+
+// 底部标签
+ctx3.fillStyle = '#999'; ctx3.font = '12px sans-serif';
+ctx3.fillText('← 所有分支都来自同一个核心意象："朝参照点移动"', 430, 140);
+
+// ===== 三层卡片 =====
+// Tier 1: 物理
+const e1 = document.getElementById('tier1');
+const ctx4 = e1.getContext('2d');
+df(ctx4,360,160);
+// 人物 - 左边远处的人
+ctx4.fillStyle = '#888';
+ctx4.beginPath(); ctx4.arc(60,80,10,0,Math.PI*2); ctx4.fill();
+ctx4.fillRect(57,90,6,18);
+// 右端 - 目的地（house）
+ctx4.fillStyle = '#c05621'; ctx4.font = '30px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('🏠',310,95);
+// 箭头
+ctx4.strokeStyle = '#c05621'; ctx4.lineWidth = 2.5;
+ctx4.beginPath(); ctx4.moveTo(75,80); ctx4.lineTo(210,80); ctx4.stroke();
+ctx4.fillStyle = '#c05621';
+ctx4.beginPath(); ctx4.moveTo(206,76); ctx4.lineTo(218,80); ctx4.lineTo(206,84); ctx4.closePath(); ctx4.fill();
+ctx4.fillStyle = '#888'; ctx4.font = '11px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('Come to the party',190,140);
+ctx4.fillStyle = '#c05621'; ctx4.font = '13px sans-serif';
+ctx4.fillText('COME',140,65);
+
+// Tier 2: 人际
+const e2 = document.getElementById('tier2');
+const ctx5 = e2.getContext('2d');
+df(ctx5,360,160);
+// 分散的人
+for (let i = 0; i < 4; i++) {
+  let x = 55 + i * 20;
+  let y = 80 + Math.sin(i)*10;
+  ctx5.fillStyle = '#888';
+  ctx5.beginPath(); ctx5.arc(x, y, 7, 0, Math.PI*2); ctx5.fill();
+}
+// 汇聚后
+for (let i = 0; i < 4; i++) {
+  let x = 270 + i * 16;
+  ctx5.fillStyle = '#c05621';
+  ctx5.beginPath(); ctx5.arc(x, 80, 7, 0, Math.PI*2); ctx5.fill();
+}
+// 箭头
+ctx5.strokeStyle = '#c05621'; ctx5.lineWidth = 2.5;
+ctx5.beginPath(); ctx5.moveTo(140,80); ctx5.lineTo(210,80); ctx5.stroke();
+ctx5.fillStyle = '#c05621';
+ctx5.beginPath(); ctx5.moveTo(206,76); ctx5.lineTo(218,80); ctx5.lineTo(206,84); ctx5.closePath(); ctx5.fill();
+ctx5.fillStyle = '#888'; ctx5.font = '11px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('Come together',180,145);
+
+// Tier 3a: 出现
+const e3 = document.getElementById('tier3a');
+const ctx6 = e3.getContext('2d');
+df(ctx6,360,160);
+// 大脑
+ctx6.strokeStyle = '#2b6cb0'; ctx6.lineWidth = 2;
+ctx6.beginPath(); ctx6.arc(280,80,35,0,Math.PI*2); ctx6.stroke();
+ctx6.fillStyle = '#2b6cb0'; ctx6.font = '11px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('🧠',280,80);
+// 灯泡
+ctx6.fillStyle = '#b7791f'; ctx6.font = '24px sans-serif';
+ctx6.fillText('💡',60,80);
+// 箭头
+ctx6.strokeStyle = '#2b6cb0'; ctx6.lineWidth = 2.5;
+ctx6.beginPath(); ctx6.moveTo(85,80); ctx6.lineTo(230,80); ctx6.stroke();
+ctx6.fillStyle = '#2b6cb0';
+ctx6.beginPath(); ctx6.moveTo(226,76); ctx6.lineTo(238,80); ctx6.lineTo(226,84); ctx6.closePath(); ctx6.fill();
+ctx6.fillStyle = '#888'; ctx6.font = '11px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('An idea came to me',160,145);
+
+// Tier 3b: 变成
+const e4 = document.getElementById('tier3b');
+const ctx7 = e4.getContext('2d');
+df(ctx7,360,160);
+// 梦想（泡泡）
+ctx7.strokeStyle = '#38a169'; ctx7.lineWidth = 2;
+ctx7.beginPath(); ctx7.arc(90,80,25,0,Math.PI*2); ctx7.stroke();
+ctx7.fillStyle = '#38a169'; ctx7.font = '20px sans-serif'; ctx7.textAlign = 'center';
+ctx7.fillText('⭐',90,88);
+ctx7.fillStyle = '#888'; ctx7.font = '10px sans-serif';
+ctx7.fillText('梦想',90,55);
+// 实现（实心）
+ctx7.fillStyle = '#38a169';
+ctx7.beginPath(); ctx7.arc(280,80,25,0,Math.PI*2); ctx7.fill();
+ctx7.fillStyle = '#fff'; ctx7.font = '12px sans-serif';
+ctx7.fillText('✅',280,87);
+// 箭头
+ctx7.strokeStyle = '#38a169'; ctx7.lineWidth = 2.5;
+ctx7.beginPath(); ctx7.moveTo(120,80); ctx7.lineTo(240,80); ctx7.stroke();
+ctx7.fillStyle = '#38a169';
+ctx7.beginPath(); ctx7.moveTo(236,76); ctx7.lineTo(248,80); ctx7.lineTo(236,84); ctx7.closePath(); ctx7.fill();
+ctx7.fillStyle = '#888'; ctx7.font = '11px sans-serif';
+ctx7.fillText('Come true',180,145);
+
+})();
+</script>
+
+</body>
+</html>

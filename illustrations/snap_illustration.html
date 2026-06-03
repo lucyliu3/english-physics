@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNAP 图解</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#e63946,#c0392b); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#e63946,#c0392b); border-radius:2px; flex-shrink:0; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#e63946; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#e63946; }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#e63946; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+
+  .spectrum-wrap { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+
+  .orange-bg { background:linear-gradient(135deg,#fff5f0,#fde8e0); }
+  .green-bg { background:linear-gradient(135deg,#f0faf5,#e0f5ec); }
+  .red-bg { background:linear-gradient(135deg,#fff0f0,#fde0e0); }
+  .blue-bg { background:linear-gradient(135deg,#f0f5ff,#e0e8f5); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>SNAP</h1>
+<p class="subtitle">突然断裂/咬合 + 清脆声响 — 从物理动作到情绪的瞬间爆发</p>
+
+<!-- 核心意象对比 -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+  <!-- Card 1: SNAP 断裂 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="snapBg" x1="0" y1="0" x2="0" y2="400">
+          <stop offset="0%" stop-color="#fef7f0"/>
+          <stop offset="100%" stop-color="#fdf0e5"/>
+        </linearGradient>
+        <filter id="shadowSnap">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#snapBg)" rx="8"/>
+
+      <!-- 树枝 -->
+      <rect x="100" y="100" width="320" height="16" rx="8" fill="#8B4513" transform="rotate(-15,260,108)"/>
+      <!-- 树皮纹理 -->
+      <line x1="120" y1="100" x2="120" y2="116" stroke="#6B3410" stroke-width="1" transform="rotate(-15,260,108)"/>
+      <line x1="180" y1="97" x2="180" y2="113" stroke="#6B3410" stroke-width="1" transform="rotate(-15,260,108)"/>
+      <line x1="240" y1="94" x2="240" y2="110" stroke="#6B3410" stroke-width="1" transform="rotate(-15,260,108)"/>
+
+      <!-- 折断处（裂纹） -->
+      <path d="M280,85 L285,115" stroke="#e63946" stroke-width="2.5" stroke-linecap="round" opacity="0">
+        <animate attributeName="opacity" values="0;0;1;1;0" dur="3s" repeatCount="indefinite" keyTimes="0;0.2;0.25;0.45;0.5"/>
+      </path>
+
+      <!-- 断开的碎片（飞散） -->
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;0;1;0;0" dur="3s" repeatCount="indefinite" keyTimes="0;0.2;0.25;0.5;0.55"/>
+        <rect x="275" y="90" width="10" height="6" rx="2" fill="#8B4513">
+          <animateTransform attributeName="transform" type="translate" values="0,0; -30,-40; -60,-50" dur="3s" repeatCount="indefinite" keyTimes="0;0.25;0.5"/>
+          <animate attributeName="opacity" values="1;0.6;0" dur="3s" repeatCount="indefinite" keyTimes="0.25;0.4;0.5"/>
+        </rect>
+        <rect x="280" y="105" width="8" height="5" rx="2" fill="#A0522D">
+          <animateTransform attributeName="transform" type="translate" values="0,0; 20,-50; 40,-60" dur="3s" repeatCount="indefinite" keyTimes="0;0.25;0.5"/>
+          <animate attributeName="opacity" values="1;0.6;0" dur="3s" repeatCount="indefinite" keyTimes="0.25;0.4;0.5"/>
+        </rect>
+        <rect x="282" y="98" width="6" height="4" rx="1" fill="#6B3410">
+          <animateTransform attributeName="transform" type="translate" values="0,0; -10,-60; -20,-80" dur="3s" repeatCount="indefinite" keyTimes="0;0.25;0.5"/>
+          <animate attributeName="opacity" values="1;0.5;0" dur="3s" repeatCount="indefinite" keyTimes="0.25;0.4;0.5"/>
+        </rect>
+      </g>
+
+      <!-- 断开的枝梢掉落 -->
+      <g>
+        <rect x="400" y="120" width="120" height="14" rx="7" fill="#8B4513" transform="rotate(-15,460,127)">
+          <animateTransform attributeName="transform" type="rotate" values="-15,460,127; 10,460,200; -5,460,280" dur="3s" repeatCount="indefinite" keyTimes="0;0.3;0.6"/>
+          <animateTransform attributeName="transform" type="translate" values="0,0; 0,80; 0,160" dur="3s" repeatCount="indefinite" keyTimes="0;0.3;0.6" additive="sum"/>
+        </rect>
+        <!-- 小叶片 -->
+        <ellipse cx="480" cy="115" rx="18" ry="8" fill="#38a169" transform="rotate(-25,480,115)">
+          <animateTransform attributeName="transform" type="rotate" values="-25,480,115; 20,480,200; -10,480,280" dur="3s" repeatCount="indefinite" keyTimes="0;0.3;0.6"/>
+          <animateTransform attributeName="transform" type="translate" values="0,0; 0,80; 0,160" dur="3s" repeatCount="indefinite" keyTimes="0;0.3;0.6" additive="sum"/>
+        </ellipse>
+      </g>
+
+      <!-- 声波效果：SNAP! 拟声 -->
+      <text x="350" y="60" text-anchor="middle" fill="#e63946" font-size="22" font-weight="900" font-family="sans-serif" opacity="0">
+        <animate attributeName="opacity" values="0;0;1;0.3;0" dur="3s" repeatCount="indefinite" keyTimes="0;0.2;0.25;0.35;0.5"/>
+        SNAP!
+      </text>
+      <!-- 声波弧线 -->
+      <path d="M300,70 Q350,40 400,70" fill="none" stroke="#e63946" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;0;1;0;0" dur="3s" repeatCount="indefinite" keyTimes="0;0.2;0.25;0.4;0.5"/>
+        <animate attributeName="d" values="M300,70 Q350,40 400,70;M290,60 Q350,25 410,60;M300,70 Q350,40 400,70" dur="3s" repeatCount="indefinite" keyTimes="0;0.25;0.5"/>
+      </path>
+      <path d="M310,50 Q350,10 390,50" fill="none" stroke="#e63946" stroke-width="1.5" opacity="0">
+        <animate attributeName="opacity" values="0;0;0.6;0;0" dur="3s" repeatCount="indefinite" keyTimes="0;0.22;0.27;0.4;0.5"/>
+      </path>
+
+      <!-- 地面 -->
+      <rect x="0" y="330" width="760" height="10" fill="#c8b89a" rx="2"/>
+      <rect x="0" y="340" width="760" height="60" fill="#e8e0d0"/>
+
+      <!-- 树干（左侧） -->
+      <rect x="80" y="150" width="40" height="180" fill="#8B4513" rx="4"/>
+
+      <!-- 标注 -->
+      <text x="260" y="370" text-anchor="middle" fill="#e63946" font-size="14" font-weight="bold" font-family="sans-serif">SNAP = 突然断裂 + 清脆声响</text>
+    </svg>
+    <div class="card-body">
+      <h3>SNAP <span class="hl">/snæp/</span></h3>
+      <div class="pos">V · N · ADJ · 突然断裂/咬合/爆发</div>
+      <div class="def">
+        <strong>本义</strong> 一根细长物体在受力超过极限时突然断裂，并伴随清脆的"啪"声<br>
+        <strong>核心意象</strong> 蓄积的张力在临界点瞬间释放 → 一个突然的、不可逆的变化<br>
+        <strong>引申主线</strong> 物理断裂 → 精神崩溃 → 快速咬合 → 快速判断 → 瞬间拍摄
+        <span class="eg">"The branch snapped under the weight of the snow." 树枝被雪压断了。<br>"He finally snapped and shouted at everyone." 他终于崩溃爆发，对着所有人吼。<br>"The dog snapped at my hand." 狗朝我的手猛地咬来。</span>
+      </div>
+      <div class="white-box"><strong>💡 理解 SNAP 的关键</strong>：SNAP 的三要素 = ① 张力蓄积（承受压力）→ ② 临界点（撑不住了）→ ③ 瞬间爆发（断裂/咬合/情绪爆发）。这三个要素是所有 SNAP 含义的底层结构——不管是树枝断掉、情绪爆发、狗狗咬合、还是快速拍照，都在共享这个"蓄积→临界→释放"的节奏。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: SNAP vs BREAK -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="vsSnapBg" x1="0" y1="0" x2="760" y2="0">
+          <stop offset="0%" stop-color="#fef7f0"/>
+          <stop offset="50%" stop-color="#fafaf8"/>
+          <stop offset="100%" stop-color="#f0f5ff"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="400" fill="url(#vsSnapBg)" rx="8"/>
+
+      <text x="380" y="40" text-anchor="middle" fill="#333" font-size="16" font-weight="700" font-family="sans-serif">SNAP vs BREAK — 都是"断"，区别在哪？</text>
+
+      <!-- SNAP 侧（左） -->
+      <text x="140" y="75" text-anchor="middle" fill="#e63946" font-size="18" font-weight="800" font-family="sans-serif">SNAP</text>
+
+      <!-- SNAP 树枝 -->
+      <rect x="80" y="250" width="15" height="80" fill="#8B4513" rx="3"/>
+      <rect x="60" y="245" width="140" height="12" rx="6" fill="#8B4513"/>
+      <!-- 断裂 -->
+      <path d="M180,240 L185,260" stroke="#e63946" stroke-width="2.5"/>
+      <!-- 断开的右半掉落 -->
+      <g>
+        <rect x="190" y="247" width="60" height="10" rx="5" fill="#A0522D">
+          <animateTransform attributeName="transform" type="translate" values="0,0; 20,50" dur="3s" repeatCount="indefinite" keyTimes="0;0.3"/>
+        </rect>
+      </g>
+      <!-- 声音 -->
+      <text x="155" y="225" text-anchor="middle" fill="#e63946" font-size="14" font-weight="bold" font-family="sans-serif">SNAP!</text>
+      <text x="140" y="380" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">"The twig snapped."</text>
+      <text x="140" y="396" text-anchor="middle" fill="#444" font-size="11" font-weight="bold" font-family="sans-serif">+ 清脆响声 | + 突然 | + 细长物体</text>
+
+      <!-- VS -->
+      <circle cx="380" cy="200" r="22" fill="#e8e0d0"/>
+      <text x="380" y="206" text-anchor="middle" fill="#888" font-size="14" font-weight="bold" font-family="sans-serif">VS</text>
+
+      <!-- BREAK 侧（右） -->
+      <text x="620" y="75" text-anchor="middle" fill="#3498db" font-size="18" font-weight="800" font-family="sans-serif">BREAK</text>
+
+      <!-- BREAK 杯子破碎 -->
+      <path d="M570,250 L590,250 L585,310 L575,310 Z" fill="#3498db" opacity="0.3"/>
+      <!-- 碎裂 -->
+      <path d="M580,250 L578,280 L582,290 L577,310" stroke="#3498db" stroke-width="1.5"/>
+      <path d="M570,270 L574,275" stroke="#3498db" stroke-width="1.5"/>
+      <path d="M585,260 L588,265" stroke="#3498db" stroke-width="1.5"/>
+      <!-- 碎片 -->
+      <rect x="555" y="300" width="8" height="6" rx="1" fill="#3498db" opacity="0.5"/>
+      <rect x="598" y="295" width="6" height="7" rx="1" fill="#3498db" opacity="0.5"/>
+      <rect x="563" y="310" width="5" height="4" rx="1" fill="#3498db" opacity="0.4"/>
+
+      <text x="620" y="380" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">"The cup broke."</text>
+      <text x="620" y="396" text-anchor="middle" fill="#444" font-size="11" font-weight="bold" font-family="sans-serif">± 声音 | ± 突然 | ± 细长物体</text>
+    </svg>
+    <div class="card-body">
+      <h3>SNAP vs BREAK <span class="hl">/snæp/ /breɪk/</span></h3>
+      <div class="pos">近义词辨析 · 都是"断"</div>
+      <div class="def">
+        <strong>SNAP</strong> = 细长物体突然断裂 + 必有响亮声音（啪/咔嚓）<br>
+        <strong>BREAK</strong> = 泛泛的"打碎/弄坏"，可以无声可以有声，涉及的物体不一定是细长的
+        <span class="eg">"The rope snapped." 绳子绷断了（啪的一声）。<br>"The vase broke." 花瓶碎了（不强调声音）。</span>
+      </div>
+      <div class="white-box"><strong>💡 核心区别</strong>：SNAP 特指"细长物体在绷紧状态下突然断裂 + 声音"。BREAK 可以指任何物体以任何方式的破坏。一根树枝可以 snap 也可以 break（snap 强调突然+声音，break 只是描述结果）。一个杯子只能 break，不能 snap（不细长，不弹响）。</div>
+      <div class="white-box"><strong>🧠 逻辑的映射</strong>：SNAP 的"张力蓄积→临界释放"结构让它天然适合比喻人的情绪爆发（"snap at someone" 突然对某人大喊大叫/发怒）。而 BREAK 更常用在"break down（崩溃/分解）"这种更缓慢的过程上。两者的隐喻方向不同——SNAP 是瞬间的，BREAK 可以是渐进的。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 逻辑演化树 -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div style="background:#fffdf7; border:1px solid #e8e0d0; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div style="display:flex; flex-direction:column; gap:12px;">
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+      <span style="background:#e63946; color:#fff; border-radius:6px; padding:6px 14px; font-size:13px; font-weight:600;">① 断裂</span>
+      <span style="color:#e63946; font-weight:700;">→</span>
+      <span style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:6px; padding:6px 14px; font-size:12.5px;">树枝/绳子/骨头断裂</span>
+      <span style="color:#999; font-size:12px;">物理断裂 + 啪声</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+      <span style="background:#c0392b; color:#fff; border-radius:6px; padding:6px 14px; font-size:13px; font-weight:600;">② 情绪爆发</span>
+      <span style="color:#e63946; font-weight:700;">→</span>
+      <span style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:6px; padding:6px 14px; font-size:12.5px;">snap at / snap (go crazy)</span>
+      <span style="color:#999; font-size:12px;">像断裂一样突然失去控制</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+      <span style="background:#e67e22; color:#fff; border-radius:6px; padding:6px 14px; font-size:13px; font-weight:600;">③ 咬合</span>
+      <span style="color:#e63946; font-weight:700;">→</span>
+      <span style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:6px; padding:6px 14px; font-size:12.5px;">狗 snap 咬/扣子 snap 扣上</span>
+      <span style="color:#999; font-size:12px;">上下快速合拢 + 声响</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+      <span style="background:#38a169; color:#fff; border-radius:6px; padding:6px 14px; font-size:13px; font-weight:600;">④ 快速动作</span>
+      <span style="color:#e63946; font-weight:700;">→</span>
+      <span style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:6px; padding:6px 14px; font-size:12.5px;">snap a photo / snap decision</span>
+      <span style="color:#999; font-size:12px;">像咬合一样的快速抓取</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+      <span style="background:#7b4ad9; color:#fff; border-radius:6px; padding:6px 14px; font-size:13px; font-weight:600;">⑤ 断开/中断联系</span>
+      <span style="color:#e63946; font-weight:700;">→</span>
+      <span style="background:#fafaf8; border:1px solid #e0d8c8; border-radius:6px; padding:6px 14px; font-size:12.5px;">snap out of it / snap ties</span>
+      <span style="color:#999; font-size:12px;">像断裂一样突然断开</span>
+    </div>
+  </div>
+  <div class="white-box" style="margin-top:16px;"><strong>💡 SNAP 的密码</strong>：所有含义共享同一个底层意象——"某物在一个绷紧状态达到临界点后瞬间发生改变"。这个"瞬间"和"不可逆"的特征让 SNAP 适合描述一切"快而清脆"的动作：狗突然咬合（嘴巴闭合是"咬合"）、相机快门（机械咬合）、情绪崩溃（理智的弦断了）、快速判断（不假思索就"咬住"了一个结论）。</div>
+</div>
+
+<!-- 程度光谱 -->
+<div class="section-title"><span class="bar"></span><span>SNAP 拉力程度光谱</span></div>
+<div class="spectrum-wrap">
+  <svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="snapSpectrum" x1="0" y1="0" x2="760" y2="0">
+        <stop offset="0%" stop-color="#38a169"/>
+        <stop offset="25%" stop-color="#7cb342"/>
+        <stop offset="50%" stop-color="#f1c40f"/>
+        <stop offset="75%" stop-color="#e67e22"/>
+        <stop offset="100%" stop-color="#e63946"/>
+      </linearGradient>
+      <filter id="ballGlow">
+        <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#e63946" flood-opacity="0.3"/>
+      </filter>
+      <filter id="ballGlow2">
+        <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#e63946" flood-opacity="0.5"/>
+      </filter>
+      <linearGradient id="ballGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f5a0a0"/>
+        <stop offset="100%" stop-color="#e63946"/>
+      </linearGradient>
+      <filter id="shadowPerson">
+        <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+      </filter>
+    </defs>
+    <rect width="760" height="380" fill="#fafaf8" rx="8"/>
+
+    <!-- 地面 -->
+    <rect x="0" y="330" width="760" height="50" fill="#e8e0d0"/>
+    <line x1="0" y1="330" x2="760" y2="330" stroke="#c8b89a" stroke-width="2"/>
+
+    <!-- 场景标题 -->
+    <text x="380" y="28" text-anchor="middle" fill="#666" font-size="13" font-weight="bold" font-family="sans-serif">压力球滚过来，越滚越大...</text>
+
+    <!-- 进度色条 -->
+    <rect x="50" y="295" width="661" height="6" fill="url(#snapSpectrum)" rx="3" opacity="0.45"/>
+    <text x="40" y="303" text-anchor="end" fill="#999" font-size="10" font-family="sans-serif">压力</text>
+
+    <!-- ========== 压力球：单向从左到右→砸下→消失 ========== -->
+    <!-- 使用两个阶段的动画组合 -->
+    <g filter="url(#ballGlow)">
+      <circle r="10" fill="url(#ballGrad)">
+        <!-- 第0-16s：从左向右滚动，逐段变大 -->
+        <animate attributeName="cx" values="-40;-40;70;180;290;400;510;520;520;520" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.57;0.6;1" dur="28s" repeatCount="indefinite"/>
+        <!-- cy 先沿抛物线上升再下降，最后砸下来 -->
+        <animate attributeName="cy" values="280;280;265;250;235;220;210;210;380;380" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.57;0.6;1" dur="28s" repeatCount="indefinite"/>
+        <!-- 半径逐步增大 -->
+        <animate attributeName="r" values="10;10;18;26;34;42;52;52;52;52" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.57;0.6;1" dur="28s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+    <!-- 球上的 ✕ -->
+    <text text-anchor="middle" fill="#fff" font-weight="bold" font-family="sans-serif">
+      <animate attributeName="x" values="-40;-40;70;180;290;400;510;520;520;520" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.57;0.6;1" dur="28s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="284;284;269;254;239;224;214;214;214;214" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.57;0.6;1" dur="28s" repeatCount="indefinite"/>
+      <animate attributeName="font-size" values="8;8;11;14;17;20;24;24;24;24" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.57;0.6;1" dur="28s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0;1;1;1;1;1;0;0;0" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.55;0.6;1" dur="28s" repeatCount="indefinite"/>
+      ✕
+    </text>
+    <!-- 球的投影 -->
+    <ellipse fill="#000" opacity="0.08">
+      <animate attributeName="cx" values="-40;-40;70;180;290;400;510;520;520;520" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.57;0.6;1" dur="28s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="330;330;330;330;330;330;330;330;330;330" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.57;0.6;1" dur="28s" repeatCount="indefinite"/>
+      <animate attributeName="rx" values="10;10;18;26;34;42;52;52;52;52" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.57;0.6;1" dur="28s" repeatCount="indefinite"/>
+      <animate attributeName="ry" values="3;3;4;6;8;10;12;12;12;12" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.57;0.6;1" dur="28s" repeatCount="indefinite"/>
+    </ellipse>
+
+    <!-- 球砸下来的震动效果 -->
+    <g>
+      <rect x="440" y="330" width="160" height="4" fill="#c8b89a" rx="2" opacity="0">
+        <animate attributeName="opacity" values="0;0;0;0;0;0;0;0.7;0;0" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.57;0.62;1" dur="28s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+
+    <!-- ========== 5个人并排站，永远不消失 ========== -->
+
+    <!-- 第1人：RELAXED -->
+    <g>
+      <circle cx="80" cy="300" r="14" fill="#f5e6d0" filter="url(#shadowPerson)"/>
+      <circle cx="76" cy="297" r="2" fill="#333"/>
+      <circle cx="84" cy="297" r="2" fill="#333"/>
+      <path d="M77,305 Q80,309 83,305" fill="none" stroke="#333" stroke-width="1.5"/>
+      <line x1="80" y1="314" x2="80" y2="330" stroke="#333" stroke-width="2"/>
+      <line x1="80" y1="318" x2="65" y2="330" stroke="#333" stroke-width="1.5"/>
+      <line x1="80" y1="318" x2="95" y2="330" stroke="#333" stroke-width="1.5"/>
+      <text x="80" y="360" text-anchor="middle" fill="#38a169" font-size="11" font-weight="bold" font-family="sans-serif">RELAXED</text>
+    </g>
+
+    <!-- 第2人：ANNOYED -->
+    <g>
+      <circle cx="190" cy="300" r="14" fill="#f5e6d0" filter="url(#shadowPerson)"/>
+      <circle cx="186" cy="297" r="2" fill="#333"/>
+      <circle cx="194" cy="297" r="2" fill="#333"/>
+      <path d="M187,308 Q190,305 193,308" fill="none" stroke="#333" stroke-width="1.5"/>
+      <line x1="190" y1="314" x2="190" y2="330" stroke="#333" stroke-width="2"/>
+      <line x1="190" y1="318" x2="178" y2="330" stroke="#333" stroke-width="1.5"/>
+      <line x1="190" y1="318" x2="198" y2="325" stroke="#333" stroke-width="1.5"/>
+      <text x="190" y="360" text-anchor="middle" fill="#7cb342" font-size="11" font-weight="bold" font-family="sans-serif">ANNOYED</text>
+    </g>
+
+    <!-- 第3人：STRESSED -->
+    <g>
+      <circle cx="300" cy="300" r="14" fill="#f5e6d0" filter="url(#shadowPerson)"/>
+      <circle cx="296" cy="297" r="2" fill="#333"/>
+      <circle cx="304" cy="297" r="2" fill="#333"/>
+      <line x1="292" y1="292" x2="297" y2="294" stroke="#333" stroke-width="1.5"/>
+      <line x1="308" y1="292" x2="303" y2="294" stroke="#333" stroke-width="1.5"/>
+      <line x1="297" y1="308" x2="303" y2="308" stroke="#333" stroke-width="1.5"/>
+      <line x1="300" y1="314" x2="300" y2="330" stroke="#333" stroke-width="2"/>
+      <line x1="300" y1="318" x2="285" y2="330" stroke="#333" stroke-width="1.5"/>
+      <line x1="300" y1="318" x2="315" y2="330" stroke="#333" stroke-width="1.5"/>
+      <!-- 汗珠 -->
+      <path d="M288,296 Q289,292 290,296" fill="#3498db" opacity="0.6">
+        <animate attributeName="opacity" values="0.6;0;0.6" dur="0.8s" repeatCount="indefinite"/>
+      </path>
+      <text x="300" y="360" text-anchor="middle" fill="#d4a017" font-size="11" font-weight="bold" font-family="sans-serif">STRESSED</text>
+    </g>
+
+    <!-- 第4人：ON EDGE -->
+    <g>
+      <circle cx="410" cy="300" r="14" fill="#f5e6d0" filter="url(#shadowPerson)"/>
+      <circle cx="406" cy="297" r="2.5" fill="#333">
+        <animate attributeName="r" values="2.5;3;2.5" dur="0.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="414" cy="297" r="2.5" fill="#333">
+        <animate attributeName="r" values="2.5;3;2.5" dur="0.5s" repeatCount="indefinite"/>
+      </circle>
+      <ellipse cx="410" cy="306" rx="4" ry="3" fill="#333"/>
+      <line x1="410" y1="314" x2="410" y2="330" stroke="#333" stroke-width="2.5"/>
+      <line x1="410" y1="318" x2="396" y2="330" stroke="#333" stroke-width="2"/>
+      <line x1="410" y1="318" x2="424" y2="330" stroke="#333" stroke-width="2"/>
+      <!-- 颤抖线 -->
+      <path d="M378,280 Q381,276 384,280" fill="none" stroke="#e67e22" stroke-width="1">
+        <animate attributeName="stroke" values="#e67e22;#c0392b;#e67e22" dur="0.3s" repeatCount="indefinite"/>
+      </path>
+      <path d="M436,280 Q439,276 442,280" fill="none" stroke="#e67e22" stroke-width="1">
+        <animate attributeName="stroke" values="#c0392b;#e67e22;#c0392b" dur="0.3s" repeatCount="indefinite"/>
+      </path>
+      <text x="410" y="360" text-anchor="middle" fill="#e67e22" font-size="11" font-weight="bold" font-family="sans-serif">ON EDGE</text>
+    </g>
+
+    <!-- 第5人：初始站立，球砸到后变被砸扁 -->
+    <!-- 站立状态（球来之前） -->
+    <g>
+      <animate attributeName="opacity" values="1;1;1;1;1;1;1;0;0;0" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.55;0.6;1" dur="28s" repeatCount="indefinite"/>
+      <circle cx="520" cy="300" r="14" fill="#f5e6d0" filter="url(#shadowPerson)"/>
+      <circle cx="516" cy="297" r="3" fill="#333"/>
+      <circle cx="524" cy="297" r="3" fill="#333"/>
+      <ellipse cx="520" cy="306" rx="4" ry="3" fill="#333"/>
+      <line x1="520" y1="314" x2="520" y2="330" stroke="#333" stroke-width="2.5"/>
+      <line x1="520" y1="318" x2="506" y2="330" stroke="#333" stroke-width="2"/>
+      <line x1="520" y1="318" x2="534" y2="330" stroke="#333" stroke-width="2"/>
+    </g>
+    <!-- 被砸扁状态 -->
+    <g>
+      <animate attributeName="opacity" values="0;0;0;0;0;0;0;1;1;1" keyTimes="0;0.02;0.12;0.22;0.32;0.42;0.53;0.55;0.6;1" dur="28s" repeatCount="indefinite"/>
+      <!-- 被压扁 -->
+      <ellipse cx="520" cy="332" rx="28" ry="10" fill="#f5e6d0"/>
+      <!-- 眼睛 -->
+      <circle cx="510" cy="333" r="2" fill="#333"/>
+      <circle cx="520" cy="333" r="2" fill="#333"/>
+      <!-- 嘴 -->
+      <path d="M515,337 Q518,333 521,337" fill="none" stroke="#333" stroke-width="1"/>
+      <!-- 伸出的手脚 -->
+      <line x1="492" y1="332" x2="476" y2="324" stroke="#333" stroke-width="2"/>
+      <line x1="548" y1="332" x2="564" y2="324" stroke="#333" stroke-width="2"/>
+      <line x1="500" y1="335" x2="492" y2="342" stroke="#333" stroke-width="2"/>
+      <line x1="540" y1="335" x2="548" y2="342" stroke="#333" stroke-width="2"/>
+      <!-- 爆星 -->
+      <text x="530" y="310" text-anchor="middle" fill="#e63946" font-size="22" font-weight="900" font-family="sans-serif">💥 SNAP!</text>
+      <circle cx="490" cy="295" r="2.5" fill="#f1c40f">
+        <animateTransform attributeName="transform" type="translate" values="0,0; -20,-25" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="560" cy="295" r="2.5" fill="#f1c40f">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 20,-25" dur="2s" repeatCount="indefinite" begin="0.3s"/>
+        <animate attributeName="opacity" values="1;0" dur="2s" repeatCount="indefinite" begin="0.3s"/>
+      </circle>
+      <circle cx="530" cy="280" r="2" fill="#e63946">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-35" dur="1.5s" repeatCount="indefinite" begin="0.2s"/>
+        <animate attributeName="opacity" values="1;0" dur="1.5s" repeatCount="indefinite" begin="0.2s"/>
+      </circle>
+      <!-- 碎片飞散 -->
+      <rect x="500" y="326" width="6" height="4" rx="1" fill="#888" opacity="0.7">
+        <animateTransform attributeName="transform" type="translate" values="0,0; -25,12" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.7;0" dur="2s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="545" y="330" width="5" height="3" rx="1" fill="#888" opacity="0.6">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 20,10" dur="2s" repeatCount="indefinite" begin="0.4s"/>
+        <animate attributeName="opacity" values="0.6;0" dur="2s" repeatCount="indefinite" begin="0.4s"/>
+      </rect>
+      <text x="520" y="375" text-anchor="middle" fill="#e63946" font-size="11" font-weight="bold" font-family="sans-serif">被压力球砸扁！</text>
+    </g>
+  </svg>
+  <div class="white-box"><strong>💡 压力球从左边滚到右边，越滚越大，砸到第5个人身上</strong>：RELAXED（放松）→ ANNOYED（烦躁）→ STRESSED（焦虑）→ ON EDGE（濒临极限）→ SNAP!（被砸扁！）。压力球象征着不断积累的压力——一开始很小，慢慢变大，最终超过承受极限把人砸垮。28秒循环：球从左侧滚出，经过4个人逐渐变大，到第5人位置垂直砸下，人被压扁后球消失。</div>
+</div>
+
+<!-- 易混对比区 -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+  <div class="compare-card">
+    <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="300" fill="#fafaf8" rx="8"/>
+      <!-- SNAP vs CRACK -->
+      <text x="140" y="45" text-anchor="middle" fill="#e63946" font-size="16" font-weight="800" font-family="sans-serif">SNAP</text>
+      <text x="380" y="45" text-anchor="middle" fill="#888" font-size="14" font-weight="bold" font-family="sans-serif">VS</text>
+      <text x="620" y="45" text-anchor="middle" fill="#8B4513" font-size="16" font-weight="800" font-family="sans-serif">CRACK</text>
+
+      <!-- SNAP: 树枝断裂两段 -->
+      <rect x="100" y="200" width="12" height="70" fill="#8B4513" rx="3"/>
+      <rect x="90" y="195" width="100" height="10" rx="5" fill="#8B4513"/>
+      <path d="M170,190 L175,210" stroke="#e63946" stroke-width="2"/>
+      <text x="140" y="180" text-anchor="middle" fill="#e63946" font-size="14" font-weight="bold" font-family="sans-serif">SNAP!</text>
+      <text x="140" y="286" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">完全断裂成两段</text>
+
+      <!-- CRACK: 表面裂缝 -->
+      <rect x="560" y="150" width="70" height="80" rx="6" fill="#ddd" stroke="#bbb" stroke-width="1"/>
+      <path d="M570,155 L575,190 L568,210" stroke="#8B4513" stroke-width="2" fill="none"/>
+      <path d="M575,190 L582,205" stroke="#8B4513" stroke-width="1.5" fill="none"/>
+      <text x="595" y="135" text-anchor="middle" fill="#8B4513" font-size="14" font-weight="bold" font-family="sans-serif">CRACK!</text>
+      <text x="595" y="286" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">表面裂了但还没断</text>
+
+      <line x1="380" y1="60" x2="380" y2="270" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3"/>
+    </svg>
+    <div class="label">
+      <div class="p">SNAP vs CRACK</div>
+      <div class="desc">SNAP = 完全断开成两截 + 啪声 | CRACK = 表面出现裂缝 + 咔嚓声</div>
+    </div>
+    <div style="padding:0 16px 16px;">
+      <div class="white-box"><strong>💡 SNAP 是穿透性断裂</strong>：树枝 snap = 整根断成两段。CRACK 是表面裂开但整体可能还有连接（a cracked egg 鸡蛋裂了但没流出来；crack in the wall 墙上裂缝但没塌）。SNAP 是更彻底的不可逆变化。</div>
+    </div>
+  </div>
+
+  <div class="compare-card">
+    <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="300" fill="#fafaf8" rx="8"/>
+      <!-- SNAP vs BITE -->
+      <text x="140" y="45" text-anchor="middle" fill="#e63946" font-size="16" font-weight="800" font-family="sans-serif">SNAP</text>
+      <text x="380" y="45" text-anchor="middle" fill="#888" font-size="14" font-weight="bold" font-family="sans-serif">VS</text>
+      <text x="620" y="45" text-anchor="middle" fill="#e67e22" font-size="16" font-weight="800" font-family="sans-serif">BITE</text>
+
+      <!-- SNAP: 狗快速咬合 -->
+      <circle cx="140" cy="130" r="28" fill="#f5e6d0"/>
+      <!-- 张开的嘴 -->
+      <path d="M155,135 L180,120 M155,145 L180,160" stroke="#333" stroke-width="2.5" stroke-linecap="round">
+        <animate attributeName="d"
+          values="M155,135 L180,120 M155,145 L180,160;M155,140 L175,142 M155,145 L175,140;M155,135 L180,120 M155,145 L180,160"
+          dur="2s" repeatCount="indefinite" keyTimes="0;0.15;0.3"/>
+      </path>
+      <text x="140" y="190" text-anchor="middle" fill="#e63946" font-size="14" font-weight="bold" font-family="sans-serif">SNAP</text>
+      <text x="140" y="280" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">快速咬合+缩回</text>
+      <text x="140" y="296" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">"The dog snapped at me."</text>
+
+      <!-- BITE: 咬住不放 -->
+      <circle cx="620" cy="130" r="28" fill="#f5e6d0"/>
+      <path d="M635,135 L660,130 M635,145 L660,150" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="620" y="190" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">BITE</text>
+      <text x="620" y="280" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">咬住不松口</text>
+      <text x="620" y="296" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">"The dog bit my leg."</text>
+
+      <line x1="380" y1="60" x2="380" y2="270" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3"/>
+    </svg>
+    <div class="label">
+      <div class="p">SNAP at vs BITE</div>
+      <div class="desc">SNAP at = 快速咬一口就缩回（可能是虚张声势）| BITE = 咬住不放</div>
+    </div>
+    <div style="padding:0 16px 16px;">
+      <div class="white-box"><strong>💡 snap at 的快速特征</strong>：狗 snap at someone 通常是一下子咬过去但没咬住太多——像"啪"一样快速开合。BITE 是咬住、咬进去了。所以用在人身上，"snap at someone" = 突然对某人说一句难听的话（快速回击），而"bite someone's head off" = 严厉训斥。SNAP 永远带着那个"快速+瞬间"的特性。</div>
+    </div>
+  </div>
+</div>
+
+<div class="compare-row">
+  <div class="compare-card">
+    <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="300" fill="#fafaf8" rx="8"/>
+      <!-- snap a photo vs take a photo -->
+      <text x="380" y="35" text-anchor="middle" fill="#333" font-size="15" font-weight="700" font-family="sans-serif">"SNAP a photo" vs "TAKE a photo"</text>
+
+      <!-- SNAP 相机 -->
+      <rect x="60" y="70" width="100" height="70" rx="8" fill="#2c3e50"/>
+      <circle cx="110" cy="105" r="20" fill="#333"/>
+      <circle cx="110" cy="105" r="14" fill="#555"/>
+      <circle cx="110" cy="105" r="8" fill="#3498db"/>
+      <!-- 闪光灯 -->
+      <circle cx="140" cy="80" r="8" fill="#f1c40f" opacity="0">
+        <animate attributeName="r" values="8;30;8" dur="2s" repeatCount="indefinite" keyTimes="0;0.1;0.2"/>
+        <animate attributeName="opacity" values="0;0.8;0" dur="2s" repeatCount="indefinite" keyTimes="0;0.1;0.2"/>
+      </circle>
+      <!-- 快门机械动作 -->
+      <rect x="155" y="90" width="40" height="30" rx="3" fill="#e63946" opacity="0.3">
+        <animate attributeName="width" values="40;20;40" dur="2s" repeatCount="indefinite" keyTimes="0;0.1;0.2"/>
+        <animate attributeName="x" values="155;175;155" dur="2s" repeatCount="indefinite" keyTimes="0;0.1;0.2"/>
+      </rect>
+      <text x="110" y="175" text-anchor="middle" fill="#e63946" font-size="14" font-weight="bold" font-family="sans-serif">SNAP</text>
+      <text x="110" y="192" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">快速抓拍（像咬合一样）</text>
+
+      <!-- VS -->
+      <text x="300" y="120" text-anchor="middle" fill="#888" font-size="14" font-weight="bold" font-family="sans-serif">VS</text>
+
+      <!-- TAKE 相机 -->
+      <rect x="410" y="70" width="100" height="70" rx="8" fill="#555"/>
+      <circle cx="460" cy="105" r="20" fill="#666"/>
+      <circle cx="460" cy="105" r="14" fill="#888"/>
+      <circle cx="460" cy="105" r="8" fill="#38a169"/>
+      <text x="460" y="175" text-anchor="middle" fill="#38a169" font-size="14" font-weight="bold" font-family="sans-serif">TAKE</text>
+      <text x="460" y="192" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">常规拍照（不强调速度）</text>
+
+      <!-- 底部分隔 -->
+      <line x1="50" y1="215" x2="710" y2="215" stroke="#eee" stroke-width="1"/>
+      <text x="380" y="243" text-anchor="middle" fill="#444" font-size="14" font-family="sans-serif">📖 "Snap a photo" 的来源：相机快门的机械结构</text>
+      <text x="380" y="263" text-anchor="middle" fill="#888" font-size="13" font-family="sans-serif">就像嘴巴 suddenly 咬合 → 快门 blades 快速闭合 → "咔嚓"一声</text>
+      <text x="380" y="283" text-anchor="middle" fill="#888" font-size="13" font-family="sans-serif">所以 snap a photo = 快速抓拍（尤其是抓拍瞬间）| take a photo = 普通的拍照</text>
+    </svg>
+    <div class="label">
+      <div class="p">SNAP a photo vs TAKE a photo</div>
+      <div class="desc">SNAP = 快速抓拍（强调瞬间）| TAKE = 普通的拍照</div>
+    </div>
+    <div style="padding:0 16px 16px;">
+      <div class="white-box"><strong>💡 snap a photo 的物理来源</strong>：老式相机的快门由两个金属片组成，按下快门时金属片快速咬合（像嘴巴闭上一样），发出"咔嚓"（snap）声。所以 snap a photo = 快速抓拍一个瞬间。数字时代虽然用电子快门了，但这个说法保留了下来。同理：a snapshot（快照）= 一个瞬间的捕捉。</div>
+    </div>
+  </div>
+
+  <div class="compare-card">
+    <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="300" fill="#fafaf8" rx="8"/>
+      <!-- snap 情绪爆发 vs 其他情绪词 -->
+      <text x="380" y="35" text-anchor="middle" fill="#333" font-size="15" font-weight="700" font-family="sans-serif">SNAP（情绪）vs BLOW UP vs CRACK UP</text>
+
+      <!-- SNAP 爆发 -->
+      <circle cx="140" cy="110" r="25" fill="#f5e6d0"/>
+      <path d="M130,105 Q140,95 150,105" fill="none" stroke="#333" stroke-width="2"/>
+      <circle cx="130" cy="100" r="3" fill="#333"/>
+      <circle cx="150" cy="100" r="3" fill="#333"/>
+      <!-- 愤怒标记 -->
+      <path d="M115,95 L105,85" stroke="#e63946" stroke-width="1.5"/>
+      <path d="M165,95 L175,85" stroke="#e63946" stroke-width="1.5"/>
+      <text x="140" y="160" text-anchor="middle" fill="#e63946" font-size="14" font-weight="bold" font-family="sans-serif">SNAP</text>
+      <text x="140" y="177" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">突然爆发</text>
+      <text x="140" y="285" text-anchor="middle" fill="#999" font-size="13" font-family="sans-serif">"I snapped at him."</text>
+
+      <!-- BLOW UP 爆发 -->
+      <circle cx="380" cy="110" r="25" fill="#f5e6d0"/>
+      <text x="380" y="160" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">BLOW UP</text>
+      <text x="380" y="177" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">暴怒（像爆炸一样）</text>
+      <text x="380" y="285" text-anchor="middle" fill="#999" font-size="13" font-family="sans-serif">"He blew up at me."</text>
+
+      <!-- CRACK UP 笑 -->
+      <circle cx="620" cy="110" r="25" fill="#f5e6d0"/>
+      <path d="M605,115 Q620,130 635,115" fill="none" stroke="#333" stroke-width="2"/>
+      <text x="620" y="160" text-anchor="middle" fill="#38a169" font-size="14" font-weight="bold" font-family="sans-serif">CRACK UP</text>
+      <text x="620" y="177" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">笑到不行（裂开了）</text>
+      <text x="620" y="285" text-anchor="middle" fill="#999" font-size="13" font-family="sans-serif">"You crack me up."</text>
+
+      <line x1="50" y1="220" x2="710" y2="220" stroke="#eee" stroke-width="1"/>
+      <text x="380" y="245" text-anchor="middle" fill="#666" font-size="14" font-family="sans-serif">SNAP = 情绪绷到极限断掉了（被动崩溃）</text>
+      <text x="380" y="264" text-anchor="middle" fill="#666" font-size="14" font-family="sans-serif">BLOW UP = 主动爆炸式发怒（火山喷发）</text>
+      <text x="380" y="283" text-anchor="middle" fill="#666" font-size="14" font-family="sans-serif">CRACK UP = 笑到"裂开"（开心到失控）</text>
+    </svg>
+    <div class="label">
+      <div class="p">SNAP vs BLOW UP vs CRACK UP（情绪爆发）</div>
+      <div class="desc">SNAP = 被动崩溃（受不了了）| BLOW UP = 主动发怒 | CRACK UP = 笑崩</div>
+    </div>
+    <div style="padding:0 16px 16px;">
+      <div class="white-box"><strong>💡 三种"爆发"的不同物理来源</strong>：SNAP = 一根弦断了（理智的弦/心理承受力）。BLOW UP = 炸弹爆炸（从内向外喷发）。CRACK UP = 表面裂开了（笑容裂开到不可收拾）。三个词都描述"从有到无"的突然变化，但各自的物理意象不同——SNAP 是被动的、压倒性的，BLOW UP 是主动的、剧烈的，CRACK UP 是好笑的。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 常见搭配区 -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+
+<div class="usage-section">
+  <h4>📖 ① 物理断裂（核心义）</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> in two</span>
+      <span class="usage-cn">啪的一声断成两截 &nbsp;|&nbsp; 📖 细长物体突然断成两段</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> off</span>
+      <span class="usage-cn">折断/拧断 &nbsp;|&nbsp; 📖 用力一掰断下一块</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> a twig/stick</span>
+      <span class="usage-cn">折断小树枝/木棍 &nbsp;|&nbsp; 📖 细长物体受压断裂</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> a bone</span>
+      <span class="usage-cn">（骨头）咔嚓断裂 &nbsp;|&nbsp; 📖 骨头受力超过极限</span>
+    </div>
+  </div>
+  <div class="white-box"><strong>💡 这是 SNAP 的原始画面</strong>：你拿着一根干树枝，双手用力一弯——啪！断成两截。这就是 SNAP。所有其他含义（情绪崩溃、咬合、拍照）都建立在这个"啪地断开"的画面之上。</div>
+</div>
+
+<div class="usage-section">
+  <h4>📖 ② 情绪崩溃/突然发作</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong></span>
+      <span class="usage-cn">情绪失控/崩溃 &nbsp;|&nbsp; 📖 理智的弦突然断了</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> at someone</span>
+      <span class="usage-cn">突然对某人大喊大叫/发火 &nbsp;|&nbsp; 📖 像狗突然咬人一样突然凶人</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> out of it</span>
+      <span class="usage-cn">从（坏情绪/发呆中）突然回过神来 &nbsp;|&nbsp; 📖 像挣脱束缚一样突然恢复清醒</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> to attention</span>
+      <span class="usage-cn">突然立正/突然集中注意 &nbsp;|&nbsp; 📖 像被弹了一下突然站直</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">I'm about to <strong>snap</strong></span>
+      <span class="usage-cn">我快受不了了 &nbsp;|&nbsp; 📖 我的承受力快到极限了</span>
+    </div>
+  </div>
+  <div class="white-box"><strong>🧠 为什么 SNAP = "情绪崩溃"？</strong>：人的心理承受力被比喻成一根绷紧的橡皮筋。压力长期积累（张力蓄积）→ 快到极限了（临界点）→ 最后一根稻草 -> 啪！断了（SNAP）。所以 "I snapped" = 我终于绷不住了。这个比喻如此自然，就是因为 SNAP 本身的物理结构完美对应了情绪崩溃的节奏。</div>
+</div>
+
+<div class="usage-section">
+  <h4>📖 ③ 狗/动物咬合</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> at</span>
+      <span class="usage-cn">（狗）猛地咬向 &nbsp;|&nbsp; 📖 嘴巴快速闭合→咬上去但可能没咬住</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> its jaws</span>
+      <span class="usage-cn">（动物）啪地闭上嘴巴 &nbsp;|&nbsp; 📖 上下颚快速合拢发出清脆声音</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> a trap</span>
+      <span class="usage-cn">老鼠夹啪地关上 &nbsp;|&nbsp; 📖 机关触发后快速闭合咬住</span>
+    </div>
+  </div>
+  <div class="white-box"><strong>🧠 从断裂到咬合</strong>：树枝"啪"地断掉 = 一个东西突然分离成两段。嘴巴"啪"地咬合 = 两个东西突然合拢到一起。同一个 SNAP 描述了"突发性的、有声音的状态改变"——只是方向相反（断裂是分开，咬合是闭合）。</div>
+</div>
+
+<div class="usage-section">
+  <h4>📖 ④ 快速拍照/记录</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> a photo/picture</span>
+      <span class="usage-cn">拍张照片（快速抓拍）&nbsp;|&nbsp; 📖 相机的机械快门啪地闭合→捕捉画面</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">a <strong>snap</strong>shot</span>
+      <span class="usage-cn">快照/瞬间 &nbsp;|&nbsp; 📖 快速拍下的照片→引申为任何快速捕捉的片段</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> a selfie</span>
+      <span class="usage-cn">自拍一张 &nbsp;|&nbsp; 📖 快速举起手机拍一张</span>
+    </div>
+  </div>
+  <div class="white-box"><strong>🧠 SNAP 到相机快门的联想</strong>：传统相机快门释放时，两个金属片快速咬合（"咔嚓"一声），就像一个机械嘴巴"咬"住了一瞬间的画面。所以"snap a photo" = 快速捕捉画面。这个"咬合"的意象如此贴切，以至于"snapshot"（快照）已经成为了一个独立的常用名词，指代任何"瞬间的画面"。</div>
+</div>
+
+<div class="usage-section">
+  <h4>📖 ⑤ 快速的判断/动作</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en">a <strong>snap</strong> decision</span>
+      <span class="usage-cn">仓促的决定 &nbsp;|&nbsp; 📖 像咬合一样快速、不经过多思考的决定</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> judgment</span>
+      <span class="usage-cn">仓促的判断/凭第一印象下结论 &nbsp;|&nbsp; 📖 瞬间"咬住"一个结论不放</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> out orders</span>
+      <span class="usage-cn">厉声发出命令 &nbsp;|&nbsp; 📖 快速、干脆、不容置疑地下命令</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> your fingers</span>
+      <span class="usage-cn">打响指 &nbsp;|&nbsp; 📖 手指快速摩擦发出清脆声响</span>
+    </div>
+  </div>
+  <div class="white-box"><strong>💡 snap decision 的物理来源</strong>：一个"snap decision"就像响指一样来得又快又脆——不需要过程、不犹豫、不回头。词根还是 SNAP 的"快速"特性。这也解释了"SNAP! I forgot my keys!"——突然意识到（像被弹了一下）。</div>
+</div>
+
+<div class="usage-section">
+  <h4>📖 ⑥ 其他固定短语</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> ties/cord</span>
+      <span class="usage-cn">断开联系/切断关系 &nbsp;|&nbsp; 📖 像剪断绳子一样突然切断关系</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> into place</span>
+      <span class="usage-cn">啪地卡入到位 &nbsp;|&nbsp; 📖 零件/拼图块卡扣到位发出啪声</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>snap</strong> suit/garment</span>
+      <span class="usage-cn">（美式足球）中锋发球 &nbsp;|&nbsp; 📖 球从胯下快速传到四分卫手中</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">It's a <strong>snap</strong>!</span>
+      <span class="usage-cn">太简单了！（小菜一碟）&nbsp;|&nbsp; 📖 像打响指一样轻松不费劲</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">cold <strong>snap</strong></span>
+      <span class="usage-cn">寒潮/突然降温 &nbsp;|&nbsp; 📖 天气突然"啪"地变冷</span>
+    </div>
+  </div>
+  <div class="white-box"><strong>💡 "It's a snap!" = 小菜一碟</strong>：这个用法非常口语化。来源：打响指（snap your fingers）几乎不花力气——所以"那件事就像打个响指一样简单"。注意跟 "snap decision" 的"仓促"含义不同，这里强调的是"轻松不费力"。</div>
+</div>
+
+<!-- 反义/相似 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card red-bg">
+      <h5 style="color:#e63946;">🔄 近义词辨析</h5>
+      <p><strong>BREAK</strong> — 泛泛的"弄坏" <small>SNAP 特指细长物体突然断裂+声音</small></p>
+      <p><strong>CRACK</strong> — 表面裂开 <small>SNAP 是完全断开，CRACK 可能只是裂缝</small></p>
+      <p><strong>SPLIT</strong> — 纵向裂开 <small>SNAP 是横向/斜向断裂</small></p>
+      <p><strong>BITE</strong> — 咬住不放 <small>snap at 是一下子咬住又放开</small></p>
+      <p><strong>BLOW UP</strong> — 爆炸式发怒 <small>SNAP 是弦断了崩溃，BLOW UP 是火山喷发</small></p>
+    </div>
+    <div class="info-card green-bg">
+      <h5 style="color:#38a169;">💡 近义细辨：SNAP 独有的特征</h5>
+      <p><strong>声音</strong> — SNAP 必然伴随清脆响声（啪/咔嚓）</p>
+      <p><strong>速度</strong> — SNAP 永远指"瞬间发生"，不是渐变</p>
+      <p><strong>细长物体</strong> — SNAP 最适合细长物体（branch, rope, bone, twig）</p>
+      <p><strong>不可逆</strong> — SNAP 后无法恢复原状</p>
+      <p style="margin-top:8px; color:#666; font-size:12px;">如果一个动作没有声音、不是瞬间、不是细长物体——基本不用 SNAP。</p>
+    </div>
+    <div class="info-card purple-bg">
+      <h5 style="color:#7b4ad9;">📝 记忆口诀</h5>
+      <p>树枝受力啪地断，<br>弦崩人怒瞬间爆，<br>狗口快合咔一咬，<br>快门抓拍念一笑，<br>响指一打小菜到！</p>
+      <p style="margin-top:8px; color:#666; font-size:12px;">SNAP 的5种用法：<br>断裂 · 崩溃 · 咬合 · 拍照 · 轻巧/响指</p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

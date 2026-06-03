@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLOP 图解 — 扑通落下 / 失败 / 瘫倒</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#888,#666); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#888,#aaa); border-radius:2px; flex-shrink:0; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#888; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #d0d0d0; padding-left:10px; }
+  .white-box { background:#fff; border:1px solid #d0d0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #d0d0d0; border-top:1px solid #d0d0d0; transform:rotate(45deg); }
+  .white-box strong { color:#888; }
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e0e0e0; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#888; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+  .flop-bg { background:linear-gradient(135deg,#f0f0f0,#e8e8e8); }
+  .flip-bg { background:linear-gradient(135deg,#fdf6ee,#f5e8d0); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+  .green-bg { background:linear-gradient(135deg,#e0f5e0,#d0e8d0); }
+  .spectrum-wrap { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e0e0e0; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+  @media (max-width:720px) { .container { padding:24px 16px 32px; } .cards, .compare-row { grid-template-columns:1fr; } .usage-list { grid-template-columns:1fr; } .three-col { grid-template-columns:1fr; } h1 { font-size:26px; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🫳 FLOP</h1>
+<p class="subtitle">扑通落下 / 失败 / 瘫倒 — 从煎饼掉地到电影扑街</p>
+
+<!-- ===== 核心卡片 ===== -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+
+  <!-- CARD 1: FLOP 核心 — 失败落下 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="fBg" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#f5f5f5"/>
+          <stop offset="100%" stop-color="#ececec"/>
+        </linearGradient>
+        <filter id="shadow">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#fBg)" rx="8"/>
+
+      <!-- 上方的手（翻转失败） -->
+      <ellipse cx="180" cy="140" rx="50" ry="25" fill="#f5e6d0" stroke="#e0c8a8" stroke-width="1.5" transform="rotate(-20,180,140)"/>
+      <!-- 掉落中的物体 -->
+      <rect x="320" y="160" width="50" height="50" rx="6" fill="#999" stroke="#777" stroke-width="2">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 0,60; 0,120"
+          keyTimes="0; 0.5; 1"
+          dur="2s" repeatCount="indefinite"/>
+      </rect>
+      <!-- 下落的虚线 -->
+      <line x1="345" y1="160" x2="345" y2="300" stroke="#888" stroke-width="2" stroke-dasharray="5,4" opacity="0.5">
+        <animate attributeName="opacity" values="0;0.5;0.8" dur="2s" repeatCount="indefinite"/>
+      </line>
+
+      <!-- 地面 -->
+      <rect x="0" y="310" width="760" height="8" fill="#ddd"/>
+
+      <!-- 落地撞击 -->
+      <g>
+        <path d="M320,310 L370,310" stroke="#888" stroke-width="2" opacity="0">
+          <animate attributeName="opacity" values="0;0;0.8;0" dur="2s" repeatCount="indefinite"/>
+        </path>
+        <text x="345" y="340" text-anchor="middle" fill="#888" font-size="22" font-weight="bold" font-family="sans-serif" opacity="0">
+          💥
+          <animate attributeName="opacity" values="0;0;1;0" dur="2s" repeatCount="indefinite"/>
+        </text>
+      </g>
+
+      <!-- 拟声词 FLOP! -->
+      <text x="420" y="250" text-anchor="start" fill="#888" font-size="28" font-weight="bold" font-family="sans-serif" opacity="0">
+        FLOP!
+        <animate attributeName="opacity" values="0;0;0;1;0.5;0" dur="2s" repeatCount="indefinite"/>
+      </text>
+
+      <text x="380" y="375" text-anchor="middle" fill="#444" font-size="14" font-weight="600" font-family="sans-serif">本义：翻转失败 -> 物体啪嗒一声掉在地上</text>
+    </svg>
+    <div class="card-body">
+      <h3>FLOP <span class="hl">/fl&#593;p/</span></h3>
+      <div class="pos">verb / noun · 啪嗒落下 / 失败</div>
+      <div class="def">
+        <strong>本义</strong> 翻转失败，物体软塌塌地掉下来<br>
+        <strong>引申义 1</strong> 瘫倒/坐下（flop onto the couch — 一屁股坐沙发上）<br>
+        <strong>引申义 2</strong> 惨败/扑街（The movie flopped — 电影票房惨败）
+        <span class="eg">"The fish flopped on the deck." 鱼在甲板上啪嗒啪嗒<br>"He flopped onto the bed." 他瘫倒在床上<br>"The film was a total flop." 这电影彻底扑街了</span>
+      </div>
+      <div class="white-box"><strong>核心逻辑</strong>：FLOP 的本质是"失去支撑后软塌塌地落下"——和 FLIP（成功翻转）相反。你试图翻煎饼但没接住 -> 煎饼啪嗒掉地上。你累瘫了 -> 身体软塌塌地倒在沙发上。一部电影没人看 -> 像没人接住的煎饼一样"啪嗒"掉地上。</div>
+    </div>
+  </div>
+
+  <!-- CARD 2: FLOP vs FLIP — 成功 vs 失败 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="c2L" x1="0" y1="0" x2="370" y2="400">
+          <stop offset="0%" stop-color="#fdf6ee"/>
+          <stop offset="100%" stop-color="#f5eee0"/>
+        </linearGradient>
+        <linearGradient id="c2R" x1="390" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#f5f5f5"/>
+          <stop offset="100%" stop-color="#ececec"/>
+        </linearGradient>
+      </defs>
+      <rect width="370" height="400" fill="url(#c2L)" rx="8"/>
+      <rect x="390" width="370" height="400" fill="url(#c2R)"/>
+      <line x1="380" y1="20" x2="380" y2="380" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- LEFT: FLIP — 煎饼成功翻面 -->
+      <ellipse cx="185" cy="280" rx="40" ry="18" fill="#f5e6d0"/>
+      <ellipse cx="185" cy="190" rx="50" ry="10" fill="#f7c948" stroke="#d4a520" stroke-width="2">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 0,-40; 0,0"
+          keyTimes="0; 0.5; 1"
+          dur="2s" repeatCount="indefinite"/>
+      </ellipse>
+      <path d="M155,200 Q185,140 215,200" fill="none" stroke="#38a169" stroke-width="2" stroke-dasharray="4,3">
+        <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>
+      </path>
+      <text x="185" y="370" text-anchor="middle" fill="#38a169" font-size="14" font-weight="bold" font-family="sans-serif">FLIP</text>
+      <text x="185" y="388" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">翻煎饼 -> 接住了</text>
+
+      <!-- RIGHT: FLOP — 煎饼掉地上 -->
+      <ellipse cx="575" cy="280" rx="40" ry="18" fill="#f5e6d0"/>
+      <ellipse cx="575" cy="160" rx="45" ry="10" fill="#999" stroke="#777" stroke-width="1.5">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 0,60; 0,120"
+          keyTimes="0; 0.5; 1"
+          dur="2.5s" repeatCount="indefinite"/>
+      </ellipse>
+      <rect x="480" y="310" width="190" height="4" fill="#ccc"/>
+      <path d="M545,310 L605,310" stroke="#888" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;0;0.6;0" dur="2.5s" repeatCount="indefinite"/>
+      </path>
+      <text x="575" y="370" text-anchor="middle" fill="#888" font-size="14" font-weight="bold" font-family="sans-serif">FLOP</text>
+      <text x="575" y="388" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">没接住 -> 啪嗒掉地</text>
+    </svg>
+    <div class="card-body">
+      <h3>FLIP vs FLOP — 一字之差，天壤之别</h3>
+      <div class="pos">元音 i -> o 改变命运</div>
+      <div class="def">
+        <strong>FLIP</strong> = 轻快地翻动 <em>"Flip the pancake."</em><br>
+        <strong>FLOP</strong> = 沉重地落下 <em>"The pancake flopped on the floor."</em>
+      </div>
+      <div class="white-box"><strong>发音即意象</strong>：FLIP 的短 i 音听起来轻快、短促（轻翻一下）。FLOP 的 &#593; 音听起来沉重、闷响（啪嗒一声）。英语中很多"短 i 表轻快、&#593; 表沉重"的对比：tip vs top、drip vs drop、skim vs swop。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 逻辑演化树 ===== -->
+<div class="section-title"><span class="bar"></span><span>逻辑演化树</span></div>
+<div style="background:#f5f5f5; border:1px solid #ddd; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div style="font-size:16px; font-weight:700; margin-bottom:16px;">逻辑演化树：啪嗒落下 -> 失败/瘫倒/廉价</div>
+  <div style="display:flex; flex-wrap:wrap; align-items:center; gap:6px;">
+    <div style="background:#fafaf8; border:1px solid #d0d0d0; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ① 物理掉落<br><span style="font-weight:400; font-size:12px; color:#888;">鱼在甲板上啪嗒</span>
+    </div>
+    <div style="font-size:18px; color:#888; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #d0d0d0; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ② 瘫倒/坐下<br><span style="font-weight:400; font-size:12px; color:#888;">flop onto sofa</span>
+    </div>
+    <div style="font-size:18px; color:#888; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #d0d0d0; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ③ 失败/扑街<br><span style="font-weight:400; font-size:12px; color:#888;">movie flop / deal</span>
+    </div>
+    <div style="font-size:18px; color:#888; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #d0d0d0; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ④ 廉价场所<br><span style="font-weight:400; font-size:12px; color:#888;">flophouse</span>
+    </div>
+    <div style="font-size:18px; color:#888; font-weight:700;">→</div>
+    <div style="background:#fafaf8; border:1px solid #d0d0d0; border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; font-weight:600;">
+      ⑤ "瘫软"的<br><span style="font-weight:400; font-size:12px; color:#888;">floppy / floppy disk</span>
+    </div>
+  </div>
+  <div style="margin-top:16px; padding-top:16px; border-top:1px dashed #d0d0d0; font-size:14px; color:#555; line-height:1.65;">
+    <strong>核心逻辑链</strong>：鱼在甲板上啪嗒挣扎（没有支撑=掉下来）-> 人累瘫了倒在沙发上（身体失去支撑=像物体一样"掉"在沙发上）-> 电影没人看票房惨淡（像掉在地上的煎饼一样无人问津）-> 廉价旅店（flophouse = 旅客像"瘫倒"一样倒头就睡的便宜地方）-> floppy（软塌塌的）-> floppy disk 软盘（软塌塌的磁盘）。<br>
+    所有用法共享一个画面：<strong>失去支撑后软塌塌/沉重地落下</strong>。
+  </div>
+</div>
+
+<!-- ===== 程度光谱 ===== -->
+<div class="section-title"><span class="bar"></span><span>FLOP 程度光谱 — 从轻微落到彻底失败</span></div>
+<div class="spectrum-wrap">
+  <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="specBg" x1="0" y1="0" x2="760" y2="340">
+        <stop offset="0%" stop-color="#f5f5f5"/>
+        <stop offset="100%" stop-color="#ececec"/>
+      </linearGradient>
+    </defs>
+    <rect width="760" height="340" fill="url(#specBg)" rx="8"/>
+
+    <line x1="60" y1="175" x2="700" y2="175" stroke="#ccc" stroke-width="1.5"/>
+    <line x1="60" y1="185" x2="700" y2="185" stroke="#ccc" stroke-width="1.5"/>
+    <text x="60" y="165" text-anchor="middle" fill="#38a169" font-size="12" font-family="sans-serif">轻微</text>
+    <text x="700" y="165" text-anchor="middle" fill="#c0392b" font-size="12" font-family="sans-serif">惨败</text>
+
+    <rect x="60" y="175" width="128" height="10" rx="5" fill="#38a169" opacity="0.2"/>
+    <rect x="188" y="175" width="128" height="10" fill="#f0b429" opacity="0.25"/>
+    <rect x="316" y="175" width="128" height="10" fill="#e67e22" opacity="0.3"/>
+    <rect x="444" y="175" width="128" height="10" fill="#e63946" opacity="0.3"/>
+    <rect x="572" y="175" width="128" height="10" rx="0 5 5 0" fill="#c0392b" opacity="0.4"/>
+
+    <circle r="10" fill="#888">
+      <animate attributeName="cx" values="60;188;316;444;572;700;572;444;316;188;60" dur="18s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="180;180;180;180;180;180;180;180;180;180;180" dur="18s" repeatCount="indefinite"/>
+    </circle>
+
+    <text x="128" y="145" text-anchor="middle" fill="#38a169" font-size="15" font-weight="bold" font-family="sans-serif">
+      flop down
+      <animate attributeName="opacity" values="1;0.2;0.2;0.2;0.2;0.2;0.2;0.2;0.2;0.2;1" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="256" y="145" text-anchor="middle" fill="#f0b429" font-size="15" font-weight="bold" font-family="sans-serif">
+      flop over
+      <animate attributeName="opacity" values="0.2;1;0.2;0.2;0.2;0.2;0.2;0.2;0.2;1;0.2" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="384" y="145" text-anchor="middle" fill="#e67e22" font-size="15" font-weight="bold" font-family="sans-serif">
+      belly flop
+      <animate attributeName="opacity" values="0.2;0.2;1;0.2;0.2;0.2;0.2;0.2;1;0.2;0.2" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="512" y="145" text-anchor="middle" fill="#e63946" font-size="15" font-weight="bold" font-family="sans-serif">
+      a flop
+      <animate attributeName="opacity" values="0.2;0.2;0.2;1;0.2;0.2;0.2;1;0.2;0.2;0.2" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="640" y="145" text-anchor="middle" fill="#c0392b" font-size="15" font-weight="bold" font-family="sans-serif">
+      total flop
+      <animate attributeName="opacity" values="0.2;0.2;0.2;0.2;1;0.2;1;0.2;0.2;0.2;0.2" dur="18s" repeatCount="indefinite"/>
+    </text>
+
+    <text x="380" y="230" text-anchor="middle" fill="#38a169" font-size="13" font-family="sans-serif">
+      flop down：软塌塌坐下/躺下
+      <animate attributeName="opacity" values="1;0;0;0;0;0;0;0;0;0;1" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="380" y="230" text-anchor="middle" fill="#f0b429" font-size="13" font-family="sans-serif">
+      flop over：翻倒/侧倒
+      <animate attributeName="opacity" values="0;1;0;0;0;0;0;0;0;1;0" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="380" y="230" text-anchor="middle" fill="#e67e22" font-size="13" font-family="sans-serif">
+      belly flop：肚子拍水（失败跳水）
+      <animate attributeName="opacity" values="0;0;1;0;0;0;0;0;1;0;0" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="380" y="230" text-anchor="middle" fill="#e63946" font-size="13" font-family="sans-serif">
+      a flop：票房/产品失败
+      <animate attributeName="opacity" values="0;0;0;1;0;0;0;1;0;0;0" dur="18s" repeatCount="indefinite"/>
+    </text>
+    <text x="380" y="230" text-anchor="middle" fill="#c0392b" font-size="13" font-family="sans-serif">
+      total flop：彻底惨败/扑街
+      <animate attributeName="opacity" values="0;0;0;0;1;0;1;0;0;0;0" dur="18s" repeatCount="indefinite"/>
+    </text>
+
+    <g><animate attributeName="opacity" values="1;0;0;0;0;0;0;0;0;0;1" dur="18s" repeatCount="indefinite"/>
+      <circle cx="128" cy="270" r="14" fill="#f5e6d0"/>
+      <path d="M124,267 L132,267" stroke="#333" stroke-width="1.5"/>
+      <path d="M124,277 Q128,280 132,277" fill="none" stroke="#333" stroke-width="1.5"/>
+      <text x="128" y="305" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">坐下</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;1;0;0;0;0;0;0;0;1;0" dur="18s" repeatCount="indefinite"/>
+      <circle cx="256" cy="270" r="14" fill="#f5e6d0"/>
+      <path d="M252,267 L260,267" stroke="#333" stroke-width="1.5"/>
+      <path d="M252,277 Q256,275 260,277" fill="none" stroke="#f0b429" stroke-width="1.5"/>
+      <text x="256" y="305" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">翻倒</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;0;1;0;0;0;0;0;1;0;0" dur="18s" repeatCount="indefinite"/>
+      <circle cx="384" cy="270" r="14" fill="#f5e6d0"/>
+      <line x1="379" y1="266" x2="383" y2="268" stroke="#333" stroke-width="1.5"/>
+      <line x1="389" y1="266" x2="385" y2="268" stroke="#333" stroke-width="1.5"/>
+      <path d="M380,276 Q384,280 388,276" fill="none" stroke="#e67e22" stroke-width="1.5"/>
+      <text x="384" y="305" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">失败</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;0;0;1;0;0;0;1;0;0;0" dur="18s" repeatCount="indefinite"/>
+      <circle cx="512" cy="270" r="14" fill="#f5e6d0"/>
+      <line x1="507" y1="265" x2="512" y2="268" stroke="#e63946" stroke-width="2"/>
+      <line x1="517" y1="265" x2="512" y2="268" stroke="#e63946" stroke-width="2"/>
+      <path d="M508,278 L516,278" stroke="#e63946" stroke-width="2"/>
+      <text x="512" y="305" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">扑街</text>
+    </g>
+    <g><animate attributeName="opacity" values="0;0;0;0;1;0;1;0;0;0;0" dur="18s" repeatCount="indefinite"/>
+      <circle cx="640" cy="270" r="14" fill="#f5e6d0"/>
+      <line x1="635" y1="264" x2="640" y2="268" stroke="#c0392b" stroke-width="2"/>
+      <line x1="645" y1="264" x2="640" y2="268" stroke="#c0392b" stroke-width="2"/>
+      <path d="M636,280 L644,280" stroke="#c0392b" stroke-width="2"/>
+      <circle cx="640" cy="270" r="18" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="3,2" opacity="0.5">
+        <animate attributeName="r" values="14;20;14" dur="1s" repeatCount="indefinite"/>
+      </circle>
+      <text x="640" y="305" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">惨败</text>
+    </g>
+  </svg>
+  <div class="white-box"><strong>从物理到抽象</strong>：FLOP 的原始画面是"煎饼从锅铲上滑落，啪嗒掉在地上"——一个试图翻转但失败的动作。这个画面延伸到"belly flop"（肚子拍水 = 跳水失败），延伸到"a movie flops"（电影扑街 = 市场"没接住"这部电影）。英语里 flop 是最直接的"失败"拟声词——你听到 FLOP 这个音就能想象出那个"闷响+失败"的画面。</div>
+</div>
+
+<!-- ===== 易混对比 ===== -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+
+  <!-- FLOP vs DROP vs PLOP -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="253" height="340" fill="#f5f5f5"/>
+      <rect x="254" width="253" height="340" fill="#f0f0f5"/>
+      <rect x="508" width="252" height="340" fill="#f0f5f0"/>
+      <line x1="253" y1="20" x2="253" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+      <line x1="507" y1="20" x2="507" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- FLOP 软塌塌 -->
+      <ellipse cx="130" cy="210" rx="40" ry="12" fill="#999" stroke="#777" stroke-width="2">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,50; 0,0; 0,50"
+          keyTimes="0; 0.5; 1"
+          dur="2s" repeatCount="indefinite"/>
+      </ellipse>
+      <text x="130" y="270" text-anchor="middle" fill="#888" font-size="14" font-weight="bold" font-family="sans-serif">FLOP</text>
+      <text x="130" y="288" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">软塌塌落下</text>
+      <text x="130" y="306" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">扁平物啪嗒落地</text>
+      <text x="200" y="180" text-anchor="middle" fill="#888" font-size="16" font-weight="bold" font-family="sans-serif">啪嗒</text>
+    </svg>
+    <div class="label">
+      <div class="p" style="color:#888;">FLOP / DROP / PLOP — 三种"掉"</div>
+      <div class="desc">FLOP = 软塌塌地落下（煎饼、鱼、身体）；DROP = 垂直掉落（任何物体，自由落体）；PLOP = 掉进液体里（扑通一声，石头掉水里）。FLOP 的特點是"软"和"闷响"。</div>
+    </div>
+  </div>
+
+  <!-- FLOP vs FLIP vs FLICK -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="253" height="340" fill="#fdf6ee"/>
+      <rect x="254" width="253" height="340" fill="#f5f5f5"/>
+      <rect x="508" width="252" height="340" fill="#f5f0ff"/>
+      <line x1="253" y1="20" x2="253" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+      <line x1="507" y1="20" x2="507" y2="320" stroke="#ddd" stroke-width="1" stroke-dasharray="4,6"/>
+
+      <!-- FLIP 成功翻转 -->
+      <rect x="90" y="170" width="70" height="50" rx="4" fill="#f7c948" stroke="#d4a520" stroke-width="1.5">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 0,-25; 0,0"
+          dur="2s" repeatCount="indefinite"/>
+      </rect>
+      <text x="125" y="310" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">FLIP</text>
+      <text x="125" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">轻快翻转</text>
+
+      <!-- FLOP 扑街 -->
+      <rect x="350" y="170" width="60" height="40" rx="3" fill="#999" stroke="#777" stroke-width="1.5">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 0,60; 0,110"
+          dur="2.5s" repeatCount="indefinite"/>
+      </rect>
+      <text x="380" y="310" text-anchor="middle" fill="#888" font-size="14" font-weight="bold" font-family="sans-serif">FLOP</text>
+      <text x="380" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">沉重落下/扑街</text>
+
+      <!-- FLICK 弹 -->
+      <circle cx="630" cy="200" r="10" fill="#ccc" stroke="#aaa" stroke-width="1.5">
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; -40,-30; -80,-40"
+          dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <text x="630" y="310" text-anchor="middle" fill="#7b4ad9" font-size="14" font-weight="bold" font-family="sans-serif">FLICK</text>
+      <text x="630" y="328" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">快速弹击</text>
+    </svg>
+    <div class="label">
+      <div class="p" style="color:#888;">FLOP vs FLIP vs FLICK — 元音区别决定含义</div>
+      <div class="desc">fl- + 不同元音 = 不同动作。FLOP (/&#593;/) = 沉重落下/失败；FLIP (/&#618;/) = 轻快翻转；FLICK (/&#618;/ 更短) = 快速弹击。这三个词的押头韵（fl-）暗示"手指/手部动作"，元音决定动作性质。</div>
+    </div>
+    <div style="padding:0 16px 16px;">
+      <div class="white-box"><strong>fl- 韵的家族</strong>：FLIP/FLOP/FLICK/FLAP/FLUTTER — 都包含"手部或身体的快速动作"。FLOP 是最重最慢的一个（沉重落地），FLIP 是中等（快速翻转），FLICK 是最轻最快（弹指一挥）。感受一下：FLICK 的发音也最轻快。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 常见搭配 ===== -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+<div class="usage-section">
+  <h4>物理 FLOP — 真正在"啪嗒"</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>flop</strong> onto the bed / sofa / floor</span><span class="usage-cn">瘫倒在床/沙发/地上</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flop</strong> around / about</span><span class="usage-cn">啪嗒啪嗒挣扎</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flop</strong> down</span><span class="usage-cn">一屁股坐下</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flop</strong> open</span><span class="usage-cn">啪地翻开</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flop</strong> over</span><span class="usage-cn">翻倒/侧倒</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flop</strong> into a chair</span><span class="usage-cn">一屁股坐进椅子</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>belly flop</strong></span><span class="usage-cn">平拍入水（肚子先拍水）</span></div>
+  </div>
+</div>
+<div class="usage-section">
+  <h4>抽象 FLOP — 失败/惨淡</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>flop</strong> (movie / product)</span><span class="usage-cn">扑街/失败（票房惨淡/无人问津）</span></div>
+    <div class="usage-item"><span class="usage-en">a total <strong>flop</strong></span><span class="usage-cn">彻底失败</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flop</strong> a deal</span><span class="usage-cn">交易告吹</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flophouse</strong></span><span class="usage-cn">廉价旅店</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>flop</strong> sweat</span><span class="usage-cn">演出失败的冷汗</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>floppy</strong> / floppy disk</span><span class="usage-cn">软塌塌的/软盘</span></div>
+  </div>
+  <div class="white-box" style="margin-top:12px;"><strong>belly flop</strong> = 肚子拍水式跳水。物理画面：身体水平地"啪嗒"拍在水面上（标准的跳水是头先入水，belly flop 是身体平着拍下去）。<em>"He did a belly flop and it hurt."</em></div>
+  <div class="white-box" style="margin-top:8px;"><strong>flophouse</strong> = 廉价旅店。来源：19世纪末美国流浪者只要花几毛钱就能"瘫倒"（flop）睡一觉的地方。<em>"He stayed in a flophouse downtown."</em></div>
+  <div class="white-box" style="margin-top:8px;"><strong>a total flop</strong> = 彻底扑街。物理画面：你翻煎饼 -> 没接住 -> 煎饼啪嗒掉地上 -> 这顿饭"失败了"。<em>"The new restaurant was a total flop."</em></div>
+</div>
+
+<!-- ===== 反义/相似 ===== -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card flop-bg">
+      <h5 style="color:#888;">反义词</h5>
+      <p><strong>FLIP</strong> — 成功翻转</p>
+      <p><strong>SUCCEED</strong> — 成功</p>
+      <p><strong>JUMP</strong> — 跳起</p>
+    </div>
+    <div class="info-card flip-bg">
+      <h5 style="color:#e67e22;">近义辨析</h5>
+      <p><strong>FLOP vs DROP</strong>：软塌塌 vs 垂直落</p>
+      <p><strong>FLOP vs PLOP</strong>：落地 vs 入水</p>
+      <p><strong>FLOP vs SLUMP</strong>：落下 vs 瘫倒</p>
+      <p><strong>FLOP vs COLLAPSE</strong>：弱落下 vs 崩塌</p>
+    </div>
+    <div class="info-card purple-bg">
+      <h5 style="color:#7b4ad9;">相关词族</h5>
+      <p><strong>fl- 家族</strong>：FLIP/FLOP/FLICK</p>
+      <p><strong>FLAP</strong> = 拍打</p>
+      <p><strong>FLUTTER</strong> = 扑动</p>
+      <p><strong>FLOPPY</strong> = 软塌塌的</p>
+      <p><strong>FLOPPY DISK</strong> = 软盘</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

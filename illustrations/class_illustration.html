@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLASS 图解 — 班级 / 等级 / 阶级</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; color:#7b4ad9; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:#7b4ad9; border-radius:2px; flex-shrink:0; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#7b4ad9; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#7b4ad9; }
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#7b4ad9; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+  .red-bg { background:linear-gradient(135deg,#fef2f2,#fde8e8); }
+  .green-bg { background:linear-gradient(135deg,#f0faf5,#e8f5ec); }
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>CLASS</h1>
+<p class="subtitle">班级 / 等级 / 阶级 — 从"classroom"到"world-class"</p>
+
+<!-- 核心意象对比 -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+
+  <!-- Card 1: CLASS 核心 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="classBg" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#f5f0ff"/>
+          <stop offset="100%" stop-color="#e8e0f5"/>
+        </linearGradient>
+        <filter id="shadow">
+          <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.10"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="url(#classBg)" rx="8"/>
+
+      <!-- 左侧：classroom / 班级 -->
+      <text x="180" y="50" text-anchor="middle" fill="#7b4ad9" font-size="15" font-weight="700" font-family="sans-serif">classroom / 班级</text>
+      <!-- 教室 -->
+      <rect x="50" y="80" width="200" height="140" fill="#fff" stroke="#ccc" stroke-width="2" rx="4"/>
+      <!-- 黑板 -->
+      <rect x="60" y="85" width="180" height="30" fill="#2d5a27" rx="3"/>
+      <text x="150" y="104" text-anchor="middle" fill="#fff" font-size="12" font-family="sans-serif">English Class</text>
+      <!-- 桌子 -->
+      <rect x="70" y="140" width="60" height="12" fill="#8B4513" rx="2"/>
+      <rect x="150" y="140" width="60" height="12" fill="#8B4513" rx="2"/>
+      <rect x="70" y="175" width="60" height="12" fill="#8B4513" rx="2"/>
+      <rect x="150" y="175" width="60" height="12" fill="#8B4513" rx="2"/>
+      <!-- 学生 -->
+      <circle cx="100" cy="132" r="8" fill="#f5e6d0"/>
+      <circle cx="180" cy="132" r="8" fill="#f5e6d0"/>
+      <circle cx="100" cy="167" r="8" fill="#f5e6d0"/>
+      <circle cx="180" cy="167" r="8" fill="#f5e6d0"/>
+      <text x="180" y="300" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">班级 / 课堂——学生一起上课的群体</text>
+      <text x="180" y="318" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">"I have English class at 9." 我9点上英语课。</text>
+
+      <!-- 右侧：social class / 社会等级 -->
+      <text x="560" y="50" text-anchor="middle" fill="#7b4ad9" font-size="15" font-weight="700" font-family="sans-serif">social class</text>
+      <!-- 金字塔 -->
+      <polygon points="560,90 490,230 630,230" fill="none" stroke="#7b4ad9" stroke-width="2"/>
+      <line x1="510" y1="190" x2="610" y2="190" stroke="#7b4ad9" stroke-width="1" stroke-dasharray="4,2"/>
+      <line x1="530" y1="150" x2="590" y2="150" stroke="#7b4ad9" stroke-width="1" stroke-dasharray="4,2"/>
+      <text x="560" y="140" text-anchor="middle" fill="#7b4ad9" font-size="11" font-weight="700" font-family="sans-serif">上层</text>
+      <text x="560" y="182" text-anchor="middle" fill="#7b4ad9" font-size="11" font-weight="700" font-family="sans-serif">中层</text>
+      <text x="560" y="222" text-anchor="middle" fill="#7b4ad9" font-size="11" font-weight="700" font-family="sans-serif">下层</text>
+      <!-- 箭头动画 -->
+      <line x1="490" y1="140" x2="480" y2="140" stroke="#7b4ad9" stroke-width="1.5">
+        <animate attributeName="opacity" values="1;0.2;1" dur="1.5s" repeatCount="indefinite"/>
+      </line>
+      <text x="560" y="280" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">社会阶级——按等级划分的群体</text>
+      <text x="560" y="298" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">"the working class" 工人阶级</text>
+    </svg>
+    <div class="card-body">
+      <h3>CLASS <span class="hl">/klæs/</span></h3>
+      <div class="pos">noun · adjective · 班级/等级/阶级/优秀</div>
+      <div class="def">
+        <strong>本义</strong> 按共同特征归类的群体<br>
+        <strong>核心意象</strong> "分类/分组"——同班同学 = 按年龄/科目分的组。社会阶级 = 按财富/地位分的组。等级/质量 = 按优劣分的类别。"Class act" = 高质量的表现/有风度的人。"In a class of its own" = 自成一类/出类拔萃。<br>
+        <span class="eg">"She's in my English class." 她在我的英语班。<br>"He's a class act." 他很有风度/做事漂亮。</span>
+      </div>
+      <div class="white-box"><strong>理解关键</strong>：CLASS 的核心是"<strong>分类/归类</strong>"。把事物按共同特征分成不同的"类别"→ 班级（学生的类别）、阶级（社会层次类别）、等级（质量类别）。"First class" = 第一类/最高级。"World-class" = 世界级的（属于世界顶尖那一类）。"Classic"和"classical"都是 class 衍生出来的。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: CLASS 等级光谱 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="classBg2" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#f5f0ff"/>
+          <stop offset="100%" stop-color="#fafaf8"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="400" fill="url(#classBg2)" rx="8"/>
+      <text x="380" y="45" text-anchor="middle" fill="#7b4ad9" font-size="18" font-weight="700" font-family="sans-serif">CLASS 等级光谱 — 从"最差"到"最佳"</text>
+
+      <!-- 等级刻度条 -->
+      <rect x="80" y="100" width="600" height="20" fill="#e8e0e8" rx="10"/>
+      <!-- 渐变 -->
+      <rect x="80" y="100" width="600" height="20" fill="url(#classGrad)" rx="10"/>
+      <defs>
+        <linearGradient id="classGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#ccc"/>
+          <stop offset="25%" stop-color="#999"/>
+          <stop offset="50%" stop-color="#7b4ad9"/>
+          <stop offset="75%" stop-color="#4a2ad9"/>
+          <stop offset="100%" stop-color="#ffd700"/>
+        </linearGradient>
+      </defs>
+
+      <!-- 标签 -->
+      <text x="130" y="90" text-anchor="middle" fill="#999" font-size="11" font-family="sans-serif">low-class</text>
+      <text x="300" y="90" text-anchor="middle" fill="#7b4ad9" font-size="11" font-family="sans-serif">middle-class</text>
+      <text x="500" y="90" text-anchor="middle" fill="#4a2ad9" font-size="11" font-family="sans-serif">first-class</text>
+      <text x="650" y="90" text-anchor="middle" fill="#ffd700" font-size="11" font-family="sans-serif">world-class</text>
+
+      <!-- 游标 -->
+      <circle cx="130" cy="110" r="12" fill="#7b4ad9">
+        <animate attributeName="cx" values="130;220;300;400;500;580;650;580;500;400;300;220;130" dur="10s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="130" cy="110" r="6" fill="#fff">
+        <animate attributeName="cx" values="130;220;300;400;500;580;650;580;500;400;300;220;130" dur="10s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- 示例 -->
+      <rect x="80" y="160" width="600" height="50" fill="#fff" rx="6" stroke="#e0d8e0" stroke-width="1"/>
+      <text x="100" y="182" fill="#444" font-size="12" font-family="sans-serif">
+        <tspan fill="#7b4ad9" font-weight="700">low-class</tspan> 低级的/低档的 — low-class behavior
+      </text>
+      <text x="100" y="200" fill="#444" font-size="12" font-family="sans-serif">
+        <tspan fill="#7b4ad9" font-weight="700">world-class</tspan> 世界级的 — world-class athlete
+      </text>
+
+      <!-- 底部特写 -->
+      <text x="380" y="280" text-anchor="middle" fill="#7b4ad9" font-size="14" font-weight="700" font-family="sans-serif">first class / business class / economy class</text>
+      <!-- 飞机座位 -->
+      <text x="190" y="320" text-anchor="middle" fill="#ffd700" font-size="18" font-family="sans-serif">✈️</text>
+      <rect x="100" y="330" width="60" height="15" fill="#ffd700" rx="3"/>
+      <rect x="175" y="330" width="60" height="15" fill="#e67e22" rx="3"/>
+      <rect x="250" y="330" width="60" height="15" fill="#3498db" rx="3"/>
+      <text x="130" y="350" text-anchor="middle" fill="#444" font-size="10" font-family="sans-serif">头等舱</text>
+      <text x="205" y="350" text-anchor="middle" fill="#444" font-size="10" font-family="sans-serif">商务舱</text>
+      <text x="280" y="350" text-anchor="middle" fill="#444" font-size="10" font-family="sans-serif">经济舱</text>
+      <text x="380" y="370" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">飞机舱位 = 经典的 class 等级体系</text>
+    </svg>
+    <div class="card-body">
+      <h3>CLASS 等级体系 <span class="hl">分类谱</span></h3>
+      <div class="pos">noun · 等级/类别/档次</div>
+      <div class="def">
+        <strong>核心</strong> 把事物按质量/地位分为不同"类别"<br>
+        <strong>阶梯</strong> low-class → middle-class → first-class → world-class<br>
+        <span class="eg">"She always travels first class." 她总是坐头等舱。<br>"This is a world-class facility." 这是世界一流的设施。</span>
+      </div>
+      <div class="white-box"><strong>CLASS 等级体系</strong>：class = "类别" → 最好的类别 = first class → world-class（世界级的）。Class system = 社会等级制度（upper/middle/working class）。"In a class of its own" = 自成一类 → 好到无法与其他同类比较。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 逻辑演化树 -->
+<div class="section-title"><span class="bar"></span><span>逻辑演化树</span></div>
+<div style="background:#fffdf7; border:1px solid #e8e0d0; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div style="font-size:16px; font-weight:700; margin-bottom:16px; color:#7b4ad9;">CLASS 核心意象 → 抽象用法演化链</div>
+  <div style="display:flex; flex-wrap:wrap; align-items:flex-start; gap:10px;">
+    <div style="background:#f5f0ff; border:1px solid #d0c0e8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; max-width:140px;">
+      ① 分类/归类<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">按共同特征分在一起</span>
+    </div>
+    <div style="font-size:18px; color:#7b4ad9; font-weight:700; line-height:40px;">→</div>
+    <div style="background:#f5f0ff; border:1px solid #d0c0e8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; max-width:140px;">
+      ② 班级/课堂<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">学生按年级分成的群体</span>
+    </div>
+    <div style="font-size:18px; color:#7b4ad9; font-weight:700; line-height:40px;">→</div>
+    <div style="background:#f5f0ff; border:1px solid #d0c0e8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; max-width:140px;">
+      ③ 社会阶级<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">按财富/地位划分的群体</span>
+    </div>
+    <div style="font-size:18px; color:#7b4ad9; font-weight:700; line-height:40px;">→</div>
+    <div style="background:#f5f0ff; border:1px solid #d0c0e8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; max-width:140px;">
+      ④ first class / world-class<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">最高等级→质量极好/世界一流</span>
+    </div>
+    <div style="font-size:18px; color:#7b4ad9; font-weight:700; line-height:40px;">→</div>
+    <div style="background:#f5f0ff; border:1px solid #d0c0e8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; max-width:140px;">
+      ⑤ class act / in a class of its own<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">"高档次的表现"/"自成一类"</span>
+    </div>
+  </div>
+  <div class="white-box" style="margin-top:16px;"><strong>核心逻辑</strong>：CLASS 的一切用法都源于"<strong>归类</strong>"。把一群人归为一类=班级。把社会人群按财富地位归类=阶级。把产品质量归到不同档次=等级。最高等级= first class → world-class。"Class act" = 表现属于"高级别"的 → 有风度。"In a class of its own" = 好到可以自成一类，不需要和别的比。</div>
+</div>
+
+<!-- 易混对比区 -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="190" y="40" text-anchor="middle" fill="#7b4ad9" font-size="16" font-weight="700" font-family="sans-serif">first class</text>
+      <text x="570" y="40" text-anchor="middle" fill="#7b4ad9" font-size="16" font-weight="700" font-family="sans-serif">world-class</text>
+      <!-- 左侧：first class -->
+      <!-- 头等舱座位 -->
+      <rect x="100" y="90" width="120" height="80" fill="#ffd700" rx="8"/>
+      <rect x="110" y="100" width="50" height="30" fill="#fff" rx="4"/>
+      <rect x="110" y="140" width="50" height="20" fill="#fff" rx="4"/>
+      <text x="130" y="118" text-anchor="middle" fill="#333" font-size="10" font-family="sans-serif">seat</text>
+      <text x="190" y="220" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">"travel first class"</text>
+      <text x="190" y="240" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">头等舱/最高级</text>
+      <text x="190" y="260" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">名词用法：等级/舱位</text>
+
+      <!-- 右侧：world-class -->
+      <!-- 奖杯 -->
+      <rect x="530" y="110" width="30" height="40" fill="#ffd700" rx="4"/>
+      <path d="M530,110 Q545,100 560,110" fill="#ffd700"/>
+      <rect x="545" y="150" width="20" height="15" fill="#333" rx="2"/>
+      <text x="570" y="220" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">"world-class athlete"</text>
+      <text x="570" y="240" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">世界级的运动员</text>
+      <text x="570" y="260" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">形容词用法：达到世界顶级</text>
+    </svg>
+    <div class="label">
+      <div class="p">first class vs world-class</div>
+      <div class="desc">"最高级" vs "世界级"</div>
+    </div>
+    <div style="padding:0 16px 18px;">
+      <div class="white-box" style="margin-top:0;"><strong>first class</strong> = 第一等级/最高级（名词或副词：travel first class）。<strong>world-class</strong> = 世界级的（形容词：world-class quality）。first class 强调"在内部等级中最高"，world-class 强调"在全球范围内顶尖"。</div>
+    </div>
+  </div>
+
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="190" y="40" text-anchor="middle" fill="#7b4ad9" font-size="16" font-weight="700" font-family="sans-serif">class act</text>
+      <text x="570" y="40" text-anchor="middle" fill="#7b4ad9" font-size="16" font-weight="700" font-family="sans-serif">class system</text>
+      <!-- 左侧：class act -->
+      <circle cx="190" cy="120" r="20" fill="#f5e6d0"/>
+      <circle cx="183" cy="115" r="2.5" fill="#333"/>
+      <circle cx="197" cy="115" r="2.5" fill="#333"/>
+      <!-- 微笑 -->
+      <path d="M183,122 Q190,128 197,122" fill="none" stroke="#333" stroke-width="1.5"/>
+      <!-- 西装 -->
+      <rect x="173" y="140" width="34" height="45" fill="#7b4ad9" rx="4"/>
+      <line x1="190" y1="140" x2="190" y2="185" stroke="#fff" stroke-width="1"/>
+      <!-- 竖大拇指 -->
+      <rect x="145" y="145" width="8" height="25" fill="#f5e6d0" rx="3"/>
+      <rect x="143" y="145" width="12" height="10" fill="#f5e6d0" rx="4"/>
+      <text x="190" y="230" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">"He's a class act."</text>
+      <text x="190" y="250" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">他有风度/做事漂亮</text>
+
+      <!-- 右侧：class system -->
+      <!-- 阶梯 -->
+      <rect x="520" y="100" width="100" height="18" fill="#7b4ad9" rx="3"/>
+      <rect x="530" y="126" width="80" height="18" fill="#7b4ad9" rx="3" opacity="0.7"/>
+      <rect x="540" y="152" width="60" height="18" fill="#7b4ad9" rx="3" opacity="0.5"/>
+      <text x="570" y="117" text-anchor="middle" fill="#fff" font-size="10" font-weight="700" font-family="sans-serif">上流</text>
+      <text x="570" y="143" text-anchor="middle" fill="#fff" font-size="10" font-weight="700" font-family="sans-serif">中产</text>
+      <text x="570" y="169" text-anchor="middle" fill="#fff" font-size="10" font-weight="700" font-family="sans-serif">劳工</text>
+      <text x="570" y="230" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">"class system"</text>
+      <text x="570" y="250" text-anchor="middle" fill="#666" font-size="11.5" font-family="sans-serif">社会等级制度</text>
+    </svg>
+    <div class="label">
+      <div class="p">class act vs class system</div>
+      <div class="desc">"有风度" vs "社会等级制度"</div>
+    </div>
+    <div style="padding:0 16px 18px;">
+      <div class="white-box" style="margin-top:0;"><strong>class act</strong> = 一个行为/表现属于"高级别"的人 → 有品味/有风度/做事漂亮的人。"<strong>class system</strong>" = 社会按阶级划分的制度（upper/middle/working class）。两个 class 都是"等级"这个核心，一个指个人品质的等级，一个指社会结构的等级。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 常见搭配区 -->
+<div class="section-title"><span class="bar"></span><span>常见搭配 / 用法</span></div>
+
+<div class="usage-section">
+  <h4>教育类</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en">English / math <strong>class</strong></span>
+      <span class="usage-cn">英语课/数学课 &nbsp;|&nbsp; 学科科目</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">in <strong>class</strong></span>
+      <span class="usage-cn">在课堂上 &nbsp;|&nbsp; 上课期间</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>class</strong> of 2025</span>
+      <span class="usage-cn">2025届 &nbsp;|&nbsp; 同年毕业的全体学生</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>class</strong>room / <strong>class</strong>mate</span>
+      <span class="usage-cn">教室/同学 &nbsp;|&nbsp; class 的衍生词</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>等级/质量类</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en">first <strong>class</strong></span>
+      <span class="usage-cn">头等舱/一等 &nbsp;|&nbsp; 最高等级</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">business <strong>class</strong></span>
+      <span class="usage-cn">商务舱 &nbsp;|&nbsp; 第二等级</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">economy <strong>class</strong></span>
+      <span class="usage-cn">经济舱 &nbsp;|&nbsp; 最基本等级</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">world-<strong>class</strong></span>
+      <span class="usage-cn">世界级的 &nbsp;|&nbsp; 达到全球顶尖水平</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">second-<strong>class</strong> citizen</span>
+      <span class="usage-cn">二等公民 &nbsp;|&nbsp; 受到歧视的群体</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">in a <strong>class</strong> of its own</span>
+      <span class="usage-cn">自成一类/出类拔萃 &nbsp;|&nbsp; 好到无需比较</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>社会阶级类</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en">upper / middle / working <strong>class</strong></span>
+      <span class="usage-cn">上层/中产/工人阶级 &nbsp;|&nbsp; 社会阶级划分</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>class</strong> system</span>
+      <span class="usage-cn">阶级制度 &nbsp;|&nbsp; 社会等级体系</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>class</strong> struggle / warfare</span>
+      <span class="usage-cn">阶级斗争 &nbsp;|&nbsp; 不同阶级间的冲突</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>class</strong>-conscious</span>
+      <span class="usage-cn">有阶级意识的 &nbsp;|&nbsp; 关注阶级差异的</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>习语/评价类</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en">a <strong>class</strong> act</span>
+      <span class="usage-cn">有风度的人/高质量 &nbsp;|&nbsp; "行为属于高级别"</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">have <strong>class</strong></span>
+      <span class="usage-cn">有格调/有品味 &nbsp;|&nbsp; 举止优雅</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">low-<strong>class</strong> / no <strong>class</strong></span>
+      <span class="usage-cn">低级/没档次 &nbsp;|&nbsp; 缺乏品味或教养</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>class</strong>ic / <strong>class</strong>ical</span>
+      <span class="usage-cn">经典的/古典的 &nbsp;|&nbsp; 属于最高"类别"的</span>
+    </div>
+  </div>
+</div>
+
+<div class="white-box"><strong>CLASS 的深层逻辑</strong>：所有用法都源于"<strong>分类</strong>"。把人群分类=班级/阶级。把产品分类=等级。class act = "高级别的行为"→ 有风度。in a class of its own = "自成一类"→ 特别好。classic = "属于最高类别"→ 经典。classify = 动词"分类"。</div>
+
+<!-- 反义/相似 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card purple-bg">
+      <h5 style="color:#7b4ad9;">近义辨析（分类类）</h5>
+      <p><strong>CLASS</strong> — 班级/等级/阶级 <small>最通用</small></p>
+      <p><strong>RANK</strong> — 军衔/排名 <small>强调顺序位置</small></p>
+      <p><strong>GRADE</strong> — 年级/成绩/质量 <small>官方的等级评定</small></p>
+      <p><strong>CATEGORY</strong> — 类别/分类 <small>最客观的分类方式</small></p>
+      <p><strong>STATUS</strong> — 地位/身份 <small>在社会中的位置</small></p>
+    </div>
+    <div class="info-card red-bg">
+      <h5 style="color:#e63946;">反义/对比</h5>
+      <p><strong>VULGAR</strong> — 粗俗的 <small>有 class 的反面</small></p>
+      <p><strong>LOW-END</strong> — 低端的 <small>高档 class 的反面</small></p>
+      <p><strong>COMMON</strong> — 普通的 <small>classic/exceptional 的反面</small></p>
+      <p><strong>CHAOS / DISORDER</strong> — 混乱 <small>分类体系的反面</small></p>
+    </div>
+    <div class="info-card green-bg">
+      <h5 style="color:#38a169;">相关扩展</h5>
+      <p><strong>classify</strong> — 分类 <small>class 的动词</small></p>
+      <p><strong>classic</strong> — 经典的 <small>属于最高级别的</small></p>
+      <p><strong>classical</strong> — 古典的 <small>经典时期的</small></p>
+      <p><strong>classless</strong> — 无阶级的 <small>没有阶级区分</small></p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

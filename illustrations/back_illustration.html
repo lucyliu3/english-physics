@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BACK 空间意象图解</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f0;
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+    color: #1a1a1a;
+  }
+  .container {
+    max-width: 960px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px 56px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .section-title .bar {
+    display: inline-block;
+    width: 4px;
+    height: 18px;
+    background: #d98c4a;
+    margin-right: 12px;
+    vertical-align: middle;
+    border-radius: 2px;
+  }
+  .section-title span { vertical-align: middle; }
+
+  /* === 核心图：BACK 的空间本质 === */
+  .core-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 44px;
+  }
+  .core-card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 18px 16px 22px;
+    text-align: center;
+  }
+  .core-card canvas {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    aspect-ratio: 380 / 220;
+    display: block;
+    margin: 0 auto 12px;
+    border-radius: 6px;
+    background: #fafaf8;
+  }
+  .core-card .card-label { font-size: 18px; font-weight: 700; color: #c05621; }
+  .core-card .card-desc { font-size: 14px; color: #555; line-height: 1.5; margin-top: 4px; }
+
+  /* === 三大类 === */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .card canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 270 / 200;
+    display: block;
+    background: #fafaf8;
+  }
+  .card-body {
+    padding: 16px 18px 20px;
+  }
+  .card-body h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .card-body h3 .highlight { color: #c05621; }
+  .card-body .ref {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 6px;
+  }
+  .card-body .def {
+    font-size: 13.5px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .card-body .def .eg {
+    color: #777;
+    font-style: italic;
+    display: block;
+    margin-top: 2px;
+  }
+  .card-body .def .key {
+    color: #c05621;
+    font-weight: 600;
+  }
+
+  .spatial-note {
+    margin-top: 36px;
+    padding: 16px 20px;
+    background: #f8f4ee;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .spatial-note strong { color: #c05621; }
+
+  /* === 用法列表（事/状态 back） === */
+  .usage-category {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .cat-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #c05621;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e8e8e4;
+  }
+  .usage-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 32px;
+  }
+  .usage-item {
+    padding: 6px 0;
+    border-bottom: 1px dashed #eee;
+  }
+  .usage-item:last-child,
+  .usage-item:nth-last-child(2):nth-child(odd) {
+    border-bottom: none;
+  }
+  .usage-en {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+  }
+  .usage-en strong { color: #c05621; }
+  .usage-cn {
+    font-size: 13px;
+    color: #777;
+    margin-top: 1px;
+  }
+
+  @media (max-width: 720px) {
+    .usage-list { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 720px) {
+    .container { padding: 28px 16px 36px; }
+    .core-row { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>BACK 的空间意象</h1>
+  <p class="subtitle">核心逻辑：沿来路返回参考点</p>
+
+  <!-- 核心图 -->
+  <div class="section-title"><span class="bar"></span><span>核心空间逻辑</span></div>
+  <div class="core-row">
+    <div class="core-card">
+      <canvas id="coreBack" width="380" height="220"></canvas>
+      <div class="card-label">BACK</div>
+      <div class="card-desc">
+        从当前位置沿来路折返，回到参考点。<br>核心 = <strong>返</strong>（逆向路径 + 回到原点）
+      </div>
+    </div>
+    <div class="core-card">
+      <canvas id="coreGiveBack" width="380" height="220"></canvas>
+      <div class="card-label">GIVE BACK · PUT BACK · PAY BACK</div>
+      <div class="card-desc">
+        "归还原主"——<strong>物</strong>沿原路径回到它原来所属的地方。
+      </div>
+    </div>
+  </div>
+
+  <!-- 三大类 -->
+  <div class="section-title"><span class="bar"></span><span>三大自然类别</span></div>
+  <div class="cards">
+
+    <div class="card">
+      <canvas id="cardThing" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>物 <span class="highlight">back</span></h3>
+        <div class="ref">参照空间 = 物理位置 / 原主</div>
+        <div class="def">
+          某物回到它原来的位置或所属的人那里，<span class="key">"归还"</span>。
+          <span class="eg">"Put the book back."<br>"Give it back to me."</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardPerson" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>人 <span class="highlight">back</span></h3>
+        <div class="ref">参照空间 = 社交/关系圈</div>
+        <div class="def">
+          某人回到原来的社交场景或关系中，<span class="key">"回来 / 回归"</span>。
+          <span class="eg">"She came back."<br>"Welcome back!"</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-state">
+      <canvas id="cardState" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>事/状态 <span class="highlight">back</span></h3>
+        <div class="ref">参照空间 = 时间线 / 原状态</div>
+        <div class="def">
+          某个事物、感受或局面恢复到原来的状态，<span class="key">"复原 / 回溯"</span>。
+          <span class="eg">"Things are back to normal."<br>"My memory is coming back."</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 事/状态 back 高频用法列表 -->
+  <div class="section-title"><span class="bar"></span><span>事/状态 back — 美国人高频用法（中国人易忽略）</span></div>
+
+  <div class="usage-category">
+    <div class="cat-label">① 回到被打断的动作（暂停→继续）</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">I'll be <strong>right back</strong>.</span>
+        <span class="usage-cn">马上回来。（暂停当前事→恢复）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let's <strong>go back to</strong> what we were talking about.</span>
+        <span class="usage-cn">我们回到刚才说的话题。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I <strong>went back to</strong> sleep after using the bathroom.</span>
+        <span class="usage-cn">上完厕所后回去接着睡。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>went back to</strong> reading her book.</span>
+        <span class="usage-cn">她继续看书（被打断后回到看书的动作）。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I need to <strong>get back to</strong> work.</span>
+        <span class="usage-cn">我得回去工作了。（回到工作状态）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let me <strong>call you back</strong>.</span>
+        <span class="usage-cn">我待会儿打回给你。（挂断后回拨）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I'll <strong>text you back</strong> in a minute.</span>
+        <span class="usage-cn">我待会儿回你短信。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She hasn't <strong>written back</strong> yet.</span>
+        <span class="usage-cn">她还没回信。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I <strong>went back to</strong> playing the game after dinner.</span>
+        <span class="usage-cn">吃完饭后继续打游戏。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">② 恢复到原状 / 回收操作</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">Screw the cap <strong>back</strong> on.</span>
+        <span class="usage-cn">把盖子旋回去。（眼线笔/牙膏/水瓶）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Put the lid <strong>back</strong> on.</span>
+        <span class="usage-cn">把盖子盖回去。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Fold it <strong>back</strong> up.</span>
+        <span class="usage-cn">把它叠回去。（衣服/地图等）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Push the chair <strong>back</strong> under the desk.</span>
+        <span class="usage-cn">把椅子推回桌下。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Comb your hair <strong>back</strong>.</span>
+        <span class="usage-cn">把头发往后梳。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Pull the strap <strong>back</strong> into place.</span>
+        <span class="usage-cn">把带子拉回原位。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Tuck your shirt <strong>back</strong> in.</span>
+        <span class="usage-cn">把衬衫重新塞回去。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Roll the window <strong>back</strong> up.</span>
+        <span class="usage-cn">把车窗摇回去。（降下来后又升回去）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">③ 状态复原（情感/身体/局面）</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">She <strong>calmed back</strong> down.</span>
+        <span class="usage-cn">她重新平静下来了。（发火后又恢复）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He is <strong>back to</strong> his old self.</span>
+        <span class="usage-cn">他恢复原样了。（病好了 / 心情恢复了）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Everything is <strong>back to</strong> normal.</span>
+        <span class="usage-cn">一切都恢复正常了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">My energy is <strong>back</strong>.</span>
+        <span class="usage-cn">我精力恢复了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Her appetite is <strong>back</strong>.</span>
+        <span class="usage-cn">她胃口恢复了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">My voice is <strong>back</strong>.</span>
+        <span class="usage-cn">我嗓子恢复了。（感冒失声后）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The feeling is <strong>back</strong> in my leg.</span>
+        <span class="usage-cn">腿有感觉了。（麻了之后恢复知觉）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">His confidence is <strong>back</strong>.</span>
+        <span class="usage-cn">他信心恢复了。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">④ 回溯时间（记忆/讨论/付款）</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">That takes me <strong>back</strong>.</span>
+        <span class="usage-cn">那让我想起以前。（回忆）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">It brings <strong>back</strong> memories.</span>
+        <span class="usage-cn">那勾起了回忆。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Think <strong>back</strong> to that day.</span>
+        <span class="usage-cn">回想那一天。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let's look <strong>back</strong> on what we learned.</span>
+        <span class="usage-cn">回顾一下我们学到了什么。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I'll pay you <strong>back</strong> on Friday.</span>
+        <span class="usage-cn">我周五还你钱。（钱回到你那里）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">You'll get your money <strong>back</strong>.</span>
+        <span class="usage-cn">你会拿回你的钱。（退款）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He <strong>backed</strong> the car <strong>up</strong> into the driveway.</span>
+        <span class="usage-cn">他把车倒进车道。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="spatial-note">
+    <strong>BACK 的统一逻辑</strong>：沿来路反向移动，回到参考点。<br>
+    GONE 是"从参考点离开"→ BACK 是"回到参考点"——<strong>它们是一对反向操作</strong>。
+  </div>
+
+</div>
+
+<script>
+(function() {
+
+function drawFrame(ctx, w, h) {
+  ctx.fillStyle = '#fafaf8';
+  ctx.fillRect(0,0,w,h);
+}
+
+// ===== 核心图1：BACK 的空间路径 =====
+const c1 = document.getElementById('coreBack');
+const ctx1 = c1.getContext('2d');
+drawFrame(ctx1,380,220);
+
+// Reference point (home)
+ctx1.fillStyle = '#4a5568';
+ctx1.beginPath(); ctx1.arc(80,110,12,0,Math.PI*2); ctx1.fill();
+ctx1.fillStyle = '#333'; ctx1.font = '13px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('参考点',80,140);
+ctx1.fillText('(origin)',80,155);
+
+// Destination point (current)
+ctx1.fillStyle = '#888';
+ctx1.beginPath(); ctx1.arc(300,110,12,0,Math.PI*2); ctx1.fill();
+ctx1.fillStyle = '#333'; ctx1.font = '13px sans-serif';
+ctx1.fillText('当前位置',300,140);
+ctx1.fillText('(current)',300,155);
+
+// Path arrow (going)
+ctx1.strokeStyle = '#bbb'; ctx1.lineWidth = 2.5; ctx1.setLineDash([5,5]);
+ctx1.beginPath(); ctx1.moveTo(90,105); ctx1.lineTo(290,105);
+ctx1.stroke(); ctx1.setLineDash([]);
+ctx1.fillStyle = '#bbb'; ctx1.font = '12px sans-serif';
+ctx1.fillText('→ GO (离开)',190,95);
+
+// Back arrow
+ctx1.strokeStyle = '#c05621'; ctx1.lineWidth = 3.5;
+ctx1.beginPath(); ctx1.moveTo(290,115); ctx1.lineTo(90,115);
+ctx1.stroke();
+// arrowhead
+ctx1.fillStyle = '#c05621';
+ctx1.beginPath(); ctx1.moveTo(100,110); ctx1.lineTo(85,115); ctx1.lineTo(100,120); ctx1.closePath(); ctx1.fill();
+ctx1.fillStyle = '#c05621'; ctx1.font = 'bold 14px sans-serif';
+ctx1.fillText('← BACK (返回)',170,170);
+
+// ===== 核心图2：GIVE BACK =====
+const c2 = document.getElementById('coreGiveBack');
+const ctx2 = c2.getContext('2d');
+drawFrame(ctx2,380,220);
+
+// Person A
+ctx2.fillStyle = '#4a5568';
+ctx2.beginPath(); ctx2.arc(80,80,16,0,Math.PI*2); ctx2.fill();
+ctx2.fillRect(75,96,10,30);
+ctx2.fillStyle = '#333'; ctx2.font = '12px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('原主',80,145);
+ctx2.fillText('(original owner)',80,160);
+
+// Person B
+ctx2.fillStyle = '#888';
+ctx2.beginPath(); ctx2.arc(300,80,16,0,Math.PI*2); ctx2.fill();
+ctx2.fillRect(295,96,10,30);
+ctx2.fillStyle = '#555'; ctx2.font = '12px sans-serif';
+ctx2.fillText('当前持有者',300,145);
+ctx2.fillText('(current holder)',300,160);
+
+// Object
+ctx2.fillStyle = '#d98c4a';
+ctx2.beginPath(); ctx2.arc(300,50,8,0,Math.PI*2); ctx2.fill();
+ctx2.fillStyle = '#999'; ctx2.font = '11px sans-serif'; ctx2.textAlign = 'left';
+ctx2.fillText('物',303,43);
+
+// Back arrow (object returning)
+ctx2.strokeStyle = '#c05621'; ctx2.lineWidth = 3;
+ctx2.beginPath(); ctx2.moveTo(290,55);
+ctx2.lineTo(100,55);
+ctx2.stroke();
+ctx2.fillStyle = '#c05621';
+ctx2.beginPath(); ctx2.moveTo(110,50); ctx2.lineTo(95,55); ctx2.lineTo(110,60); ctx2.closePath(); ctx2.fill();
+ctx2.fillStyle = '#c05621'; ctx2.font = 'bold 13px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('← BACK (归还)',190,50);
+
+// ===== 物 back =====
+const e1 = document.getElementById('cardThing');
+const ctx3 = e1.getContext('2d');
+drawFrame(ctx3,270,200);
+ctx3.fillStyle = '#f5f0e8'; ctx3.fillRect(0,0,270,200);
+
+// two people
+ctx3.fillStyle = '#4a5568';
+ctx3.beginPath(); ctx3.arc(55,85,12,0,Math.PI*2); ctx3.fill();
+ctx3.fillRect(51,97,8,22);
+ctx3.fillStyle = '#aaa';
+ctx3.beginPath(); ctx3.arc(215,85,12,0,Math.PI*2); ctx3.fill();
+ctx3.fillRect(211,97,8,22);
+
+ctx3.fillStyle = '#333'; ctx3.font = '11px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('我',55,135);
+ctx3.fillText('你',215,135);
+
+// object in transit
+ctx3.fillStyle = '#d98c4a';
+ctx3.beginPath(); ctx3.arc(135,55,9,0,Math.PI*2); ctx3.fill();
+ctx3.fillStyle = '#fff'; ctx3.font = '8px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('物',135,58);
+
+// back arrow
+ctx3.strokeStyle = '#c05621'; ctx3.lineWidth = 2.5;
+ctx3.beginPath(); ctx3.moveTo(215,65); ctx3.lineTo(65,65); ctx3.stroke();
+ctx3.fillStyle = '#c05621';
+ctx3.beginPath(); ctx3.moveTo(75,60); ctx3.lineTo(62,65); ctx3.lineTo(75,70); ctx3.closePath(); ctx3.fill();
+ctx3.fillStyle = '#c05621'; ctx3.font = 'bold 12px sans-serif';
+ctx3.fillText('Give it back!',135,180);
+
+// 人 back
+const e2 = document.getElementById('cardPerson');
+const ctx4 = e2.getContext('2d');
+drawFrame(ctx4,270,200);
+ctx4.fillStyle = '#eef2f5'; ctx4.fillRect(0,0,270,200);
+
+// room
+ctx4.strokeStyle = '#666'; ctx4.lineWidth = 2;
+ctx4.strokeRect(30,25,120,100);
+
+// people inside
+ctx4.fillStyle = '#4a5568';
+ctx4.beginPath(); ctx4.arc(60,70,10,0,Math.PI*2); ctx4.fill();
+ctx4.fillRect(56,80,8,20);
+ctx4.fillStyle = '#888';
+ctx4.beginPath(); ctx4.arc(90,70,10,0,Math.PI*2); ctx4.fill();
+ctx4.fillRect(86,80,8,20);
+
+ctx4.fillStyle = '#333'; ctx4.font = '11px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('欢迎回来！',90,120);
+
+// person coming back
+ctx4.fillStyle = '#c05621';
+ctx4.beginPath(); ctx4.arc(210,90,10,0,Math.PI*2); ctx4.fill();
+ctx4.fillRect(206,100,8,20);
+
+// arrow
+ctx4.strokeStyle = '#c05621'; ctx4.lineWidth = 2.5;
+ctx4.beginPath(); ctx4.moveTo(200,95); ctx4.lineTo(155,80); ctx4.stroke();
+ctx4.fillStyle = '#c05621';
+ctx4.beginPath(); ctx4.moveTo(163,76); ctx4.lineTo(152,78); ctx4.lineTo(160,85); ctx4.closePath(); ctx4.fill();
+
+ctx4.fillStyle = '#c05621'; ctx4.font = 'bold 16px sans-serif'; ctx4.textAlign = 'left';
+ctx4.fillText('She came back.',20,170);
+
+// ===== 事/状态 back =====
+const e3 = document.getElementById('cardState');
+const ctx5 = e3.getContext('2d');
+drawFrame(ctx5,270,200);
+ctx5.fillStyle = '#f5f2ed'; ctx5.fillRect(0,0,270,200);
+
+// timeline
+ctx5.strokeStyle = '#bbb'; ctx5.lineWidth = 2;
+ctx5.beginPath(); ctx5.moveTo(30,100); ctx5.lineTo(240,100); ctx5.stroke();
+
+// before: abnormal
+ctx5.fillStyle = '#e53e3e'; ctx5.font = '14px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('混乱',70,70);
+
+// after: normal
+ctx5.fillStyle = '#38a169'; ctx5.font = '14px sans-serif';
+ctx5.fillText('正常',200,70);
+
+// arrow going back
+ctx5.strokeStyle = '#c05621'; ctx5.lineWidth = 2.5;
+ctx5.beginPath(); ctx5.moveTo(210,95); ctx5.lineTo(100,95); ctx5.stroke();
+ctx5.fillStyle = '#c05621';
+ctx5.beginPath(); ctx5.moveTo(110,90); ctx5.lineTo(97,95); ctx5.lineTo(110,100); ctx5.closePath(); ctx5.fill();
+
+// restore icon
+ctx5.strokeStyle = '#c05621'; ctx5.lineWidth = 2;
+ctx5.beginPath(); ctx5.arc(150,50,18,0,Math.PI*2); ctx5.stroke();
+ctx5.strokeStyle = '#c05621'; ctx5.lineWidth = 2;
+ctx5.beginPath(); ctx5.moveTo(145,58); ctx5.lineTo(145,48); ctx5.lineTo(155,48); ctx5.stroke();
+ctx5.fillStyle = '#888'; ctx5.font = '11px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('恢复原状',150,85);
+
+ctx5.fillStyle = '#c05621'; ctx5.font = 'bold 15px sans-serif'; ctx5.textAlign = 'left';
+ctx5.fillText('Back to normal.',20,180);
+
+})();
+</script>
+
+</body>
+</html>

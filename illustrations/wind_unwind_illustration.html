@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WIND / UNWIND 空间意象图解</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f0;
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+    color: #1a1a1a;
+  }
+  .container {
+    max-width: 960px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px 56px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .section-title .bar {
+    display: inline-block;
+    width: 4px; height: 18px;
+    background: #b7791f;
+    margin-right: 12px;
+    vertical-align: middle;
+    border-radius: 2px;
+  }
+  .section-title span { vertical-align: middle; }
+
+  /* 核心图 */
+  .core-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 44px;
+  }
+  .core-card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 18px 16px 22px;
+    text-align: center;
+  }
+  .core-card canvas {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    aspect-ratio: 380 / 220;
+    display: block;
+    margin: 0 auto 12px;
+    border-radius: 6px;
+    background: #fafaf8;
+  }
+  .core-card .card-label { font-size: 18px; font-weight: 700; color: #b7791f; }
+  .core-card .card-desc { font-size: 14px; color: #555; line-height: 1.5; margin-top: 4px; }
+
+  /* 三大类卡片 */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .card canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 270 / 200;
+    display: block;
+    background: #fafaf8;
+  }
+  .card-body { padding: 16px 18px 20px; }
+  .card-body h3 { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+  .card-body h3 .hl { color: #b7791f; }
+  .card-body .ref { font-size: 13px; color: #888; margin-bottom: 6px; }
+  .card-body .def { font-size: 13.5px; color: #444; line-height: 1.6; }
+  .card-body .def .eg { color: #777; font-style: italic; display: block; margin-top: 2px; }
+  .card-body .def .key { color: #b7791f; font-weight: 600; }
+
+  /* 用法列表 */
+  .usage-category {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .cat-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #b7791f;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e8e8e4;
+  }
+  .usage-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 32px;
+  }
+  .usage-item { padding: 6px 0; border-bottom: 1px dashed #eee; }
+  .usage-item:last-child,
+  .usage-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .usage-en { font-size: 14px; font-weight: 600; color: #333; }
+  .usage-en strong { color: #b7791f; }
+  .usage-cn { font-size: 13px; color: #777; margin-top: 1px; }
+
+  .spatial-note {
+    margin-top: 36px;
+    padding: 16px 20px;
+    background: #f8f2eb;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .spatial-note strong { color: #b7791f; }
+
+  @media (max-width: 720px) {
+    .container { padding: 28px 16px 36px; }
+    .core-row { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+    .usage-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>WIND / UNWIND 的空间意象</h1>
+  <p class="subtitle">核心逻辑：线状物围绕一个中心缠绕 → 缠绕状态本身 / 解开缠绕</p>
+
+  <!-- 核心图 -->
+  <div class="section-title"><span class="bar"></span><span>核心空间逻辑</span></div>
+  <div class="core-row">
+    <div class="core-card">
+      <canvas id="coreWind" width="380" height="220"></canvas>
+      <div class="card-label">WIND</div>
+      <div class="card-desc">
+        线/绳/带子围绕着中心物体缠绕。<br>
+        核心 = <strong>绕</strong>（螺旋式包围）
+      </div>
+    </div>
+    <div class="core-card">
+      <canvas id="coreUnwind" width="380" height="220"></canvas>
+      <div class="card-label">UNWIND</div>
+      <div class="card-desc">
+        将缠绕着的线解开、松开。<br>
+        核心 = <strong>解 / 松开</strong>（从缠绕恢复自由）
+      </div>
+    </div>
+  </div>
+
+  <!-- 三大类 -->
+  <div class="section-title"><span class="bar"></span><span>三大自然类别</span></div>
+  <div class="cards">
+
+    <div class="card">
+      <canvas id="cardPhysical" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>物理缠绕 <span class="hl">wind</span></h3>
+        <div class="ref">线/绳子/带子围绕物体缠绕</div>
+        <div class="def">
+          把线状物绕在某个轴或物体上，<span class="key">"缠绕"</span>。
+          <span class="eg">"Wind the string around the stick."<br>"Wind the cable neatly."</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardMechanical" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>机械装置 <span class="hl">wind up</span></h3>
+        <div class="ref">钟表/发条/摇把</div>
+        <div class="def">
+          转动旋钮/发条来上紧机械装置，<span class="key">"上发条 / 摇起来"</span>。
+          <span class="eg">"Wind up the clock."<br>"Wind down the car window."</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardAbstract" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>抽象/心理 <span class="hl">wind up / unwind</span></h3>
+        <div class="ref">情绪/状态/谈话的紧张或放松</div>
+        <div class="def">
+          精神像发条一样"上紧"（wind up）或"松开"（unwind），<span class="key">"紧张 / 放松"</span>。
+          <span class="eg">"I need to unwind."<br>"He was all wound up."</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 高频用法 -->
+  <div class="section-title"><span class="bar"></span><span>WIND / UNWIND 高频用法</span></div>
+
+  <div class="usage-category">
+    <div class="cat-label">① 物理缠绕 — 把线/绳/带子绕在某物上</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Wind</strong> the thread around the spool.</span>
+        <span class="usage-cn">把线绕在线轴上。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>wound</strong> the scarf around her neck.</span>
+        <span class="usage-cn">她把围巾绕在脖子上。（wind的过去式为wound）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Wind</strong> the rope around the post.</span>
+        <span class="usage-cn">把绳子绕在柱子上。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The ivy <strong>wound</strong> its way up the wall.</span>
+        <span class="usage-cn">常春藤沿着墙蜿蜒攀爬。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The path <strong>winds</strong> through the forest.</span>
+        <span class="usage-cn">小路蜿蜒穿过森林。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Wind</strong> the cable and put it away.</span>
+        <span class="usage-cn">把线缆绕好收起来。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">② 机械 — 上发条 / 摇起来 / 摇下去</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Wind up</strong> the clock every night.</span>
+        <span class="usage-cn">每天晚上给钟上发条。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>wound</strong> the car window <strong>up</strong>.</span>
+        <span class="usage-cn">她把车窗摇上去了。（老式手摇车窗）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He <strong>wound</strong> the window <strong>down</strong> to get some air.</span>
+        <span class="usage-cn">他把车窗摇下来透透气。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The toy needs to be <strong>wound up</strong>.</span>
+        <span class="usage-cn">这个玩具需要上发条。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Wind</strong> the crank slowly.</span>
+        <span class="usage-cn">慢慢摇动摇把。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Wind</strong> the film forward.</span>
+        <span class="usage-cn">把胶卷往前卷。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">③ 抽象：wind up（以……告终 / 最后落到）超级高频！</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">He <strong>wound up</strong> in jail.</span>
+        <span class="usage-cn">他最后进了监狱。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">We <strong>wound up</strong> staying an extra day.</span>
+        <span class="usage-cn">我们最后多待了一天。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">How did you <strong>wind up</strong> here?</span>
+        <span class="usage-cn">你怎么最后落到这里来了？</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>wound up</strong> running the company.</span>
+        <span class="usage-cn">她最后竟然经营起了整个公司。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I <strong>wound up</strong> buying the car.</span>
+        <span class="usage-cn">最后我还是把车买了。（不是最初计划，但最终做了）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let's <strong>wind up</strong> the meeting.</span>
+        <span class="usage-cn">咱们结束会议吧。（把会议"收尾"）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">④ 抽象：wound up（紧张的 / 焦虑的）vs unwind（放松）</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">I need to <strong>unwind</strong> after work.</span>
+        <span class="usage-cn">下班后我需要放松一下。（超高頻！）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He was really <strong>wound up</strong> before the exam.</span>
+        <span class="usage-cn">他考前紧张得不行。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Listening to music helps me <strong>unwind</strong>.</span>
+        <span class="usage-cn">听音乐帮我放松。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She was all <strong>wound up</strong> about the presentation.</span>
+        <span class="usage-cn">她因为演讲搞得特别紧张。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let the story <strong>unwind</strong> naturally.</span>
+        <span class="usage-cn">让故事自然展开/发展。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Just <strong>unwind</strong> and enjoy the weekend.</span>
+        <span class="usage-cn">放轻松，享受周末。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="spatial-note">
+    <strong>WIND / UNWIND 的统一空间逻辑</strong>：WIND 的核心是 <strong>"一个东西绕着另一个东西转"</strong> —— 线绕着线轴、路绕着山、围巾绕着脖子。<br>
+    WIND UP 把这个意象延伸为"上紧发条 → 紧张 → 最终结果"；UNWIND 则是"松开缠绕 → 恢复自由 → 放松/解开"。<br>
+    注意：wind (v.) 读音为 /waɪnd/（谐音"外nd"），和 wind (n. 风) /wɪnd/ 完全不同。
+  </div>
+
+</div>
+
+<script>
+(function() {
+function drawFrame(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ===== 核心图1：WIND 缠绕 =====
+const c1 = document.getElementById('coreWind');
+const ctx1 = c1.getContext('2d');
+drawFrame(ctx1,380,220);
+
+// spool/core (中心轴)
+ctx1.fillStyle = '#c8b89a';
+ctx1.fillRect(170,70,40,80);
+ctx1.fillStyle = '#a8987a';
+ctx1.fillRect(165,70,5,80);
+ctx1.fillRect(210,70,5,80);
+ctx1.fillStyle = '#888'; ctx1.font = '11px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('中心轴',190,115);
+
+// rope wound around spool (缠绕的绳子)
+ctx1.strokeStyle = '#b7791f'; ctx1.lineWidth = 3;
+// 缠绕线 - 用一系列半圆来表示螺旋缠绕
+ctx1.beginPath();
+ctx1.arc(190,78,25,0,Math.PI,false);
+ctx1.arc(190,88,25,0,Math.PI,true);
+ctx1.arc(190,98,25,0,Math.PI,false);
+ctx1.arc(190,108,25,0,Math.PI,true);
+ctx1.arc(190,118,25,0,Math.PI,false);
+ctx1.arc(190,128,25,0,Math.PI,true);
+ctx1.stroke();
+
+// loose end
+ctx1.strokeStyle = '#b7791f'; ctx1.lineWidth = 2;
+ctx1.beginPath(); ctx1.moveTo(215,78); ctx1.quadraticCurveTo(280,30,330,50); ctx1.stroke();
+ctx1.fillStyle = '#b7791f'; ctx1.font = '11px sans-serif';
+ctx1.fillText('线头',300,45);
+
+// arrow showing winding direction
+ctx1.strokeStyle = '#b7791f'; ctx1.lineWidth = 2;
+ctx1.beginPath(); ctx1.arc(190,103,48,-1.8,1.2); ctx1.stroke();
+ctx1.fillStyle = '#b7791f';
+ctx1.beginPath(); ctx1.moveTo(220,62); ctx1.lineTo(228,68); ctx1.lineTo(222,72); ctx1.closePath(); ctx1.fill();
+ctx1.fillStyle = '#b7791f'; ctx1.font = '11px sans-serif';
+ctx1.fillText('↻ 绕 (wind)',240,60);
+
+ctx1.fillStyle = '#888'; ctx1.font = '11px sans-serif';
+ctx1.fillText('绳子缠绕在中心轴上',190,175);
+
+// ===== 核心图2：UNWIND 解开 =====
+const c2 = document.getElementById('coreUnwind');
+const ctx2 = c2.getContext('2d');
+drawFrame(ctx2,380,220);
+
+// spool center (同一个轴)
+ctx2.fillStyle = '#c8b89a';
+ctx2.fillRect(170,70,40,80);
+ctx2.fillStyle = '#a8987a';
+ctx2.fillRect(165,70,5,80);
+ctx2.fillRect(210,70,5,80);
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('中心轴',190,115);
+
+// 残留的绳子（还绕在上面）
+ctx2.strokeStyle = '#b7791f'; ctx2.lineWidth = 2.5;
+ctx2.beginPath();
+ctx2.arc(190,78,25,0,Math.PI,false);
+ctx2.arc(190,88,25,0,Math.PI,true);
+ctx2.stroke();
+
+// 正在被拉走的绳子
+ctx2.strokeStyle = '#b7791f'; ctx2.lineWidth = 2;
+ctx2.beginPath(); ctx2.moveTo(215,98); ctx2.quadraticCurveTo(280,120,330,150); ctx2.stroke();
+
+// arrow showing unwinding direction
+ctx2.strokeStyle = '#b7791f'; ctx2.lineWidth = 2;
+ctx2.beginPath(); ctx2.arc(190,103,48,1.2,-1.8); ctx2.stroke();
+ctx2.fillStyle = '#b7791f';
+ctx2.beginPath(); ctx2.moveTo(220,145); ctx2.lineTo(222,135); ctx2.lineTo(230,141); ctx2.closePath(); ctx2.fill();
+ctx2.fillStyle = '#b7791f'; ctx2.font = '11px sans-serif';
+ctx2.fillText('↺ 解开 (unwind)',240,150);
+
+ctx2.fillStyle = '#888'; ctx2.font = '11px sans-serif';
+ctx2.fillText('绳子从轴上解开/松开',190,175);
+
+// ===== 三大类卡片 =====
+
+// 1. 物理缠绕 — 围巾绕脖子
+const e1 = document.getElementById('cardPhysical');
+const ctx3 = e1.getContext('2d');
+drawFrame(ctx3,270,200);
+
+// neck
+ctx3.fillStyle = '#e8dcc8';
+ctx3.beginPath();
+ctx3.ellipse(135,95,22,30,0,0,Math.PI*2);
+ctx3.fill();
+ctx3.strokeStyle = '#c8b89a'; ctx3.lineWidth = 1.5;
+ctx3.beginPath();
+ctx3.ellipse(135,95,22,30,0,0,Math.PI*2);
+ctx3.stroke();
+ctx3.fillStyle = '#888'; ctx3.font = '11px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('脖子',135,100);
+
+// scarf winding around
+ctx3.strokeStyle = '#b7791f'; ctx3.lineWidth = 3;
+ctx3.beginPath();
+ctx3.arc(135,95,30,0.3,2.8);
+ctx3.stroke();
+ctx3.beginPath();
+ctx3.arc(135,95,33,0.8,2.3);
+ctx3.stroke();
+
+// scarf tails
+ctx3.strokeStyle = '#b7791f'; ctx3.lineWidth = 2.5;
+ctx3.beginPath(); ctx3.moveTo(162,110); ctx3.quadraticCurveTo(180,150,160,175); ctx3.stroke();
+ctx3.beginPath(); ctx3.moveTo(158,108); ctx3.quadraticCurveTo(170,140,150,170); ctx3.stroke();
+
+ctx3.fillStyle = '#333'; ctx3.font = 'bold 13px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('Wind the scarf',135,35);
+ctx3.font = 'bold 13px sans-serif';
+ctx3.fillText('around your neck.',135,52);
+
+// 2. 机械 — 上发条
+const e2 = document.getElementById('cardMechanical');
+const ctx4 = e2.getContext('2d');
+drawFrame(ctx4,270,200);
+
+// clock body
+ctx4.strokeStyle = '#666'; ctx4.lineWidth = 2;
+ctx4.beginPath(); ctx4.arc(135,95,30,0,Math.PI*2); ctx4.stroke();
+ctx4.fillStyle = '#f5f0e8';
+ctx4.beginPath(); ctx4.arc(135,95,28,0,Math.PI*2); ctx4.fill();
+
+// clock face
+ctx4.strokeStyle = '#999'; ctx4.lineWidth = 1;
+ctx4.beginPath(); ctx4.arc(135,95,22,0,Math.PI*2); ctx4.stroke();
+ctx4.fillStyle = '#333'; ctx4.font = '16px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('12',135,78);
+ctx4.fillText('6',135,118);
+ctx4.fillText('3',157,100);
+ctx4.fillText('9',113,100);
+
+// winding knob at top
+ctx4.fillStyle = '#666';
+ctx4.fillRect(130,35,10,15);
+ctx4.beginPath(); ctx4.arc(135,35,7,0,Math.PI*2); ctx4.fill();
+
+// winding arrow
+ctx4.strokeStyle = '#b7791f'; ctx4.lineWidth = 2;
+ctx4.beginPath(); ctx4.arc(135,35,16,0.3,1.8); ctx4.stroke();
+ctx4.fillStyle = '#b7791f';
+ctx4.beginPath(); ctx4.moveTo(151,42); ctx4.lineTo(146,33); ctx4.lineTo(155,35); ctx4.closePath(); ctx4.fill();
+
+ctx4.fillStyle = '#b7791f'; ctx4.font = '11px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('↻ wind up',135,185);
+
+ctx4.fillStyle = '#333'; ctx4.font = 'bold 13px sans-serif';
+ctx4.fillText('Wind up the clock.',135,165);
+
+// 3. 抽象 — unwind 放松
+const e3 = document.getElementById('cardAbstract');
+const ctx5 = e3.getContext('2d');
+drawFrame(ctx5,270,200);
+
+// person sitting relaxed
+ctx5.fillStyle = '#b7791f';
+ctx5.beginPath(); ctx5.arc(80,65,12,0,Math.PI*2); ctx5.fill(); // head
+ctx5.fillRect(76,77,8,20); // body
+ctx5.strokeStyle = '#b7791f'; ctx5.lineWidth = 2;
+ctx5.beginPath(); ctx5.moveTo(76,80); ctx5.lineTo(55,95); ctx5.stroke(); // arm up
+ctx5.beginPath(); ctx5.moveTo(84,80); ctx5.lineTo(105,95); ctx5.stroke(); // arm up
+
+// spring/mind metaphor
+ctx5.strokeStyle = '#ddd'; ctx5.lineWidth = 2;
+ctx5.beginPath();
+ctx5.moveTo(190,40);
+ctx5.lineTo(210,40); ctx5.lineTo(210,55);
+ctx5.lineTo(190,55); ctx5.lineTo(190,70);
+ctx5.lineTo(210,70); ctx5.lineTo(210,85);
+ctx5.lineTo(190,85); ctx5.lineTo(190,100);
+ctx5.lineTo(210,100); ctx5.lineTo(210,115);
+ctx5.lineTo(190,115); ctx5.lineTo(190,130);
+ctx5.lineTo(210,130); ctx5.lineTo(210,145);
+ctx5.stroke();
+
+// original state (tightened spring)
+ctx5.strokeStyle = '#b7791f'; ctx5.lineWidth = 2;
+ctx5.beginPath();
+ctx5.moveTo(240,40);
+ctx5.lineTo(260,40); ctx5.lineTo(260,60);
+ctx5.lineTo(240,60); ctx5.lineTo(240,80);
+ctx5.lineTo(260,80); ctx5.lineTo(260,100);
+ctx5.lineTo(240,100); ctx5.lineTo(240,120);
+ctx5.lineTo(260,120); ctx5.lineTo(260,145);
+ctx5.stroke();
+
+ctx5.fillStyle = '#888'; ctx5.font = '10px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('放松 (unwind)',200,170);
+ctx5.fillText('紧张 (wound up)',250,170);
+
+ctx5.fillStyle = '#333'; ctx5.font = 'bold 13px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('"I need to unwind."',140,28);
+
+})();
+</script>
+
+</body>
+</html>

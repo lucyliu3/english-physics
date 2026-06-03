@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOWN 空间意象图解</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f0;
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+    color: #1a1a1a;
+  }
+  .container {
+    max-width: 960px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px 56px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .section-title .bar {
+    display: inline-block;
+    width: 4px; height: 18px;
+    background: #2b6cb0;
+    margin-right: 12px;
+    vertical-align: middle;
+    border-radius: 2px;
+  }
+  .section-title span { vertical-align: middle; }
+
+  .core-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 44px;
+  }
+  .core-card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 18px 16px 22px;
+    text-align: center;
+  }
+  .core-card canvas {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    aspect-ratio: 380 / 220;
+    display: block;
+    margin: 0 auto 12px;
+    border-radius: 6px;
+    background: #fafaf8;
+  }
+  .core-card .card-label { font-size: 18px; font-weight: 700; color: #2b6cb0; }
+  .core-card .card-desc { font-size: 14px; color: #555; line-height: 1.5; margin-top: 4px; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .card canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 380 / 200;
+    display: block;
+    background: #fafaf8;
+  }
+  .card-body { padding: 16px 18px 20px; }
+  .card-body h3 { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+  .card-body h3 .hl { color: #2b6cb0; }
+  .card-body .ref { font-size: 13px; color: #888; margin-bottom: 6px; }
+  .card-body .def { font-size: 13.5px; color: #444; line-height: 1.6; }
+  .card-body .def .eg { color: #777; font-style: italic; display: block; margin-top: 2px; }
+  .card-body .def .key { color: #2b6cb0; font-weight: 600; }
+  .card-body .chain { font-size: 12px; color: #2b6cb0; background: #e8f0f8; border-radius: 6px; padding: 6px 10px; margin-top: 8px; line-height: 1.5; }
+
+  .usage-category {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .cat-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #2b6cb0;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e8e8e4;
+  }
+  .cat-chain {
+    font-size: 12.5px;
+    color: #555;
+    background: #eef4f8;
+    border-radius: 6px;
+    padding: 8px 14px;
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+  .cat-chain strong { color: #2b6cb0; }
+  .usage-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 32px;
+  }
+  .usage-item { padding: 6px 0; border-bottom: 1px dashed #eee; }
+  .usage-item:last-child,
+  .usage-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .usage-en { font-size: 14px; font-weight: 600; color: #333; }
+  .usage-en strong { color: #2b6cb0; }
+  .usage-cn { font-size: 13px; color: #777; margin-top: 1px; }
+
+  .spatial-note {
+    margin-top: 36px;
+    padding: 20px 24px;
+    background: #e8f0f8;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.7;
+  }
+  .spatial-note strong { color: #2b6cb0; }
+
+  @media (max-width: 720px) {
+    .container { padding: 28px 16px 36px; }
+    .core-row { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+    .usage-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>DOWN 的空间意象</h1>
+  <p class="subtitle">核心逻辑：沿着引力方向向下 → 再从"下"向各方向延伸出抽象含义</p>
+
+  <!-- 核心图 -->
+  <div class="section-title"><span class="bar"></span><span>核心空间逻辑</span></div>
+  <div class="core-row">
+    <div class="core-card">
+      <canvas id="coreDown" width="380" height="220"></canvas>
+      <div class="card-label">DOWN 的核心空间</div>
+      <div class="card-desc">
+        物体沿着引力方向从高处移向低处。<br>
+        核心 = <strong>"下"</strong>（最基本的空间方位之一）
+      </div>
+    </div>
+    <div class="core-card">
+      <canvas id="coreUpDown" width="380" height="220"></canvas>
+      <div class="card-label">UP vs DOWN 空间对比</div>
+      <div class="card-desc">
+        DOWN 的对立面是 UP。<br>
+        两者构成了英语里最基础的空间轴。
+      </div>
+    </div>
+  </div>
+
+  <!-- 逻辑演变总图：一个"下"如何衍生出所有用法 -->
+  <div class="section-title"><span class="bar"></span><span>DOWN 的逻辑演变树</span></div>
+  <div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+    <div style="font-size:14px; line-height:1.8; color:#444;">
+      <div style="margin-bottom:12px; font-weight:700; color:#2b6cb0; font-size:13px;">核心意象：引力方向的"下" ↓</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; font-size:12.5px;">
+        <div style="background:#e8f0f8; border-radius:8px; padding:12px;">
+          <div style="font-weight:700; color:#2b6cb0; margin-bottom:4px;">① 物理向下</div>
+          <div style="color:#666;">sit down / fall down / go down / put down<br><span style="color:#999;">物体真的在往下走</span></div>
+        </div>
+        <div style="background:#e8f0f8; border-radius:8px; padding:12px;">
+          <div style="font-weight:700; color:#2b6cb0; margin-bottom:4px;">② 量向下</div>
+          <div style="color:#666;">slow down / turn down / calm down / cool down<br><span style="color:#999;">↓变少/变弱/变低</span></div>
+        </div>
+        <div style="background:#e8f0f8; border-radius:8px; padding:12px;">
+          <div style="font-weight:700; color:#2b6cb0; margin-bottom:4px;">③ 按下去（同一动作 3 种对象）</div>
+          <div style="color:#666;">turn down(按提议=拒绝) / shut down(按机器=关闭) / write down(按想法到纸=记录)<br><span style="color:#999;">↓按的东西不同→结果不同</span></div>
+        </div>
+        <div style="background:#e8f0f8; border-radius:8px; padding:12px;">
+          <div style="font-weight:700; color:#2b6cb0; margin-bottom:4px;">④ 倒下去</div>
+          <div style="color:#666;">break down / tear down / burn down / fall down<br><span style="color:#999;">↓竖立结构→平躺碎片</span></div>
+        </div>
+      </div>
+      <div style="margin-top:10px; font-size:12px; color:#999; text-align:center;">
+        ⚠️ 注意：walk down the street / downtown 里面的 down 是"沿路径延伸"，和"向下"不完全相同，见下文分解。
+      </div>
+    </div>
+  </div>
+
+  <!-- 四大类卡片 -->
+  <div class="section-title"><span class="bar"></span><span>四大自然类别</span></div>
+  <div class="cards">
+
+    <div class="card">
+      <canvas id="cardPhysical" width="380" height="200"></canvas>
+      <div class="card-body">
+        <h3>① 物理向下 <span class="hl">引力方向</span></h3>
+        <div class="ref">sit down / go down / put down / fall down / come down</div>
+        <div class="def">
+          物体在重力作用下从高处移向低处。<span class="key">最简单的空间用法</span>。
+          <span class="eg">"Sit down." / "The sun went down." / "Put it down."</span>
+        </div>
+        <div class="chain">🧠 逻辑：高处→低处 = 遇到任何"由上到下"的场景就用 down</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardReduce" width="380" height="200"></canvas>
+      <div class="card-body">
+        <h3>② 量向下 <span class="hl">变少 / 变弱 / 变低</span></h3>
+        <div class="ref">slow down / calm down / turn down / cool down / cut down</div>
+        <div class="def">
+          把"数量/速度/温度/音量/情绪"这些抽象量想象成水柱——<span class="key">水柱降低 = 量减小</span>。
+          <span class="eg">"Slow down!" / "Turn the music down." / "Calm down."</span>
+        </div>
+        <div class="chain">🧠 逻辑：水柱高度代表量 → 压下去 = 量减少 → 任何"减弱/减少"都用 down</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardPress" width="380" height="200"></canvas>
+      <div class="card-body">
+        <h3>③ 按下去 <span class="hl">同一个动作，三种对象</span></h3>
+        <div class="ref">turn down / shut down / write down — 都是"按下去"，但对象不同</div>
+        <div class="def">
+          核心画面：<span class="key">手把一个东西按下去</span>。按的对象不同，结果就不同：<br>
+          <span style="color:#2b6cb0;">▪ 按提议</span> = 拒绝（turn down / vote down）<br>
+          <span style="color:#2b6cb0;">▪ 按机器</span> = 关闭（shut down / go down）<br>
+          <span style="color:#2b6cb0;">▪ 按想法到纸上</span> = 记录（write down / put down）
+          <span class="eg">"She turned down the job." / "Write it down." / "The system went down."</span>
+        </div>
+        <div class="chain">🧠 逻辑：同一个物理动作"按下去"→ 按的对象不同 = 拒绝/关闭/记录。不是"记录=拒绝"而是"都用了按下去这个动作"。</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardCollapse" width="380" height="200"></canvas>
+      <div class="card-body">
+        <h3>④ 倒下去 <span class="hl">破坏 / 崩塌</span></h3>
+        <div class="ref">break down / tear down / burn down / knock down / fall apart</div>
+        <div class="def">
+          竖立的结构"倒下去"了 = 从完整变成碎片。<span class="key">结构崩溃</span>。
+          <span class="eg">"The car broke down." / "Tear down the building." / "The bridge fell down."</span>
+        </div>
+        <div class="chain">🧠 逻辑：竖立=UP → 倒下=DOWN → 任何从"完整→破碎/坍塌"都像建筑倒下</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 高频用法 -->
+  <div class="section-title"><span class="bar"></span><span>DOWN 高频用法（每条都带逻辑解释）</span></div>
+
+  <div class="usage-category">
+    <div class="cat-label">① 物理向下 — 引力方向</div>
+    <div class="cat-chain">🧠 逻辑链：高处→低处 = 物体在重力作用下移动。这是所有其他用法的物理基础。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Sit down</strong>, please.</span>
+        <span class="usage-cn">请坐。（从站立→坐下 = 身体重心下移）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The sun <strong>went down</strong>.</span>
+        <span class="usage-cn">太阳下山了。（太阳从高空→地平线以下）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He <strong>fell down</strong> the stairs.</span>
+        <span class="usage-cn">他从楼梯上摔下来了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Put</strong> the bag <strong>down</strong>.</span>
+        <span class="usage-cn">把包放下。（手托着包→放到低处）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She <strong>lay down</strong> on the bed.</span>
+        <span class="usage-cn">她躺到床上。（身体从竖→横，重心降低）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The cat jumped <strong>down</strong> from the tree.</span>
+        <span class="usage-cn">猫从树上跳下来了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Come down</strong> here right now!</span>
+        <span class="usage-cn">马上给我下来！</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He <strong>knelt down</strong> to tie his shoes.</span>
+        <span class="usage-cn">他蹲下来系鞋带。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">② 量向下 — 变少 / 变弱 / 变低 / 变慢</div>
+    <div class="cat-chain">🧠 逻辑链：把"音量/速度/温度/情绪"想象成一根水柱。水柱高度↔量的大小。把水柱"按下去" = 量减少。所以任何"减少/减弱"都用 down。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Slow down</strong>!</span>
+        <span class="usage-cn">慢点！（速度降下来）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Calm down</strong>.</span>
+        <span class="usage-cn">冷静下来。（情绪从高到低）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Turn down</strong> the TV.</span>
+        <span class="usage-cn">把电视音量调低。（想象旋钮往下转 = 音量柱降低）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let the soup <strong>cool down</strong>.</span>
+        <span class="usage-cn">让汤凉一凉。（温度降低）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The pain <strong>died down</strong>.</span>
+        <span class="usage-cn">疼痛减弱了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The wind <strong>calmed down</strong>.</span>
+        <span class="usage-cn">风小了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Cut down</strong> on sugar.</span>
+        <span class="usage-cn">减少糖的摄入。（砍掉一部分 = 量降低）</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The fever <strong>came down</strong>.</span>
+        <span class="usage-cn">退烧了。（温度柱降下来了）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">③ 按下去 — 拒绝 / 否定</div>
+    <div class="cat-chain">🧠 逻辑链：想象一个提议被"提上来"摆在桌面 → 你伸手把它"按下去"（turn it down）→ 按下去 = 不让它通过 = 拒绝。同样 vote down = 投票把它按下去，shoot down = 开枪把它击落 = 否定。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">She <strong>turned down</strong> the job offer.</span>
+        <span class="usage-cn">她拒绝了那份工作邀请。<br><span style="font-size:11px;color:#999;">📖 画面：offer 被放到桌上 → 她把 offer "转下去" = 不要了</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He asked her out, but she <strong>turned him down</strong>.</span>
+        <span class="usage-cn">他约她出去，但她拒绝了。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The proposal was <strong>voted down</strong>.</span>
+        <span class="usage-cn">提案被投票否决了。<br><span style="font-size:11px;color:#999;">📖 画面：提案在桌上 → 投票把它"按下去" = 不通过</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The idea was <strong>shot down</strong> by the boss.</span>
+        <span class="usage-cn">这个想法被老板否决了。<br><span style="font-size:11px;color:#999;">📖 画面：想法像飞机一样飞起来 → 被一枪"击落"了</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">④ 按下去 — 关闭 / 停止</div>
+    <div class="cat-chain">🧠 逻辑链：机器运转时是"运行状态"=竖立/UP → 把开关"按下去"=DOWN → 机器停止。和 turn down（拒绝）完全相同的"按下去"逻辑，只是对象不同——一个是按提议，一个是按机器。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">The factory <strong>shut down</strong> last year.</span>
+        <span class="usage-cn">工厂去年关闭了。<br><span style="font-size:11px;color:#999;">📖 画面：工厂像一台机器 → 被"关掉"了 → 不再运转</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The government <strong>shut down</strong> the website.</span>
+        <span class="usage-cn">政府关闭了那个网站。<br><span style="font-size:11px;color:#999;">📖 画面：网站像一扇门 → "关"了</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The system is <strong>down</strong>.</span>
+        <span class="usage-cn">系统宕机了/停了。<br><span style="font-size:11px;color:#999;">📖 画面：系统从"运行状态"→"停机状态"</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The computer <strong>went down</strong>.</span>
+        <span class="usage-cn">电脑死机了。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">⑤ 按下去 — 记下来 / 固定住</div>
+    <div class="cat-chain">🧠 逻辑链：想法在脑子里"飘着"（悬空/不可见）→ 你把它从脑子里"按到"纸上 = 固定成可见的文字。write down = 把飘着的想法按到纸面固定住。同样 put down a deposit = 把钱"按下去"= 锁住这笔钱 = 付定金。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en"><strong>Write</strong> it <strong>down</strong> before you forget.</span>
+        <span class="usage-cn">趁还没忘，把它写下来。<br><span style="font-size:11px;color:#999;">📖 画面：飘在空中的想法 → 按到纸上固定 = 写下来</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let me <strong>put</strong> that <strong>down</strong> in my calendar.</span>
+        <span class="usage-cn">让我把它记在日历上。<br><span style="font-size:11px;color:#999;">📖 画面：把一件事"放"到日历上固定位置</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Can you <strong>put me down</strong> for Friday?</span>
+        <span class="usage-cn">把我登记在周五好吗？<br><span style="font-size:11px;color:#999;">📖 画面：把我的名字"按"到周五那一格 = 固定预约</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The police <strong>took down</strong> his statement.</span>
+        <span class="usage-cn">警察记录了他的供述。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I <strong>jotted down</strong> her phone number.</span>
+        <span class="usage-cn">我匆匆记下了她的电话号码。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en"><strong>Note down</strong> the key points.</span>
+        <span class="usage-cn">把要点记下来。</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I <strong>put down</strong> a $500 deposit.</span>
+        <span class="usage-cn">我付了500美元定金。<br><span style="font-size:11px;color:#999;">📖 画面：把钱"按下去"固定住 = 锁定/预付</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">⑥ 倒下去 — 破坏 / 崩塌</div>
+    <div class="cat-chain">🧠 逻辑链：一个竖立的东西（建筑/车/机器）→ "倒下去"了 = 不再竖立 = 不再工作/不再完整。break down = 车"垮了"，tear down = 撕扯到它倒下去，burn down = 烧到它倒下去。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">The car <strong>broke down</strong> on the highway.</span>
+        <span class="usage-cn">车在高速上抛锚了。<br><span style="font-size:11px;color:#999;">📖 画面：车本来在"跑"=竖立状态 → "倒下了" = 不能跑了</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The building was <strong>torn down</strong>.</span>
+        <span class="usage-cn">大楼被拆除了。<br><span style="font-size:11px;color:#999;">📖 画面：撕扯它 → 直到它倒下去</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The old bridge <strong>fell down</strong>.</span>
+        <span class="usage-cn">那座老桥塌了。<br><span style="font-size:11px;color:#999;">📖 画面：桥从竖立→平躺</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The house <strong>burned down</strong>.</span>
+        <span class="usage-cn">房子烧光了。<br><span style="font-size:11px;color:#999;">📖 画面：烧到房子倒下去 = 全毁了</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Someone <strong>knocked down</strong> the wall.</span>
+        <span class="usage-cn">有人把这堵墙推倒了。<br><span style="font-size:11px;color:#999;">📖 画面：击打它 → 它倒下了</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let's <strong>break down</strong> the problem.</span>
+        <span class="usage-cn">我们来把问题拆解开来分析。<br><span style="font-size:11px;color:#999;">📖 抽象：把大问题像建筑一样"拆倒" = 分解成小块</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">⑦ 情绪 / 身体 — 心情低落 / 病倒</div>
+    <div class="cat-chain">🧠 逻辑链：情绪高 = UP（开心/兴奋）→ 情绪低 = DOWN（难过/低落）。和量向下的逻辑完全相同——情绪也是一根"水柱"，高=好，低=差。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">I'm feeling <strong>down</strong> today.</span>
+        <span class="usage-cn">我今天心情不好/低落。<br><span style="font-size:11px;color:#999;">📖 情绪像水柱一样"降低了"</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">You look <strong>down</strong>. What's wrong?</span>
+        <span class="usage-cn">你看起来情绪不高，怎么了？</span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He <strong>came down with</strong> the flu.</span>
+        <span class="usage-cn">他得了流感病倒了。<br><span style="font-size:11px;color:#999;">📖 身体从"站立"→"倒下了"= 生病</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Don't let it <strong>get you down</strong>.</span>
+        <span class="usage-cn">别让这事影响你的心情。<br><span style="font-size:11px;color:#999;">📖 这件事"把你按下去"= 让你不开心</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">She was <strong>weighed down</strong> by work.</span>
+        <span class="usage-cn">她被工作压得喘不过气来。<br><span style="font-size:11px;color:#999;">📖 像重物压在你身上 = 被"压下去"了</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">This movie is such a <strong>downer</strong>.</span>
+        <span class="usage-cn">这部电影太让人郁闷了。<br><span style="font-size:11px;color:#999;">📖 让人情绪"下去"的东西 = downer</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-category">
+    <div class="cat-label">⑧ 沿路径延伸 — walk down / downtown</div>
+    <div class="cat-chain">🧠 逻辑链：⚠️ 这里比较特殊。walk down the street 里的 down 不是"向下"，而是"沿路径走完全程"。这个词义来源于：你站在路的某一点 → 沿着路走到尽头 = 路在你面前"延伸下去"。downtown 在曼哈顿指地图上的"南边"（下城），后来泛指"市中心"。UP 也同样可以表示"沿路径"——walk up to someone = 走到某人面前。</div>
+    <div class="usage-list">
+      <div class="usage-item">
+        <span class="usage-en">She walked <strong>down</strong> the street.</span>
+        <span class="usage-cn">她沿着街走下去。<br><span style="font-size:11px;color:#999;">📖 这里的 down = "沿着路径延伸"，不一定是走下坡</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">The store is just <strong>down</strong> the road.</span>
+        <span class="usage-cn">那家店就在路那头。<br><span style="font-size:11px;color:#999;">📖 路"延伸下去"的地方</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">We're going <strong>down</strong> to Florida.</span>
+        <span class="usage-cn">我们要南下佛罗里达。<br><span style="font-size:11px;color:#999;">📖 地图上南 = 下方 + 也泛指离开中心去远处</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">Let's go <strong>downtown</strong>.</span>
+        <span class="usage-cn">咱们去市中心吧。<br><span style="font-size:11px;color:#999;">📖 曼哈顿 downtown = 地图下方 = 商业中心，后泛称"市中心"</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">He's <strong>down</strong> in the basement.</span>
+        <span class="usage-cn">他在楼下地下室。<br><span style="font-size:11px;color:#999;">📖 物理上的"下方楼层"</span></span>
+      </div>
+      <div class="usage-item">
+        <span class="usage-en">I'll be <strong>down</strong> in a minute.</span>
+        <span class="usage-cn">我马上下来（下楼）。<br><span style="font-size:11px;color:#999;">📖 物理向下——我从楼上下来</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="spatial-note">
+    <strong>DOWN 的统一逻辑</strong>：所有用法都从一个核心画面出发——<strong>"由上往下"</strong>。<br><br>
+    ① <strong>物理向下</strong>：真的在往下走（sit down / go down）<br>
+    ② <strong>量向下</strong>：从"量柱高→低" = 减少/减弱（slow down / turn down / calm down）<br>
+    ③ <strong>按下去</strong>：把"东西从台面按到台面下" = 不让它通过（拒绝/关闭/固定）<br>
+    ④ <strong>倒下去</strong>：从竖立→平躺 = 结构崩溃（break down / tear down）<br>
+    ⑤ <strong>情绪向下</strong>：情绪水柱降低了 = 低落（down / get down / downer）<br>
+    ⑥ <strong>沿路径</strong>：路在你面前"延伸下去"（walk down / downtown）<br><br>
+    <strong>注意</strong>：UP 和 DOWN 有时候都能表示"前方/沿路径"（walk up the street / walk down the street 意思几乎一样），这时方向词本身失去了"上/下"的意义，变成了<strong>强调"走完一段路"</strong>。
+  </div>
+
+</div>
+
+<script>
+(function() {
+function drawFrame(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ===== 核心图1：DOWN 的空间 =====
+const c1 = document.getElementById('coreDown');
+const ctx1 = c1.getContext('2d');
+drawFrame(ctx1,380,220);
+
+// sky
+ctx1.fillStyle = '#e8f0f8'; ctx1.fillRect(0,0,380,80);
+// ground
+ctx1.fillStyle = '#d4d4c8'; ctx1.fillRect(0,170,380,50);
+
+// person on platform
+ctx1.fillStyle = '#2b6cb0';
+ctx1.beginPath(); ctx1.arc(190,60,14,0,Math.PI*2); ctx1.fill();
+ctx1.fillRect(187,74,6,20);
+ctx1.fillStyle = '#fff'; ctx1.font = '11px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('人',190,64);
+
+ctx1.fillStyle = '#c8b89a'; ctx1.fillRect(120,95,140,8);
+
+// big arrow down
+ctx1.strokeStyle = '#2b6cb0'; ctx1.lineWidth = 3.5;
+ctx1.beginPath(); ctx1.moveTo(190,103); ctx1.lineTo(190,165); ctx1.stroke();
+ctx1.fillStyle = '#2b6cb0';
+ctx1.beginPath(); ctx1.moveTo(185,160); ctx1.lineTo(190,170); ctx1.lineTo(195,160); ctx1.closePath(); ctx1.fill();
+
+ctx1.fillStyle = '#888'; ctx1.font = '12px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('地面',190,205);
+ctx1.fillStyle = '#2b6cb0'; ctx1.font = 'bold 16px sans-serif';
+ctx1.fillText('↓ 向下 = 引力方向',190,30);
+ctx1.fillStyle = '#888'; ctx1.font = '11px sans-serif';
+ctx1.fillText('这是所有抽象用法的基础',190,225);
+
+// ===== 核心图2：UP vs DOWN =====
+const c2 = document.getElementById('coreUpDown');
+const ctx2 = c2.getContext('2d');
+drawFrame(ctx2,380,220);
+
+// center divide
+ctx2.strokeStyle = '#ddd'; ctx2.lineWidth = 2;
+ctx2.beginPath(); ctx2.moveTo(190,30); ctx2.lineTo(190,200); ctx2.stroke();
+
+// UP side
+ctx2.fillStyle = '#e63946'; ctx2.font = 'bold 22px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('UP ↑',95,50);
+ctx2.fillStyle = '#555'; ctx2.font = '13px sans-serif';
+var upItems = ['多', '开', '好', '强', '增加', '高兴', '完整', '运行'];
+upItems.forEach(function(item, i) {
+  ctx2.fillText(item, 95, 75 + i * 18);
+});
+
+// DOWN side
+ctx2.fillStyle = '#2b6cb0'; ctx2.font = 'bold 22px sans-serif';
+ctx2.fillText('↓ DOWN',285,50);
+ctx2.fillStyle = '#555'; ctx2.font = '13px sans-serif';
+var downItems = ['少', '关', '差', '弱', '减少', '低落', '破碎', '停止'];
+downItems.forEach(function(item, i) {
+  ctx2.fillText(item, 285, 75 + i * 18);
+});
+
+ctx2.fillStyle = '#999'; ctx2.font = '11px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('UP ↔ DOWN 是最基础的空间对立轴',190,215);
+
+// ===== 四大类 =====
+
+// 1. 物理向下
+const e1 = document.getElementById('cardPhysical');
+const ctx3 = e1.getContext('2d');
+drawFrame(ctx3,380,200);
+
+// slope
+ctx3.fillStyle = '#d4d4c8';
+ctx3.beginPath(); ctx3.moveTo(0,60); ctx3.lineTo(220,30); ctx3.lineTo(380,140); ctx3.closePath(); ctx3.fill();
+
+// person on slope
+ctx3.fillStyle = '#2b6cb0';
+ctx3.beginPath(); ctx3.arc(230,95,11,0,Math.PI*2); ctx3.fill();
+ctx3.fillRect(227,106,6,18);
+
+// arrow along slope
+ctx3.strokeStyle = '#2b6cb0'; ctx3.lineWidth = 2.5;
+ctx3.beginPath(); ctx3.moveTo(246,100); ctx3.lineTo(330,125); ctx3.stroke();
+ctx3.fillStyle = '#2b6cb0';
+ctx3.beginPath(); ctx3.moveTo(326,120); ctx3.lineTo(336,127); ctx3.lineTo(326,131); ctx3.closePath(); ctx3.fill();
+
+ctx3.fillStyle = '#2b6cb0'; ctx3.font = 'bold 14px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('go down the hill',260,90);
+ctx3.fillStyle = '#888'; ctx3.font = '11px sans-serif';
+ctx3.fillText('sit down   •   put down   •   fall down   •   come down',190,180);
+
+// 2. 量向下
+const e2 = document.getElementById('cardReduce');
+const ctx4 = e2.getContext('2d');
+drawFrame(ctx4,380,200);
+
+// water column metaphor
+ctx4.fillStyle = '#ddd';
+ctx4.fillRect(120,20,30,160);
+
+var grad = ctx4.createLinearGradient(120,20,150,180);
+grad.addColorStop(0, '#e63946');
+grad.addColorStop(1, '#f5f0e8');
+ctx4.fillStyle = grad;
+ctx4.fillRect(122,60,26,118);
+
+// arrow pushing down
+ctx4.strokeStyle = '#2b6cb0'; ctx4.lineWidth = 3;
+ctx4.beginPath(); ctx4.moveTo(165,40); ctx4.lineTo(220,60); ctx4.stroke();
+ctx4.fillStyle = '#2b6cb0';
+ctx4.beginPath(); ctx4.moveTo(215,55); ctx4.lineTo(225,62); ctx4.lineTo(214,65); ctx4.closePath(); ctx4.fill();
+
+ctx4.fillStyle = '#2b6cb0'; ctx4.font = '13px sans-serif'; ctx4.textAlign = 'center';
+ctx4.fillText('把水柱"按下去" = 量减少',200,55);
+ctx4.fillStyle = '#888'; ctx4.font = '11px sans-serif';
+ctx4.fillText('slow down / turn down / calm down / cool down',190,185);
+
+// 3. 按下去 — 拒绝
+const e3 = document.getElementById('cardPress');
+const ctx5 = e3.getContext('2d');
+drawFrame(ctx5,380,200);
+
+// table
+ctx5.fillStyle = '#c8b89a'; ctx5.fillRect(50,100,280,8);
+
+// hand pushing something down
+ctx5.strokeStyle = '#2b6cb0'; ctx5.lineWidth = 2.5;
+ctx5.beginPath(); ctx5.moveTo(220,30); ctx5.lineTo(220,95); ctx5.stroke();
+ctx5.fillStyle = '#2b6cb0';
+ctx5.beginPath(); ctx5.moveTo(216,90); ctx5.lineTo(220,100); ctx5.lineTo(224,90); ctx5.closePath(); ctx5.fill();
+
+// hand
+ctx5.fillStyle = '#e8dcc8';
+ctx5.beginPath(); ctx5.arc(220,25,14,0,Math.PI*2); ctx5.fill();
+ctx5.fillStyle = '#2b6cb0'; ctx5.font = '10px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('手',220,29);
+
+// thing being pushed (proposal/job offer)
+ctx5.fillStyle = '#4a90d9'; ctx5.strokeStyle = '#2b6cb0'; ctx5.lineWidth = 1.5;
+ctx5.fillRect(140,75,60,25);
+ctx5.strokeRect(140,75,60,25);
+ctx5.fillStyle = '#fff'; ctx5.font = '9px sans-serif';
+ctx5.fillText('提议/offer',170,90);
+
+ctx5.fillStyle = '#888'; ctx5.font = '11px sans-serif'; ctx5.textAlign = 'left';
+ctx5.fillText('✋ 手把"提议"按到桌面以下',55,35);
+ctx5.fillStyle = '#888'; ctx5.font = '10px sans-serif'; ctx5.textAlign = 'center';
+ctx5.fillText('= 不让它通过 = 拒绝/关闭',190,150);
+ctx5.fillStyle = '#2b6cb0'; ctx5.font = '12px sans-serif';
+ctx5.fillText('turn down / shut down / vote down / write down',190,185);
+
+// 4. 倒下去
+const e4 = document.getElementById('cardCollapse');
+const ctx6 = e4.getContext('2d');
+drawFrame(ctx6,380,200);
+
+// standing wall (left)
+ctx6.fillStyle = '#ddd'; ctx6.strokeStyle = '#bbb'; ctx6.lineWidth = 1;
+ctx6.fillRect(40,40,40,80); ctx6.strokeRect(40,40,40,80);
+ctx6.fillStyle = '#888'; ctx6.font = '10px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('竖立',60,130);
+
+// arrow
+ctx6.strokeStyle = '#2b6cb0'; ctx6.lineWidth = 2;
+ctx6.beginPath(); ctx6.moveTo(85,80); ctx6.lineTo(130,80); ctx6.stroke();
+ctx6.fillStyle = '#2b6cb0';
+ctx6.beginPath(); ctx6.moveTo(126,76); ctx6.lineTo(136,80); ctx6.lineTo(126,84); ctx6.closePath(); ctx6.fill();
+ctx6.fillStyle = '#2b6cb0'; ctx6.font = '12px sans-serif';
+ctx6.fillText('→ 倒下去',108,70);
+
+// collapsed (right)
+ctx6.fillStyle = '#ddd'; ctx6.strokeStyle = '#bbb'; ctx6.lineWidth = 1;
+ctx6.fillRect(170,105,50,15); ctx6.strokeRect(170,105,50,15);
+// debris
+ctx6.fillStyle = '#2b6cb0';
+ctx6.fillRect(140,100,10,8);
+ctx6.fillRect(160,95,8,6);
+ctx6.fillRect(230,108,12,8);
+ctx6.fillRect(225,98,6,6);
+ctx6.fillStyle = '#888'; ctx6.font = '10px sans-serif';
+ctx6.fillText('平躺/碎片',195,130);
+
+ctx6.fillStyle = '#2b6cb0'; ctx6.font = 'bold 13px sans-serif'; ctx6.textAlign = 'center';
+ctx6.fillText('break down / tear down / burn down / knock down',190,40);
+ctx6.fillStyle = '#888'; ctx6.font = '11px sans-serif';
+ctx6.fillText('结构从竖立→倒塌 → 不再工作/不再完整',190,170);
+
+})();
+</script>
+
+</body>
+</html>

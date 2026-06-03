@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GO / COME / LEAVE / ARRIVE 易混动词图解</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:#f5f5f0; display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:#fff; border-radius:16px; padding:48px 40px 56px; box-shadow:0 2px 20px rgba(0,0,0,0.06); }
+  h1 { font-size:28px; font-weight:700; text-align:center; margin-bottom:4px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:40px; }
+  .section-title { font-size:18px; font-weight:600; margin-bottom:20px; color:#333; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:#e63946; margin-right:12px; vertical-align:middle; border-radius:2px; }
+  .section-title span { vertical-align:middle; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:36px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; }
+  .card canvas { width:100%; height:auto; aspect-ratio:380/200; display:block; background:#fafaf8; }
+  .card-body { padding:16px 18px 20px; }
+  .card-body h3 { font-size:17px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#e63946; }
+  .card-body .pos { font-size:12px; color:#999; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.6; }
+  .card-body .def .eg { color:#777; font-style:italic; display:block; margin-top:2px; }
+  .white-box { background:#fff; border:1px solid #e0dce8; border-radius:8px; padding:12px 16px; margin-top:12px; font-size:13px; color:#555; line-height:1.6; box-shadow:0 1px 4px rgba(0,0,0,0.03); }
+  .white-box strong { color:#e63946; }
+
+  .four-grid { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:14px; margin-bottom:36px; }
+  .mini-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:12px; overflow:hidden; text-align:center; }
+  .mini-card canvas { width:100%; height:auto; aspect-ratio:200/160; display:block; background:#fafaf8; }
+  .mini-card .label { padding:8px 10px 12px; }
+  .mini-card .label .p { font-size:15px; font-weight:700; }
+  .mini-card .label .desc { font-size:11px; color:#666; margin-top:2px; }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:12px; overflow:hidden; }
+  .compare-card canvas { width:100%; height:auto; aspect-ratio:380/170; display:block; background:#fafaf8; }
+  .compare-card .label { padding:10px 14px 16px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#666; margin-top:2px; line-height:1.5; }
+
+  @media (max-width:720px) {
+    .container { padding:28px 16px 36px; }
+    .cards { grid-template-columns:1fr; }
+    .four-grid { grid-template-columns:1fr 1fr; }
+    .compare-row { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🚶 GO · COME · LEAVE · ARRIVE</h1>
+<p class="subtitle">四个"移动"动词——方向不同，画面完全不同</p>
+
+<!-- 四词独立 -->
+<div class="section-title"><span class="bar"></span><span>四个词，四个方向</span></div>
+<div class="cards">
+  <div class="card">
+    <canvas id="cardGo" width="380" height="200"></canvas>
+    <div class="card-body">
+      <h3>GO <span class="hl">/ɡoʊ/</span></h3>
+      <div class="pos">动词 · 从说话者位置离开前往别处</div>
+      <div class="def">
+        从"这里"移动到"那里"——<span class="hl">核心=离开当前位置</span>。
+        <span class="eg">"I need to go."<br>"I'm going to the store."<br>"Let's go!"</span>
+      </div>
+      <div class="white-box"><strong>💡 核心画面</strong>：说话者站在A点，你从A点出发向远处移动。GO永远是从"这里"到"别处"。所以 "I go to school" = 我从家离开→去学校。</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cardCome" width="380" height="200"></canvas>
+    <div class="card-body">
+      <h3>COME <span class="hl">/kʌm/</span></h3>
+      <div class="pos">动词 · 朝说话者/听话者方向移动</div>
+      <div class="def">
+        从"远处"移动到"这里"——<span class="hl">核心=朝向说话者</span>。
+        <span class="eg">"Come here!"<br>"Can you come to my party?"<br>"Winter is coming."</span>
+      </div>
+      <div class="white-box"><strong>💡 核心画面</strong>：说话者在B点，对方从远处向B点靠近。COME永远是"从别处到这里"。所以 "Come to my house" = 你从你家出发→朝我家来。</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cardLeave" width="380" height="200"></canvas>
+    <div class="card-body">
+      <h3>LEAVE <span class="hl">/liːv/</span></h3>
+      <div class="pos">动词 · 离开某处</div>
+      <div class="def">
+        从某地走开——<span class="hl">核心=不再在某处</span>。不强调去哪里，只强调"不在这里了"。
+        <span class="eg">"I have to leave now."<br>"Leave the room."<br>"The train leaves at 8."</span>
+      </div>
+      <div class="white-box"><strong>💡 核心画面</strong>：你本来在一个地方→你走了=你leave了那个地方。和GO的区别：GO强调"去了哪里"，LEAVE强调"离开了哪里"。</div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="cardArrive" width="380" height="200"></canvas>
+    <div class="card-body">
+      <h3>ARRIVE <span class="hl">/əˈraɪv/</span></h3>
+      <div class="pos">动词 · 到达某处</div>
+      <div class="def">
+        从某地来到目的地——<span class="hl">核心=到达了</span>。强调"到了"，不强调从哪里来。
+        <span class="eg">"We arrived at the station."<br>"She arrived home late."<br>"The mail has arrived."</span>
+      </div>
+      <div class="white-box"><strong>💡 核心画面</strong>：你经过一段旅程→现在你在目的地了=你arrived。和COME的区别：COME强调"朝我来的方向"，ARRIVE只强调"到达了"。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 四词同框对比 -->
+<div class="section-title"><span class="bar"></span><span>同一个场景，四个词的不同视角</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:12px; padding:12px; margin-bottom:36px;">
+  <canvas id="sceneFour" width="880" height="300" style="width:100%; height:auto; aspect-ratio:880/300; display:block; border-radius:8px; background:#fafaf8;"></canvas>
+</div>
+
+<!-- 易混对比 -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+  <div class="compare-card">
+    <canvas id="vsGoCome" width="380" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#e63946;">GO vs COME</div>
+      <div class="desc">GO = 从说话者位置离开 · COME = 朝说话者位置靠近<br>🚫 不能说 "I will come to school"（如果你在学校说）</div>
+    </div>
+  </div>
+  <div class="compare-card">
+    <canvas id="vsGoLeave" width="380" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#e63946;">GO vs LEAVE</div>
+      <div class="desc">GO = 强调目的地 · LEAVE = 强调出发地<br>"I go to work" ≠ "I leave work"</div>
+    </div>
+  </div>
+</div>
+
+<div class="compare-row">
+  <div class="compare-card">
+    <canvas id="vsComeArrive" width="380" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#e63946;">COME vs ARRIVE</div>
+      <div class="desc">COME = 朝"我"的方向 · ARRIVE = 到达目的地<br>"Come to the party" vs "Arrive at the party"</div>
+    </div>
+  </div>
+  <div class="compare-card">
+    <canvas id="vsArriveLeave" width="380" height="170"></canvas>
+    <div class="label">
+      <div class="p" style="color:#e63946;">ARRIVE vs LEAVE</div>
+      <div class="desc">ARRIVE = 旅程结束 · LEAVE = 旅程开始<br>一对反义词</div>
+    </div>
+  </div>
+</div>
+
+<!-- 反义/相似 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词扩展</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:12px; padding:20px 24px; margin-bottom:20px;">
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px;">
+    <div style="background:#fde8e8; border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:#e63946; margin-bottom:6px;">🚫 GO 的反义词</div>
+      <div><strong>STAY</strong> — 留下<br><span style="color:#999;">go = 走 / stay = 不走</span></div>
+      <div style="margin-top:6px;"><strong>STOP</strong> — 停下</div>
+      <div style="margin-top:6px;"><strong>RETURN</strong> / <strong>COME BACK</strong> — 回来</div>
+    </div>
+    <div style="background:#e8f0f8; border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:#2b6cb0; margin-bottom:6px;">🔗 COME 的反义词</div>
+      <div><strong>GO</strong> — 去（方向完全相反）</div>
+      <div style="margin-top:6px;"><strong>LEAVE</strong> — 离开（从"这里"走开）</div>
+      <div style="margin-top:6px;"><strong>SEND</strong> — 送走（让别人go）</div>
+    </div>
+    <div style="background:#f0e8f8; border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:#7b4ad9; margin-bottom:6px;">🔗 易混词提醒</div>
+      <div><strong>GO vs GO TO vs GO TO THE</strong>：go home（无to）/ go to school / go to the store</div>
+      <div style="margin-top:6px;"><strong>COME vs GO</strong>：对方邀请你 → "I'll come!"（你朝对方去）/ "I have to go."（你从对方处离开）</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+function df(ctx,w,h) { ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,w,h); }
+
+// ===== GO =====
+const e1=document.getElementById('cardGo');
+const ctx1=e1.getContext('2d');
+df(ctx1,380,200);
+// person
+ctx1.fillStyle='#e63946';
+ctx1.beginPath(); ctx1.arc(100,100,14,0,Math.PI*2); ctx1.fill();
+ctx1.fillRect(97,114,6,22);
+ctx1.fillStyle='#fff'; ctx1.font='10px sans-serif'; ctx1.textAlign='center'; ctx1.fillText('你',100,104);
+// arrow away
+ctx1.strokeStyle='#e63946'; ctx1.lineWidth=3;
+ctx1.beginPath(); ctx1.moveTo(118,100); ctx1.lineTo(280,100); ctx1.stroke();
+ctx1.fillStyle='#e63946';
+ctx1.beginPath(); ctx1.moveTo(276,96); ctx1.lineTo(286,100); ctx1.lineTo(276,104); ctx1.closePath(); ctx1.fill();
+// destination
+ctx1.fillStyle='#666'; ctx1.fillRect(290,65,40,50);
+ctx1.fillStyle='#888'; ctx1.font='10px sans-serif'; ctx1.fillText('目的地',310,90);
+ctx1.fillStyle='#e63946'; ctx1.font='11px sans-serif'; ctx1.fillText('"GO!"',170,85);
+ctx1.fillStyle='#888'; ctx1.font='10px sans-serif'; ctx1.fillText('从"这里"到"那里"',100,175);
+
+// ===== COME =====
+const e2=document.getElementById('cardCome');
+const ctx2=e2.getContext('2d');
+df(ctx2,380,200);
+ctx2.fillStyle='#e63946';
+ctx2.beginPath(); ctx2.arc(280,100,14,0,Math.PI*2); ctx2.fill();
+ctx2.fillRect(277,114,6,22);
+ctx2.fillStyle='#fff'; ctx2.font='10px sans-serif'; ctx2.textAlign='center'; ctx2.fillText('你',280,104);
+ctx2.strokeStyle='#e63946'; ctx2.lineWidth=3;
+ctx2.beginPath(); ctx2.moveTo(260,100); ctx2.lineTo(100,100); ctx2.stroke();
+ctx2.fillStyle='#e63946';
+ctx2.beginPath(); ctx2.moveTo(104,96); ctx2.lineTo(94,100); ctx2.lineTo(104,104); ctx2.closePath(); ctx2.fill();
+ctx2.fillStyle='#666'; ctx2.fillRect(40,65,40,50);
+ctx2.fillStyle='#888'; ctx2.font='10px sans-serif'; ctx2.fillText('对方',60,90);
+ctx2.fillStyle='#e63946'; ctx2.font='11px sans-serif'; ctx2.fillText('"COME here!"',170,85);
+ctx2.fillStyle='#888'; ctx2.font='10px sans-serif'; ctx2.fillText('从"那里"到"这里"',100,175);
+
+// ===== LEAVE =====
+const e3=document.getElementById('cardLeave');
+const ctx3=e3.getContext('2d');
+df(ctx3,380,200);
+// room/building
+ctx3.strokeStyle='#888'; ctx3.lineWidth=1.5;
+ctx3.strokeRect(40,50,80,90);
+ctx3.fillStyle='#888'; ctx3.font='10px sans-serif'; ctx3.textAlign='center'; ctx3.fillText('房间/地点',80,100);
+// person existing it
+ctx3.fillStyle='#e63946';
+ctx3.beginPath(); ctx3.arc(160,100,14,0,Math.PI*2); ctx3.fill();
+ctx3.fillRect(157,114,6,22);
+ctx3.fillStyle='#fff'; ctx3.font='10px sans-serif'; ctx3.fillText('你',160,104);
+// arrow out
+ctx3.strokeStyle='#e63946'; ctx3.lineWidth=2.5;
+ctx3.beginPath(); ctx3.moveTo(178,100); ctx3.lineTo(300,100); ctx3.stroke();
+ctx3.fillStyle='#e63946';
+ctx3.beginPath(); ctx3.moveTo(296,96); ctx3.lineTo(306,100); ctx3.lineTo(296,104); ctx3.closePath(); ctx3.fill();
+// X mark on the room
+ctx3.strokeStyle='#e63946'; ctx3.lineWidth=2;
+ctx3.beginPath(); ctx3.moveTo(50,55); ctx3.lineTo(75,80); ctx3.moveTo(75,55); ctx3.lineTo(50,80); ctx3.stroke();
+ctx3.fillStyle='#888'; ctx3.font='10px sans-serif'; ctx3.fillText('你"不在那里了"',130,175);
+
+// ===== ARRIVE =====
+const e4=document.getElementById('cardArrive');
+const ctx4=e4.getContext('2d');
+df(ctx4,380,200);
+ctx4.fillStyle='#e63946';
+ctx4.beginPath(); ctx4.arc(280,100,14,0,Math.PI*2); ctx4.fill();
+ctx4.fillRect(277,114,6,22);
+ctx4.fillStyle='#fff'; ctx4.font='10px sans-serif'; ctx4.textAlign='center'; ctx4.fillText('你',280,104);
+// destination
+ctx4.fillStyle='#666';
+ctx4.fillRect(60,60,50,70);
+ctx4.fillStyle='#888'; ctx4.font='10px sans-serif'; ctx4.fillText('目的地',85,100);
+// arrow arriving
+ctx4.strokeStyle='#e63946'; ctx4.lineWidth=2.5;
+ctx4.beginPath(); ctx4.moveTo(115,100); ctx4.lineTo(260,100); ctx4.stroke();
+// checkmark
+ctx4.strokeStyle='#38a169'; ctx4.lineWidth=3;
+ctx4.beginPath(); ctx4.moveTo(310,90); ctx4.lineTo(318,100); ctx4.lineTo(335,80); ctx4.stroke();
+ctx4.fillStyle='#38a169'; ctx4.font='10px sans-serif'; ctx4.fillText('✓ 到了！',335,97);
+ctx4.fillStyle='#888'; ctx4.font='10px sans-serif'; ctx4.fillText('"We arrived."',130,175);
+
+// ===== 总场景 =====
+const e5=document.getElementById('sceneFour');
+const ctx5=e5.getContext('2d');
+df(ctx5,880,300);
+
+// base line (road)
+ctx5.strokeStyle='#ddd'; ctx5.lineWidth=2;
+ctx5.beginPath(); ctx5.moveTo(40,160); ctx5.lineTo(840,160); ctx5.stroke();
+
+// HOME (left)
+ctx5.fillStyle='#4a90d9';
+ctx5.fillRect(40,80,60,80);
+ctx5.fillStyle='#fff'; ctx5.font='12px sans-serif'; ctx5.textAlign='center'; ctx5.fillText('🏠',70,120);
+ctx5.fillStyle='#888'; ctx5.font='10px sans-serif'; ctx5.fillText('家',70,170);
+
+// SCHOOL (right)
+ctx5.fillStyle='#e8dcc8';
+ctx5.fillRect(700,70,70,90);
+ctx5.fillStyle='#888'; ctx5.font='12px sans-serif'; ctx5.fillText('🏫',735,120);
+ctx5.fillStyle='#888'; ctx5.font='10px sans-serif'; ctx5.fillText('学校',735,170);
+
+// person (in the middle)
+ctx5.fillStyle='#e63946';
+ctx5.beginPath(); ctx5.arc(400,140,16,0,Math.PI*2); ctx5.fill();
+ctx5.fillRect(397,156,6,28);
+ctx5.fillStyle='#fff'; ctx5.font='12px sans-serif'; ctx5.fillText('你',400,145);
+
+// GO: you → school
+ctx5.strokeStyle='#e63946'; ctx5.lineWidth=2.5;
+ctx5.beginPath(); ctx5.moveTo(420,140); ctx5.lineTo(680,130); ctx5.stroke();
+ctx5.fillStyle='#e63946';
+ctx5.beginPath(); ctx5.moveTo(676,126); ctx5.lineTo(686,130); ctx5.lineTo(676,134); ctx5.closePath(); ctx5.fill();
+ctx5.fillStyle='#e63946'; ctx5.font='11px sans-serif'; ctx5.fillText('GO → 去学校',530,115);
+// ⭐ 说话者在"家"时说GO
+ctx5.fillStyle='#999'; ctx5.font='10px sans-serif'; ctx5.fillText('⭐ 从家说",I go to school."',530,130);
+
+// COME: school → you (person at school)
+ctx5.fillStyle='#e63946';
+ctx5.beginPath(); ctx5.arc(735,90,10,0,Math.PI*2); ctx5.fill(); // friend at school
+ctx5.fillStyle='#fff'; ctx5.font='8px sans-serif'; ctx5.textAlign='center'; ctx5.fillText('朋友',735,93);
+ctx5.strokeStyle='#e63946'; ctx5.lineWidth=2; ctx5.setLineDash([4,3]);
+ctx5.beginPath(); ctx5.moveTo(720,85); ctx5.lineTo(440,135); ctx5.stroke(); ctx5.setLineDash([]);
+ctx5.fillStyle='#e63946';
+ctx5.beginPath(); ctx5.moveTo(444,131); ctx5.lineTo(434,137); ctx5.lineTo(446,140); ctx5.closePath(); ctx5.fill();
+ctx5.fillStyle='#e63946'; ctx5.font='11px sans-serif'; ctx5.fillText('← COME 朝我来',580,100);
+
+// LEAVE: you leave home
+ctx5.strokeStyle='#e63946'; ctx5.lineWidth=2;
+ctx5.beginPath(); ctx5.moveTo(100,130); ctx5.lineTo(220,140); ctx5.stroke();
+ctx5.fillStyle='#e63946';
+ctx5.beginPath(); ctx5.moveTo(216,135); ctx5.lineTo(226,140); ctx5.lineTo(216,145); ctx5.closePath(); ctx5.fill();
+ctx5.fillStyle='#e63946'; ctx5.font='11px sans-serif'; ctx5.fillText('LEAVE 家 →',160,115);
+ctx5.fillStyle='#999'; ctx5.font='10px sans-serif'; ctx5.fillText('离开家",not,in,home"',160,130);
+
+// ARRIVE: arrive at school
+ctx5.strokeStyle='#38a169'; ctx5.lineWidth=2.5;
+ctx5.beginPath(); ctx5.moveTo(420,160); ctx5.lineTo(680,170); ctx5.stroke();
+ctx5.fillStyle='#38a169';
+ctx5.beginPath(); ctx5.moveTo(676,166); ctx5.lineTo(686,170); ctx5.lineTo(676,174); ctx5.closePath(); ctx5.fill();
+ctx5.fillStyle='#38a169'; ctx5.font='11px sans-serif'; ctx5.fillText('← ARRIVE 到学校了',530,185);
+ctx5.fillStyle='#999'; ctx5.font='10px sans-serif'; ctx5.fillText('✓ 旅程结束',530,198);
+
+// ===== GO vs COME =====
+const e6=document.getElementById('vsGoCome');
+const ctx6=e6.getContext('2d');
+df(ctx6,380,170);
+// you
+ctx6.fillStyle='#e63946';
+ctx6.beginPath(); ctx6.arc(60,85,12,0,Math.PI*2); ctx6.fill();
+ctx6.fillStyle='#fff'; ctx6.font='9px sans-serif'; ctx6.textAlign='center'; ctx6.fillText('你',60,88);
+// friend
+ctx6.fillStyle='#e63946';
+ctx6.beginPath(); ctx6.arc(320,85,12,0,Math.PI*2); ctx6.fill();
+ctx6.fillStyle='#fff'; ctx6.font='9px sans-serif'; ctx6.fillText('朋友',320,88);
+
+// GO (you → friend)
+ctx6.strokeStyle='#e63946'; ctx6.lineWidth=2; ctx6.setLineDash([4,3]);
+ctx6.beginPath(); ctx6.moveTo(76,85); ctx6.lineTo(200,50); ctx6.stroke(); ctx6.setLineDash([]);
+ctx6.fillStyle='#e63946';
+ctx6.beginPath(); ctx6.moveTo(196,47); ctx6.lineTo(204,53); ctx6.lineTo(198,56); ctx6.closePath(); ctx6.fill();
+ctx6.fillStyle='#e63946'; ctx6.font='11px sans-serif'; ctx6.fillText('"I go to you."',130,40);
+ctx6.fillStyle='#999'; ctx6.font='9px sans-serif'; ctx6.fillText('你从自己位置→朋友位置',130,55);
+
+// COME (friend → you)
+ctx6.strokeStyle='#e63946'; ctx6.lineWidth=2;
+ctx6.beginPath(); ctx6.moveTo(300,85); ctx6.lineTo(180,120); ctx6.stroke();
+ctx6.fillStyle='#e63946';
+ctx6.beginPath(); ctx6.moveTo(184,117); ctx6.lineTo(176,124); ctx6.lineTo(186,125); ctx6.closePath(); ctx6.fill();
+ctx6.fillStyle='#e63946'; ctx6.font='11px sans-serif'; ctx6.fillText('"I came to you."',180,125);
+ctx6.fillStyle='#999'; ctx6.font='9px sans-serif'; ctx6.fillText('对方从自己位置→你的位置',180,140);
+
+// ===== GO vs LEAVE =====
+const e7=document.getElementById('vsGoLeave');
+const ctx7=e7.getContext('2d');
+df(ctx7,380,170);
+// room
+ctx7.strokeStyle='#888'; ctx7.lineWidth=1.5;
+ctx7.strokeRect(30,30,60,80);
+ctx7.fillStyle='#888'; ctx7.font='9px sans-serif'; ctx7.textAlign='center'; ctx7.fillText('家',60,75);
+// person leaving home
+ctx7.fillStyle='#e63946';
+ctx7.beginPath(); ctx7.arc(140,70,10,0,Math.PI*2); ctx7.fill();
+ctx7.fillStyle='#fff'; ctx7.font='9px sans-serif'; ctx7.fillText('你',140,73);
+// LEAVE arrow
+ctx7.strokeStyle='#e63946'; ctx7.lineWidth=2;
+ctx7.beginPath(); ctx7.moveTo(93,70); ctx7.lineTo(125,70); ctx7.stroke();
+ctx7.fillStyle='#e63946';
+ctx7.beginPath(); ctx7.moveTo(121,66); ctx7.lineTo(131,70); ctx7.lineTo(121,74); ctx7.closePath(); ctx7.fill();
+ctx7.fillStyle='#e63946'; ctx7.font='10px sans-serif'; ctx7.fillText('LEAVE home',70,55);
+ctx7.fillStyle='#999'; ctx7.font='9px sans-serif'; ctx7.fillText('你",not,in,home"=离开',70,148);
+
+// GO arrow (toward workplace)
+ctx7.strokeStyle='#38a169'; ctx7.lineWidth=2;
+ctx7.beginPath(); ctx7.moveTo(155,70); ctx7.lineTo(320,70); ctx7.stroke();
+ctx7.fillStyle='#38a169';
+ctx7.beginPath(); ctx7.moveTo(316,66); ctx7.lineTo(326,70); ctx7.lineTo(316,74); ctx7.closePath(); ctx7.fill();
+// destination
+ctx7.fillStyle='#666';
+ctx7.fillRect(330,40,40,50);
+ctx7.fillStyle='#888'; ctx7.font='9px sans-serif'; ctx7.fillText('公司',350,70);
+ctx7.fillStyle='#38a169'; ctx7.font='10px sans-serif'; ctx7.fillText('GO to work →',230,55);
+ctx7.fillStyle='#999'; ctx7.font='9px sans-serif'; ctx7.fillText('去公司=前往目的地',230,148);
+
+// ===== COME vs ARRIVE =====
+const e8=document.getElementById('vsComeArrive');
+const ctx8=e8.getContext('2d');
+df(ctx8,380,170);
+// you (at home)
+ctx8.fillStyle='#e63946';
+ctx8.beginPath(); ctx8.arc(60,85,12,0,Math.PI*2); ctx8.fill();
+ctx8.fillStyle='#fff'; ctx8.font='9px sans-serif'; ctx8.textAlign='center'; ctx8.fillText('你',60,88);
+ctx8.fillStyle='#888'; ctx8.font='8px sans-serif'; ctx8.fillText('在家',60,118);
+// friend coming
+ctx8.fillStyle='#e63946';
+ctx8.beginPath(); ctx8.arc(280,60,10,0,Math.PI*2); ctx8.fill();
+ctx8.fillStyle='#fff'; ctx8.font='8px sans-serif'; ctx8.fillText('朋友',280,63);
+ctx8.strokeStyle='#e63946'; ctx8.lineWidth=2;
+ctx8.beginPath(); ctx8.moveTo(265,65); ctx8.lineTo(80,85); ctx8.stroke();
+ctx8.fillStyle='#e63946';
+ctx8.beginPath(); ctx8.moveTo(84,81); ctx8.lineTo(74,87); ctx8.lineTo(86,90); ctx8.closePath(); ctx8.fill();
+ctx8.fillStyle='#e63946'; ctx8.font='10px sans-serif'; ctx8.fillText('"Come to my house!"',160,50);
+ctx8.fillStyle='#999'; ctx8.font='9px sans-serif'; ctx8.fillText('朝"我"的方向来 = COME',160,65);
+
+// ARRIVE: just arriving
+ctx8.strokeStyle='#38a169'; ctx8.lineWidth=2;
+ctx8.beginPath(); ctx8.moveTo(300,100); ctx8.lineTo(360,100); ctx8.stroke();
+ctx8.fillStyle='#38a169';
+ctx8.beginPath(); ctx8.moveTo(356,96); ctx8.lineTo(366,100); ctx8.lineTo(356,104); ctx8.closePath(); ctx8.fill();
+ctx8.fillStyle='#38a169'; ctx8.font='10px sans-serif'; ctx8.fillText('"We arrived at the station."',300,115);
+ctx8.fillStyle='#999'; ctx8.font='9px sans-serif'; ctx8.fillText('不强调方向，只强调"到了"',300,130);
+
+// ===== ARRIVE vs LEAVE =====
+const e9=document.getElementById('vsArriveLeave');
+const ctx9=e9.getContext('2d');
+df(ctx9,380,170);
+// station
+ctx9.fillStyle='#ddd'; ctx9.strokeStyle='#888'; ctx9.lineWidth=1.5;
+ctx9.fillRect(160,40,60,80);
+ctx9.strokeRect(160,40,60,80);
+ctx9.fillStyle='#888'; ctx9.font='10px sans-serif'; ctx9.textAlign='center'; ctx9.fillText('车站',190,85);
+// arrive (coming to station)
+ctx9.fillStyle='#38a169';
+ctx9.beginPath(); ctx9.arc(90,80,12,0,Math.PI*2); ctx9.fill();
+ctx9.fillStyle='#fff'; ctx9.font='9px sans-serif'; ctx9.fillText('你',90,83);
+ctx9.strokeStyle='#38a169'; ctx9.lineWidth=2;
+ctx9.beginPath(); ctx9.moveTo(106,80); ctx9.lineTo(150,80); ctx9.stroke();
+ctx9.fillStyle='#38a169';
+ctx9.beginPath(); ctx9.moveTo(146,76); ctx9.lineTo(156,80); ctx9.lineTo(146,84); ctx9.closePath(); ctx9.fill();
+ctx9.fillStyle='#38a169'; ctx9.font='10px sans-serif';
+ctx9.fillText('ARRIVE → 到了 ✓',80,50);
+// leave (going away from station)
+ctx9.fillStyle='#e63946';
+ctx9.beginPath(); ctx9.arc(290,80,12,0,Math.PI*2); ctx9.fill();
+ctx9.fillStyle='#fff'; ctx9.font='9px sans-serif'; ctx9.fillText('你',290,83);
+ctx9.strokeStyle='#e63946'; ctx9.lineWidth=2;
+ctx9.beginPath(); ctx9.moveTo(225,80); ctx9.lineTo(270,80); ctx9.stroke();
+ctx9.fillStyle='#e63946';
+ctx9.beginPath(); ctx9.moveTo(266,76); ctx9.lineTo(276,80); ctx9.lineTo(266,84); ctx9.closePath(); ctx9.fill();
+ctx9.fillStyle='#e63946'; ctx9.font='10px sans-serif'; ctx9.fillText('← LEAVE 走了',290,50);
+// time arrow
+ctx9.strokeStyle='#999'; ctx9.lineWidth=1.5;
+ctx9.beginPath(); ctx9.moveTo(50,140); ctx9.lineTo(330,140); ctx9.stroke();
+ctx9.fillStyle='#999'; ctx9.font='9px sans-serif'; ctx9.fillText('→ 时间线: LEAVE（开始）→ ARRIVE（结束）',190,155);
+
+})();
+</script>
+</body>
+</html>

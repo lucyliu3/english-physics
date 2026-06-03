@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RIM · EDGE · BORDER · CORNER — 边缘词族对比</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#e63946,#e67e22); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#e63946,#e67e22); border-radius:2px; flex-shrink:0; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#e63946; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#e63946; }
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#e63946; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+  .spectrum-wrap { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+  .rim-bg { background:linear-gradient(135deg,#fef9f2,#fdf2e6); }
+  .edge-bg { background:linear-gradient(135deg,#fef2f2,#fde8e8); }
+  .border-bg { background:linear-gradient(135deg,#f0f0ff,#e0e0f5); }
+  .corner-bg { background:linear-gradient(135deg,#f0faf5,#e0f5e8); }
+  .four-col { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:14px; font-size:13px; }
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    .four-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>RIM · EDGE · BORDER · CORNER</h1>
+<p class="subtitle">同一"边界/边缘"意象，四种空间关系</p>
+
+<!-- 核心意象大场景（1720x400） -->
+<div class="section-title"><span class="bar"></span><span>核心意象大场景</span></div>
+<div class="spectrum-wrap" style="margin-bottom:32px;">
+  <svg viewBox="0 0 1720 400" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="shBig"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/></filter>
+    </defs>
+    <rect width="1720" height="400" fill="#fafaf8" rx="8"/>
+
+    <text x="860" y="38" text-anchor="middle" fill="#333" font-size="18" font-weight="700" font-family="sans-serif">空间关系：RIM · EDGE · BORDER · CORNER</text>
+
+    <!-- 正方形主体区域 -->
+    <rect x="360" y="60" width="1000" height="260" rx="10" fill="#f0f5fa" stroke="#ccd8e4" stroke-width="2"/>
+
+    <!-- 内部区域标注 -->
+    <text x="860" y="200" text-anchor="middle" fill="#8899aa" font-size="20" font-weight="300" font-family="sans-serif" font-style="italic">AREA / REGION</text>
+
+    <!-- RIM — 内缘（用杯状标记） -->
+    <ellipse cx="410" cy="100" rx="35" ry="12" fill="none" stroke="#e67e22" stroke-width="4" stroke-dasharray="6,3"/>
+    <text x="410" y="80" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="700" font-family="sans-serif">RIM</text>
+    <text x="410" y="70" text-anchor="middle" fill="#aaa" font-size="10" font-family="sans-serif">内缘（开口边）</text>
+    <line x1="410" y1="85" x2="410" y2="100" stroke="#e67e22" stroke-width="1.5"/>
+
+    <!-- EDGE — 外缘 -->
+    <line x1="1360" y1="60" x2="1360" y2="320" stroke="#e63946" stroke-width="5"/>
+    <text x="1410" y="190" text-anchor="middle" fill="#e63946" font-size="15" font-weight="700" font-family="sans-serif">EDGE</text>
+    <text x="1410" y="210" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">外缘（整体边缘）</text>
+
+    <!-- BORDER — 边界线 -->
+    <line x1="750" y1="60" x2="750" y2="320" stroke="#5b6abf" stroke-width="4" stroke-dasharray="10,6"/>
+    <text x="750" y="48" text-anchor="middle" fill="#5b6abf" font-size="14" font-weight="700" font-family="sans-serif">BORDER</text>
+    <text x="750" y="340" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">分界线（分隔两个区域）</text>
+
+    <!-- 两个区域用颜色填充来表现 border 的意义 -->
+    <rect x="360" y="60" width="390" height="260" fill="rgba(91,106,191,0.06)" rx="10"/>
+    <rect x="750" y="60" width="610" height="260" fill="rgba(91,106,191,0.03)" rx="10"/>
+
+    <!-- CORNER — 角落 -->
+    <circle cx="370" cy="70" r="25" fill="#38a169" opacity="0.15"/>
+    <text x="370" y="45" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">CORNER</text>
+    <text x="370" y="125" text-anchor="middle" fill="#38a169" font-size="11" font-family="sans-serif">两面边界的交汇点</text>
+    <line x1="380" y1="60" x2="395" y2="60" stroke="#38a169" stroke-width="3"/>
+    <line x1="360" y1="75" x2="360" y2="90" stroke="#38a169" stroke-width="3"/>
+
+    <!-- 底部图例 -->
+    <rect x="360" y="355" width="30" height="14" rx="3" fill="none" stroke="#e67e22" stroke-width="3" stroke-dasharray="4,2"/>
+    <text x="405" y="367" text-anchor="start" fill="#888" font-size="12" font-family="sans-serif">RIM 内缘</text>
+    <rect x="560" y="355" width="30" height="14" rx="3" fill="#e63946"/>
+    <text x="605" y="367" text-anchor="start" fill="#888" font-size="12" font-family="sans-serif">EDGE 外缘</text>
+    <rect x="760" y="355" width="30" height="14" rx="3" fill="#5b6abf" stroke-dasharray="6,3"/>
+    <text x="805" y="367" text-anchor="start" fill="#888" font-size="12" font-family="sans-serif">BORDER 分界线</text>
+    <rect x="1020" y="355" width="30" height="14" rx="3" fill="#38a169"/>
+    <text x="1065" y="367" text-anchor="start" fill="#888" font-size="12" font-family="sans-serif">CORNER 角落</text>
+  </svg>
+</div>
+
+<!-- 对比卡片区（2列x4行） -->
+<div class="section-title"><span class="bar"></span><span>两两对比卡片</span></div>
+
+<div class="compare-row">
+
+  <!-- Card 1: RIM vs EDGE -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="sh1"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.10"/></filter>
+      </defs>
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="380" y="32" text-anchor="middle" fill="#e67e22" font-size="17" font-weight="700" font-family="sans-serif">RIM vs EDGE — 开口的边缘 vs 整体的边缘</text>
+
+      <!-- RIM: 杯口 -->
+      <g transform="translate(30,50)">
+        <rect x="0" y="0" width="335" height="130" rx="8" fill="#fef9f2" stroke="#f0dcc8" stroke-width="1.5"/>
+        <text x="167" y="25" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="700" font-family="sans-serif">RIM</text>
+        <ellipse cx="167" cy="55" rx="40" ry="12" fill="none" stroke="#e67e22" stroke-width="3"/>
+        <rect x="127" y="60" width="80" height="50" fill="rgba(200,230,255,0.3)" stroke="#3498db" stroke-width="1"/>
+        <text x="167" y="110" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">rim of a glass — 杯口</text>
+        <text x="167" y="125" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">强调"圆形容器的开口边缘"</text>
+      </g>
+
+      <!-- EDGE: 悬崖 -->
+      <g transform="translate(395,50)">
+        <rect x="0" y="0" width="335" height="130" rx="8" fill="#fef2f2" stroke="#f0c8c8" stroke-width="1.5"/>
+        <text x="167" y="25" text-anchor="middle" fill="#e63946" font-size="14" font-weight="700" font-family="sans-serif">EDGE</text>
+        <rect x="80" y="40" width="50" height="60" fill="#888"/>
+        <rect x="80" y="90" width="110" height="15" fill="#666"/>
+        <line x1="130" y1="40" x2="130" y2="90" stroke="#e63946" stroke-width="4"/>
+        <text x="167" y="125" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">edge of a cliff — 悬崖边</text>
+        <text x="167" y="140" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">强调"任何形体的最外侧线"</text>
+      </g>
+
+      <text x="380" y="210" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">RIM = 开口的"内侧边缘"（杯口、篮筐、眼镜框）</text>
+      <text x="380" y="230" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">EDGE = 整体的"最外侧线"（悬崖、桌子、刀刃）</text>
+      <text x="380" y="260" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">不能说 "edge of a glass"（会误解为玻璃的棱角而非杯口）</text>
+    </svg>
+    <div class="label">
+      <div class="p">RIM vs EDGE</div>
+      <div class="desc">RIM 特指"圆形的/开口的"容器或孔洞的边缘（杯口、眼镜框、火山口 rim）；EDGE 是更通用的"任何物体的外侧边缘"（桌边、悬崖边、刀刃）。RIM 关注的是"开口的边"，EDGE 关注的是"整体的边"。</div>
+    </div>
+    <div style="padding:0 16px 18px;">
+      <div class="white-box" style="margin-top:0;"><strong>核心区别</strong>：你可以说 "the rim of a glass"（杯口）但不能说 "the edge of a glass" 来表达同一个意思——EDGE 会让人理解为玻璃杯的"侧面棱角"。反过来，你可以说 "the edge of the table"（桌边）但不适合用 rim，因为桌子不是圆形容器。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: EDGE vs BORDER -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="sh2"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.10"/></filter>
+      </defs>
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="380" y="32" text-anchor="middle" fill="#5b6abf" font-size="16" font-weight="700" font-family="sans-serif">EDGE vs BORDER — 物体的边缘 vs 地理/政治边界</text>
+
+      <!-- EDGE: 桌边 -->
+      <g transform="translate(30,50)">
+        <rect x="0" y="0" width="335" height="130" rx="8" fill="#fef2f2" stroke="#f0c8c8" stroke-width="1.5"/>
+        <text x="167" y="25" text-anchor="middle" fill="#e63946" font-size="14" font-weight="700" font-family="sans-serif">EDGE of table</text>
+        <rect x="90" y="40" width="150" height="15" rx="2" fill="#d4a843"/>
+        <line x1="90" y1="55" x2="90" y2="95" stroke="#d4a843" stroke-width="3"/>
+        <line x1="240" y1="55" x2="240" y2="95" stroke="#d4a843" stroke-width="3"/>
+        <line x1="90" y1="55" x2="240" y2="55" stroke="#e63946" stroke-width="4"/>
+        <text x="167" y="120" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">"Don't sit on the edge of the table."</text>
+      </g>
+
+      <!-- BORDER: 国界 -->
+      <g transform="translate(395,50)">
+        <rect x="0" y="0" width="335" height="130" rx="8" fill="#f0f0ff" stroke="#c8c8f0" stroke-width="1.5"/>
+        <text x="167" y="25" text-anchor="middle" fill="#5b6abf" font-size="14" font-weight="700" font-family="sans-serif">BORDER of country</text>
+        <rect x="60" y="40" width="100" height="80" fill="#f5e6d0" rx="4"/>
+        <text x="110" y="78" text-anchor="middle" fill="#333" font-size="13" font-family="sans-serif">A国</text>
+        <rect x="175" y="40" width="100" height="80" fill="#d0e8f5" rx="4"/>
+        <text x="225" y="78" text-anchor="middle" fill="#333" font-size="13" font-family="sans-serif">B国</text>
+        <line x1="160" y1="40" x2="160" y2="120" stroke="#5b6abf" stroke-width="4" stroke-dasharray="8,4"/>
+        <text x="167" y="120" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">"Cross the border into Canada."</text>
+      </g>
+
+      <text x="380" y="210" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">EDGE = 物体本身的"形态边界"（桌子的边缘、悬崖的边沿）</text>
+      <text x="380" y="230" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">BORDER = 两个区域之间的"分界线"（国界、州界、花坛边界）</text>
+      <text x="380" y="260" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">EDGE 关注"物"的边界；BORDER 关注"地/区"之间的分界</text>
+    </svg>
+    <div class="label">
+      <div class="p">EDGE vs BORDER</div>
+      <div class="desc">EDGE 用于描述"物体/形态"的物理边界（edge of the knife/table/cliff）；BORDER 用于描述"区域/领土"之间的人为或自然分界线（border between France and Germany / flower border）。BORDER 隐含"分隔两个区域"的意思，EDGE 只是"物体的尽头"。</div>
+    </div>
+    <div style="padding:0 16px 18px;">
+      <div class="white-box" style="margin-top:0;"><strong>核心区别</strong>：桌子有 edge（桌子的尽头）但没有 border（桌子没有被分成两个区域）。两个国家的交界既有 border（国界）也有 edge（国土的尽头）。BORDER 强调的是"两者之间的分隔线", EDGE 强调的是"单一物体的外沿"。抽象用法：borderline personality（边缘人格=在正常和异常的分界线上）, on edge（紧张=站在悬崖边）。</div>
+    </div>
+  </div>
+</div>
+
+<div class="compare-row" style="margin-bottom:24px;">
+
+  <!-- Card 3: CORNER vs EDGE -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="sh3"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.10"/></filter>
+      </defs>
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="380" y="32" text-anchor="middle" fill="#38a169" font-size="16" font-weight="700" font-family="sans-serif">CORNER vs EDGE — 角落 vs 边缘</text>
+
+      <!-- CORNER: 房间角落 -->
+      <g transform="translate(30,50)">
+        <rect x="0" y="0" width="335" height="130" rx="8" fill="#f0faf5" stroke="#c8f0d8" stroke-width="1.5"/>
+        <text x="167" y="25" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">CORNER of a room</text>
+        <rect x="70" y="40" width="120" height="80" fill="none" stroke="#ccc" stroke-width="3"/>
+        <rect x="70" y="40" width="40" height="40" fill="#38a169" opacity="0.12"/>
+        <line x1="70" y1="40" x2="110" y2="40" stroke="#38a169" stroke-width="3"/>
+        <line x1="70" y1="40" x2="70" y2="80" stroke="#38a169" stroke-width="3"/>
+        <rect x="75" y="70" width="20" height="30" fill="#8B4513" rx="3"/>
+        <circle cx="85" cy="65" r="10" fill="#38a169"/>
+        <text x="167" y="120" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">"There's a plant in the corner."</text>
+      </g>
+
+      <!-- EDGE: 路边 -->
+      <g transform="translate(395,50)">
+        <rect x="0" y="0" width="335" height="130" rx="8" fill="#fef2f2" stroke="#f0c8c8" stroke-width="1.5"/>
+        <text x="167" y="25" text-anchor="middle" fill="#e63946" font-size="14" font-weight="700" font-family="sans-serif">EDGE of the road</text>
+        <rect x="60" y="50" width="80" height="50" fill="#555"/>
+        <rect x="140" y="50" width="80" height="50" fill="#888"/>
+        <line x1="140" y1="50" x2="140" y2="100" stroke="#e63946" stroke-width="4"/>
+        <text x="167" y="130" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">"Keep to the edge of the road."</text>
+      </g>
+
+      <text x="380" y="210" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">CORNER = 两条 edge/border 的交汇点</text>
+      <text x="380" y="230" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">EDGE = 物体的一条"边线"（直线或曲线）</text>
+      <text x="380" y="260" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">角落是"两条边相遇的地方"，边缘是"一整条边"</text>
+    </svg>
+    <div class="label">
+      <div class="p">CORNER vs EDGE</div>
+      <div class="desc">CORNER 是"两条边（edge）或边界（border）交汇的点/区域"。EDGE 是"一条连续的边/线"。一个房间有4个 CORNER（角落）和4条 EDGE（墙边）。CORNER 强调"交汇点"的感觉——被两边夹住；EDGE 强调"边界线"的感觉——处于某物的外侧。</div>
+    </div>
+    <div style="padding:0 16px 18px;">
+      <div class="white-box" style="margin-top:0;"><strong>核心区别</strong>：corner 必须是"两条线的交点或接近交点的区域"；edge 可以是一条无限长的边界线。抽象用法中，corner 暗示"被逼到无路可逃"（cornered = 被逼到角落），edge 暗示"处于危险的边界"（on edge = 紧张）。</div>
+    </div>
+  </div>
+
+  <!-- Card 4: 抽象用法对比 -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="sh4"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.10"/></filter>
+      </defs>
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="380" y="32" text-anchor="middle" fill="#555" font-size="15" font-weight="700" font-family="sans-serif">抽象用法对比</text>
+
+      <!-- on edge -->
+      <g transform="translate(20,45)">
+        <rect x="0" y="0" width="355" height="62" rx="8" fill="#fef2f2" stroke="#f0c8c8" stroke-width="1.5"/>
+        <text x="15" y="22" text-anchor="start" fill="#e63946" font-size="13" font-weight="700" font-family="sans-serif">on edge</text>
+        <text x="15" y="42" text-anchor="start" fill="#555" font-size="11" font-family="sans-serif">紧张/烦躁不安 — 就像站在悬崖的边缘：小心翼翼、紧张兮兮</text>
+      </g>
+
+      <!-- on the rim -->
+      <g transform="translate(385,45)">
+        <rect x="0" y="0" width="355" height="62" rx="8" fill="#fef9f2" stroke="#f0dcc8" stroke-width="1.5"/>
+        <text x="15" y="22" text-anchor="start" fill="#e67e22" font-size="13" font-weight="700" font-family="sans-serif">on the rim of</text>
+        <text x="15" y="42" text-anchor="start" fill="#555" font-size="11" font-family="sans-serif">即将发生但尚未发生 — 像水在杯口边缘，差一点就溢出</text>
+      </g>
+
+      <!-- over the border -->
+      <g transform="translate(20,118)">
+        <rect x="0" y="0" width="355" height="62" rx="8" fill="#f0f0ff" stroke="#c8c8f0" stroke-width="1.5"/>
+        <text x="15" y="22" text-anchor="start" fill="#5b6abf" font-size="13" font-weight="700" font-family="sans-serif">over the border / border on</text>
+        <text x="15" y="42" text-anchor="start" fill="#555" font-size="11" font-family="sans-serif">越界 / 近乎… — 跨过了边界线，或者"接近于"某种状态</text>
+      </g>
+
+      <!-- cornered -->
+      <g transform="translate(385,118)">
+        <rect x="0" y="0" width="355" height="62" rx="8" fill="#f0faf5" stroke="#c8f0d8" stroke-width="1.5"/>
+        <text x="15" y="22" text-anchor="start" fill="#38a169" font-size="13" font-weight="700" font-family="sans-serif">cornered</text>
+        <text x="15" y="42" text-anchor="start" fill="#555" font-size="11" font-family="sans-serif">被逼到角落/走投无路 — 两面墙夹住，没有退路</text>
+      </g>
+
+      <!-- 底部总结 -->
+      <line x1="40" y1="200" x2="720" y2="200" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3"/>
+
+      <text x="380" y="225" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">四个词从"物理边缘" → "抽象临界状态"的演变：</text>
+      <text x="380" y="250" text-anchor="middle" fill="#888" font-size="11.5" font-family="sans-serif">on edge = 内心站在悬崖边（紧张）</text>
+      <text x="380" y="270" text-anchor="middle" fill="#888" font-size="11.5" font-family="sans-serif">on the rim = 差一点就要发生（临界）</text>
+      <text x="380" y="290" text-anchor="middle" fill="#888" font-size="11.5" font-family="sans-serif">border on = 近乎/接近于（某种状态）</text>
+      <text x="380" y="310" text-anchor="middle" fill="#888" font-size="11.5" font-family="sans-serif">cornered = 被逼到无路可退（困境）</text>
+    </svg>
+    <div class="label">
+      <div class="p">抽象用法对比</div>
+      <div class="desc">四个边缘类词汇都有从物理到抽象的演变——核心画面都是"在边线上/靠近边线/越过边线/被边线夹住"，但抽象方向各有不同。on edge = 内心紧张；on the rim of = 事件临界；border on = 性质接近；cornered = 处境困境。</div>
+    </div>
+    <div style="padding:0 16px 18px;">
+      <div class="white-box" style="margin-top:0;"><strong>抽象逻辑总结</strong>：边缘 = 临界状态。EDGE 侧重"危险感"（紧张）；RIM 侧重"差一点"（满到杯口即将溢出）；BORDER 侧重"分界线两侧"（越界/近乎）；CORNER 侧重"无退路"（被两条边夹住）。四个词覆盖了"临界"的不同侧面。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 常见搭配区（每个词3-4个，共15个左右） -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+
+<div class="four-col">
+  <div class="usage-section" style="padding:16px 18px;">
+    <h4 style="font-size:14px;color:#e67e22;">RIM</h4>
+    <div style="margin-top:8px;">
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en"><strong>rim</strong> of a glass</span><span class="usage-cn">杯口 &nbsp;|&nbsp; 圆形容器开口的边缘</span></div>
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en">Pacific <strong>Rim</strong></span><span class="usage-cn">环太平洋地区 &nbsp;|&nbsp; 太平洋"周围"的国家</span></div>
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en"><strong>rim</strong> shot</span><span class="usage-cn">敲击鼓边 &nbsp;|&nbsp; 鼓槌同时敲击鼓面和边缘的声音</span></div>
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en">gold-<strong>rimmed</strong></span><span class="usage-cn">金边的 &nbsp;|&nbsp; 眼镜/杯碟边缘镀金</span></div>
+    </div>
+  </div>
+
+  <div class="usage-section" style="padding:16px 18px;">
+    <h4 style="font-size:14px;color:#e63946;">EDGE</h4>
+    <div style="margin-top:8px;">
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en">cutting <strong>edge</strong></span><span class="usage-cn">前沿/尖端 &nbsp;|&nbsp; 像刀刃一样"最新最锋利"</span></div>
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en">on <strong>edge</strong></span><span class="usage-cn">紧张/烦躁 &nbsp;|&nbsp; 像站在悬崖边缘一样小心翼翼</span></div>
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en"><strong>edge</strong> out</span><span class="usage-cn">以微弱优势险胜 &nbsp;|&nbsp; 把对手"挤出边缘"</span></div>
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en">competitive <strong>edge</strong></span><span class="usage-cn">竞争优势 &nbsp;|&nbsp; 在竞争中略微"领先一点"</span></div>
+    </div>
+  </div>
+
+  <div class="usage-section" style="padding:16px 18px;">
+    <h4 style="font-size:14px;color:#5b6abf;">BORDER</h4>
+    <div style="margin-top:8px;">
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en"><strong>border</strong> line</span><span class="usage-cn">边界线/临界 &nbsp;|&nbsp; 两个区域之间的分界线</span></div>
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en"><strong>border</strong> on</span><span class="usage-cn">近乎/接近于 &nbsp;|&nbsp; 接近于某种状态（border on ridiculous）</span></div>
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en">cross the <strong>border</strong></span><span class="usage-cn">过境/越界 &nbsp;|&nbsp; 跨越国境线</span></div>
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en">over the <strong>border</strong></span><span class="usage-cn">超出界限 &nbsp;|&nbsp; 越过允许的范围</span></div>
+    </div>
+  </div>
+
+  <div class="usage-section" style="padding:16px 18px;">
+    <h4 style="font-size:14px;color:#38a169;">CORNER</h4>
+    <div style="margin-top:8px;">
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en"><strong>corner</strong> office</span><span class="usage-cn">角落办公室 &nbsp;|&nbsp; 高管/老板的办公室（通常有两侧窗户）</span></div>
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en"><strong>corner</strong> the market</span><span class="usage-cn">垄断市场 &nbsp;|&nbsp; 把市场"逼到角落"=控制整个市场</span></div>
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en"><strong>cornered</strong></span><span class="usage-cn">被逼到绝境 &nbsp;|&nbsp; 像被逼到墙角，没有退路</span></div>
+      <div class="usage-item" style="border:none;padding:4px 0;"><span class="usage-en">corner of my eye</span><span class="usage-cn">眼角余光 &nbsp;|&nbsp; 用视野的"角落"看到</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 小白框解释 -->
+<div style="margin-bottom:20px;">
+  <div class="white-box"><strong>RIM 特殊搭配</strong>：Pacific Rim（环太平洋地区）= 把太平洋看作一个大"杯子"，围绕它的国家就像杯口 rim。rim shot（鼓边敲击）= 爵士乐鼓手用鼓槌敲击鼓面边缘和鼓框。gold-rimmed（金边的）= 用 rim 作后缀表示"有……边缘的"。</div>
+  <div class="white-box"><strong>EDGE 特殊搭配</strong>：cutting edge（前沿/尖端）= 刀刃的"刃口"象征"最新最先进"。competitive edge（竞争优势）= 在竞争中"比对手多出一点点"——就像站在边缘比对手更靠前。on edge（紧张/烦躁）= 像站在危险的边缘一样。edge out（险胜）= 把对手"推到边缘外面"。</div>
+  <div class="white-box"><strong>BORDER 特殊搭配</strong>：borderline（边界线上的）= 介于两种状态之间，常用于心理学：borderline personality disorder（边缘型人格障碍）。border on（近乎/接近于）= 从物理上"毗邻"变成抽象上"近乎"——His behavior borders on insanity.（他的行为近乎疯狂。）</div>
+  <div class="white-box"><strong>CORNER 特殊搭配</strong>：corner the market（垄断市场）= 把竞争对手"逼到角落"使其无法动弹。cornered（被逼到绝境）= 像被堵在角落无处可逃。corner office（角落办公室）= 高管专属，因为角落办公室有两面窗户，空间更大。corner of my eye（眼角余光）= 用视野的"角落"而非中心来看。</div>
+</div>
+
+<!-- 反义/相似 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card rim-bg">
+      <h5 style="color:#e67e22;">近义辨析（边缘类）</h5>
+      <p><strong>RIM</strong> — 圆形容器开口边 <small>杯子/眼镜/火山口</small></p>
+      <p><strong>EDGE</strong> — 任何形体的最外侧 <small>最通用</small></p>
+      <p><strong>BORDER</strong> — 区域间的分界 <small>国界/州界/花坛边</small></p>
+      <p><strong>CORNER</strong> — 两条边相交的点 <small>房间角落/街角</small></p>
+      <p><strong>BRINK</strong> — 危险边缘 <small>即将崩溃/坠落</small></p>
+      <p><strong>VERGE</strong> — 即将状态 <small>on the verge of</small></p>
+    </div>
+    <div class="info-card" style="background:linear-gradient(135deg,#f0f0ff,#e0e0f5);">
+      <h5 style="color:#5b6abf;">反义/对比</h5>
+      <p><strong>CENTER / MIDDLE</strong> — 中心 <small>所有"边"的反面</small></p>
+      <p><strong>INTERIOR</strong> — 内部 <small>不在边界的位置</small></p>
+      <p><strong>CORE</strong> — 核心 <small>最深处/最重要的部分</small></p>
+      <p><strong>BLUNT</strong> — 钝的 <small>edge 有"刃"的含义</small></p>
+    </div>
+    <div class="info-card corner-bg">
+      <h5 style="color:#38a169;">特殊用法提醒</h5>
+      <p><strong>edge case</strong> — 边界值 <small>编程中的极端情况</small></p>
+      <p><strong>cutting-edge</strong> — 尖端的 <small>复合形容词</small></p>
+      <p><strong>borderline</strong> — 接近临界 <small>兼作名词和形容词</small></p>
+      <p><strong>cornerstone</strong> — 基石 <small>建筑墙角石→基础</small></p>
+      <p><strong>rim vs brim</strong> — brim 比 rim 更宽 <small>"帽檐"用 brim</small></p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

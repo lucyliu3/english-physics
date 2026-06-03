@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHANNEL 图解</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f0f4f8 0%,#e8eef5 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#2b6cb0,#1a365d); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#2b6cb0,#4299e1); border-radius:2px; flex-shrink:0; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#2b6cb0; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #c8d8e8; padding-left:10px; }
+
+  .white-box { background:#fff; border:1px solid #d0dce8; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #d0dce8; border-top:1px solid #d0dce8; transform:rotate(45deg); }
+  .white-box strong { color:#2b6cb0; }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+
+  .usage-section { background:linear-gradient(135deg,#f4f8fc,#eef4fa); border:1px solid #d0dce8; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#2b6cb0; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+
+  .channel-bg { background:linear-gradient(135deg,#e8f0fa,#d4e4f5); }
+  .canal-bg { background:linear-gradient(135deg,#f0f5f0,#e0f0e0); }
+
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>CHANNEL</h1>
+<p class="subtitle">通道 / 渠道 / 频道 — 从"water channel"到"change the channel"</p>
+
+<!-- 核心意象对比 -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+  <!-- Card 1: CHANNEL 核心意象 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="400">
+          <stop offset="0%" stop-color="#2b6cb0" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#2b6cb0" stop-opacity="0.35"/>
+        </linearGradient>
+        <linearGradient id="waterFlow" x1="0" y1="0" x2="760" y2="0">
+          <stop offset="0%" stop-color="#2b6cb0" stop-opacity="0.4"/>
+          <stop offset="50%" stop-color="#4299e1" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#2b6cb0" stop-opacity="0.4"/>
+        </linearGradient>
+        <filter id="shadow">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="#fafaf8" rx="8"/>
+
+      <!-- 背景河床 -->
+      <path d="M60,220 Q200,280 380,260 Q560,240 700,220 L700,340 Q560,360 380,370 Q200,380 60,340 Z" fill="url(#waterGrad)" stroke="#2b6cb0" stroke-width="1.5" stroke-opacity="0.3"/>
+
+      <!-- 水流波纹动画 -->
+      <path d="M80,250 Q200,265 380,255 Q560,245 680,250" fill="none" stroke="url(#waterFlow)" stroke-width="2.5" stroke-linecap="round" opacity="0.6">
+        <animate attributeName="d" values="M80,250 Q200,265 380,255 Q560,245 680,250;M80,255 Q200,240 380,260 Q560,250 680,255;M80,250 Q200,265 380,255 Q560,245 680,250" dur="3s" repeatCount="indefinite"/>
+      </path>
+      <path d="M100,270 Q240,280 400,272 Q560,264 660,268" fill="none" stroke="url(#waterFlow)" stroke-width="2" stroke-linecap="round" opacity="0.4">
+        <animate attributeName="d" values="M100,270 Q240,280 400,272 Q560,264 660,268;M100,274 Q240,264 400,276 Q560,268 660,272;M100,270 Q240,280 400,272 Q560,264 660,268" dur="4s" repeatCount="indefinite"/>
+      </path>
+
+      <!-- 河岸 -->
+      <path d="M60,220 Q200,280 380,260 Q560,240 700,220" fill="none" stroke="#8B7355" stroke-width="12" stroke-linecap="round" opacity="0.6"/>
+      <path d="M60,340 Q200,380 380,370 Q560,360 700,340" fill="none" stroke="#8B7355" stroke-width="10" stroke-linecap="round" opacity="0.5"/>
+
+      <!-- 水方向箭头 -->
+      <polygon points="380,252 390,260 370,260" fill="#2b6cb0" opacity="0.7">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 20,0; -20,0; 0,0" dur="3s" repeatCount="indefinite"/>
+      </polygon>
+      <polygon points="400,268 410,276 390,276" fill="#2b6cb0" opacity="0.5">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 15,0; -15,0; 0,0" dur="3.5s" repeatCount="indefinite"/>
+      </polygon>
+
+      <!-- TV 频道示意 - 右上角 -->
+      <rect x="520" y="50" width="120" height="90" rx="8" fill="#2b6cb0" opacity="0.08" stroke="#2b6cb0" stroke-width="1.5" stroke-opacity="0.3"/>
+      <rect x="525" y="55" width="110" height="6" rx="2" fill="#2b6cb0" opacity="0.15"/>
+      <rect x="525" y="66" width="110" height="6" rx="2" fill="#2b6cb0" opacity="0.12"/>
+      <rect x="525" y="77" width="80" height="6" rx="2" fill="#2b6cb0" opacity="0.1"/>
+      <rect x="525" y="88" width="95" height="6" rx="2" fill="#2b6cb0" opacity="0.1"/>
+      <rect x="525" y="99" width="70" height="6" rx="2" fill="#2b6cb0" opacity="0.08"/>
+      <text x="580" y="133" text-anchor="middle" fill="#2b6cb0" font-size="13" font-weight="600" font-family="sans-serif">TV Channel</text>
+
+      <!-- 销售渠道示意 - 左下角 -->
+      <rect x="80" y="100" width="100" height="70" rx="6" fill="#4299e1" opacity="0.08" stroke="#2b6cb0" stroke-width="1" stroke-opacity="0.2"/>
+      <line x1="130" y1="100" x2="130" y2="60" stroke="#2b6cb0" stroke-width="1.5" stroke-dasharray="3,3"/>
+      <polygon points="126,65 130,55 134,65" fill="#2b6cb0"/>
+      <text x="130" y="95" text-anchor="middle" fill="#2b6cb0" font-size="12" font-weight="600" font-family="sans-serif">Producer</text>
+      <text x="130" y="120" text-anchor="middle" fill="#555" font-size="12" font-weight="600" font-family="sans-serif">→</text>
+      <text x="130" y="145" text-anchor="middle" fill="#2b6cb0" font-size="12" font-weight="600" font-family="sans-serif">Distributor</text>
+      <text x="130" y="160" text-anchor="middle" fill="#555" font-size="12" font-weight="600" font-family="sans-serif">→</text>
+      <text x="130" y="175" text-anchor="middle" fill="#2b6cb0" font-size="12" font-weight="600" font-family="sans-serif">Customer</text>
+
+      <!-- 中央大字 -->
+      <text x="380" y="50" text-anchor="middle" fill="#2b6cb0" font-size="22" font-weight="800" font-family="sans-serif">CHANNEL</text>
+      <text x="380" y="72" text-anchor="middle" fill="#666" font-size="14" font-family="sans-serif">通道 · 渠道 · 频道 · 引导</text>
+    </svg>
+    <div class="card-body">
+      <h3>CHANNEL <span class="hl">/ˈtʃæn.əl/</span></h3>
+      <div class="pos">NOUN · VERB</div>
+      <div class="def">
+        <strong>本义（名词）</strong> 水道、通道 — 水流通行的天然或人工路径<br>
+        <strong>引申（名词）</strong> 渠道、频道、途径 — 信息/能量/资源流通的媒介<br>
+        <strong>引申（动词）</strong> 引导、输送 — 使某物沿着特定路径流动
+        <span class="eg">"Water flows through an irrigation channel." 水流经灌溉渠。</span>
+        <span class="eg">"We need to go through official channels." 我们需要通过官方渠道。</span>
+      </div>
+      <div class="white-box"><strong>💡 核心意象</strong>：一条让事物从A点流向B点的限定通道。无论是水流、电视信号、销售途径，还是个人精力——"channel"的本质都是"在限定路径中引导流动"。<br>
+      🧠 物理渠 → 抽象渠：水在渠中流动 → 信息在频道中传播 → 商品在销售渠道中流通 → 精力被引导到特定方向。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: CHANNEL vs CANAL 对比 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="shadow2">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="#fafaf8" rx="8"/>
+
+      <!-- CHANNEL 侧 -->
+      <text x="190" y="40" text-anchor="middle" fill="#2b6cb0" font-size="20" font-weight="800" font-family="sans-serif">CHANNEL</text>
+      <text x="190" y="60" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">天然或自然形成</text>
+      <!-- 自然水道 -->
+      <path d="M50,140 Q120,170 190,155 Q260,140 330,150" fill="none" stroke="#2b6cb0" stroke-width="2.5" opacity="0.5"/>
+      <path d="M50,200 Q120,230 190,215 Q260,200 330,210" fill="none" stroke="#2b6cb0" stroke-width="2.5" opacity="0.5"/>
+      <path d="M60,150 Q190,180 320,160" fill="url(#waterGrad)" stroke="none"/>
+      <text x="190" y="270" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">水渠 / 海峡（自然）</text>
+      <text x="190" y="290" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">English Channel</text>
+      <text x="190" y="120" text-anchor="middle" fill="#2b6cb0" font-size="14" font-family="sans-serif">🍃 Natural</text>
+
+      <!-- 分隔线 -->
+      <line x1="380" y1="50" x2="380" y2="350" stroke="#ddd" stroke-width="1" stroke-dasharray="4,4"/>
+
+      <!-- CANAL 侧 -->
+      <text x="570" y="40" text-anchor="middle" fill="#38a169" font-size="20" font-weight="800" font-family="sans-serif">CANAL</text>
+      <text x="570" y="60" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">人工开凿建造</text>
+      <!-- 人工运河 -->
+      <rect x="420" y="140" width="300" height="80" rx="2" fill="#38a169" opacity="0.08"/>
+      <rect x="420" y="155" width="300" height="50" fill="#38a169" opacity="0.15"/>
+      <line x1="420" y1="140" x2="720" y2="140" stroke="#8B7355" stroke-width="6"/>
+      <line x1="420" y1="230" x2="720" y2="230" stroke="#8B7355" stroke-width="6"/>
+      <!-- 水流 -->
+      <path d="M440,175 Q510,185 570,180 Q630,175 700,180" fill="none" stroke="#38a169" stroke-width="2" opacity="0.5">
+        <animate attributeName="d" values="M440,175 Q510,185 570,180 Q630,175 700,180;M440,180 Q510,170 570,178 Q630,182 700,178;M440,175 Q510,185 570,180 Q630,175 700,180" dur="3s" repeatCount="indefinite"/>
+      </path>
+      <!-- 船 -->
+      <g filter="url(#shadow2)">
+        <path d="M530,170 L540,195 L600,195 L610,170 Z" fill="#8B4513" opacity="0.7"/>
+        <rect x="540" y="160" width="60" height="15" rx="2" fill="#f5deb3" opacity="0.8"/>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 60,0; 0,0" dur="6s" repeatCount="indefinite"/>
+      </g>
+      <text x="570" y="270" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">运河（人工建造）</text>
+      <text x="570" y="290" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">Panama Canal, Suez Canal</text>
+      <text x="570" y="120" text-anchor="middle" fill="#38a169" font-size="14" font-family="sans-serif">🏗️ Man-made</text>
+
+      <!-- 底部对比 -->
+      <text x="380" y="340" text-anchor="middle" fill="#555" font-size="13" font-family="sans-serif">Channel 可以是天然的（海峡/水道）；Canal 一定是人工开凿的（运河）</text>
+    </svg>
+    <div class="card-body">
+      <h3>CHANNEL vs CANAL</h3>
+      <div class="pos">核心区别：天然 vs 人工</div>
+      <div class="def">
+        channel 强调"通道本身"（可天然可人工）<br>
+        canal 强调"人工开凿的运输水道"
+      </div>
+      <div class="white-box"><strong>💡 对比关键</strong>：channel 的核心是"流通媒介"——无论是天然形成的海峡还是人为设定的频道；canal 更具体，特指"人工挖的运河/管道"，用于船运或灌溉。Channel 范围更广，canal 更具体于工程领域。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 逻辑演化树 -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div style="background:#f4f8fc; border:1px solid #d0dce8; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div class="tree-grid" style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #c8d8e8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ① 物理水道<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">水流通行的路径</span>
+    </div>
+    <div class="tree-arrow" style="font-size:18px; color:#2b6cb0; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #c8d8e8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ② 电视频道<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">信号流通的通道</span>
+    </div>
+    <div class="tree-arrow" style="font-size:18px; color:#2b6cb0; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #c8d8e8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ③ 销售渠道<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">商品流通的路径</span>
+    </div>
+    <div class="tree-arrow" style="font-size:18px; color:#2b6cb0; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #c8d8e8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ④ 官方渠道<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">流程通过的途径</span>
+    </div>
+    <div class="tree-arrow" style="font-size:18px; color:#2b6cb0; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#fafaf8; border:1px solid #c8d8e8; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ⑤ 引导(动词)<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">使能量或资源沿通道流动</span>
+    </div>
+  </div>
+  <div style="margin-top:12px;">
+    <div class="white-box" style="margin-top:0;"><strong>🧠 逻辑链条</strong>：物理世界中，"channel"就是水流通行的河道/渠。人们发现这个"让东西沿路径流动"的概念非常好用 → 应用到电磁波领域 → "TV channel"（电视频道，信号沿特定频率通道传播）→ 应用到商业领域 → "sales channel"（销售渠道，商品沿特定通路流向消费者）→ 应用到社交领域 → "official channels"（官方渠道，信息按组织流程传递）→ 再抽象成动词 → "channel your energy"（引导你的精力，让精力沿特定方向流动）。</div>
+  </div>
+</div>
+
+<!-- 易混对比区 -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;">
+  <!-- CHANNEL vs PASSAGE -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="190" y="45" text-anchor="middle" fill="#2b6cb0" font-size="18" font-weight="700" font-family="sans-serif">CHANNEL</text>
+      <text x="570" y="45" text-anchor="middle" fill="#8B4513" font-size="18" font-weight="700" font-family="sans-serif">PASSAGE</text>
+
+      <!-- CHANNEL 水道 -->
+      <path d="M60,120 Q190,155 320,130" fill="none" stroke="#2b6cb0" stroke-width="3" opacity="0.4"/>
+      <path d="M60,180 Q190,215 320,190" fill="none" stroke="#2b6cb0" stroke-width="3" opacity="0.4"/>
+      <text x="190" y="230" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">有界定向流动</text>
+      <text x="190" y="250" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">强调"流通媒介"</text>
+      <polygon points="320,145 330,155 310,155" fill="#2b6cb0" opacity="0.5">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 20,0; 0,0" dur="2s" repeatCount="indefinite"/>
+      </polygon>
+
+      <line x1="380" y1="50" x2="380" y2="300" stroke="#ddd" stroke-width="1" stroke-dasharray="4,4"/>
+
+      <!-- PASSAGE 走廊 -->
+      <rect x="450" y="100" width="240" height="80" rx="2" fill="#8B4513" opacity="0.08"/>
+      <rect x="450" y="100" width="240" height="80" fill="none" stroke="#8B4513" stroke-width="2" opacity="0.3"/>
+      <line x1="460" y1="100" x2="460" y2="180" stroke="#8B4513" stroke-width="1" opacity="0.2"/>
+      <line x1="680" y1="100" x2="680" y2="180" stroke="#8B4513" stroke-width="1" opacity="0.2"/>
+      <text x="570" y="145" text-anchor="middle" fill="#8B4513" font-size="16" font-weight="600" font-family="sans-serif">↔ 走廊/过道</text>
+      <text x="570" y="230" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">空间通道（穿过）</text>
+      <text x="570" y="250" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">强调"穿过的空间"</text>
+    </svg>
+    <div class="label">
+      <div class="p">CHANNEL vs PASSAGE</div>
+      <div class="desc">Channel 强调"流动媒介"（水/信息/商品），有输入输出方向；Passage 强调"穿过的空间"（走廊/段落/时光流逝），更侧重"从一端到另一端的移动"。</div>
+    </div>
+  </div>
+
+  <!-- CHANNEL vs MEDIUM -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="190" y="45" text-anchor="middle" fill="#2b6cb0" font-size="18" font-weight="700" font-family="sans-serif">CHANNEL</text>
+      <text x="570" y="45" text-anchor="middle" fill="#7c3aed" font-size="18" font-weight="700" font-family="sans-serif">MEDIUM</text>
+
+      <!-- CHANNEL 渠道 -->
+      <rect x="60" y="90" width="260" height="80" rx="6" fill="#2b6cb0" opacity="0.06"/>
+      <text x="190" y="120" text-anchor="middle" fill="#2b6cb0" font-size="14" font-weight="600" font-family="sans-serif">→ 路径/管道 →</text>
+      <text x="190" y="145" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">a channel of communication</text>
+      <text x="190" y="165" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">（一条具体的沟通渠道）</text>
+
+      <line x1="380" y1="50" x2="380" y2="300" stroke="#ddd" stroke-width="1" stroke-dasharray="4,4"/>
+
+      <!-- MEDIUM 媒介 -->
+      <rect x="440" y="90" width="260" height="80" rx="6" fill="#7c3aed" opacity="0.06"/>
+      <text x="570" y="120" text-anchor="middle" fill="#7c3aed" font-size="14" font-weight="600" font-family="sans-serif">◯ 环境/媒介 ◯</text>
+      <text x="570" y="145" text-anchor="middle" fill="#444" font-size="13" font-family="sans-serif">the medium of painting</text>
+      <text x="570" y="165" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">（绘画这种媒介形式）</text>
+
+      <text x="380" y="240" text-anchor="middle" fill="#555" font-size="13" font-family="sans-serif">Channel = 路径（一条）；Medium = 媒介/介质（一类）</text>
+      <text x="380" y="270" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">通过某个 channel 传递信息；用某种 medium 表达艺术</text>
+    </svg>
+    <div class="label">
+      <div class="p">CHANNEL vs MEDIUM</div>
+      <div class="desc">Channel 是"具体的流通路径"，有起点和终点（如 TV channel 5、diplomatic channel）。Medium 是"媒介/介质/形式"本身，更抽象（如 oil painting is a medium、the medium of social media）。你可以说 "TV is a medium, and Channel 5 is a channel on that medium"。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 常见搭配区 -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+
+<div class="usage-section">
+  <h4>📺 电视频道</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>change</strong> the channel</span>
+      <span class="usage-cn">换频道 &nbsp;|&nbsp; 📖 按遥控器切换电视频道</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>channel</strong> surfing</span>
+      <span class="usage-cn">频道冲浪/不断换台 &nbsp;|&nbsp; 📖 快速浏览各个频道找想看的节目</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">cable <strong>channel</strong></span>
+      <span class="usage-cn">有线电视频道 &nbsp;|&nbsp; 📖 通过有线电视网络传输的频道</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">switch <strong>channels</strong></span>
+      <span class="usage-cn">切换频道 &nbsp;|&nbsp; 📖 从当前频道换到另一个</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>🏛️ 渠道/途径</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en">through official <strong>channels</strong></span>
+      <span class="usage-cn">通过官方渠道 &nbsp;|&nbsp; 📖 按正规组织流程办事而非私人关系</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">diplomatic <strong>channels</strong></span>
+      <span class="usage-cn">外交渠道 &nbsp;|&nbsp; 📖 国与国之间的正式沟通途径</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">sales <strong>channel</strong></span>
+      <span class="usage-cn">销售渠道 &nbsp;|&nbsp; 📖 产品从生产者到消费者的流通路径</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">communication <strong>channel</strong></span>
+      <span class="usage-cn">沟通渠道 &nbsp;|&nbsp; 📖 信息传递的途径</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">distribution <strong>channel</strong></span>
+      <span class="usage-cn">分销渠道 &nbsp;|&nbsp; 📖 商品从生产到零售的中间环节</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">open a <strong>channel</strong> of dialogue</span>
+      <span class="usage-cn">开启对话渠道 &nbsp;|&nbsp; 📖 建立双方沟通的途径</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>⚡ 动词用法：引导</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>channel</strong> your energy</span>
+      <span class="usage-cn">引导你的精力 &nbsp;|&nbsp; 📖 将精力集中到特定方向/活动上</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>channel</strong> your anger</span>
+      <span class="usage-cn">疏导你的愤怒 &nbsp;|&nbsp; 📖 将愤怒转化为建设性的行动</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>channel</strong> funds into</span>
+      <span class="usage-cn">将资金导入 &nbsp;|&nbsp; 📖 把资金调配到特定项目/领域</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>channel</strong> resources</span>
+      <span class="usage-cn">调配资源 &nbsp;|&nbsp; 📖 将资源引导到需要的地方</span>
+    </div>
+  </div>
+</div>
+
+<div class="usage-section">
+  <h4>🌍 地理名称</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en">the English <strong>Channel</strong></span>
+      <span class="usage-cn">英吉利海峡 &nbsp;|&nbsp; 📖 英国和法国之间的海峡（天然水道）</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">the Bristol <strong>Channel</strong></span>
+      <span class="usage-cn">布里斯托尔湾 &nbsp;|&nbsp; 📖 英国西南部海域</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en">irrigation <strong>channel</strong></span>
+      <span class="usage-cn">灌溉渠 &nbsp;|&nbsp; 📖 将水引到农田的人造水道</span>
+    </div>
+  </div>
+</div>
+
+<!-- 白框解释区 -->
+<div style="margin-bottom:20px;">
+  <div class="white-box"><strong>💡 change the channel</strong> = 换频道。物理来源：早期电视需要通过旋钮改变接收信号的频率"通道" → 泛指切换话题/注意力。<br>
+  <em>"Let's change the channel — I'm tired of this show."</em>（换个频道吧——我看腻了这个节目。）</div>
+  <div class="white-box"><strong>💡 through official channels</strong> = 通过官方渠道。物理来源：水要沿着水渠流动 → 信息/申请要沿着组织规定的"流程渠道"传递，而不是走捷径或私人关系。<br>
+  <em>"You need to apply through official channels."</em>（你需要通过官方渠道申请。）</div>
+  <div class="white-box"><strong>💡 channel your energy/anger</strong> = 引导你的精力/愤怒。物理来源：水渠把散乱的水流汇聚到一条河道中 → 把散乱的精力/情绪集中引导到建设性的方向上。<br>
+  <em>"Channel your anger into your workout."</em>（把你的愤怒发泄到锻炼中。）</div>
+  <div class="white-box"><strong>💡 channel surfing</strong> = 频道冲浪。物理来源：像冲浪者在海浪间穿梭一样，用遥控器在频道之间快速切换浏览。<br>
+  <em>"I spent an hour channel surfing and found nothing good."</em>（我花了一小时换台，什么好节目都没找到。）</div>
+</div>
+
+<!-- 反义/相似 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card" style="background:linear-gradient(135deg,#e8f0fa,#d4e4f5);">
+      <h5 style="color:#2b6cb0;">近义辨析</h5>
+      <p><strong>CHANNEL</strong> — 通道/渠道 <small>流通媒介，可天然可人工</small></p>
+      <p><strong>CANAL</strong> — 运河 <small>人工建造的水道</small></p>
+      <p><strong>PASSAGE</strong> — 通道/走廊 <small>穿过空间的动作或路径</small></p>
+      <p><strong>MEDIUM</strong> — 媒介 <small>表达或传播的介质/形式</small></p>
+      <p><strong>CONDUIT</strong> — 管道/导管 <small>输送液体或电线的管子</small></p>
+      <p><strong>DUCT</strong> — 管道/导管 <small>体内或建筑内的输送管</small></p>
+    </div>
+    <div class="info-card" style="background:linear-gradient(135deg,#f0f5ff,#e0e8f5);">
+      <h5 style="color:#4a5568;">易混提醒</h5>
+      <p><strong>Channel ≠ Canal</strong> <small>Channel 可天然（海峡）；Canal 必人工（运河）</small></p>
+      <p><strong>Channel ≠ Passage</strong> <small>Channel 强调"流动"；Passage 强调"穿过"</small></p>
+      <p><strong>Channel ≠ Medium</strong> <small>Channel 是具体的"路径"；Medium 是泛指的"媒介"</small></p>
+      <p><strong>Channel ≠ Tunnel</strong> <small>Channel 是开放水道；Tunnel 是封闭隧道</small></p>
+    </div>
+    <div class="info-card" style="background:linear-gradient(135deg,#f8f4f0,#f0e8e0);">
+      <h5 style="color:#8B4513;">结构对比</h5>
+      <p><strong>CHANNEL</strong> — 水道/渠道 <small>开放式的流通路径</small></p>
+      <p><strong>TUNNEL</strong> — 隧道 <small>封闭式的通过路径</small></p>
+      <p><strong>PIPE</strong> — 管子 <small>封闭圆形管道，通常较小</small></p>
+      <p><strong>STRAIT</strong> — 海峡 <small>连接两大水域的狭窄天然水道</small></p>
+      <p><strong>GUTTER</strong> — 排水沟 <small>路边排雨水的槽</small></p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

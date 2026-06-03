@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GONE 空间意象图解 — 三大类</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f0;
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+    color: #1a1a1a;
+  }
+  .container {
+    max-width: 960px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px 56px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .section-title .bar {
+    display: inline-block;
+    width: 4px;
+    height: 18px;
+    background: #4a90d9;
+    margin-right: 12px;
+    vertical-align: middle;
+    border-radius: 2px;
+  }
+  .section-title span { vertical-align: middle; }
+
+  /* === 三格对比 === */
+  .compare-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 44px;
+  }
+  .compare-card {
+    background: #fafaf8;
+    border-radius: 12px;
+    padding: 18px 14px 22px;
+    border: 1px solid #e8e8e4;
+  }
+  .compare-card canvas {
+    width: 100%;
+    max-width: 270px;
+    height: auto;
+    aspect-ratio: 270 / 180;
+    display: block;
+    margin: 0 auto 12px;
+    border-radius: 6px;
+    background: #fafaf8;
+  }
+  .card-label {
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .card-label .en { font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+  .card-label .cn { font-size: 14px; color: #888; font-weight: 400; margin-left: 4px; }
+  .card-desc {
+    text-align: center;
+    font-size: 13.5px;
+    color: #555;
+    line-height: 1.5;
+  }
+  .in .card-label .en { color: #2b6cb0; }
+  .out .card-label .en { color: #c05621; }
+  .gone .card-label .en { color: #9b2c2c; }
+
+  /* === 三大类卡片 === */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .card {
+    background: #fafaf8;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .card canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 270 / 200;
+    display: block;
+    background: #fafaf8;
+  }
+  .card-body {
+    padding: 16px 18px 20px;
+  }
+  .card-body h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .card-body h3 .highlight { color: #9b2c2c; }
+  .card-body .ref {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 6px;
+  }
+  .card-body .def {
+    font-size: 13.5px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .card-body .def .eg {
+    color: #777;
+    font-style: italic;
+    display: block;
+    margin-top: 2px;
+  }
+  .card-body .def .key {
+    color: #9b2c2c;
+    font-weight: 600;
+  }
+
+  .spatial-note {
+    margin-top: 36px;
+    padding: 16px 20px;
+    background: #f0f4f8;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .spatial-note strong { color: #2b6cb0; }
+
+  @media (max-width: 720px) {
+    .container { padding: 28px 16px 36px; }
+    .compare-row { grid-template-columns: 1fr; gap: 14px; }
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>GONE 的空间意象</h1>
+  <p class="subtitle">核心逻辑：主体从参照空间脱离 → 参照点空了</p>
+
+  <!-- 三格对比 -->
+  <div class="section-title"><span class="bar"></span><span>与 IN / OUT 的关系</span></div>
+  <div class="compare-row">
+    <div class="compare-card in">
+      <canvas id="cIn" width="270" height="180"></canvas>
+      <div class="card-label"><span class="en">IN</span><span class="cn">在...里</span></div>
+      <p class="card-desc">主体在参照空间内部</p>
+    </div>
+    <div class="compare-card out">
+      <canvas id="cOut" width="270" height="180"></canvas>
+      <div class="card-label"><span class="en">OUT</span><span class="cn">在...外</span></div>
+      <p class="card-desc">主体在外部，但仍在场景中</p>
+    </div>
+    <div class="compare-card gone">
+      <canvas id="cGone" width="270" height="180"></canvas>
+      <div class="card-label"><span class="en">GONE</span><span class="cn">消失了</span></div>
+      <p class="card-desc">主体离开了整个场景</p>
+    </div>
+  </div>
+
+  <!-- 三大类 -->
+  <div class="section-title"><span class="bar"></span><span>三大自然类别</span></div>
+  <div class="cards">
+
+    <div class="card">
+      <canvas id="cardThing" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>物 <span class="highlight">is gone</span></h3>
+        <div class="ref">参照空间 = 物理位置</div>
+        <div class="def">
+          某物从它原来的物理位置消失了，<span class="key">参照点空了</span>。
+          <span class="eg">"My keys are gone."</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardPerson" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>人 <span class="highlight">is gone</span></h3>
+        <div class="ref">参照空间 = 社交/关系圈</div>
+        <div class="def">
+          某人离开了所属的关系场景，<span class="key">不在场了</span>。
+          <span class="eg">"She is gone." / "He's long gone."</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas id="cardState" width="270" height="200"></canvas>
+      <div class="card-body">
+        <h3>事/状态 <span class="highlight">is gone</span></h3>
+        <div class="ref">参照空间 = 时间线上的状态集合</div>
+        <div class="def">
+          某个感受、可能性、事件从时间线上<span class="key">终结了</span>。
+          <span class="eg">"The pain is gone." / "All hope is gone."</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="spatial-note">
+    <strong>统一逻辑</strong>：物、人、事/状态 —— 参照空间不同，但 GONE 的空间框架完全一样：<br>
+    "主体从参照空间脱离，参照点空了"
+  </div>
+
+</div>
+
+<script>
+(function() {
+
+// helper: draw reference frame
+function drawFrame(ctx, w, h) {
+  ctx.fillStyle = '#fafaf8';
+  ctx.fillRect(0,0,w,h);
+}
+
+// ===== IN =====
+const cIn = document.getElementById('cIn');
+const ctxIn = cIn.getContext('2d');
+drawFrame(ctxIn,270,180);
+ctxIn.strokeStyle = '#4a5568'; ctxIn.lineWidth = 2.5;
+ctxIn.strokeRect(75,30,120,90);
+ctxIn.fillStyle = '#888'; ctxIn.font = '11px sans-serif'; ctxIn.textAlign = 'center';
+ctxIn.fillText('reference space', 135, 135);
+ctxIn.fillStyle = '#2b6cb0';
+ctxIn.beginPath(); ctxIn.arc(135, 75, 16, 0, Math.PI*2); ctxIn.fill();
+ctxIn.fillStyle = '#2b6cb0'; ctxIn.font = 'bold 13px sans-serif';
+ctxIn.fillText('● inside', 135, 162);
+
+// ===== OUT =====
+const cOut = document.getElementById('cOut');
+const ctxOut = cOut.getContext('2d');
+drawFrame(ctxOut,270,180);
+ctxOut.strokeStyle = '#4a5568'; ctxOut.lineWidth = 2.5;
+ctxOut.strokeRect(75,30,120,90);
+ctxOut.fillStyle = '#888'; ctxOut.font = '11px sans-serif'; ctxOut.textAlign = 'center';
+ctxOut.fillText('reference space', 135, 135);
+ctxOut.fillStyle = '#c05621';
+ctxOut.beginPath(); ctxOut.arc(220, 55, 16, 0, Math.PI*2); ctxOut.fill();
+ctxOut.strokeStyle = '#c05621'; ctxOut.lineWidth = 1.5; ctxOut.setLineDash([4,4]);
+ctxOut.beginPath(); ctxOut.moveTo(195,80); ctxOut.lineTo(220,62); ctxOut.stroke(); ctxOut.setLineDash([]);
+ctxOut.fillStyle = '#c05621'; ctxOut.font = 'bold 13px sans-serif';
+ctxOut.fillText('● outside', 135, 162);
+
+// ===== GONE =====
+const cGone = document.getElementById('cGone');
+const ctxGone = cGone.getContext('2d');
+drawFrame(ctxGone,270,180);
+ctxGone.strokeStyle = '#9b2c2c'; ctxGone.lineWidth = 2.5;
+ctxGone.strokeRect(75,30,120,90);
+ctxGone.strokeStyle = '#ccc'; ctxGone.lineWidth = 2;
+ctxGone.beginPath(); ctxGone.moveTo(105,55); ctxGone.lineTo(165,95);
+ctxGone.moveTo(165,55); ctxGone.lineTo(105,95); ctxGone.stroke();
+ctxGone.strokeStyle = '#9b2c2c'; ctxGone.lineWidth = 2; ctxGone.setLineDash([5,5]);
+ctxGone.beginPath(); ctxGone.arc(240, 25, 16, 0, Math.PI*2); ctxGone.stroke();
+ctxGone.strokeStyle = '#9b2c2c'; ctxGone.lineWidth = 1.5; ctxGone.setLineDash([3,5]);
+ctxGone.beginPath(); ctxGone.moveTo(195,85); ctxGone.lineTo(234,35); ctxGone.stroke(); ctxGone.setLineDash([]);
+ctxGone.fillStyle = '#9b2c2c';
+ctxGone.beginPath(); ctxGone.moveTo(232,42); ctxGone.lineTo(238,32); ctxGone.lineTo(227,36); ctxGone.closePath(); ctxGone.fill();
+ctxGone.fillStyle = '#888'; ctxGone.font = '11px sans-serif'; ctxGone.textAlign = 'center';
+ctxGone.fillText('reference space', 135, 135);
+ctxGone.fillStyle = '#9b2c2c'; ctxGone.font = 'bold 13px sans-serif';
+ctxGone.fillText('● gone (left the scene)', 135, 162);
+
+
+// ===== 三大类 =====
+
+// 1. 物
+const e1 = document.getElementById('cardThing');
+const ctx1 = e1.getContext('2d');
+drawFrame(ctx1,270,200);
+ctx1.fillStyle = '#f5f0e8'; ctx1.fillRect(0,0,270,200);
+
+// table
+ctx1.strokeStyle = '#8B7355'; ctx1.lineWidth = 2;
+ctx1.beginPath(); ctx1.moveTo(40,125); ctx1.lineTo(230,125);
+ctx1.moveTo(65,125); ctx1.lineTo(65,150); ctx1.moveTo(205,125); ctx1.lineTo(205,150); ctx1.stroke();
+ctx1.fillStyle = '#D2B48C';
+ctx1.fillRect(40,120,190,5);
+
+// dashed outline of where keys used to be
+ctx1.strokeStyle = '#bbb'; ctx1.lineWidth = 2; ctx1.setLineDash([4,4]);
+ctx1.beginPath();
+ctx1.ellipse(145,105,22,12,-0.3,0,Math.PI*2);
+ctx1.stroke();
+ctx1.setLineDash([]);
+
+ctx1.fillStyle = '#999'; ctx1.font = '11px sans-serif'; ctx1.textAlign = 'center';
+ctx1.fillText('原来放钥匙的位置',145,180);
+
+// key icon flying away
+ctx1.strokeStyle = '#9b2c2c'; ctx1.lineWidth = 2.5;
+ctx1.beginPath();
+ctx1.arc(235,45,10,0,Math.PI*2); ctx1.stroke();
+ctx1.beginPath(); ctx1.moveTo(245,45); ctx1.lineTo(255,45); ctx1.lineTo(255,40); ctx1.moveTo(245,48); ctx1.lineTo(252,48); ctx1.stroke();
+
+ctx1.fillStyle = '#9b2c2c'; ctx1.font = 'bold 11px sans-serif'; ctx1.textAlign = 'right';
+ctx1.fillText('gone!',265,28);
+
+// arrow
+ctx1.strokeStyle = '#9b2c2c'; ctx1.lineWidth = 1.5; ctx1.setLineDash([3,4]);
+ctx1.beginPath(); ctx1.moveTo(185,110); ctx1.lineTo(228,55); ctx1.stroke(); ctx1.setLineDash([]);
+
+// label
+ctx1.fillStyle = '#9b2c2c'; ctx1.font = 'bold 16px sans-serif'; ctx1.textAlign = 'left';
+ctx1.fillText('My keys are gone.',20,35);
+
+// 2. 人
+const e2 = document.getElementById('cardPerson');
+const ctx2 = e2.getContext('2d');
+drawFrame(ctx2,270,200);
+ctx2.fillStyle = '#eef2f5'; ctx2.fillRect(0,0,270,200);
+
+// room outline
+ctx2.strokeStyle = '#666'; ctx2.lineWidth = 2;
+ctx2.strokeRect(40,25,190,120);
+
+// door (open)
+ctx2.fillStyle = '#d0d8de';
+ctx2.fillRect(210,105,24,40);
+ctx2.strokeStyle = '#666'; ctx2.lineWidth = 1.5;
+ctx2.strokeRect(210,105,24,40);
+
+// X inside room
+ctx2.strokeStyle = '#ccc'; ctx2.lineWidth = 2.5;
+ctx2.beginPath(); ctx2.moveTo(100,60); ctx2.lineTo(160,100);
+ctx2.moveTo(160,60); ctx2.lineTo(100,100); ctx2.stroke();
+
+// person silhouette fading out through door
+ctx2.fillStyle = 'rgba(155,44,44,0.4)';
+ctx2.beginPath(); ctx2.arc(238,90,8,0,Math.PI*2); ctx2.fill();
+ctx2.fillRect(235,98,6,18);
+
+// solid further away
+ctx2.fillStyle = '#9b2c2c';
+ctx2.beginPath(); ctx2.arc(258,70,5,0,Math.PI*2); ctx2.fill();
+ctx2.fillRect(256,75,4,12);
+
+ctx2.fillStyle = '#999'; ctx2.font = '11px sans-serif'; ctx2.textAlign = 'center';
+ctx2.fillText('空房间',135,180);
+
+ctx2.fillStyle = '#9b2c2c'; ctx2.font = 'bold 16px sans-serif'; ctx2.textAlign = 'left';
+ctx2.fillText("She is gone.",20,28);
+
+// 3. 事/状态
+const e3 = document.getElementById('cardState');
+const ctx3 = e3.getContext('2d');
+drawFrame(ctx3,270,200);
+ctx3.fillStyle = '#f5f2ed'; ctx3.fillRect(0,0,270,200);
+
+// Person outline (body)
+ctx3.strokeStyle = '#666'; ctx3.lineWidth = 2;
+ctx3.beginPath(); ctx3.arc(135,65,25,0,Math.PI*2); ctx3.stroke();
+ctx3.beginPath(); ctx3.moveTo(135,90); ctx3.lineTo(135,145);
+ctx3.moveTo(110,110); ctx3.lineTo(135,125); ctx3.lineTo(160,110); ctx3.stroke();
+
+// red zone - gone
+ctx3.fillStyle = '#e53e3e'; ctx3.font = '20px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('✕',135,70);
+
+ctx3.strokeStyle = '#9b2c2c'; ctx3.lineWidth = 2.5; ctx3.setLineDash([4,4]);
+ctx3.beginPath(); ctx3.moveTo(30,15); ctx3.lineTo(240,175); ctx3.stroke(); ctx3.setLineDash([]);
+
+ctx3.fillStyle = '#999'; ctx3.font = '11px sans-serif'; ctx3.textAlign = 'center';
+ctx3.fillText('疼痛从身体中消失',135,180);
+
+ctx3.fillStyle = '#9b2c2c'; ctx3.font = 'bold 16px sans-serif'; ctx3.textAlign = 'left';
+ctx3.fillText('The pain is gone.',20,28);
+
+})();
+</script>
+
+</body>
+</html>

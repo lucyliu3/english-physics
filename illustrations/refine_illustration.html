@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REFINE 图解 — 精炼 / 提炼 / 改进</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#fdf5ee 0%,#f8efe5 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; background:linear-gradient(135deg,#e67e22,#d35400); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#e67e22,#f39c12); border-radius:2px; flex-shrink:0; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#e67e22; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#777; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8d0c0; padding-left:10px; }
+
+  .white-box { background:#fff; border:1px solid #e8d8c8; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8d8c8; border-top:1px solid #e8d8c8; transform:rotate(45deg); }
+  .white-box strong { color:#e67e22; }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#e67e22; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+
+  .spectrum-wrap { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+
+  .orange-bg { background:linear-gradient(135deg,#fdf5ee,#f8efe5); }
+  .blue-bg { background:linear-gradient(135deg,#eef5ff,#e0e8f5); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>REFINE</h1>
+<p class="subtitle">精炼 / 提炼 / 改进 — 从"refine oil"到"refine skills"</p>
+
+<!-- 核心意象对比 -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+  <!-- Card 1: REFINE 核心意象 — 炼油过程 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="shadow">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+        <linearGradient id="orangeGlow" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#fdf5ee"/>
+          <stop offset="100%" stop-color="#f8efe5"/>
+        </linearGradient>
+        <linearGradient id="crudeOil" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3a2a1a"/>
+          <stop offset="100%" stop-color="#1a0e05"/>
+        </linearGradient>
+        <linearGradient id="pureOil" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f5d76e"/>
+          <stop offset="100%" stop-color="#e8c84a"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="400" fill="url(#orangeGlow)" rx="8"/>
+
+      <text x="380" y="35" text-anchor="middle" fill="#e67e22" font-size="18" font-weight="bold" font-family="sans-serif">物理来源：炼油过程 — 去除杂质，提取精华</text>
+
+      <!-- 左侧：原油桶 -->
+      <rect x="50" y="80" width="120" height="160" rx="10" fill="url(#crudeOil)" stroke="#3a2a1a" stroke-width="2" filter="url(#shadow)"/>
+      <text x="110" y="200" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">原油</text>
+      <text x="110" y="218" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">(CRUDE OIL)</text>
+      <!-- 原油杂质粒子 -->
+      <circle cx="70" cy="100" r="4" fill="#555"><animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/></circle>
+      <circle cx="100" cy="120" r="3" fill="#666"><animate attributeName="opacity" values="0.4;1;0.4" dur="2.3s" repeatCount="indefinite"/></circle>
+      <circle cx="85" cy="150" r="5" fill="#444"><animate attributeName="opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite"/></circle>
+      <circle cx="130" cy="130" r="3.5" fill="#555"><animate attributeName="opacity" values="1;0.5;1" dur="2.5s" repeatCount="indefinite"/></circle>
+
+      <!-- 管道/加热塔 -->
+      <rect x="180" y="130" width="40" height="18" rx="4" fill="#888"/>
+      <rect x="220" y="80" width="80" height="180" rx="8" fill="#aaa" stroke="#888" stroke-width="1.5"/>
+      <rect x="230" y="90" width="60" height="160" rx="5" fill="#ccc"/>
+      <text x="260" y="180" text-anchor="middle" fill="#666" font-size="11" font-weight="bold" font-family="sans-serif">加热</text>
+      <text x="260" y="198" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">分离</text>
+      <!-- 加热火焰 -->
+      <path d="M240,260 Q250,275 260,260 Q270,275 280,260" fill="#e67e22" opacity="0.6">
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="1s" repeatCount="indefinite"/>
+      </path>
+
+      <!-- 杂质从塔顶排出 -->
+      <path d="M260,95 L260,60 Q260,50 270,50 L340,50" fill="none" stroke="#999" stroke-width="2" stroke-dasharray="4,3"/>
+      <circle cx="310" cy="50" r="3" fill="#888"><animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite"/></circle>
+      <circle cx="330" cy="50" r="2.5" fill="#999"><animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/></circle>
+      <text x="340" y="55" fill="#999" font-size="10" font-family="sans-serif">杂质排出</text>
+
+      <!-- 管道到右侧纯净产品 -->
+      <rect x="300" y="160" width="40" height="18" rx="4" fill="#888"/>
+
+      <!-- 右侧：纯净油桶 -->
+      <rect x="350" y="80" width="120" height="160" rx="10" fill="url(#pureOil)" stroke="#d4a830" stroke-width="2" filter="url(#shadow)">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite"/>
+      </rect>
+      <text x="410" y="200" text-anchor="middle" fill="#7a5a10" font-size="11" font-family="sans-serif">精炼油</text>
+      <text x="410" y="218" text-anchor="middle" fill="#8a6a20" font-size="10" font-family="sans-serif">(REFINED OIL)</text>
+      <!-- 纯净光芒 -->
+      <circle cx="410" cy="120" r="25" fill="#f5d76e" opacity="0.15">
+        <animate attributeName="r" values="20;30;20" dur="3s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- 过程箭头 -->
+      <path d="M170,100 L220,100" fill="none" stroke="#e67e22" stroke-width="2" marker-end="url(#arrowOrange)"/>
+      <path d="M340,100 L350,100" fill="none" stroke="#e67e22" stroke-width="2" marker-end="url(#arrowOrange)"/>
+      <defs>
+        <marker id="arrowOrange" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0,0 8,3 0,6" fill="#e67e22"/>
+        </marker>
+      </defs>
+
+      <!-- 底部逻辑链 -->
+      <text x="380" y="310" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">粗 → 加热分离杂质 → 纯净</text>
+      <text x="380" y="335" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">物理画面 = 去除不好的部分，留下精华</text>
+
+      <!-- 抽象映射箭头 -->
+      <path d="M50,370 L380,370 L710,370" fill="none" stroke="#e67e22" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="380" y="385" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">🔗—— 物理炼油 → 抽象改进 ——</text>
+    </svg>
+    <div class="card-body">
+      <h3>REFINE <span class="hl">/rɪˈfaɪn/</span></h3>
+      <div class="pos">verb · 精炼 / 提炼 / 改进</div>
+      <div class="def">
+        <strong>本义</strong> 通过加热等工艺去除杂质，使物质更纯净（re- 再次 + fine 精细）<br>
+        <strong>引申</strong> 不断改进、精炼，使事物更完善
+        <span class="eg">"They refine crude oil into gasoline." 他们将原油精炼成汽油。</span>
+      </div>
+      <div class="white-box"><strong>💡 理解关键</strong>：re-（再次）+ fine（精细/优良）= 反复加工使其更精细。物理画面是"原油经过加热蒸馏，杂质被分离出去，留下纯净的有用成分"。任何 refine 用法都隐含：去除/减少不好的部分、保留/强化好的部分。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: REFINE 抽象用法 — 技能提升 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="shadow2">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+        <linearGradient id="skillGrad" x1="0" y1="0" x2="760" y2="400">
+          <stop offset="0%" stop-color="#f8efe5"/>
+          <stop offset="100%" stop-color="#f0e5d8"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="400" fill="url(#skillGrad)" rx="8"/>
+
+      <text x="380" y="35" text-anchor="middle" fill="#e67e22" font-size="17" font-weight="bold" font-family="sans-serif">从"炼油"到"打磨技能"— 同一逻辑</text>
+
+      <!-- 左侧：粗糙的木块（原始技能） -->
+      <rect x="50" y="65" width="140" height="180" rx="12" fill="#c8a870" stroke="#a08050" stroke-width="2" filter="url(#shadow2)"/>
+      <text x="120" y="210" text-anchor="middle" fill="#8a6a30" font-size="12" font-weight="bold" font-family="sans-serif">粗糙技能</text>
+      <text x="120" y="228" text-anchor="middle" fill="#a08050" font-size="10" font-family="sans-serif">未经打磨</text>
+      <!-- 木刺/瑕疵 -->
+      <path d="M60,90 L75,80 L70,95" fill="#a08050" opacity="0.6"/>
+      <path d="M130,120 L145,110 L135,130" fill="#a08050" opacity="0.6"/>
+      <path d="M70,160 L85,150 L75,170" fill="#a08050" opacity="0.6"/>
+
+      <!-- 中间：工具（砂纸/打磨机） -->
+      <g transform="translate(280,100)">
+        <rect x="0" y="40" width="100" height="60" rx="10" fill="#ddd" stroke="#bbb" stroke-width="1.5"/>
+        <text x="50" y="58" text-anchor="middle" fill="#888" font-size="11" font-weight="bold" font-family="sans-serif">打磨</text>
+        <text x="50" y="75" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">(反复练习)</text>
+        <!-- 砂纸纹理 -->
+        <line x1="15" y1="85" x2="85" y2="85" stroke="#bbb" stroke-width="1">
+          <animate attributeName="x1" values="15;5;15" dur="1s" repeatCount="indefinite"/>
+          <animate attributeName="x2" values="85;75;85" dur="1s" repeatCount="indefinite"/>
+        </line>
+        <line x1="20" y1="90" x2="80" y2="90" stroke="#bbb" stroke-width="1">
+          <animate attributeName="x1" values="20;10;20" dur="1.2s" repeatCount="indefinite"/>
+          <animate attributeName="x2" values="80;70;80" dur="1.2s" repeatCount="indefinite"/>
+        </line>
+      </g>
+
+      <!-- 箭头 -->
+      <path d="M200,155 Q240,140 270,140" fill="none" stroke="#e67e22" stroke-width="2" marker-end="url(#arrowO2)"/>
+      <path d="M380,155 Q420,140 450,155" fill="none" stroke="#e67e22" stroke-width="2" marker-end="url(#arrowO2)"/>
+      <defs>
+        <marker id="arrowO2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0,0 8,3 0,6" fill="#e67e22"/>
+        </marker>
+      </defs>
+
+      <!-- 右侧：打磨好的木块 -->
+      <rect x="460" y="65" width="140" height="180" rx="12" fill="#e8c888" stroke="#d4a830" stroke-width="2" filter="url(#shadow2)">
+        <animate attributeName="opacity" values="0.85;1;0.85" dur="2s" repeatCount="indefinite"/>
+      </rect>
+      <text x="530" y="210" text-anchor="middle" fill="#8a6a30" font-size="12" font-weight="bold" font-family="sans-serif">精炼技能</text>
+      <text x="530" y="228" text-anchor="middle" fill="#a08050" font-size="10" font-family="sans-serif">(polished)</text>
+      <!-- 光泽 -->
+      <rect x="470" y="75" width="50" height="30" rx="6" fill="#fff" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.35;0.2" dur="2s" repeatCount="indefinite"/>
+      </rect>
+
+      <!-- 底部对比 -->
+      <text x="120" y="290" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">原油 = 未经训练的原始能力</text>
+      <text x="530" y="290" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">精炼能力 = 去除瑕疵后的产物</text>
+
+      <text x="380" y="320" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">refine your skills / technique / design</text>
+      <text x="380" y="345" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">跟炼油一样：反复加工 → 去除粗糙 → 达到精良</text>
+
+      <!-- 抽象映射箭头 -->
+      <text x="380" y="380" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">🔗 炼油厂 → 打磨技能 → 完善设计 → 提纯思想</text>
+    </svg>
+    <div class="card-body">
+      <h3>REFINE <span class="hl">(抽象用法)</span></h3>
+      <div class="pos">抽象 · 改进 / 臻于完善</div>
+      <div class="def">
+        <strong>核心逻辑</strong> 去除坏的、保留好的、反复打磨<br>
+        <strong>适用领域</strong> 技能、设计、流程、思想、品味
+        <span class="eg">"She refined her public speaking skills over years of practice." 她经过多年练习磨炼了演讲技巧。</span>
+      </div>
+      <div class="white-box"><strong>🧠 演变过程</strong>：炼油（物理去除杂质）→ 打磨（反复修正瑕疵）→ 技能提升（反复练习消除弱点）→ 设计优化（迭代改进细节）→ 思想提炼（去掉不重要的，留下核心）。所有的抽象 refine 都保留"re-（反复）+ fine（变好）"这个基因。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 🧠 逻辑演化树 -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div style="background:#fffdf7; border:1px solid #e8d8c8; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div style="font-size:16px; font-weight:700; margin-bottom:16px;">🧠 逻辑演化树 — 从"炼油"到"任何精细化改进"</div>
+  <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+    <div style="background:#fdf5ee; border:1px solid #e8d0b0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ① 炼油<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">加热分离杂质</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+    <div style="background:#fdf5ee; border:1px solid #e8d0b0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ② 精制食品<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">refine sugar/oil/flour</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+    <div style="background:#fdf5ee; border:1px solid #e8d0b0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ③ 改进流程<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">refine a process</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+    <div style="background:#fdf5ee; border:1px solid #e8d0b0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ④ 强化技能<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">refine skills/technique</span>
+    </div>
+    <div style="font-size:18px; color:#e67e22; font-weight:700;">→</div>
+    <div style="background:#fdf5ee; border:1px solid #e8d0b0; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:80px;">
+      ⑤ 完善设计<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">refine a design</span>
+    </div>
+  </div>
+</div>
+
+<!-- 程度光谱 — REFINE 的改进过程 -->
+<div class="section-title"><span class="bar"></span><span>程度光谱：从粗糙到精炼</span></div>
+<div class="spectrum-wrap">
+  <svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="specGrad" x1="0" y1="0" x2="760" y2="0">
+        <stop offset="0%" stop-color="#d4a870"/>
+        <stop offset="25%" stop-color="#e0b880"/>
+        <stop offset="50%" stop-color="#e8c888"/>
+        <stop offset="75%" stop-color="#f0d498"/>
+        <stop offset="100%" stop-color="#f5d76e"/>
+      </linearGradient>
+    </defs>
+    <rect width="760" height="280" fill="#fafaf8" rx="8"/>
+
+    <text x="380" y="28" text-anchor="middle" fill="#e67e22" font-size="14" font-weight="bold" font-family="sans-serif">RAW ⟶ REFINED 光谱</text>
+
+    <!-- 进度条背景 -->
+    <rect x="40" y="55" width="680" height="14" rx="7" fill="#eee"/>
+    <rect x="40" y="55" width="680" height="14" rx="7" fill="url(#specGrad)" opacity="0.8"/>
+
+    <!-- 游标 -->
+    <circle cx="40" cy="62" r="12" fill="#e67e22" stroke="#fff" stroke-width="2">
+      <animate attributeName="cx" values="40;210;380;550;720;550;380;210;40" dur="20s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- 阶段标签 -->
+    <text x="40" y="100" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">
+      RAW
+      <animate attributeName="opacity" values="1;0.5;0.2;0.2;0.2;0.2;0.2;0.5;1" dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="210" y="100" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">
+      UNREFINED
+      <animate attributeName="opacity" values="0.2;1;0.5;0.2;0.2;0.2;0.5;1;0.2" dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="380" y="100" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="bold" font-family="sans-serif">
+      REFINING
+      <animate attributeName="opacity" values="0.2;0.5;1;0.5;0.2;0.5;1;0.5;0.2" dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="550" y="100" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">
+      POLISHED
+      <animate attributeName="opacity" values="0.2;0.2;0.5;1;0.5;1;0.5;0.2;0.2" dur="20s" repeatCount="indefinite"/>
+    </text>
+    <text x="720" y="100" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="bold" font-family="sans-serif">
+      REFINED ✦
+      <animate attributeName="opacity" values="0.2;0.2;0.2;0.5;1;0.5;0.2;0.2;0.2" dur="20s" repeatCount="indefinite"/>
+    </text>
+
+    <!-- 状态说明 (底部换行显示) -->
+    <text x="380" y="140" text-anchor="middle" fill="#666" font-size="13" font-family="sans-serif">
+      原油 → 初步过滤 → 反复加工 → 去除杂质 → 纯净成品
+      <animate attributeName="opacity" values="0.2;0.5;0.8;1;1;1;0.8;0.5;0.2" dur="20s" repeatCount="indefinite"/>
+    </text>
+
+    <!-- 抽象对应 -->
+    <text x="380" y="175" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">技能粗糙 → 发现不足 → 反复练习 → 修正错误 → 技艺精湛</text>
+
+    <!-- 底部物品代表 -->
+    <g transform="translate(0,200)">
+      <!-- Raw 阶段 -->
+      <rect x="20" y="0" width="60" height="45" rx="8" fill="#c8a870" stroke="#a08050" stroke-width="1" opacity="0.5"/>
+      <text x="50" y="30" text-anchor="middle" fill="#8a6a30" font-size="10" font-family="sans-serif">原木</text>
+
+      <g transform="translate(90,0)">
+        <rect x="0" y="5" width="55" height="40" rx="6" fill="#d4b078" stroke="#b09058" stroke-width="1"/>
+        <text x="28" y="30" text-anchor="middle" fill="#8a6a30" font-size="10" font-family="sans-serif">粗刨</text>
+      </g>
+
+      <g transform="translate(155,0)">
+        <rect x="0" y="10" width="55" height="35" rx="6" fill="#e0b880" stroke="#c0a060" stroke-width="1"/>
+        <text x="28" y="32" text-anchor="middle" fill="#8a6a30" font-size="10" font-family="sans-serif">打磨</text>
+      </g>
+
+      <g transform="translate(220,0)">
+        <rect x="0" y="10" width="55" height="35" rx="6" fill="#e8c888" stroke="#d4a830" stroke-width="1"/>
+        <text x="28" y="30" text-anchor="middle" fill="#8a6a30" font-size="10" font-family="sans-serif">上漆</text>
+      </g>
+
+      <g transform="translate(285,0)">
+        <rect x="0" y="5" width="55" height="40" rx="8" fill="#f0d498" stroke="#d4a830" stroke-width="1.5" opacity="0.5">
+          <animate attributeName="opacity" values="0.5;0.7;0.5" dur="2s" repeatCount="indefinite"/>
+        </rect>
+        <text x="28" y="28" text-anchor="middle" fill="#7a5a10" font-size="10" font-family="sans-serif">成品</text>
+        <text x="28" y="43" text-anchor="middle" fill="#a08050" font-size="9" font-family="sans-serif">Refined</text>
+      </g>
+    </g>
+
+    <!-- REFINE 标签 -->
+    <text x="380" y="270" text-anchor="middle" fill="#e67e22" font-size="13" font-weight="bold" font-family="sans-serif">REFINE = 整个加工过程，从原材料到精品</text>
+  </svg>
+</div>
+
+<!-- 易混对比区 -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+  <!-- REFINE vs IMPROVE -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="sh1"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/></filter>
+      </defs>
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="380" y="32" text-anchor="middle" fill="#e67e22" font-size="17" font-weight="bold" font-family="sans-serif">REFINE ⟷ IMPROVE  — "精炼" vs "改善"</text>
+
+      <!-- 左：REFINE -->
+      <rect x="30" y="50" width="330" height="260" rx="10" fill="#fdf5ee" stroke="#e8d0b0" stroke-width="1" filter="url(#sh1)"/>
+      <text x="195" y="80" text-anchor="middle" fill="#e67e22" font-size="16" font-weight="bold" font-family="sans-serif">REFINE 精炼</text>
+      <!-- 过滤漏斗 -->
+      <polygon points="145,100 245,100 225,180 165,180" fill="#e8c888" stroke="#d4a830" stroke-width="1.5"/>
+      <line x1="155" y1="120" x2="235" y2="120" stroke="#d4a830" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="195" y="140" text-anchor="middle" fill="#8a6a30" font-size="11" font-family="sans-serif">过滤</text>
+      <!-- 杂质粒子掉落 -->
+      <circle cx="165" cy="195" r="3" fill="#e67e22">
+        <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="195" cy="200" r="2.5" fill="#d35400">
+        <animate attributeName="opacity" values="1;0;1" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="225" cy="195" r="2" fill="#e67e22">
+        <animate attributeName="opacity" values="0;1;0" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+      <text x="195" y="235" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">去除杂质 → 留下精华</text>
+      <text x="195" y="260" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">refine = 深度提纯，改变本质</text>
+      <text x="195" y="280" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">(做得更精细、更纯粹)</text>
+
+      <!-- VS -->
+      <text x="380" y="180" text-anchor="middle" fill="#ccc" font-size="28" font-weight="bold" font-family="sans-serif">VS</text>
+
+      <!-- 右：IMPROVE -->
+      <rect x="400" y="50" width="330" height="260" rx="10" fill="#eef5ff" stroke="#c0d0e8" stroke-width="1" filter="url(#sh1)"/>
+      <text x="565" y="80" text-anchor="middle" fill="#3b82f6" font-size="16" font-weight="bold" font-family="sans-serif">IMPROVE 改善</text>
+      <!-- 向上箭头 -->
+      <line x1="530" y1="200" x2="530" y2="120" stroke="#3b82f6" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="530,115 538,130 522,130" fill="#3b82f6"/>
+      <text x="565" y="145" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">在原有基础上变好</text>
+      <text x="565" y="170" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">improve = 增量提升，不改变本质</text>
+      <text x="565" y="190" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">（变得更好，但不一定"精"）</text>
+
+      <text x="380" y="325" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">💡 improve = 任何方向的变好；refine = 向内去除杂质，使其精良。refine 是 improve 的一种特殊方式。</text>
+    </svg>
+    <div class="label">
+      <div class="p">REFINE vs IMPROVE</div>
+      <div class="desc">精炼 vs 改善</div>
+      <div class="white-box"><strong>💡 区别</strong>：improve 是泛泛的"变好"（成绩提高、天气好转、关系改善）。refine 特指"通过去除瑕疵/细节打磨使其精良"——带有"提纯"的意味。你可以 improve 你的字迹，但要 refine 你的书法风格。</div>
+    </div>
+  </div>
+
+  <!-- REFINE vs POLISH -->
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="sh2"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/></filter>
+      </defs>
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="380" y="32" text-anchor="middle" fill="#e67e22" font-size="17" font-weight="bold" font-family="sans-serif">REFINE ⟷ POLISH — "精炼" vs "抛光"</text>
+
+      <!-- 左：REFINE 深度改变 -->
+      <rect x="30" y="50" width="330" height="260" rx="10" fill="#fdf5ee" stroke="#e8d0b0" stroke-width="1" filter="url(#sh1)"/>
+      <text x="195" y="80" text-anchor="middle" fill="#e67e22" font-size="16" font-weight="bold" font-family="sans-serif">REFINE 深层次改变</text>
+      <!-- 炼油塔简化 -->
+      <rect x="120" y="100" width="150" height="140" rx="6" fill="#ccc" stroke="#aaa" stroke-width="1.5"/>
+      <rect x="130" y="110" width="130" height="120" rx="4" fill="#ddd" stroke="#ccc" stroke-width="1"/>
+      <!-- 加热区 -->
+      <rect x="140" y="130" width="110" height="30" rx="3" fill="#e67e22" opacity="0.3"/>
+      <text x="195" y="150" text-anchor="middle" fill="#e67e22" font-size="11" font-weight="bold" font-family="sans-serif">加热分离</text>
+      <!-- 改变结构 -->
+      <text x="195" y="185" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">改变分子结构</text>
+      <text x="195" y="205" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">去除内部杂质</text>
+      <text x="195" y="228" text-anchor="middle" fill="#e67e22" font-size="12" font-weight="bold" font-family="sans-serif">深层改造</text>
+
+      <!-- VS -->
+      <text x="380" y="180" text-anchor="middle" fill="#ccc" font-size="28" font-weight="bold" font-family="sans-serif">VS</text>
+
+      <!-- 右：POLISH 表面美化 -->
+      <rect x="400" y="50" width="330" height="260" rx="10" fill="#f5f0ff" stroke="#d0c0e8" stroke-width="1" filter="url(#sh1)"/>
+      <text x="565" y="80" text-anchor="middle" fill="#7b4ad9" font-size="16" font-weight="bold" font-family="sans-serif">POLISH 表面美化</text>
+      <!-- 靴子 -->
+      <path d="M500,220 L500,170 Q500,160 510,160 L600,160 Q610,160 610,170 L610,220 Z" fill="#5a3a1a" stroke="#3a1a0a" stroke-width="1.5"/>
+      <rect x="610" y="200" width="15" height="20" rx="3" fill="#5a3a1a" stroke="#3a1a0a" stroke-width="1"/>
+      <!-- 光泽 -->
+      <ellipse cx="550" cy="180" rx="35" ry="15" fill="#fff" opacity="0.15">
+        <animate attributeName="opacity" values="0.15;0.3;0.15" dur="2s" repeatCount="indefinite"/>
+      </ellipse>
+      <!-- 抛光布 -->
+      <path d="M460,140 Q480,120 510,130 Q530,140 520,160 Q510,170 490,160 Q470,150 460,140" fill="#e8c888" stroke="#d4a830" stroke-width="1">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 10,-10; 0,0" dur="2s" repeatCount="indefinite"/>
+      </path>
+      <text x="565" y="140" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">抛光表面、去污亮泽</text>
+      <text x="565" y="160" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">不改变内部结构</text>
+      <text x="565" y="250" text-anchor="middle" fill="#7b4ad9" font-size="12" font-weight="bold" font-family="sans-serif">表面美化</text>
+
+      <text x="380" y="325" text-anchor="middle" fill="#555" font-size="12" font-family="sans-serif">💡 refine = 内部提纯（像炼油改变分子结构）；polish = 表面美化（像擦亮皮鞋）。先 refine 再 polish。</text>
+    </svg>
+    <div class="label">
+      <div class="p">REFINE vs POLISH</div>
+      <div class="desc">深层次提纯 vs 表面美化</div>
+      <div class="white-box"><strong>💡 区别</strong>：refine 是从内到外的改善——去除杂质/错误，改变本质。polish 是在已做好的基础上表面润色、使其光亮。先 refine 你的文章结构（改逻辑问题），再 polish 你的措辞（润色语言）。refine 比 polish 更根本、更深入。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 常见搭配区 -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+<div class="usage-section">
+  <h4>📖 工业/制造场景</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>refine</strong> crude oil</span>
+      <span class="usage-cn">精炼原油 &nbsp;|&nbsp; 📖 原油经过加热蒸馏分离成汽油、柴油等</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>refine</strong> sugar</span>
+      <span class="usage-cn">精制糖 &nbsp;|&nbsp; 📖 甘蔗/甜菜提纯为白糖</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>refine</strong> ore / metal</span>
+      <span class="usage-cn">精炼矿石/金属 &nbsp;|&nbsp; 📖 从矿石中提取并纯化金属</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>refine</strong> flour / salt</span>
+      <span class="usage-cn">精制面粉/盐 &nbsp;|&nbsp; 📖 去除杂质使成品更细腻</span>
+    </div>
+  </div>
+</div>
+<div class="usage-section">
+  <h4>📖 抽象/技能场景</h4>
+  <div class="usage-list">
+    <div class="usage-item">
+      <span class="usage-en"><strong>refine</strong> your skills</span>
+      <span class="usage-cn">精炼技能 &nbsp;|&nbsp; 📖 通过练习去除技术短板</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>refine</strong> your technique</span>
+      <span class="usage-cn">改进技术/手法 &nbsp;|&nbsp; 📖 反复调整操作方式使其更高效</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>refine</strong> a process</span>
+      <span class="usage-cn">优化流程 &nbsp;|&nbsp; 📖 去除步骤中的冗余，使其更顺畅</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>refine</strong> a design</span>
+      <span class="usage-cn">完善设计 &nbsp;|&nbsp; 📖 迭代修改细节，使设计更精致</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>refine</strong> your ideas</span>
+      <span class="usage-cn">提炼想法 &nbsp;|&nbsp; 📖 去除不成熟的部分，留下核心思路</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>refine</strong> a theory / model</span>
+      <span class="usage-cn">完善理论/模型 &nbsp;|&nbsp; 📖 通过修正假设使其更精确</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>refine</strong> your taste</span>
+      <span class="usage-cn">提升品味 &nbsp;|&nbsp; 📖 通过学习/阅历形成更高级的审美</span>
+    </div>
+    <div class="usage-item">
+      <span class="usage-en"><strong>refine</strong> search results</span>
+      <span class="usage-cn">优化搜索结果 &nbsp;|&nbsp; 📖 通过筛选条件使结果更精确</span>
+    </div>
+  </div>
+</div>
+
+<!-- 反义/相似词 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card orange-bg">
+      <h5 style="color:#e67e22;">近义辨析</h5>
+      <p><strong>IMPROVE</strong> — 改善 <small>泛泛的变好</small></p>
+      <p><strong>POLISH</strong> — 抛光/润色 <small>表面美化</small></p>
+      <p><strong>HONE</strong> — 磨炼 <small>像磨刀一样精进</small></p>
+      <p><strong>PERFECT</strong> — 使完美 <small>追求极致</small></p>
+    </div>
+    <div class="info-card blue-bg">
+      <h5 style="color:#3b82f6;">反义词</h5>
+      <p><strong>RUIN</strong> — 毁坏 <small>使变糟</small></p>
+      <p><strong>CORRUPT</strong> — 污染 <small>掺入杂质（refine 的反向）</small></p>
+      <p><strong>CONTAMINATE</strong> — 污染 <small>引入有害杂质</small></p>
+      <p><strong>DEGRADE</strong> — 降级 <small>降低品质</small></p>
+    </div>
+    <div class="info-card purple-bg">
+      <h5 style="color:#7b4ad9;">词根关联</h5>
+      <p><strong>REFINED</strong> — 精炼的/优雅的 <small>形容词形式</small></p>
+      <p><strong>REFINEMENT</strong> — 精炼/改进 <small>名词形式</small></p>
+      <p><strong>REFINERY</strong> — 炼油厂 <small>具体场所</small></p>
+      <p><strong>FINE</strong> — 好的/精细的 <small>词根</small></p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

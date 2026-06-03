@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STROLL 图解 - 散步 / 闲逛</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; color:#38a169; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#38a169,#68d391); border-radius:2px; flex-shrink:0; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#38a169; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#666; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#38a169; }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#38a169; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+
+  .green-bg { background:linear-gradient(135deg,#f0faf5,#e8f5ec); }
+  .orange-bg { background:linear-gradient(135deg,#fff8f0,#fdeee0); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>STROLL</h1>
+<p class="subtitle">散步 / 闲逛 — 从"stroll in the park"到"stroll to victory"</p>
+
+<!-- 核心意象对比 -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+  <!-- Card 1: STROLL 核心 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="shadow">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e8f5e9"/>
+          <stop offset="100%" stop-color="#f1f8e9"/>
+        </linearGradient>
+        <linearGradient id="path" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#d7ccc8"/>
+          <stop offset="100%" stop-color="#bcaaa4"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="400" fill="#fafaf8" rx="8"/>
+
+      <text x="380" y="35" text-anchor="middle" fill="#38a169" font-size="20" font-weight="800" font-family="sans-serif">STROLL — 悠闲散步的核心画面</text>
+
+      <!-- 公园场景 -->
+      <!-- 天空 -->
+      <rect x="40" y="50" width="680" height="200" rx="6" fill="url(#sky)"/>
+
+      <!-- 地面 -->
+      <rect x="40" y="200" width="680" height="50" rx="0" fill="#a5d6a7" opacity="0.4"/>
+
+      <!-- 小路 -->
+      <path d="M40,220 Q200,210 380,220 Q560,230 720,220" fill="none" stroke="url(#path)" stroke-width="30" stroke-linecap="round"/>
+
+      <!-- 树 -->
+      <g transform="translate(80, 100)">
+        <rect x="8" y="30" width="8" height="40" rx="2" fill="#8d6e63"/>
+        <circle cx="12" cy="20" r="25" fill="#66bb6a" opacity="0.8"/>
+        <circle cx="0" cy="25" r="18" fill="#81c784" opacity="0.6"/>
+        <circle cx="24" cy="25" r="18" fill="#81c784" opacity="0.6"/>
+      </g>
+      <g transform="translate(180, 90)">
+        <rect x="8" y="35" width="8" height="35" rx="2" fill="#8d6e63"/>
+        <circle cx="12" cy="25" r="22" fill="#66bb6a" opacity="0.7"/>
+        <circle cx="0" cy="30" r="16" fill="#a5d6a7" opacity="0.6"/>
+        <circle cx="24" cy="28" r="16" fill="#a5d6a7" opacity="0.6"/>
+      </g>
+      <g transform="translate(600, 95)">
+        <rect x="8" y="35" width="8" height="35" rx="2" fill="#8d6e63"/>
+        <circle cx="12" cy="25" r="23" fill="#66bb6a" opacity="0.8"/>
+        <circle cx="-2" cy="28" r="17" fill="#a5d6a7" opacity="0.6"/>
+      </g>
+      <g transform="translate(680, 105)">
+        <rect x="8" y="30" width="8" height="40" rx="2" fill="#8d6e63"/>
+        <circle cx="12" cy="20" r="20" fill="#66bb6a" opacity="0.7"/>
+      </g>
+
+      <!-- 散步的人（带动画） -->
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="100,0; 660,0; 100,0"
+          dur="10s" repeatCount="indefinite"/>
+        <!-- 身体 -->
+        <circle cx="180" cy="150" r="14" fill="#f5e6d0"/>
+        <circle cx="175" cy="147" r="2" fill="#333"/>
+        <circle cx="185" cy="147" r="2" fill="#333"/>
+        <path d="M180,158 Q178,161 180,161" fill="none" stroke="#333" stroke-width="1.5"/>
+        <line x1="180" y1="164" x2="180" y2="190" stroke="#38a169" stroke-width="3"/>
+        <!-- 摆动的腿 -->
+        <line x1="180" y1="190" x2="170" y2="215" stroke="#38a169" stroke-width="2.5">
+          <animate attributeName="x2" values="170;190;170" dur="1s" repeatCount="indefinite"/>
+        </line>
+        <line x1="180" y1="190" x2="190" y2="215" stroke="#38a169" stroke-width="2.5">
+          <animate attributeName="x2" values="190;170;190" dur="1s" repeatCount="indefinite"/>
+        </line>
+        <!-- 手臂 -->
+        <line x1="180" y1="168" x2="165" y2="178" stroke="#f5e6d0" stroke-width="2.5">
+          <animate attributeName="x2" values="165;175;165" dur="1s" repeatCount="indefinite"/>
+        </line>
+        <line x1="180" y1="168" x2="195" y2="178" stroke="#f5e6d0" stroke-width="2.5">
+          <animate attributeName="x2" values="195;185;195" dur="1s" repeatCount="indefinite"/>
+        </line>
+      </g>
+
+      <!-- 小鸟 -->
+      <g transform="translate(500, 75)">
+        <path d="M0,10 Q5,0 10,10 Q15,0 20,10" fill="none" stroke="#666" stroke-width="1.5">
+          <animateTransform attributeName="transform" type="translate" values="0,0; 30,-10; 60,0" dur="4s" repeatCount="indefinite"/>
+        </path>
+      </g>
+
+      <!-- 云朵 -->
+      <ellipse cx="400" cy="65" rx="35" ry="12" fill="#fff" opacity="0.7">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 20,0; 0,0" dur="6s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="430" cy="62" rx="25" ry="10" fill="#fff" opacity="0.6">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 20,0; 0,0" dur="6s" repeatCount="indefinite"/>
+      </ellipse>
+
+      <!-- 文字 -->
+      <text x="380" y="280" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">stroll in the park — 在公园里散步</text>
+      <text x="380" y="300" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">悠闲、放松、无目的——这就是 stroll 的核心感觉</text>
+
+      <!-- 速度对比条 -->
+      <rect x="120" y="325" width="520" height="10" rx="5" fill="#e0e0e0"/>
+      <rect x="120" y="325" width="520" height="10" rx="5" fill="url(#sky)" opacity="0.5"/>
+      <text x="90" y="334" text-anchor="end" fill="#666" font-size="11" font-family="sans-serif">慢</text>
+      <text x="650" y="334" text-anchor="start" fill="#666" font-size="11" font-family="sans-serif">快</text>
+
+      <!-- STROLL 位置标记 -->
+      <circle cy="330" r="8" fill="#38a169">
+        <animate attributeName="cx" values="200;350;200" dur="6s" repeatCount="indefinite"/>
+      </circle>
+      <text x="380" y="360" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">🔵 STROLL ≈ 中间偏慢，"慢走欣赏"</text>
+    </svg>
+    <div class="card-body">
+      <h3>STROLL <span class="hl">/stroʊl/</span></h3>
+      <div class="pos">VERB / NOUN · 散步</div>
+      <div class="def">
+        <strong>本义</strong> 悠闲地步行，不为赶路，而为享受过程<br>
+        <strong>引申</strong> 轻松完成某事、漫步人生
+        <span class="eg">"We strolled along the beach at sunset." 日落时分我们沿着海滩散步。</span>
+      </div>
+      <div class="white-box"><strong>💡 理解关键</strong>：STROLL 的独特性在于"悠闲"和"享受"——不是最快到达目的地的方式，而是一种生活态度。速度不重要，过程才重要。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: STROLL vs WALK -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="shadow2">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="#fafaf8" rx="8"/>
+
+      <text x="380" y="35" text-anchor="middle" fill="#333" font-size="18" font-weight="700" font-family="sans-serif">STROLL vs WALK — 核心区别：目的与节奏</text>
+
+      <!-- STROLL -->
+      <rect x="30" y="55" width="340" height="160" rx="8" fill="#f0faf5" stroke="#c8e6c9" stroke-width="1"/>
+      <text x="200" y="80" fill="#38a169" font-size="16" font-weight="700" font-family="sans-serif">STROLL 散步</text>
+
+      <!-- 悠闲人物 -->
+      <circle cx="100" cy="120" r="16" fill="#f5e6d0"/>
+      <circle cx="95" cy="117" r="2.5" fill="#333"/>
+      <circle cx="105" cy="117" r="2.5" fill="#333"/>
+      <path d="M100,128 Q98,131 100,131" fill="none" stroke="#333" stroke-width="1.5"/>
+      <line x1="100" y1="136" x2="100" y2="160" stroke="#38a169" stroke-width="3"/>
+      <line x1="100" y1="160" x2="92" y2="180" stroke="#38a169" stroke-width="2.5"/>
+      <line x1="100" y1="160" x2="108" y2="180" stroke="#38a169" stroke-width="2.5"/>
+
+      <!-- 周围环境 -->
+      <circle cx="160" cy="110" r="8" fill="#81c784" opacity="0.6"/>
+      <circle cx="170" cy="130" r="6" fill="#a5d6a7" opacity="0.6"/>
+      <circle cx="150" cy="140" r="5" fill="#81c784" opacity="0.4"/>
+
+      <text x="200" y="200" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">享受过程，随时停下欣赏</text>
+
+      <circle cx="380" cy="135" r="18" fill="#38a169" opacity="0.8"/>
+      <text x="380" y="140" text-anchor="middle" fill="#fff" font-size="12" font-weight="700" font-family="sans-serif">VS</text>
+
+      <!-- WALK -->
+      <rect x="410" y="55" width="320" height="160" rx="8" fill="#f0f4ff" stroke="#c8d6e5" stroke-width="1"/>
+      <text x="570" y="80" fill="#5b7db9" font-size="16" font-weight="700" font-family="sans-serif">WALK 走路</text>
+
+      <!-- 赶路人物 -->
+      <circle cx="500" cy="120" r="16" fill="#f5e6d0"/>
+      <circle cx="495" cy="117" r="2.5" fill="#333"/>
+      <circle cx="505" cy="117" r="2.5" fill="#333"/>
+      <path d="M500,125 Q498,128 500,130" fill="none" stroke="#333" stroke-width="1.5"/>
+      <line x1="500" y1="136" x2="500" y2="160" stroke="#5b7db9" stroke-width="3"/>
+      <line x1="500" y1="160" x2="490" y2="180" stroke="#5b7db9" stroke-width="2.5"/>
+      <line x1="500" y1="160" x2="510" y2="180" stroke="#5b7db9" stroke-width="2.5"/>
+
+      <!-- 目的地箭头 -->
+      <rect x="560" y="110" width="30" height="30" rx="4" fill="#fa9" stroke="#e67e22" stroke-width="1.5"/>
+      <text x="575" y="130" text-anchor="middle" fill="#fff" font-size="10" font-weight="600" font-family="sans-serif">目的地</text>
+      <path d="M540,125 L560,125" stroke="#5b7db9" stroke-width="2" stroke-dasharray="4,3"/>
+
+      <text x="570" y="200" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">有目的地，重在到达</text>
+
+      <!-- 底部对比 -->
+      <rect x="30" y="230" width="700" height="150" rx="8" fill="#fafaf8" stroke="#eee" stroke-width="1"/>
+      <text x="380" y="255" text-anchor="middle" fill="#333" font-size="13" font-weight="700" font-family="sans-serif">关键区别</text>
+      <text x="50" y="278" fill="#444" font-size="12" font-family="sans-serif">STROLL:</text>
+      <text x="110" y="278" fill="#666" font-size="12" font-family="sans-serif">节奏慢，以愉悦为目的，边走边看边享受。"We strolled through the old town."</text>
+      <text x="50" y="300" fill="#444" font-size="12" font-family="sans-serif">WALK:</text>
+      <text x="110" y="300" fill="#666" font-size="12" font-family="sans-serif">普通走路，可能快可能慢，通常是功能性移动。"I walk to work."</text>
+      <text x="50" y="328" fill="#444" font-size="12" font-family="sans-serif">💡:</text>
+      <text x="110" y="328" fill="#666" font-size="12" font-family="sans-serif">所有的 STROLL 都是 WALK，但不是所有的 WALK 都是 STROLL。stroll = walk + 悠闲 + 享受。</text>
+    </svg>
+    <div class="card-body">
+      <h3>STROLL vs WALK <span class="hl">区别</span></h3>
+      <div class="pos">近义对比</div>
+      <div class="def">
+        <strong>核心区别</strong>：WALK = 功能性的走，STROLL = 享受性的走。
+        <span class="eg">"Let's go for a stroll." 我们去散个步吧（放松）。</span>
+        <span class="eg">"Let's walk." 我们走过去吧（移动）。</span>
+      </div>
+      <div class="white-box"><strong>💡 引申用法</strong>：stroll to victory = 轻松取胜（像散步一样赢）。"The team <strong>strolled</strong> to a 5-0 win." 球队轻松取得 5-0 胜利，"散步般"赢下比赛。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 逻辑演化树 -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div style="background:#fffdf7; border:1px solid #e8e0d0; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div class="tree-grid" style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; justify-content:center;">
+    <div class="tree-node" style="background:#f0faf5; border:1px solid #c8e6c9; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ① 悠闲散步<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">享受过程的步行</span>
+    </div>
+    <div class="tree-arrow" style="font-size:18px; color:#38a169; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#f0faf5; border:1px solid #c8e6c9; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ② 轻松获胜<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">stroll to victory</span>
+    </div>
+    <div class="tree-arrow" style="font-size:18px; color:#38a169; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#f0faf5; border:1px solid #c8e6c9; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ③ 漫步于<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">stroll through / along</span>
+    </div>
+    <div class="tree-arrow" style="font-size:18px; color:#38a169; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#f0faf5; border:1px solid #c8e6c9; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ④ 周日散步传统<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">Sunday stroll</span>
+    </div>
+  </div>
+
+  <div class="white-box" style="margin-top:16px;"><strong>💡 从①到②</strong>：散步是"毫不费力地移动"→ 引申为"轻松做成某事"。"She <strong>strolled</strong> through the exam." 她轻松通过了考试（像散步一样不费力）。</div>
+  <div class="white-box" style="margin-top:8px;"><strong>💡 从①到③</strong>：散步的空间延伸。stroll through the park（穿过公园散步）→ stroll through the mall（逛商场）→ stroll through life（漫步人生）。最后一个很文学化。</div>
+  <div class="white-box" style="margin-top:8px;"><strong>💡 Sunday stroll</strong>：许多文化中周日午后散步的传统。强调"休闲、放松、无目的"。"a <strong>Sunday stroll</strong>" ≈ 最理想状态的散步——阳光、微风、不赶时间。</div>
+</div>
+
+<!-- 易混对比 -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs><filter id="s3"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/></filter></defs>
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="380" y="35" text-anchor="middle" fill="#333" font-size="16" font-weight="700" font-family="sans-serif">STROLL vs AMBLE vs SAUNTER — 都是"慢走"</text>
+
+      <!-- STROLL -->
+      <rect x="20" y="50" width="235" height="130" rx="8" fill="#f0faf5" stroke="#c8e6c9" stroke-width="1"/>
+      <text x="137" y="75" fill="#38a169" font-size="13" font-weight="700" font-family="sans-serif">STROLL</text>
+      <circle cx="80" cy="105" r="14" fill="#f5e6d0"/>
+      <line x1="80" y1="119" x2="80" y2="140" stroke="#38a169" stroke-width="2.5"/>
+      <line x1="80" y1="140" x2="73" y2="158" stroke="#38a169" stroke-width="2"/>
+      <line x1="80" y1="140" x2="87" y2="158" stroke="#38a169" stroke-width="2"/>
+      <text x="137" y="168" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">轻松、享受、无目的</text>
+
+      <!-- AMBLE -->
+      <rect x="268" y="50" width="225" height="130" rx="8" fill="#f0f4ff" stroke="#c8d6e5" stroke-width="1"/>
+      <text x="380" y="75" fill="#5b7db9" font-size="13" font-weight="700" font-family="sans-serif">AMBLE</text>
+      <circle cx="330" cy="105" r="14" fill="#f5e6d0"/>
+      <line x1="330" y1="119" x2="330" y2="140" stroke="#5b7db9" stroke-width="2.5"/>
+      <line x1="330" y1="140" x2="323" y2="155" stroke="#5b7db9" stroke-width="2"/>
+      <line x1="330" y1="140" x2="337" y2="155" stroke="#5b7db9" stroke-width="2"/>
+      <text x="380" y="168" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">从容不迫、温和地走</text>
+
+      <!-- SAUNTER -->
+      <rect x="505" y="50" width="235" height="130" rx="8" fill="#fff8f0" stroke="#fde" stroke-width="1"/>
+      <text x="622" y="75" fill="#d97706" font-size="13" font-weight="700" font-family="sans-serif">SAUNTER</text>
+      <circle cx="570" cy="105" r="14" fill="#f5e6d0"/>
+      <line x1="570" y1="119" x2="570" y2="140" stroke="#d97706" stroke-width="2.5"/>
+      <line x1="570" y1="140" x2="563" y2="158" stroke="#d97706" stroke-width="2"/>
+      <line x1="570" y1="140" x2="577" y2="158" stroke="#d97706" stroke-width="2"/>
+      <text x="622" y="168" text-anchor="middle" fill="#666" font-size="10" font-family="sans-serif">自信、随意甚至有点拽</text>
+
+      <rect x="20" y="195" width="720" height="130" rx="8" fill="#fafaf8" stroke="#eee" stroke-width="1"/>
+      <text x="380" y="218" text-anchor="middle" fill="#333" font-size="13" font-weight="700" font-family="sans-serif">对比总结</text>
+      <text x="40" y="242" fill="#444" font-size="12" font-family="sans-serif">STROLL ≈ "心情好，出来走走" — 重在享受过程</text>
+      <text x="40" y="265" fill="#444" font-size="12" font-family="sans-serif">AMBLE ≈ "不急，慢慢走" — 重在速度慢、节奏稳</text>
+      <text x="40" y="288" fill="#444" font-size="12" font-family="sans-serif">SAUNTER ≈ "我就随便逛逛" — 重在态度随意、自信甚至有些漫不经心</text>
+      <text x="40" y="311" fill="#666" font-size="11" font-family="sans-serif">💡 和一个叫 MEANDER 的对比：meander 强调"蜿蜒曲折"（路或河流的路径），不仅是走得慢。</text>
+    </svg>
+    <div class="label"><span class="p">STROLL vs AMBLE vs SAUNTER vs MEANDER</span><span class="desc">STROLL=享受过程，AMBLE=从容不迫，SAUNTER=随意自信，MEANDER=蜿蜒曲折（路径特点）。</span></div>
+  </div>
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs><filter id="s4"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/></filter></defs>
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="380" y="35" text-anchor="middle" fill="#333" font-size="16" font-weight="700" font-family="sans-serif">WALK 系列动词 — 速度/态度光谱</text>
+
+      <!-- 光谱条 -->
+      <rect x="40" y="55" width="680" height="16" rx="8" fill="#e0e0e0"/>
+      <rect x="40" y="55" width="680" height="16" rx="8" fill="url(#specGrad)" opacity="0.6"/>
+      <defs>
+        <linearGradient id="specGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#81c784"/>
+          <stop offset="50%" stop-color="#fdd835"/>
+          <stop offset="100%" stop-color="#e53935"/>
+        </linearGradient>
+      </defs>
+
+      <!-- 位置标记 -->
+      <text x="60" y="95" text-anchor="middle" fill="#38a169" font-size="12" font-weight="700" font-family="sans-serif">AMBLE</text>
+      <text x="160" y="95" text-anchor="middle" fill="#43a047" font-size="12" font-weight="700" font-family="sans-serif">STROLL</text>
+      <text x="280" y="95" text-anchor="middle" fill="#888" font-size="12" font-weight="700" font-family="sans-serif">WALK</text>
+      <text x="420" y="95" text-anchor="middle" fill="#e67e22" font-size="12" font-weight="700" font-family="sans-serif">MARCH</text>
+      <text x="540" y="95" text-anchor="middle" fill="#e63946" font-size="12" font-weight="700" font-family="sans-serif">JOG</text>
+      <text x="660" y="95" text-anchor="middle" fill="#c62828" font-size="12" font-weight="700" font-family="sans-serif">RUN</text>
+
+      <text x="60" y="115" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">从容</text>
+      <text x="160" y="115" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">悠闲</text>
+      <text x="280" y="115" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">正常</text>
+      <text x="420" y="115" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">健步</text>
+      <text x="540" y="115" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">慢跑</text>
+      <text x="660" y="115" text-anchor="middle" fill="#999" font-size="9" font-family="sans-serif">快跑</text>
+
+      <!-- 游标扫描 -->
+      <circle cy="63" r="10" fill="#38a169" stroke="#fff" stroke-width="2">
+        <animate attributeName="cx" values="60;160;280;420;540;660;540;420;280;160;60" dur="20s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- 场景示例 -->
+      <rect x="40" y="135" width="680" height="185" rx="8" fill="#fafaf8" stroke="#eee" stroke-width="1"/>
+      <text x="380" y="160" text-anchor="middle" fill="#333" font-size="14" font-weight="700" font-family="sans-serif">每个词的感觉差异</text>
+
+      <text x="60" y="185" fill="#38a169" font-size="12" font-weight="600" font-family="sans-serif"><animate attributeName="opacity" values="1;0;0;0;0;0;0;0;1;0" dur="20s" repeatCount="indefinite"/>AMBLE: 老人家在山间小径上缓步而行</text>
+      <text x="60" y="205" fill="#43a047" font-size="12" font-weight="600" font-family="sans-serif"><animate attributeName="opacity" values="0;1;0;0;0;0;0;0;0;1" dur="20s" repeatCount="indefinite"/>STROLL: 情侣傍晚在公园里牵手散步</text>
+      <text x="60" y="225" fill="#888" font-size="12" font-weight="600" font-family="sans-serif"><animate attributeName="opacity" values="0;0;1;0;0;0;0;1;0;0" dur="20s" repeatCount="indefinite"/>WALK: 上班族从地铁站走到公司</text>
+      <text x="60" y="245" fill="#e67e22" font-size="12" font-weight="600" font-family="sans-serif"><animate attributeName="opacity" values="0;0;0;1;0;0;1;0;0;0" dur="20s" repeatCount="indefinite"/>MARCH: 士兵们步调一致地行进</text>
+      <text x="60" y="265" fill="#e63946" font-size="12" font-weight="600" font-family="sans-serif"><animate attributeName="opacity" values="0;0;0;0;1;0;0;0;0;0" dur="20s" repeatCount="indefinite"/>JOG: 晨跑者在公园里慢跑锻炼</text>
+      <text x="60" y="285" fill="#c62828" font-size="12" font-weight="600" font-family="sans-serif"><animate attributeName="opacity" values="0;0;0;0;0;1;0;0;0;0" dur="20s" repeatCount="indefinite"/>RUN: 运动员全速冲向终点</text>
+
+      <text x="380" y="310" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">💡 从左到右：速度递增、急迫感递增、享受感递减（STROLL 是最享受的）</text>
+    </svg>
+    <div class="label"><span class="p">步行动词光谱：AMBLE < STROLL < WALK < MARCH < JOG < RUN</span><span class="desc">STROLL 处于"慢而享受"的位置，比 AMBLE 快一点但比 WALK 悠闲。</span></div>
+  </div>
+</div>
+
+<!-- 常见搭配 -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+<div class="usage-section">
+  <h4>📖 STROLL 常见搭配</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>stroll</strong> along</span><span class="usage-cn">沿着...散步 &nbsp;|&nbsp; 📖 沿着海滩/河边/街道悠闲地走</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>stroll</strong> through</span><span class="usage-cn">漫步穿过 &nbsp;|&nbsp; 📖 穿过公园/花园/商场/小镇</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>stroll</strong> around</span><span class="usage-cn">四处逛 &nbsp;|&nbsp; 📖 没有特定目的地到处走走</span></div>
+    <div class="usage-item"><span class="usage-en">Sunday <strong>stroll</strong></span><span class="usage-cn">周日散步 &nbsp;|&nbsp; 📖 最典型的悠闲散步场景</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>stroll</strong> in the park</span><span class="usage-cn">在公园散步 &nbsp;|&nbsp; 📖 字面义，也常用于否定：it's no stroll in the park（不容易）</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>stroll</strong> to victory</span><span class="usage-cn">轻松取胜 &nbsp;|&nbsp; 📖 体育/比赛中"散步般"获胜</span></div>
+    <div class="usage-item"><span class="usage-en">take a <strong>stroll</strong></span><span class="usage-cn">去散个步 &nbsp;|&nbsp; 📖 名词用法，最口语化的邀请</span></div>
+    <div class="usage-item"><span class="usage-en">evening <strong>stroll</strong></span><span class="usage-cn">傍晚散步 &nbsp;|&nbsp; 📖 饭后或日落时的散步习惯</span></div>
+  </div>
+</div>
+
+<div class="white-box" style="margin-bottom:20px;"><strong>💡 "it's no stroll in the park" 的演变</strong>：stroll in the park 是最轻松的散步方式 → 否定后表示"这件事一点都不轻松"。"Passing that exam was no <strong>stroll in the park</strong>." = 通过那个考试可不容易（完全不是散散步就能搞定的事）。</div>
+<div class="white-box" style="margin-bottom:20px;"><strong>💡 stroll to victory 的用法</strong>：把比赛/竞争比作"散步"，强调赢得毫不费力。"The champion <strong>strolled</strong> to victory in the final set." = 冠军在最后一盘轻松取胜，像散步一样不费劲。</div>
+
+<!-- 反义/相似 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card green-bg">
+      <h5 style="color:#38a169;">近义（同属"慢走"）</h5>
+      <p><strong>AMBLE</strong> — 从容行走 <small>更慢更稳，不着急不被打扰地走。</small></p>
+      <p><strong>SAUNTER</strong> — 信步闲逛 <small>漫不经心的走，带点自信或倨傲的态度。</small></p>
+      <p><strong>MEANDER</strong> — 蜿蜒而行 <small>路径婉转曲折，不一定是步行（河也行）。</small></p>
+    </div>
+    <div class="info-card orange-bg">
+      <h5 style="color:#d97706;">反义</h5>
+      <p><strong>MARCH</strong> — 行军/齐步走 <small>有纪律、有目的地快速行进。和 stroll 完全相反。</small></p>
+      <p><strong>RUSH</strong> — 冲/赶 <small>stroll 的反面——匆忙、赶时间。</small></p>
+      <p><strong>DASH</strong> — 冲刺 <small>短距离全力奔跑，和悠闲的 stroll 完全相反。</small></p>
+    </div>
+    <div class="info-card purple-bg">
+      <h5 style="color:#7c3aed;">形似易混</h5>
+      <p><strong>SCROLL</strong> — 滚动/卷轴 <small>拼写仅差一个字母 C。stroll = 散步，scroll = 滚动/卷轴。</small></p>
+      <p><strong>STROLLER</strong> — 婴儿车 <small>stroll + er = 推着宝宝散步的车。</small></p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

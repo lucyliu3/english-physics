@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOWKEY 图解 - 低调的 / 悄悄的</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,#f5f0e8 0%,#f0ebe0 100%); display:flex; justify-content:center; padding:48px 24px; color:#1a1a1a; }
+  .container { max-width:960px; width:100%; background:rgba(255,255,255,0.92); border-radius:20px; padding:48px 40px 56px; box-shadow:0 8px 40px rgba(0,0,0,0.07); }
+
+  h1 { font-size:32px; font-weight:800; text-align:center; margin-bottom:4px; color:#777; letter-spacing:-0.5px; }
+  .subtitle { text-align:center; color:#666; font-size:15px; margin-bottom:36px; letter-spacing:1px; }
+
+  .section-title { font-size:17px; font-weight:700; margin-bottom:20px; color:#333; display:flex; align-items:center; gap:10px; }
+  .section-title .bar { display:inline-block; width:4px; height:18px; background:linear-gradient(180deg,#888,#bbb); border-radius:2px; flex-shrink:0; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+  .card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:16px; overflow:hidden; transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.10); }
+  .card svg { width:100%; height:auto; display:block; background:#fafaf8; border-radius:16px 16px 0 0; }
+
+  .card-body { padding:18px 20px 22px; }
+  .card-body h3 { font-size:18px; font-weight:700; margin-bottom:2px; }
+  .card-body h3 .hl { color:#888; }
+  .card-body .pos { font-size:12px; color:#bbb; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-body .def { font-size:13.5px; color:#444; line-height:1.65; }
+  .card-body .def .eg { color:#666; font-size:13px; font-style:italic; display:block; margin-top:4px; border-left:2px solid #e8e0d0; padding-left:10px; }
+
+  .white-box { background:#fff; border:1px solid #e8e0d0; border-radius:10px; padding:14px 18px; margin-top:14px; font-size:13px; color:#555; line-height:1.65; box-shadow:0 2px 8px rgba(0,0,0,0.03); position:relative; }
+  .white-box::before { content:''; position:absolute; top:-6px; left:20px; width:12px; height:12px; background:#fff; border-left:1px solid #e8e0d0; border-top:1px solid #e8e0d0; transform:rotate(45deg); }
+  .white-box strong { color:#888; }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+  .compare-card { background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; overflow:hidden; transition:transform 0.2s; }
+  .compare-card:hover { transform:translateY(-2px); }
+  .compare-card svg { width:100%; height:auto; display:block; border-radius:14px 14px 0 0; }
+  .compare-card .label { padding:12px 16px 18px; }
+  .compare-card .label .p { font-size:15px; font-weight:700; }
+  .compare-card .label .desc { font-size:12px; color:#888; margin-top:3px; line-height:1.55; }
+
+  .usage-section { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px; }
+  .usage-section h4 { font-size:15px; font-weight:700; color:#333; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .usage-list { display:grid; grid-template-columns:1fr 1fr; gap:4px 32px; padding:0; }
+  .usage-item { padding:7px 0; border-bottom:1px dashed #eee; display:flex; flex-direction:column; }
+  .usage-en { font-size:14px; font-weight:600; color:#333; }
+  .usage-en strong { color:#888; }
+  .usage-cn { font-size:12.5px; color:#777; margin-top:2px; }
+
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; font-size:13.5px; }
+  .info-card { border-radius:12px; padding:16px 18px; }
+  .info-card h5 { font-weight:700; margin-bottom:8px; font-size:14px; }
+  .info-card p { margin-bottom:5px; line-height:1.5; }
+  .info-card small { color:#777; font-size:12px; }
+
+  .gray-bg { background:linear-gradient(135deg,#f5f5f5,#eee); }
+  .orange-bg { background:linear-gradient(135deg,#fff8f0,#fdeee0); }
+  .purple-bg { background:linear-gradient(135deg,#f5f0ff,#e8e0f5); }
+
+  .spectrum-wrap { background:linear-gradient(135deg,#fafaf8,#f8f6f2); border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:24px; }
+  .spectrum-wrap svg { width:100%; height:auto; display:block; border-radius:10px; }
+
+  @media (max-width:720px) {
+    .container { padding:24px 16px 32px; }
+    .cards { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .usage-list { grid-template-columns:1fr; }
+    .three-col { grid-template-columns:1fr; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>LOWKEY</h1>
+<p class="subtitle">低调的 / 悄悄的 — 从"low key"到"lowkey obsessed"</p>
+
+<!-- 核心意象对比 -->
+<div class="section-title"><span class="bar"></span><span>核心意象对比</span></div>
+<div class="cards">
+  <!-- Card 1: LOWKEY 核心 -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="shadow">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+        <linearGradient id="pianoBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f5f5f5"/>
+          <stop offset="100%" stop-color="#e8e8e8"/>
+        </linearGradient>
+      </defs>
+      <rect width="760" height="400" fill="#fafaf8" rx="8"/>
+
+      <text x="380" y="35" text-anchor="middle" fill="#888" font-size="20" font-weight="800" font-family="sans-serif">LOWKEY — 物理来源：钢琴的"低音键"</text>
+
+      <!-- 钢琴键盘 -->
+      <g transform="translate(80, 60)">
+        <!-- 白键 -->
+        <rect x="0" y="0" width="40" height="140" rx="3" fill="#fff" stroke="#ccc" stroke-width="1" filter="url(#shadow)"/>
+        <rect x="42" y="0" width="40" height="140" rx="3" fill="#fff" stroke="#ccc" stroke-width="1" filter="url(#shadow)"/>
+        <rect x="84" y="0" width="40" height="140" rx="3" fill="#fff" stroke="#ccc" stroke-width="1" filter="url(#shadow)"/>
+        <rect x="126" y="0" width="40" height="140" rx="3" fill="#fff" stroke="#ccc" stroke-width="1" filter="url(#shadow)"/>
+        <rect x="168" y="0" width="40" height="140" rx="3" fill="#fff" stroke="#ccc" stroke-width="1" filter="url(#shadow)"/>
+        <rect x="210" y="0" width="40" height="140" rx="3" fill="#fff" stroke="#ccc" stroke-width="1" filter="url(#shadow)"/>
+        <rect x="252" y="0" width="40" height="140" rx="3" fill="#fff" stroke="#ccc" stroke-width="1" filter="url(#shadow)"/>
+        <!-- 黑键 -->
+        <rect x="28" y="0" width="28" height="85" rx="2" fill="#333"/>
+        <rect x="70" y="0" width="28" height="85" rx="2" fill="#333"/>
+        <rect x="154" y="0" width="28" height="85" rx="2" fill="#333"/>
+        <rect x="196" y="0" width="28" height="85" rx="2" fill="#333"/>
+        <rect x="238" y="0" width="28" height="85" rx="2" fill="#333"/>
+
+        <!-- 高亮 LOW KEY 区域（左侧低音区） -->
+        <rect x="0" y="0" width="80" height="140" rx="3" fill="none" stroke="#888" stroke-width="3" stroke-dasharray="6,4">
+          <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+        </rect>
+        <text x="40" y="165" text-anchor="middle" fill="#888" font-size="13" font-weight="700" font-family="sans-serif">LOW KEY</text>
+        <text x="40" y="182" text-anchor="middle" fill="#999" font-size="11" font-family="sans-serif">低音键 → 不引人注意</text>
+      </g>
+
+      <!-- 物理→抽象箭头 -->
+      <text x="430" y="105" fill="#888" font-size="14" font-weight="600" font-family="sans-serif">物理：低音键</text>
+      <text x="430" y="125" fill="#999" font-size="12" font-family="sans-serif">声音低沉 → 不刺耳</text>
+      <text x="430" y="155" fill="#888" font-size="14" font-weight="600" font-family="sans-serif">→ 抽象：低调</text>
+      <text x="430" y="175" fill="#999" font-size="12" font-family="sans-serif">不引人注目 → 悄悄进行</text>
+      <text x="430" y="205" fill="#888" font-size="14" font-weight="600" font-family="sans-serif">→ 口语：有点...的</text>
+      <text x="430" y="225" fill="#999" font-size="12" font-family="sans-serif">"I'm lowkey excited" = 我有点小激动（不想太张扬）</text>
+
+      <!-- 声波动画 -->
+      <g transform="translate(440, 250)">
+        <!-- 高音声波（大振幅、紧密） -->
+        <path d="M0,0 Q15,-20 30,0 Q45,20 60,0 Q75,-20 90,0" fill="none" stroke="#ccc" stroke-width="2" opacity="0.4"/>
+        <text x="45" y="-30" text-anchor="middle" fill="#ccc" font-size="11" font-family="sans-serif">HIGH KEY（高音 = 高调）</text>
+
+        <!-- 低音声波（小振幅、平缓） -->
+        <path d="M0,50 Q20,40 40,50 Q60,60 80,50 Q100,40 120,50" fill="none" stroke="#888" stroke-width="2.5" stroke-dasharray="4,3">
+          <animate attributeName="opacity" values="1;0.5;1" dur="3s" repeatCount="indefinite"/>
+        </path>
+        <text x="60" y="85" text-anchor="middle" fill="#888" font-size="11" font-family="sans-serif">LOW KEY（低音 = 低调）</text>
+
+        <!-- 第三行：更加平缓 -->
+        <path d="M0,110 Q40,105 80,110 Q120,115 160,110" fill="none" stroke="#888" stroke-width="1.5" opacity="0.5"/>
+      </g>
+
+      <text x="380" y="385" text-anchor="middle" fill="#999" font-size="11" font-family="sans-serif">💡 音乐术语 → 日常口语：低音键不刺耳 → 低调不张扬 → "有点..."的委婉表达</text>
+    </svg>
+    <div class="card-body">
+      <h3>LOW-KEY → LOWKEY <span class="hl">/ˈloʊˌki/</span></h3>
+      <div class="pos">ADJ / ADV · 低调的 / 有点...</div>
+      <div class="def">
+        <strong>本义（音乐）</strong> low key = 低音调，声音低沉柔和<br>
+        <strong>引申（形容词）</strong> 低调的、不引人注目的<br>
+        <strong>引申（副词/口语）</strong> 有点...的、悄悄...了
+        <span class="eg">"I'm lowkey obsessed with this song." 我有点迷上这首歌了（但不想让太多人知道）。</span>
+      </div>
+      <div class="white-box"><strong>💡 理解关键</strong>：音乐中"低音键"不刺耳、不突出 → 引申为"不引人注目的" → 口语中变为副词"有点..."（轻微程度 + 不想公开张扬的语气）。这个演变反映了从"物理属性"到"态度属性"再到"程度副词"的完整轨迹。</div>
+    </div>
+  </div>
+
+  <!-- Card 2: LOWKEY vs SUBTLE -->
+  <div class="card">
+    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="shadow2">
+          <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+      <rect width="760" height="400" fill="#fafaf8" rx="8"/>
+
+      <text x="380" y="35" text-anchor="middle" fill="#333" font-size="18" font-weight="700" font-family="sans-serif">LOWKEY vs SUBTLE — 两者都"低调"，但视角不同</text>
+
+      <!-- LOWKEY -->
+      <rect x="30" y="55" width="340" height="150" rx="8" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+      <text x="200" y="80" text-anchor="middle" fill="#888" font-size="16" font-weight="700" font-family="sans-serif">LOWKEY</text>
+      <!-- 安静角落 -->
+      <rect x="60" y="90" width="120" height="60" rx="6" fill="#eee" stroke="#ccc" stroke-width="1"/>
+      <circle cx="80" cy="110" r="10" fill="#f5e6d0"/>
+      <circle cx="85" cy="130" r="10" fill="#f5e6d0"/>
+      <text x="120" y="115" text-anchor="middle" fill="#999" font-size="11" font-family="sans-serif">两个人小声交谈</text>
+      <text x="200" y="185" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">态度上不高调、不张扬</text>
+
+      <circle cx="380" cy="130" r="18" fill="#888" opacity="0.8"/>
+      <text x="380" y="135" text-anchor="middle" fill="#fff" font-size="12" font-weight="700" font-family="sans-serif">VS</text>
+
+      <!-- SUBTLE -->
+      <rect x="410" y="55" width="320" height="150" rx="8" fill="#f0f5ff" stroke="#cce" stroke-width="1"/>
+      <text x="570" y="80" text-anchor="middle" fill="#5b7db9" font-size="16" font-weight="700" font-family="sans-serif">SUBTLE</text>
+      <!-- 细微差别 -->
+      <rect x="440" y="90" width="100" height="60" rx="6" fill="#eef" stroke="#dde" stroke-width="1"/>
+      <text x="490" y="110" text-anchor="middle" fill="#5b7db9" font-size="12" font-weight="600" font-family="sans-serif">一丁点不同</text>
+      <rect x="455" y="120" width="70" height="4" rx="2" fill="#5b7db9"/>
+      <rect x="455" y="128" width="68" height="4" rx="2" fill="#5b7db9" opacity="0.6"/>
+      <rect x="455" y="136" width="66" height="4" rx="2" fill="#5b7db9" opacity="0.3"/>
+      <text x="570" y="185" text-anchor="middle" fill="#666" font-size="12" font-family="sans-serif">细节上精妙、不易察觉</text>
+
+      <!-- 底部对比 -->
+      <rect x="30" y="220" width="700" height="160" rx="8" fill="#fafaf8" stroke="#eee" stroke-width="1"/>
+      <text x="380" y="245" text-anchor="middle" fill="#333" font-size="14" font-weight="700" font-family="sans-serif">关键区别</text>
+
+      <circle cx="65" cy="265" r="6" fill="#888"/>
+      <text x="80" y="270" fill="#444" font-size="12.5" font-family="sans-serif">LOWKEY = <strong>态度上的</strong>低调。主体<strong>选择</strong>不张扬、不引人注目。</text>
+      <text x="80" y="290" fill="#777" font-size="12" font-family="sans-serif">强调"故意保持低调"，常用于人或事件。</text>
+
+      <circle cx="65" cy="315" r="6" fill="#5b7db9"/>
+      <text x="80" y="320" fill="#444" font-size="12.5" font-family="sans-serif">SUBTLE = <strong>性质上的</strong>细微。事物本身<strong>天然地</strong>难以察觉。</text>
+      <text x="80" y="340" fill="#777" font-size="12" font-family="sans-serif">强调"精妙微妙"，常用于品味、差别、细节。</text>
+
+      <line x1="370" y1="258" x2="370" y2="350" stroke="#ddd" stroke-width="1" stroke-dasharray="4,4"/>
+    </svg>
+    <div class="card-body">
+      <h3>LOWKEY vs SUBTLE vs UNDERSTATED <span class="hl">区别</span></h3>
+      <div class="pos">近义对比</div>
+      <div class="def">
+        <strong>LOWKEY</strong> = 故意低调（社交态度，"我不想招摇"）<br>
+        <strong>SUBTLE</strong> = 精妙细微（性质，"不经意间才注意到"）<br>
+        <strong>UNDERSTATED</strong> = 含蓄克制（表达方式，"话没说满但意思到了"）
+        <span class="eg">"We had a lowkey wedding." 我们办了个低调的婚礼。<br>"There's a subtle difference." 有个细微差别。<br>"Her style is understated elegance." 她的风格是含蓄优雅。</span>
+      </div>
+      <div class="white-box"><strong>💡 记忆法</strong>：LOWKEY = "压低音量"，SUBTLE = "细如丝线"，UNDERSTATED = "低于实际说了"。三个词的画面完全不同。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 程度光谱：从 LOUD 到 INCOGNITO -->
+<div class="section-title"><span class="bar"></span><span>📊 程度光谱：从 LOUD → INCOGNITO</span></div>
+<div class="spectrum-wrap">
+  <svg viewBox="0 0 1720 400" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="specGrad" x1="0" y1="0" x2="1720" y2="0">
+        <stop offset="0%" stop-color="#e63946"/>
+        <stop offset="25%" stop-color="#e67e22"/>
+        <stop offset="50%" stop-color="#f0c040"/>
+        <stop offset="75%" stop-color="#888"/>
+        <stop offset="100%" stop-color="#444"/>
+      </linearGradient>
+      <filter id="specShadow"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.15"/></filter>
+    </defs>
+    <rect width="1720" height="400" fill="#fafaf8" rx="8"/>
+
+    <text x="860" y="35" text-anchor="middle" fill="#333" font-size="20" font-weight="800" font-family="sans-serif">LOWKEY 程度光谱 — 从张扬到隐藏</text>
+
+    <!-- 光谱条 -->
+    <rect x="60" y="270" width="1600" height="18" rx="9" fill="url(#specGrad)" opacity="0.8"/>
+
+    <!-- 刻度标签 -->
+    <text x="160" y="260" text-anchor="middle" fill="#e63946" font-size="16" font-weight="700" font-family="sans-serif">LOUD</text>
+    <text x="560" y="260" text-anchor="middle" fill="#d97706" font-size="16" font-weight="700" font-family="sans-serif">NOTICEABLE</text>
+    <text x="860" y="260" text-anchor="middle" fill="#b8860b" font-size="16" font-weight="700" font-family="sans-serif">MODEST</text>
+    <text x="1160" y="260" text-anchor="middle" fill="#888" font-size="16" font-weight="700" font-family="sans-serif">LOWKEY</text>
+    <text x="1560" y="260" text-anchor="middle" fill="#444" font-size="16" font-weight="700" font-family="sans-serif">INCOGNITO</text>
+
+    <!-- 描述文字 -->
+    <text x="160" y="320" text-anchor="middle" fill="#777" font-size="12" font-family="sans-serif">大声疾呼 / 抢眼</text>
+    <text x="560" y="320" text-anchor="middle" fill="#777" font-size="12" font-family="sans-serif">明显 / 引人注意</text>
+    <text x="860" y="320" text-anchor="middle" fill="#777" font-size="12" font-family="sans-serif">谦虚 / 不过分</text>
+    <text x="1160" y="320" text-anchor="middle" fill="#777" font-size="12" font-family="sans-serif">低调 / 不张扬</text>
+    <text x="1560" y="320" text-anchor="middle" fill="#777" font-size="12" font-family="sans-serif">伪装 / 隐姓埋名</text>
+
+    <!-- 视觉场景 -->
+    <!-- LOUD: 喇叭 -->
+    <g transform="translate(100, 70)">
+      <path d="M0,30 L30,10 L30,50 Z" fill="#e63946" opacity="0.7"/>
+      <rect x="30" y="15" width="40" height="30" rx="4" fill="#e63946" opacity="0.5"/>
+      <text x="30" y="85" fill="#666" font-size="11" font-family="sans-serif">大声广播</text>
+    </g>
+
+    <!-- NOTICEABLE: 聚光灯 -->
+    <g transform="translate(480, 70)">
+      <circle cx="40" cy="20" r="8" fill="#e67e22"/>
+      <line x1="40" y1="28" x2="20" y2="60" stroke="#e67e22" stroke-width="2"/>
+      <line x1="40" y1="28" x2="60" y2="60" stroke="#e67e22" stroke-width="2"/>
+      <text x="40" y="85" fill="#666" font-size="11" font-family="sans-serif">引人注目</text>
+    </g>
+
+    <!-- MODEST: 安静的人 -->
+    <g transform="translate(830, 60)">
+      <circle cx="30" cy="25" r="20" fill="#f5e6d0" stroke="#ddd" stroke-width="1"/>
+      <circle cx="22" cy="22" r="2.5" fill="#333"/>
+      <circle cx="38" cy="22" r="2.5" fill="#333"/>
+      <path d="M30,35 Q28,38 30,38" fill="none" stroke="#333" stroke-width="1.5"/>
+      <text x="30" y="80" fill="#666" font-size="11" font-family="sans-serif">谦虚得体</text>
+    </g>
+
+    <!-- LOWKEY: 墨镜人（中心高亮） -->
+    <g transform="translate(1100, 55)" filter="url(#specShadow)">
+      <rect x="0" y="0" width="100" height="100" rx="10" fill="#fff" stroke="#888" stroke-width="2"/>
+      <circle cx="50" cy="35" r="22" fill="#f5e6d0"/>
+      <rect x="35" y="28" width="12" height="8" rx="3" fill="#333"/>
+      <rect x="53" y="28" width="12" height="8" rx="3" fill="#333"/>
+      <path d="M50,50 Q48,53 50,53" fill="none" stroke="#333" stroke-width="1.5"/>
+      <text x="50" y="85" text-anchor="middle" fill="#888" font-size="13" font-weight="700" font-family="sans-serif">LOWKEY</text>
+    </g>
+
+    <!-- INCOGNITO: 隐藏的人 -->
+    <g transform="translate(1480, 60)">
+      <circle cx="30" cy="25" r="20" fill="#f5e6d0" stroke="#ccc" stroke-width="1"/>
+      <!-- 帽子 -->
+      <path d="M10,15 Q30,-5 50,15" fill="#444" stroke="#333" stroke-width="1"/>
+      <rect x="15" y="20" width="30" height="18" rx="2" fill="#444" opacity="0.5"/>
+      <text x="30" y="80" fill="#666" font-size="11" font-family="sans-serif">完全隐藏</text>
+    </g>
+
+    <!-- 游标动画 -->
+    <g>
+      <circle cy="279" r="14" fill="#fff" stroke="#888" stroke-width="3" filter="url(#specShadow)">
+        <animate attributeName="cx" values="160;560;860;1160;1560;1160;860;560;160" dur="20s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- 状态文字 - 错开显示 -->
+    <!-- LOUD -->
+    <text x="860" y="370" text-anchor="middle" fill="#e63946" font-size="15" font-weight="700" font-family="sans-serif">
+      <animate attributeName="opacity" values="1;0;0;0;0;0;0;0;1;0;" dur="20s" repeatCount="indefinite"/>
+      LOUD: 完全张扬、高调行事
+    </text>
+    <!-- NOTICEABLE -->
+    <text x="860" y="370" text-anchor="middle" fill="#e67e22" font-size="15" font-weight="700" font-family="sans-serif">
+      <animate attributeName="opacity" values="0;1;0;0;0;0;0;0;0;1" dur="20s" repeatCount="indefinite"/>
+      NOTICEABLE:  明显可见、引人注意
+    </text>
+    <!-- MODEST -->
+    <text x="860" y="370" text-anchor="middle" fill="#b8860b" font-size="15" font-weight="700" font-family="sans-serif">
+      <animate attributeName="opacity" values="0;0;1;0;0;0;0;1;0;0" dur="20s" repeatCount="indefinite"/>
+      MODEST: 谦虚得体、不过分
+    </text>
+    <!-- LOWKEY -->
+    <text x="860" y="370" text-anchor="middle" fill="#888" font-size="15" font-weight="700" font-family="sans-serif">
+      <animate attributeName="opacity" values="0;0;0;1;0;0;1;0;0;0" dur="20s" repeatCount="indefinite"/>
+      LOWKEY: 低调行事、避免注目
+    </text>
+    <!-- INCOGNITO -->
+    <text x="860" y="370" text-anchor="middle" fill="#444" font-size="15" font-weight="700" font-family="sans-serif">
+      <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0" dur="20s" repeatCount="indefinite"/>
+      INCOGNITO: 完全隐藏身份
+    </text>
+  </svg>
+</div>
+
+<!-- 逻辑演化树 -->
+<div class="section-title"><span class="bar"></span><span>🧠 逻辑演化树</span></div>
+<div style="background:#fffdf7; border:1px solid #e8e0d0; border-radius:12px; padding:20px 24px; margin-bottom:36px;">
+  <div class="tree-grid" style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; justify-content:center;">
+    <div class="tree-node" style="background:#f5f5f5; border:1px solid #ddd; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ① 低音键<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">钢琴键盘左侧</span>
+    </div>
+    <div class="tree-arrow" style="font-size:18px; color:#888; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#f5f5f5; border:1px solid #ddd; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ② 不刺耳<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">声音低沉柔和</span>
+    </div>
+    <div class="tree-arrow" style="font-size:18px; color:#888; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#f5f5f5; border:1px solid #ddd; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ③ 低调态度<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">不引人注目</span>
+    </div>
+    <div class="tree-arrow" style="font-size:18px; color:#888; font-weight:700;">→</div>
+    <div class="tree-node" style="background:#f5f5f5; border:1px solid #ddd; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; text-align:center; min-width:90px;">
+      ④ 有点...<br><span style="display:block; font-weight:400; font-size:11px; color:#888; margin-top:4px;">口语副词化</span>
+    </div>
+  </div>
+
+  <div class="white-box" style="margin-top:16px;"><strong>💡 从①到②</strong>：钢琴左侧的 key 产生低沉浑厚的声音，物理上不尖锐、不刺耳。这是 low key 的字面意义。</div>
+  <div class="white-box" style="margin-top:8px;"><strong>💡 从②到③</strong>："低音"那种"不突出"的感觉 → 形容人/事"不引人注目、低调"。a <strong>lowkey wedding</strong> = 不铺张低调的婚礼。a <strong>lowkey person</strong> = 低调的人。</div>
+  <div class="white-box" style="margin-top:8px;"><strong>💡 从③到④</strong>：口语中最新的演变 —— lowkey 变成副词，表示"有点...但不张扬"。I'm <strong>lowkey</strong> hoping he shows up = 我悄悄希望他会来（不让自己显得太在意）。这个用法主要在 Gen Z / 年轻人中流行。</div>
+  <div class="white-box" style="margin-top:8px;"><strong>💡 与 HIGHKEY 对比</strong>：highkey = "公开地、张扬地"（lowkey 的反义）。"I <strong>highkey</strong> love this." = 我超级喜欢这个（不藏着掖着）。highkey 是 lowkey 的衍生词，使用频率低很多。</div>
+</div>
+
+<!-- 易混对比 -->
+<div class="section-title"><span class="bar"></span><span>易混对比</span></div>
+<div class="compare-row">
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs><filter id="s3"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/></filter></defs>
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="380" y="35" text-anchor="middle" fill="#333" font-size="16" font-weight="700" font-family="sans-serif">LOWKEY vs MODEST — 动机不同</text>
+
+      <rect x="30" y="50" width="340" height="130" rx="8" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+      <text x="200" y="75" fill="#888" font-size="14" font-weight="700" font-family="sans-serif">LOWKEY = 故意不引人注目</text>
+      <circle cx="120" cy="110" r="20" fill="#f5e6d0"/>
+      <rect x="106" y="106" width="10" height="7" rx="2" fill="#333"/>
+      <rect x="124" y="106" width="10" height="7" rx="2" fill="#333"/>
+      <text x="120" y="140" text-anchor="middle" fill="#888" font-size="12" font-family="sans-serif">"我不想被注意到"</text>
+      <text x="200" y="165" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">选择低调、回避关注</text>
+
+      <circle cx="380" cy="115" r="18" fill="#888" opacity="0.8"/>
+      <text x="380" y="120" text-anchor="middle" fill="#fff" font-size="12" font-weight="700" font-family="sans-serif">VS</text>
+
+      <rect x="410" y="50" width="320" height="130" rx="8" fill="#f0faf0" stroke="#dde" stroke-width="1"/>
+      <text x="570" y="75" fill="#38a169" font-size="14" font-weight="700" font-family="sans-serif">MODEST = 谦虚不吹嘘</text>
+      <circle cx="520" cy="110" r="20" fill="#f5e6d0"/>
+      <circle cx="512" cy="107" r="2.5" fill="#333"/>
+      <circle cx="528" cy="107" r="2.5" fill="#333"/>
+      <path d="M520,118 Q518,121 520,121" fill="none" stroke="#333" stroke-width="1.5"/>
+      <text x="520" y="140" text-anchor="middle" fill="#38a169" font-size="12" font-family="sans-serif">"我不觉得自己多了不起"</text>
+      <text x="570" y="165" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">发自内心的谦逊</text>
+
+      <rect x="30" y="195" width="700" height="130" rx="8" fill="#fafaf8" stroke="#eee" stroke-width="1"/>
+      <text x="380" y="220" text-anchor="middle" fill="#333" font-size="13" font-weight="700" font-family="sans-serif">关键区别</text>
+      <text x="50" y="245" fill="#444" font-size="12" font-family="sans-serif">LOWKEY: 外部策略 — "我选择不让外界注意到我"，可以是有钱人故意穿得朴素。</text>
+      <text x="50" y="268" fill="#444" font-size="12" font-family="sans-serif">MODEST: 内部品质 — "我内心不觉得自己特别"，是对自身价值的真实评估。</text>
+      <text x="50" y="295" fill="#666" font-size="12" font-family="sans-serif">💡 一个 lowkey 的人可能骨子里很骄傲（只是选择低调），一个 modest 的人是真的觉得自己没什么了不起。</text>
+    </svg>
+    <div class="label"><span class="p">LOWKEY vs MODEST vs UNDERSTATED</span><span class="desc">LOWKEY = 刻意低调，MODEST = 内心谦逊，UNDERSTATED = 表达含蓄。</span></div>
+  </div>
+  <div class="compare-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs><filter id="s4"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/></filter></defs>
+      <rect width="760" height="340" fill="#fafaf8" rx="8"/>
+      <text x="380" y="35" text-anchor="middle" fill="#333" font-size="16" font-weight="700" font-family="sans-serif">LOWKEY（形容词）vs LOWKEY（副词）— 两种用法</text>
+
+      <rect x="30" y="50" width="340" height="130" rx="8" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+      <text x="200" y="75" fill="#888" font-size="14" font-weight="700" font-family="sans-serif">形容词：低调的</text>
+      <rect x="60" y="85" width="120" height="55" rx="6" fill="#eee" stroke="#ccc" stroke-width="1"/>
+      <text x="120" y="100" text-anchor="middle" fill="#444" font-size="11" font-weight="600" font-family="sans-serif">a lowkey party</text>
+      <text x="120" y="120" text-anchor="middle" fill="#777" font-size="11" font-family="sans-serif">只有几个好朋友</text>
+      <text x="120" y="135" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">不喧哗、不张扬</text>
+      <text x="200" y="165" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">修饰名词：低调的X</text>
+
+      <circle cx="380" cy="115" r="18" fill="#888" opacity="0.8"/>
+      <text x="380" y="120" text-anchor="middle" fill="#fff" font-size="12" font-weight="700" font-family="sans-serif">VS</text>
+
+      <rect x="410" y="50" width="320" height="130" rx="8" fill="#f0f0f8" stroke="#ccd" stroke-width="1"/>
+      <text x="570" y="75" fill="#5b7db9" font-size="14" font-weight="700" font-family="sans-serif">副词：有点...</text>
+      <rect x="440" y="85" width="120" height="55" rx="6" fill="#eef" stroke="#cce" stroke-width="1"/>
+      <text x="500" y="100" text-anchor="middle" fill="#444" font-size="11" font-weight="600" font-family="sans-serif">I'm lowkey tired</text>
+      <text x="500" y="120" text-anchor="middle" fill="#777" font-size="11" font-family="sans-serif">有点累，但还好</text>
+      <text x="500" y="135" text-anchor="middle" fill="#999" font-size="10" font-family="sans-serif">不想大肆抱怨</text>
+      <text x="570" y="165" text-anchor="middle" fill="#666" font-size="11" font-family="sans-serif">修饰动词/形容词：有点X</text>
+
+      <rect x="30" y="195" width="700" height="130" rx="8" fill="#fafaf8" stroke="#eee" stroke-width="1"/>
+      <text x="380" y="220" text-anchor="middle" fill="#333" font-size="13" font-weight="700" font-family="sans-serif">翻译对照</text>
+      <text x="50" y="245" fill="#444" font-size="12" font-family="sans-serif">形容词：a <strong>lowkey</strong> affair = 一场低调的活动（主要形容人、事件、氛围）</text>
+      <text x="50" y="268" fill="#444" font-size="12" font-family="sans-serif">副词：I'm <strong>lowkey</strong> obsessed = 我有点迷上了（主要修饰感情、程度判断）</text>
+      <text x="50" y="295" fill="#666" font-size="12" font-family="sans-serif">💡 副词用法是近10年口语新演变，在社交媒体上极其常见。表达"轻微程度 + 不想表现得太在乎"的微妙态度。</text>
+    </svg>
+    <div class="label"><span class="p">形容词 vs 副词两种用法</span><span class="desc">形容词 = 描述事物低调（lowkey vibe），副词 = 弱化表态（lowkey thinking...）。</span></div>
+  </div>
+</div>
+
+<!-- 常见搭配 -->
+<div class="section-title"><span class="bar"></span><span>常见搭配</span></div>
+<div class="usage-section">
+  <h4>📖 LOWKEY 常见搭配</h4>
+  <div class="usage-list">
+    <div class="usage-item"><span class="usage-en"><strong>lowkey</strong> person</span><span class="usage-cn">低调的人 &nbsp;|&nbsp; 📖 不爱炫耀、不追求关注的人</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>lowkey</strong> affair / event</span><span class="usage-cn">低调的活动 &nbsp;|&nbsp; 📖 小范围、不铺张的聚会/婚礼</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>lowkey</strong> excited</span><span class="usage-cn">有点小激动 &nbsp;|&nbsp; 📖 内心高兴但表现克制</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>lowkey</strong> obsessed</span><span class="usage-cn">有点迷上了 &nbsp;|&nbsp; 📖 入坑了但不想显得太狂热</span></div>
+    <div class="usage-item"><span class="usage-en">keep it <strong>lowkey</strong></span><span class="usage-cn">低调处理 &nbsp;|&nbsp; 📖 保持低调，不张扬</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>lowkey</strong> hoping</span><span class="usage-cn">悄悄希望 &nbsp;|&nbsp; 📖 有所期待但不表露</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>lowkey</strong> flex</span><span class="usage-cn">低调炫耀 &nbsp;|&nbsp; 📖 假装不经意地炫耀（社交媒体常见）</span></div>
+    <div class="usage-item"><span class="usage-en"><strong>lowkey</strong> vibe</span><span class="usage-cn">低调的氛围 &nbsp;|&nbsp; 📖 安静、放松、不喧闹的气氛</span></div>
+  </div>
+</div>
+
+<div class="white-box" style="margin-bottom:20px;"><strong>💡 keep it lowkey 的用法</strong>：字面"保持低音"→ "控制音量"→ 在任何语境中说"保持低调"。Can we <strong>keep this lowkey</strong>? = 我们能不张扬这件事吗？（不希望被太多人知道）。</div>
+<div class="white-box" style="margin-bottom:20px;"><strong>💡 lowkey flex 的来源</strong>：flex 原意是"秀肌肉"，引申为炫耀。lowkey flex = 假装不经意地炫耀。"He posted a lowkey flex of his new car." = 他发了个低调炫耀新车的帖子（表面上是拍风景，但车入镜了）。</div>
+
+<!-- 反义/相似 -->
+<div class="section-title"><span class="bar"></span><span>反义 / 相似词</span></div>
+<div style="background:#fafaf8; border:1px solid #e8e8e4; border-radius:14px; padding:22px 26px; margin-bottom:20px;">
+  <div class="three-col">
+    <div class="info-card gray-bg">
+      <h5 style="color:#888;">近义（同属"低调"）</h5>
+      <p><strong>SUBTLE</strong> — 细微的、精妙的 <small>强调细节上的微妙，不一定是故意低调。</small></p>
+      <p><strong>UNDERSTATED</strong> — 含蓄的、克制的 <small>表达方式上的克制，话没说满。</small></p>
+      <p><strong>MODEST</strong> — 谦虚的 <small>人格品质上的谦逊，不是策略性的选择。</small></p>
+    </div>
+    <div class="info-card orange-bg">
+      <h5 style="color:#d97706;">反义</h5>
+      <p><strong>HIGHKEY</strong> — 张扬地/非常地 <small>lowkey 的直接反义，网络新词。</small></p>
+      <p><strong>LOUD</strong> — 高调的、喧闹的 <small>物理上/社交上"声音大"。</small></p>
+      <p><strong>OSTENTATIOUS</strong> — 炫耀的、铺张的 <small>比 loud 更贬义，刻意炫富。</small></p>
+    </div>
+    <div class="info-card purple-bg">
+      <h5 style="color:#7c3aed;">形似/音似易混</h5>
+      <p><strong>LOW-KEY</strong> — 带连字符的形容词 <small>传统拼写，作形容词。但不带连字符的 lowkey 更常用。</small></p>
+      <p><strong>KEY</strong> — 钥匙/关键 <small>lowkey 中的 key 不是"钥匙"而是"琴键"。</small></p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
