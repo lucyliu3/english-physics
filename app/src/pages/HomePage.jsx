@@ -49,16 +49,47 @@ export default function HomePage() {
       <Logo />
 
       <div className="scroll-area">
-        <input
-          className="search-box"
-          type="search"
-          placeholder="看看这个词的空间逻辑"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={handleSearch}
-          autoFocus
-          autoComplete="off"
-        />
+        <div className="search-row">
+          <input
+            className="search-box"
+            type="search"
+            placeholder="输入你想查询的任何单词/固定搭配，查询它的空间逻辑"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleSearch}
+            autoFocus
+            autoComplete="off"
+          />
+          <button
+            className="search-btn"
+            disabled={searching}
+            onClick={async () => {
+              const q = query.trim();
+              if (!q || searching) return;
+              setSearching(true);
+              const slug = encodeURIComponent(q);
+              const engineResult = await fetchWordFromEngine(q);
+              if (engineResult) {
+                setQuery('');
+                setSearching(false);
+                navigate(`/word/${slug}`);
+                return;
+              }
+              const local = searchWord(q);
+              if (local) {
+                setQuery('');
+                setSearching(false);
+                navigate(`/word/${encodeURIComponent(local.key)}`);
+                return;
+              }
+              setSearching(false);
+              alert(`✨ "${q}" 的图解正在生成中……\n\n（这是 MVP 演示，实际产品中引擎会自动生成）`);
+              setQuery('');
+            }}
+          >
+            {searching ? '查询中…' : '查询'}
+          </button>
+        </div>
 
         <div className="section-label" onClick={() => navigate('/favorites')}>
           ❤️ 我的收藏
