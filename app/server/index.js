@@ -4,14 +4,23 @@
 
 import express from 'express';
 import cors from 'cors';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import { analyze, debugAnalyze } from './engine/analyzer.js';
 import { render } from './engine/renderer.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
+
+// 生产环境：托管前端静态文件
+// __dirname = server/ 目录，dist 在 app/dist
+const publicPath = join(__dirname, '..', 'dist');
+app.use(express.static(publicPath));
 
 // 健康检查
 app.get('/api/health', (req, res) => {
@@ -57,6 +66,14 @@ app.get('/api/info', (req, res) => {
     layers: ['L1: 精确匹配（手写内容）', 'L2: 语义分类（规则推导）', 'L3: 词性兜底（通用模板）'],
     coverage: '任何英语单词'
   });
+});
+
+// SPA 路由回退：所有非 API 请求返回 index.html
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'API 端点不存在' });
+  }
+  res.sendFile(join(publicPath, 'index.html'));
 });
 
 app.listen(PORT, () => {
