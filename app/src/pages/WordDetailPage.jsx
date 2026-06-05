@@ -147,7 +147,7 @@ export default function WordDetailPage() {
         {/* ── 程度光谱 ── */}
         {data.spectrum && (
           <div className="detail-section">
-            <h3>📊 SNAP 拉力程度光谱</h3>
+            <h3>📊 程度光谱</h3>
             <div className="spectrum-wrap">
               <div className="spectrum-svg" dangerouslySetInnerHTML={{ __html: data.spectrum }} />
               <div className="white-box">{data.spectrumNote}</div>
