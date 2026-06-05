@@ -1,0 +1,236 @@
+{
+  "patterns": [
+    {
+      "id": "tension_release",
+      "name": "张力释放",
+      "description": "物体在受力超过极限时突然断裂/释放，伴随清脆声响",
+      "categories": ["tension_force"],
+      "visual": {
+        "template": "tension",
+        "viewBox": "0 0 760 400",
+        "elements": {
+          "object_type": "细长物体",
+          "action": "stretch_until_break",
+          "sound_effect": true,
+          "debris": true
+        }
+      },
+      "logic_chain_labels": ["蓄积张力", "达到临界点", "瞬间释放", "不可逆变化"],
+      "leap_template": "{word} = 张力积累到极限后突然释放",
+      "core_logic": "<strong>💡 核心逻辑</strong><br>物理画面：{object}被拉到极限 → <strong>啪的一声释放</strong>。<br><br>→ 引申为任何从蓄积到爆发的突然变化。",
+      "spectrum": {
+        "enabled": true,
+        "title": "压力程度光谱",
+        "stages": ["放松", "烦躁", "焦虑", "濒临极限", "爆发!"]
+      },
+      "compare_words": [
+        { "word": "break", "desc": "泛泛的'弄坏'" },
+        { "word": "crack", "desc": "表面裂开" },
+        { "word": "burst", "desc": "从内部胀破" }
+      ]
+    },
+    {
+      "id": "friction_transfer",
+      "name": "摩擦转移",
+      "description": "通过摩擦使某物从表面脱离并转移到另一表面",
+      "categories": ["contact_transfer"],
+      "visual": {
+        "template": "friction",
+        "viewBox": "0 0 760 400"
+      },
+      "logic_chain_labels": ["接触", "摩擦", "脱离", "转移", "附着"],
+      "leap_template": "{word} = 通过摩擦将某物转移到另一表面",
+      "core_logic": "<strong>💡 核心逻辑</strong><br>物理画面：一个表面上的物质通过摩擦转移到另一个表面上。<br><br>→ 引申为：某种特质像颜料一样'沾染'到另一个人或事物身上。",
+      "spectrum": { "enabled": false },
+      "compare_words": [
+        { "word": "smear", "desc": "涂抹开" },
+        { "word": "coat", "desc": "覆盖一层" }
+      ]
+    },
+    {
+      "id": "spatial_movement",
+      "name": "空间位移",
+      "description": "物体或人在空间中从一个位置移动到另一个位置",
+      "categories": ["movement"],
+      "visual": {
+        "template": "movement",
+        "viewBox": "0 0 760 400"
+      },
+      "logic_chain_labels": ["起点", "移动路径", "经过", "到达终点"],
+      "leap_template": "{word} = 在空间中从 A 点移动到 B 点",
+      "core_logic": "<strong>💡 核心逻辑</strong><br>物理画面：一个物体从起点出发，经过一段路径，到达终点。<br><br>→ 引申为：抽象的进展、变化或过程。",
+      "spectrum": {
+        "enabled": true,
+        "title": "速度程度光谱",
+        "stages": ["静止", "慢速", "中速", "快速", "极速"]
+      },
+      "compare_words": [
+        { "word": "go", "desc": "去/走" },
+        { "word": "come", "desc": "来" }
+      ]
+    },
+    {
+      "id": "state_transition",
+      "name": "状态变化",
+      "description": "物体从一个状态转变为另一个状态（形态/性质/相变）",
+      "categories": ["state_change"],
+      "visual": {
+        "template": "transition",
+        "viewBox": "0 0 760 400"
+      },
+      "logic_chain_labels": ["初始状态", "变化过程", "临界点", "新状态"],
+      "leap_template": "{word} = 从一种状态转变到另一种状态",
+      "core_logic": "<strong>💡 核心逻辑</strong><br>物理画面：某物经历一个过程，从一种状态变成另一种状态。<br><br>→ 引申为：任何性质、角色或形态的改变。",
+      "spectrum": { "enabled": false },
+      "compare_words": [
+        { "word": "change", "desc": "改变" },
+        { "word": "transform", "desc": "转变" }
+      ]
+    },
+    {
+      "id": "scale_gradient",
+      "name": "规模渐变",
+      "description": "某属性在规模/数量/强度上的渐变",
+      "categories": ["spatial", "degree_intensity", "natural_phenomenon"],
+      "visual": {
+        "template": "gradient",
+        "viewBox": "0 0 760 400"
+      },
+      "logic_chain_labels": ["最小", "较小", "中等", "较大", "最大"],
+      "leap_template": "{word} = 在某个维度上从弱到强的变化",
+      "core_logic": "<strong>💡 核心逻辑</strong><br>物理画面：一个属性从一端渐变到另一端。<br><br>→ 任何可以用'多少/大小/强弱'来衡量的概念。",
+      "spectrum": {
+        "enabled": true,
+        "title": "程度光谱",
+        "stages": ["极少", "较少", "适中", "较多", "极多"]
+      },
+      "compare_words": []
+    },
+    {
+      "id": "temperature_gradient",
+      "name": "温度渐变",
+      "description": "温度从冷到热的渐变",
+      "categories": ["temperature"],
+      "visual": {
+        "template": "temperature",
+        "viewBox": "0 0 760 400"
+      },
+      "logic_chain_labels": ["冰冷", "凉爽", "温暖", "热", "滚烫"],
+      "leap_template": "{word} = 温度的标尺",
+      "core_logic": "<strong>💡 核心逻辑</strong><br>物理画面：温度计从冷区到热区。<br><br>→ 引申为：情绪或氛围的'温度'。",
+      "spectrum": {
+        "enabled": true,
+        "title": "温度光谱",
+        "stages": ["冰冷", "凉爽", "温暖", "热", "滚烫"]
+      },
+      "compare_words": [
+        { "word": "hot", "desc": "热的" },
+        { "word": "cold", "desc": "冷的" }
+      ]
+    },
+    {
+      "id": "body_action",
+      "name": "身体动作",
+      "description": "身体部位的动作或手势",
+      "categories": ["body_action"],
+      "visual": {
+        "template": "body",
+        "viewBox": "0 0 760 400"
+      },
+      "logic_chain_labels": ["意图", "动作准备", "动作执行", "结果"],
+      "leap_template": "{word} = 身体做出的动作",
+      "core_logic": "<strong>💡 核心逻辑</strong><br>物理画面：身体某个部位做出一个动作。<br><br>→ 引申为：与这个动作相关的抽象概念。",
+      "spectrum": { "enabled": false },
+      "compare_words": []
+    },
+    {
+      "id": "spatial_direction",
+      "name": "空间方向",
+      "description": "物体在空间中的方向关系/位置变化",
+      "categories": ["direction"],
+      "visual": {
+        "template": "direction",
+        "viewBox": "0 0 760 400"
+      },
+      "logic_chain_labels": ["参考点", "方向", "目标位置", "关系"],
+      "leap_template": "{word} = 空间中的方向/位置关系",
+      "core_logic": "<strong>💡 核心逻辑</strong><br>物理画面：两个物体之间的空间位置关系。<br><br>→ 引申为：抽象的关系、程度或变化方向。",
+      "spectrum": {
+        "enabled": true,
+        "title": "空间距离光谱",
+        "stages": ["远", "较远", "适中", "近", "接触"]
+      },
+      "compare_words": []
+    },
+    {
+      "id": "separation",
+      "name": "分离/断开",
+      "description": "物体从连接/整体状态分离成独立部分",
+      "categories": ["cut_separate"],
+      "visual": {
+        "template": "separation",
+        "viewBox": "0 0 760 400"
+      },
+      "logic_chain_labels": ["连接状态", "分离动作", "断裂/分割", "独立部分"],
+      "leap_template": "{word} = 将某物从整体分离",
+      "core_logic": "<strong>💡 核心逻辑</strong><br>物理画面：一个整体被分割成独立的部分。<br><br>→ 引申为：切断关系、区分概念、做出选择。",
+      "spectrum": { "enabled": false },
+      "compare_words": [
+        { "word": "cut", "desc": "切割" },
+        { "word": "separate", "desc": "分离" }
+      ]
+    },
+    {
+      "id": "connection",
+      "name": "连接/附着",
+      "description": "物体连接/附着到另一物体上",
+      "categories": ["attach_connect"],
+      "visual": {
+        "template": "connection",
+        "viewBox": "0 0 760 400"
+      },
+      "logic_chain_labels": ["分离状态", "接近", "连接动作", "结合"],
+      "leap_template": "{word} = 将某物连接到另一物",
+      "core_logic": "<strong>💡 核心逻辑</strong><br>物理画面：两个物体通过某种方式连接在一起。<br><br>→ 引申为：建立关系、添加、组合。",
+      "spectrum": { "enabled": false },
+      "compare_words": [
+        { "word": "join", "desc": "加入" },
+        { "word": "attach", "desc": "附上" }
+      ]
+    },
+    {
+      "id": "scale_bar",
+      "name": "刻度标尺",
+      "description": "在一条标尺上展示程度变化",
+      "categories": ["degree", "frequency", "speed"],
+      "visual": {
+        "template": "scalebar",
+        "viewBox": "0 0 760 400"
+      },
+      "logic_chain_labels": ["最低", "较低", "中等", "较高", "最高"],
+      "leap_template": "{word} = 在程度标尺上的位置",
+      "core_logic": "<strong>💡 核心逻辑</strong><br>物理画面：一条标尺从一端到另一端。<br><br>→ 任何可以用程度衡量的概念都在标尺上有一个位置。",
+      "spectrum": {
+        "enabled": true,
+        "title": "程度光谱",
+        "stages": ["最低", "较低", "中等", "较高", "最高"]
+      },
+      "compare_words": []
+    },
+    {
+      "id": "generic",
+      "name": "通用模板",
+      "description": "当无法确定具体物理模式时的通用图解",
+      "categories": [],
+      "visual": {
+        "template": "generic",
+        "viewBox": "0 0 760 400"
+      },
+      "logic_chain_labels": ["理解", "分析", "关联", "掌握"],
+      "leap_template": "{word} = 探索这个词的物理意象",
+      "core_logic": "<strong>💡 核心逻辑</strong><br>这个词的物理意象正在探索中。<br><br>根据从物到心的学习法则，每个抽象概念都源于一个物理体验。<br>输入更多上下文可以生成更精确的画面。",
+      "spectrum": { "enabled": false },
+      "compare_words": []
+    }
+  ]
+}

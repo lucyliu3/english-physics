@@ -1,0 +1,79 @@
+# 词库 → 物理模式映射
+# 格式：word: { pattern_id, pos, phrases, compare }
+
+snap:
+  pattern: tension_release
+  pos: [verb, noun]
+  leap: "极限断裂 → 崩溃/折断/咬合"
+  anchor: snap
+  object: 橡皮筋
+  phrases:
+    - pattern: snap
+      cn: 突然折断 / 断裂
+      eg: '"The branch snapped under the weight." 树枝承受不住重量折断了。'
+    - pattern: snap at someone
+      cn: 冲某人发火 / 厉声说
+      eg: '"I\'m sorry I snapped at you earlier." 对不起刚才冲你发火了。'
+    - pattern: snap out of it
+      cn: 从低落/恍惚中振作
+      eg: '"Come on, snap out of it!" 振作起来！'
+    - pattern: snap decision
+      cn: 仓促/瞬间决定
+      eg: '"It was a snap decision, and I regret it." 那是个冲动的决定，我后悔了。'
+  compare_override:
+    - word: snap
+      desc: 啪地断裂
+    - word: break
+      desc: 用力折断
+    - word: crack
+      desc: 出现裂缝
+    - word: burst
+      desc: 从内部胀破
+
+rub off on:
+  pattern: friction_transfer
+  pos: [phrasal_verb]
+  leap: "擦掉 → 沾染"
+  anchor: rub
+  object: 颜料
+  phrases:
+    - pattern: rub off on someone
+      cn: （某种特质）沾染/影响某人
+      eg: '"His positivity really rubbed off on me." 他的积极向上感染了我。'
+    - pattern: rub it in
+      cn: 反复提别人的痛处 / 伤口撒盐
+      eg: '"I know I made a mistake. Don\'t rub it in." 我知道我错了，别再说了。'
+    - pattern: rub along
+      cn: 勉强相处 / 凑合过日子
+      eg: '"We don\'t really get along, but we rub along." 我们不算合得来，但还能凑合。'
+    - pattern: rub someone the wrong way
+      cn: 惹恼某人 / 让人不舒服
+      eg: '"Something about him rubs me the wrong way." 他有些地方让我很不舒服。'
+  compare_override:
+    - word: rub
+      desc: 摩擦表面
+    - word: scrub
+      desc: 用力刷洗
+    - word: wipe
+      desc: 擦拭表面
+    - word: scrape
+      desc: 刮掉表层
+
+get around to:
+  pattern: obstacle_avoidance
+  pos: [phrasal_verb]
+  leap: "绕过去 → 终于抽出时间做"
+  anchor: get
+  object: 小人
+  phrases:
+    - pattern: get around to doing something
+      cn: 终于找出时间做某事
+      eg: '"I finally got around to cleaning the garage." 我终于抽出时间清理车库了。'
+    - pattern: never got around to it
+      cn: 一直没腾出时间做
+      eg: '"I wanted to read that book but never got around to it." 我想读那本书，但一直没空。'
+  compare_override:
+    - word: get around to
+      desc: 终于找到时间做
+    - word: get to
+      desc: 有机会/轮到做

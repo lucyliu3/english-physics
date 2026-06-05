@@ -1,0 +1,133 @@
+{
+  "Verb": {
+    "movement": {
+      "keywords": ["go","come","leave","arrive","enter","exit","return","follow","lead","approach","pass","cross","reach","move","travel","walk","run","ride","drive","fly","climb","fall","swim","stroll","skip","hop","sway","swing","wander","advance","proceed","depart","flee","escape","pursue","chase","slide","glide","roll","flow","pour","stream","drift","float","sink","rise","ascend","descend","dive","jump","leap","bound","vault"],
+      "suffixes": [],
+      "scene": "spatial_movement",
+      "spectrum_type": "speed"
+    },
+    "body_action": {
+      "keywords": ["see","look","watch","hear","listen","speak","talk","say","tell","ask","answer","call","cry","laugh","smile","jump","sit","stand","kneel","hold","carry","lift","drop","push","pull","throw","catch","hit","kick","breathe","sleep","wake","blink","wave","nod","shake","point","clap","tap","pat","flap","wave","grab","grasp","touch","feel","bite","chew","swallow","lick","kiss","hug","embrace","squeeze","press","stomp","stamp","knock","bang","punch","slap","pinch","scratch","tickle"],
+      "suffixes": [],
+      "scene": "body_action"
+    },
+    "tension_force": {
+      "keywords": ["snap","break","crack","burst","split","tighten","loosen","stretch","squeeze","press","bend","twist","tear","rip","shred","crush","shatter","smash","fracture","sever","snap","pop","bang","explode","implode","collapse","crumble","shrink","expand","swell","contract","tense","relax","stiffen","loosen","slacken","tauten","wring","wrench","yank","tug","jerk","strain","stress","overload"],
+      "suffixes": ["en"],
+      "scene": "tension_release"
+    },
+    "contact_transfer": {
+      "keywords": ["rub","wipe","scrape","scrub","brush","polish","paint","coat","cover","smear","smudge","daub","spread","apply","layer","coat","dab","blot","sponge","mop","sweep","dust","clean","wash","rinse","dry","grate","file","sand","smooth"],
+      "suffixes": [],
+      "particle_affinity": ["off","on","over"],
+      "scene": "friction_transfer"
+    },
+    "state_change": {
+      "keywords": ["become","grow","turn","get","change","transform","convert","evolve","develop","shift","switch","alter","modify","adjust","adapt","morph","transit","vary","dissolve","melt","freeze","boil","evaporate","condense","solidify","liquefy","vaporize","wilt","wither","bloom","ripen","rot","decay","decompose","fossilize","petrify"],
+      "suffixes": ["ify","ize","en"],
+      "scene": "state_transition"
+    },
+    "cut_separate": {
+      "keywords": ["cut","slice","chop","dice","mince","trim","prune","sever","detach","separate","divide","split","part","disconnect","unlink","unfasten","untie","unlock","unzip","unwrap","peel","shave","trim","mow","reap","harvest","carve","whittle","engrave","etch"],
+      "suffixes": [],
+      "scene": "separation"
+    },
+    "attach_connect": {
+      "keywords": ["attach","connect","join","link","fasten","tie","bind","strap","buckle","zip","wrap","bundle","pack","load","stack","pile","gather","collect","assemble","combine","merge","fuse","blend","mix","stir","whisk","beat","fold","knead","screw","bolt","nail","glue","tape","weld","solder","knit","weave","braid","thread"],
+      "suffixes": [],
+      "scene": "connection"
+    }
+  },
+  "Adjective": {
+    "tension_force": {
+      "keywords": ["tight","loose","slack","taut","tense","stiff","limp","brittle","flaky","elastic","rigid","flexible","stretchy","snapped","broken","cracked","firm","solid","hard","soft","squishy","mushy","tender","tough","strong","weak","fragile","delicate","flimsy","sturdy","durable","taut","lax","slack"],
+      "scene": "tension_release",
+      "spectrum_type": "material_deformation"
+    },
+    "spatial": {
+      "keywords": ["big","small","large","tiny","long","short","wide","narrow","high","low","deep","shallow","thick","thin","fat","slim","flat","round","sharp","dull","smooth","rough","heavy","light","tall","wide","broad","narrow","steep","gentle","vast","compact","dense","sparse"],
+      "scene": "scale_gradient",
+      "spectrum_type": "magnitude"
+    },
+    "temperature": {
+      "keywords": ["hot","cold","warm","cool","freezing","boiling","mild","icy","chilly","frosty","frigid","arctic","scorching","blazing","burning","lukewarm","tepid","crisp","brisk","balmy","sweltering","steaming","glacial"],
+      "scene": "temperature_gradient",
+      "spectrum_type": "thermal"
+    },
+    "speed_frequency": {
+      "keywords": ["fast","slow","quick","rapid","sudden","gradual","constant","steady","rare","common","frequent","occasional","brisk","swift","hasty","leisurely","sluggish","prompt","instant","overnight","abrupt"],
+      "scene": "scale_bar",
+      "spectrum_type": "speed"
+    },
+    "degree_intensity": {
+      "keywords": ["full","empty","complete","partial","total","absolute","extreme","moderate","mild","strong","weak","powerful","intense","severe","slight","perfect","flawed","pure","impure","raw","ripe","fresh","stale","new","old","young","aged","clean","dirty","bright","dark","clear","cloudy"],
+      "scene": "scale_gradient",
+      "spectrum_type": "magnitude"
+    }
+  },
+  "Noun": {
+    "natural_phenomenon": {
+      "keywords": ["rain","drizzle","downpour","wind","breeze","gale","storm","thunder","lightning","fog","cloud","sunshine","shade","shadow","flood","drought","wave","tide","current","ripple","snow","sleet","hail","ice","frost","mist","haze","smog","dew","rainbow","aurora","tornado","hurricane","typhoon","cyclone","blizzard","dust","sandstorm","avalanche","landslide","eruption","earthquake","tsunami","whirlwind","vortex"],
+      "scene": "scale_gradient",
+      "spectrum_type": "density"
+    },
+    "force_energy": {
+      "keywords": ["snap","pressure","tension","force","power","energy","weight","impact","momentum","thrust","drag","lift","gravity","magnetism","electricity","current","resistance","friction","stress","strain","torque","velocity","acceleration"],
+      "scene": "tension_release"
+    },
+    "container_space": {
+      "keywords": ["box","bag","bottle","cup","bowl","plate","room","house","door","window","wall","gap","hole","space","area","bucket","barrel","chest","drawer","cabinet","closet","shelf","rack","bin","basket","crate","tank","pool","reservoir","chamber","cavity","pocket","envelope","folder","tube","pipe"],
+      "scene": "container"
+    },
+    "path_passage": {
+      "keywords": ["path","road","way","route","track","gate","entrance","exit","bridge","tunnel","stairs","step","sidewalk","lane","avenue","boulevard","highway","freeway","trail","alley","corridor","hallway","passage","channel","conduit","pipeline","pathway","driveway","footpath","crosswalk","intersection","crossroad"],
+      "scene": "spatial_movement"
+    },
+    "boundary_edge": {
+      "keywords": ["edge","border","boundary","limit","end","tip","top","bottom","side","corner","center","middle","rim","brink","verge","threshold","frontier","perimeter","circumference","outline","horizon","skyline","shore","coast","bank","margin"],
+      "scene": "spatial_direction"
+    }
+  },
+  "Adverb": {
+    "degree": {
+      "keywords": ["very","quite","rather","pretty","fairly","somewhat","slightly","barely","completely","partially","totally","absolutely","entirely","almost","nearly","highly","deeply","badly","seriously","extremely","intensely","mildly","hardly","scarcely","practically","virtually","fully","wholly","utterly","thoroughly"],
+      "scene": "scale_bar",
+      "spectrum_type": "degree"
+    },
+    "frequency": {
+      "keywords": ["always","never","often","rarely","sometimes","usually","frequently","constantly","regularly","occasionally","seldom","infrequently","periodically","repeatedly","routinely","typically","normally","generally","commonly","continually","perpetually","eternally","forever"],
+      "scene": "scale_bar",
+      "spectrum_type": "frequency"
+    },
+    "speed": {
+      "keywords": ["quickly","slowly","rapidly","fast","gradually","suddenly","immediately","promptly","steadily","briskly","hastily","swiftly","abruptly","instantly","momentarily","leisurely","sluggishly"],
+      "scene": "scale_bar",
+      "spectrum_type": "speed"
+    }
+  },
+  "Preposition": {
+    "direction": {
+      "keywords": ["up","down","in","out","on","off","over","under","above","below","across","through","along","around","toward","away","back","forward","to","from","into","onto","past","beyond","inside","outside","beneath","underneath","upon","within","without","throughout","against","about","among","between","beside","behind","before","after","by","near","next","opposite","via","amid"],
+      "scene": "spatial_direction"
+    }
+  },
+  "PhrasalVerb": {
+    "particle_direction": {
+      "particle_patterns": [
+        {"particle": "up", "core_image": "向上/增加/完成", "scene": "spatial_direction"},
+        {"particle": "down", "core_image": "向下/减少/失败", "scene": "spatial_direction"},
+        {"particle": "out", "core_image": "向外/消失/耗尽", "scene": "spatial_direction"},
+        {"particle": "in", "core_image": "向内/进入/包含", "scene": "spatial_direction"},
+        {"particle": "off", "core_image": "脱离/分离/关闭", "scene": "separation"},
+        {"particle": "on", "core_image": "接触/继续/穿着", "scene": "connection"},
+        {"particle": "over", "core_image": "跨越/覆盖/结束", "scene": "spatial_movement"},
+        {"particle": "through", "core_image": "穿透/通过/完成", "scene": "spatial_movement"},
+        {"particle": "around", "core_image": "环绕/回避/空闲", "scene": "spatial_movement"},
+        {"particle": "away", "core_image": "远离/消失/持续", "scene": "spatial_direction"},
+        {"particle": "back", "core_image": "返回/回溯/倒退", "scene": "spatial_direction"},
+        {"particle": "together", "core_image": "聚集/联合/整理", "scene": "connection"},
+        {"particle": "apart", "core_image": "分散/拆开/区分", "scene": "separation"}
+      ]
+    }
+  }
+}
