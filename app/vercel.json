@@ -1,7 +1,7 @@
 {
-  "buildCommand": "cd server && npm install && cd .. && npm install && npm run build",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "installCommand": "cd server && npm install && cd .. && npm install",
+  "installCommand": "cd server && npm install --production && cd .. && npm install",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/(.*)", "destination": "/index.html" }
